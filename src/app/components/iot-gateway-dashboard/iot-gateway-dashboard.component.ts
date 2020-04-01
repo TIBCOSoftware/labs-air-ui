@@ -44,7 +44,6 @@ export class IotGatewayDashboardComponent implements OnInit {
         showHelp: false,
         showLogout: false,
         showPageNavigation: true,
-        showReloadAnalysis: false,
         showStatusBar: false,
         showToolBar: false,
         showUndoRedo: false

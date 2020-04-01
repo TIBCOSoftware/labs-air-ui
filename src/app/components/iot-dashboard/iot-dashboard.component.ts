@@ -64,7 +64,6 @@ export class IotDashboardComponent implements OnInit {
       showHelp: false,
       showLogout: false,
       showPageNavigation: true,
-      showReloadAnalysis: false,
       showStatusBar: false,
       showToolBar: false,
       showUndoRedo: false

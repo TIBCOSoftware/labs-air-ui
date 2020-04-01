@@ -6,7 +6,14 @@ import {TcLiveappsLibModule} from '@tibco-tcstk/tc-liveapps-lib';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { MaterialModule } from './material.module';
-import {LogService, TcCoreLibModule} from '@tibco-tcstk/tc-core-lib';
+import {
+  LogService, OAuthInterceptor,
+  ProxyInterceptor,
+  SessionRefreshService,
+  TcCoreConfig,
+  TcCoreConfigService,
+  TcCoreLibModule
+} from '@tibco-tcstk/tc-core-lib';
 import {TcFormsLibModule} from '@tibco-tcstk/tc-forms-lib';
 import {LoginComponent} from './routes/login/login.component';
 import {HomeComponent} from './routes/home/home.component';
@@ -49,6 +56,24 @@ import { DataFilteringViewComponent } from './components/iot-data-pipeline/data-
 import { DataStoresViewComponent } from './components/iot-data-pipeline/data-stores-view/data-stores-view.component';
 import { DataStreamingViewComponent } from './components/iot-data-pipeline/data-streaming-view/data-streaming-view.component';
 import { ProtocolsViewComponent } from './components/iot-data-pipeline/protocols-view/protocols-view.component';
+import {HTTP_INTERCEPTORS} from '@angular/common/http';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+
+/** This is the tc core configuration object
+ * To use oauth you must also add the OAuthInterceptor to providers
+ *  Note: Only HTTP calls that start with / will have oAuth token attached
+ * To use proxy you must also add the ProxyInterceptor to providers
+ *  Note: Only HTTP calls that start with / will be proxied
+ */
+const tcCoreConfig: TcCoreConfig = {
+  oAuthLocalStorageKey: '',
+  proxy_url: '',
+  proxy_liveapps_path: '',
+  proxy_tce_path: '',
+  api_key: '',
+  api_key_param: 'api_key',
+  enable_tce: false
+}
 
 @NgModule({
   declarations: [
@@ -92,11 +117,12 @@ import { ProtocolsViewComponent } from './components/iot-data-pipeline/protocols
   ],
   imports: [
     AppRoutingModule,
-    TcCoreLibModule,
+    TcCoreLibModule.forRoot(tcCoreConfig),
     TcFormsLibModule,
     TcLiveappsLibModule.forRoot(),
     FlexLayoutModule,
     BrowserModule,
+    BrowserAnimationsModule,
     FormsModule,
     ChartsModule,
     Ng2GoogleChartsModule,
@@ -107,8 +133,22 @@ import { ProtocolsViewComponent } from './components/iot-data-pipeline/protocols
   ],
   providers: [
     LogService,
-    DatePipe
+    DatePipe,
+    // for proxied API calls
+    // { provide: HTTP_INTERCEPTORS, useClass: ProxyInterceptor, multi: true },
+
+    // for using oAuth
+    // { provide: HTTP_INTERCEPTORS, useClass: OAuthInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {   
+  constructor(public sessionRefreshService: SessionRefreshService, public tcConfigService: TcCoreConfigService) {
+    if (!tcConfigService.getConfig().oAuthLocalStorageKey) {
+      // setup cookie refresh for every 10 minutes
+      // note: if oauth in use then no need since key will be refreshed in local storage by session manager app
+      const usingProxy = (this.tcConfigService.getConfig().proxy_url && this.tcConfigService.getConfig().proxy_url !== '') ? true : false;
+      this.sessionRefreshService.scheduleCookieRefresh(600000, usingProxy);
+    }
+  }
+}
