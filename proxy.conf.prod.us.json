@@ -263,15 +263,8 @@
     "logLevel": "info",
     "pathRewrite":{"^/gateway1/edgexgateway" : ""}
   },
-  "/gateway2/edgexgateway/*": {
-    "target": "https://52.45.185.99:8443",
-    "secure": false,
-    "changeOrigin": true,
-    "logLevel": "info",
-    "pathRewrite":{"^/gateway2/edgexgateway" : ""}
-  },
   "/dgraph/*": {
-    "target": "http://a2c0b15e0059c11ea9265064cae82812-1704359995.us-west-2.elb.amazonaws.com:8080",
+    "target": "http://mydgraphdns:8080",
     "secure": "false",
     "changeOrigin": true,
     "logLevel": "info",
