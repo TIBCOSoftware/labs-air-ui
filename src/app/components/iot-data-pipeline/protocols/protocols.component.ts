@@ -150,13 +150,7 @@ export class ProtocolsComponent implements OnInit {
 
   onFormChanges(): void {
     this.transportForm.valueChanges.subscribe(val => {
-      console.log("TransportForm has changed for: ", val);
-
-      // if (this.transportForm.dirty) {
-      //   console.log("form is dirty");
-
-      // }
-
+      // console.log("TransportForm has changed for: ", val);
 
       if (this.transportForm.get('protocol').value == "") {
         

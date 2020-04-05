@@ -1,14 +1,26 @@
-<div id="filtering-details" [formGroup]="filteringForm">
+<div id="filtering-details">
 
-    <div fxLayout="column" style="height: 100%;">
+    <div fxLayout="column" fxLayoutGap="20px" style="height: 100%;">
 
-        <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px">
-            <mat-form-field fxFlex="1 1 15%" appearance="outline">
-                <mat-label>Device Name</mat-label>
-                <input matInput [readonly]=false formControlName="deviceName">
-            </mat-form-field>
+        <div fxLayout="row" wrap fxFlex="100%" fxFlexOffset="20px" fxLayoutGap="15px">
+
+            <form [formGroup]="filteringForm">
+
+                <div [formGroup]="filteringForm">
+                    <div formArrayName="deviceNames">
+
+                      <div *ngFor="let item of deviceSelectedArray.controls; let i = index">
+                        <mat-checkbox [disabled]="true" [checked]="item.value">
+                            {{devices[i].name}}
+                        </mat-checkbox>
+                    </div>
+                      
+                    </div>
+                  </div>
+
+            </form>
+
         </div>
-
     </div>
 
 </div>
