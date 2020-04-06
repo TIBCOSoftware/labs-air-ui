@@ -180,6 +180,7 @@ export class Pipeline {
   protocol: any;
   dataStoreType: string;
   dataStore: any;
+  filter: any;
   status: string;
 }
 

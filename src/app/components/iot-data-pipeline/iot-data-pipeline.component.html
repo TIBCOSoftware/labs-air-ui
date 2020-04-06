@@ -21,32 +21,10 @@
                                 </form>
                             </mat-step>
 
-                            <!-- <mat-step [stepControl]="transportForm">
-                                <form [formGroup]="transportForm">
-                                    <ng-template matStepLabel>Select Protocol</ng-template>
-                                    <mat-form-field>
-                                        <mat-label>Protocol</mat-label>
-                                        <input matInput placeholder="Select Protocol" formControlName="protocol"
-                                            required>
-                                    </mat-form-field>
-                                    <div>
-                                        <button mat-button matStepperNext>Next</button>
-                                    </div>
-                                </form>
-                            </mat-step> -->
-
-                            <!-- <mat-step label="Transport Protocol" completed=true>
-                                Step 1 content
-
-                                <div>
-                                    <button mat-button matStepperNext>Next</button>
-                                </div>
-                            </mat-step> -->
-
                             <mat-step [stepControl]="filteringForm" optional>
                                 <form [formGroup]="filteringForm">
                                     <ng-template matStepLabel>Data Filtering</ng-template>
-                                    <app-data-filtering [filteringForm]="filteringForm"></app-data-filtering>
+                                    <app-data-filtering [devices]="devices" [filteringForm]="filteringForm"></app-data-filtering>
                                 </form>
                             </mat-step>
 
@@ -64,15 +42,6 @@
                                 </form>
                             </mat-step>
 
-                            <!-- <mat-step label="Select Data Store" completed=true>
-                                Step 2 content
-
-                                <div>
-                                    <button mat-button matStepperPrevious>Back</button>
-                                    <button mat-button matStepperNext>Next</button>
-                                </div>
-                            </mat-step> -->
-
                             <mat-step label="Deploy">
 
                                 <div fxLayout="column" fxLayoutGap="15px" style="height: 100%;">
@@ -83,8 +52,10 @@
 
                                     <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px">
                                         <button type="button" matStepperPrevious>Back</button>
-                                        <button type="button" (click)="stepper.reset()">Reset</button>
-                                        <button type="button" (click)="deployDataPipeline()">Deploy Data
+                                        <button type="button" (click)="resetFormsToDefaults()">Reset</button>
+                                        <button type="button" (click)="saveDataPipeline(false)">Save Data
+                                            Pipeline</button>
+                                        <button type="button" (click)="saveDataPipeline(true)">Save and Deploy Data
                                             Pipeline</button>
                                     </div>
                                 </div>
@@ -171,7 +142,7 @@
                     <app-protocols-view [transportForm]="transportViewForm"></app-protocols-view>
                 </mat-tab>
                 <mat-tab label="Data Filtering">
-                    <app-data-filtering-view [filteringForm]="filteringViewForm"></app-data-filtering-view>
+                    <app-data-filtering-view [devices]="devices" [filteringForm]="filteringViewForm"></app-data-filtering-view>
                 </mat-tab>
                 <mat-tab label="Data Streaming">
                     <app-data-streaming-view [streamingForm]="streamingViewForm"></app-data-streaming-view>
@@ -184,9 +155,9 @@
 
         <div fxLayout="row" fxLayoutGap="15px"  *ngIf="pipelineSelected" style="width: 100%">
 
-            <button mat-raised-button [disabled]="undeployDisabled" (click)="undeployDataPipeline(true)" color="primary">Undeploy Pipeline</button>
-            <button mat-raised-button [disabled]="deployDisabled" (click)="redeployDataPipeline()" color="primary">Redeploy Pipeline</button>
-            <button mat-raised-button (click)="deleteDataPipeline()" color="primary">Undeploy/Delete Pipeline</button>
+            <button mat-raised-button [disabled]="deployDisabled" (click)="deploySelectedDataPipeline()" color="primary">Deploy Pipeline</button>
+            <button mat-raised-button [disabled]="undeployDisabled" (click)="undeploySelectedDataPipeline(false)" color="primary">Undeploy Pipeline</button>
+            <button mat-raised-button [disabled]="deployDisabled" (click)="deleteSelectedDataPipeline()" color="primary">Delete Pipeline</button>
 
         </div>
     </div>

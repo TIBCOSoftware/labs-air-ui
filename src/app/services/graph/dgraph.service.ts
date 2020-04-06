@@ -80,6 +80,11 @@ export class DgraphService {
   // Defined as a proxy.  (i.e. http://137.117.38.255:8080)
   private dgraphUrl = '/dgraph';
 
+  /**
+   * 
+   * @param logger 
+   * @param http 
+   */
   constructor(private logger: LogService,
     private http: HttpClient) {
 
@@ -87,6 +92,9 @@ export class DgraphService {
 
   }
 
+  /**
+   * 
+   */
   getGateways(): Observable<Gateway[]> {
     console.log("GetGateways service called")
     const url = `${this.dgraphUrl}/query`;
@@ -104,6 +112,10 @@ export class DgraphService {
       );
   }
 
+  /**
+   * 
+   * @param gateway 
+   */
   updateGateway(gateway: Gateway): Observable<string> {
     const url = `${this.dgraphUrl}/mutate?commitNow=true`;
     let query = `{
@@ -125,6 +137,10 @@ export class DgraphService {
       );
   }
 
+  /**
+   * 
+   * @param gateway 
+   */
   addGateway(gateway: Gateway): Observable<string> {
     const url = `${this.dgraphUrl}/mutate?commitNow=true`;
     let query = `{
@@ -150,6 +166,10 @@ export class DgraphService {
       );
   }
 
+  /**
+   * 
+   * @param gatewayUid 
+   */
   deleteGateway(gatewayUid: number): Observable<string> {
     const url = `${this.dgraphUrl}/mutate?commitNow=true`;
     let query = `{
@@ -166,6 +186,10 @@ export class DgraphService {
       );
   }
 
+  /**
+   * 
+   * @param gatewayName 
+   */
   getGatewayAndSubscriptions(gatewayName): Observable<Gateway[]> {
     const url = `${this.dgraphUrl}/query`;
     let query = `{
@@ -211,6 +235,10 @@ export class DgraphService {
 
   }
 
+  /**
+   * 
+   * @param gatewayName 
+   */
   getSubscriptions(gatewayName): Observable<Subscription[]> {
     const url = `${this.dgraphUrl}/query`;
     let query = `{
@@ -256,6 +284,11 @@ export class DgraphService {
 
   }
 
+  /**
+   * 
+   * @param gatewayUid 
+   * @param subscription 
+   */
   addSubscription(gatewayUid: number, subscription: Subscription): Observable<string> {
     const url = `${this.dgraphUrl}/mutate?commitNow=true`;
     let query = `{
@@ -299,6 +332,10 @@ export class DgraphService {
 
   }
 
+  /**
+   * 
+   * @param subscription 
+   */
   updateSubscription(subscription: Subscription): Observable<string> {
     const url = `${this.dgraphUrl}/mutate?commitNow=true`;
     let query = `{
@@ -335,6 +372,11 @@ export class DgraphService {
 
   }
 
+  /**
+   * 
+   * @param gatewayUid 
+   * @param subscriptionUid 
+   */
   deleteSubscription(gatewayUid: number, subscriptionUid: number): Observable<string> {
     const url = `${this.dgraphUrl}/mutate?commitNow=true`;
     let query = `{
@@ -352,7 +394,10 @@ export class DgraphService {
       );
   }
 
-
+  /**
+   * 
+   * @param gatewayName 
+   */
   getGatewayAndPublishers(gatewayName): Observable<Gateway[]> {
     const url = `${this.dgraphUrl}/query`;
     let query = `{
@@ -382,6 +427,10 @@ export class DgraphService {
 
   }
 
+  /**
+   * 
+   * @param gatewayName 
+   */
   getPublishers(gatewayName): Observable<Publisher[]> {
     const url = `${this.dgraphUrl}/query`;
     let query = `{
@@ -411,6 +460,11 @@ export class DgraphService {
 
   }
 
+  /**
+   * 
+   * @param gatewayUid 
+   * @param publisher 
+   */
   addPublisher(gatewayUid: number, publisher: Publisher): Observable<string> {
     const url = `${this.dgraphUrl}/mutate?commitNow=true`;
     let query = `{
@@ -437,7 +491,10 @@ export class DgraphService {
       );
 
   }
-
+  /**
+   * 
+   * @param publisher 
+   */
   updatePublisher(publisher: Publisher): Observable<string> {
     const url = `${this.dgraphUrl}/mutate?commitNow=true`;
     let query = `{
@@ -459,6 +516,11 @@ export class DgraphService {
 
   }
 
+  /**
+   * 
+   * @param gatewayUid 
+   * @param publisherUid 
+   */
   deletePublisher(gatewayUid: number, publisherUid: number): Observable<string> {
     const url = `${this.dgraphUrl}/mutate?commitNow=true`;
     let query = `{
@@ -476,15 +538,20 @@ export class DgraphService {
       );
   }
 
+  /**
+   * 
+   * @param gatewayName 
+   */
   getGatewayAndPipelines(gatewayName): Observable<Gateway[]> {
     const url = `${this.dgraphUrl}/query`;
 
     let pipeline_protocol = `protocol: pipeline_protocol {uid brokerURL topic maximumQOS username password encryptionMode caCertificate clientCertificate clientKey authMode serverCerticate consumerGroupId connectionTimeout sessionTimeout retryBackoff commitInterval initialOffset fetchMinBytes fetchMaxWait heartbeatInterval}`;
     let pipeline_datastore = `dataStore: pipeline_datastore {uid host port databaseName user password accountName warehouse database schema authType username clientId clientSecret authorizationCode redirectURI loginTimeout url}`;
+    let pipeline_filter = `filter: pipeline_filter {uid deviceNames}`;
     
     let query = `{
       resp(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
-        uid uuid
+        uid uuid accessToken
         pipelines: gateway_pipeline {
           uid
           name
@@ -498,6 +565,7 @@ export class DgraphService {
           status
           ${pipeline_protocol}
           ${pipeline_datastore}
+          ${pipeline_filter}
         }
       }
     }`;
@@ -512,12 +580,17 @@ export class DgraphService {
 
   }
 
+  /**
+   * 
+   * @param gatewayName 
+   */
   getPipelines(gatewayName): Observable<Pipeline[]> {
     const url = `${this.dgraphUrl}/query`;
 
     let pipeline_protocol = `protocol: pipeline_protocol {uid brokerURL topic maximumQOS username password encryptionMode caCertificate clientCertificate clientKey authMode serverCerticate consumerGroupId connectionTimeout sessionTimeout retryBackoff commitInterval initialOffset fetchMinBytes fetchMaxWait heartbeatInterval}`;
     let pipeline_datastore = `datastore: pipeline_datastore {uid host port databaseName user password accountName warehouse database schema authType username clientId clientSecret authorizationCode redirectURI loginTimeout url}`;
-    
+    let pipeline_filter = `filter: pipeline_filter {uid deviceNames}`;
+
     let query = `{
       var(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
         pipelines as gateway_pipeline {
@@ -536,6 +609,7 @@ export class DgraphService {
         status
         ${pipeline_protocol}
         ${pipeline_datastore}
+        ${pipeline_filter}
       }
     }`;
 
@@ -548,7 +622,17 @@ export class DgraphService {
 
   }
 
-  addPipeline(gatewayUid: number, pipeline: Pipeline, transportObj: any, dataStoreObj: any): Observable<string> {
+  /**
+   * 
+   * @param gatewayUid 
+   * @param pipeline 
+   * @param transportObj 
+   * @param dataStoreObj 
+   * @param filterObj 
+   */
+  addPipeline(gatewayUid: number, pipeline: Pipeline, transportObj: any,
+    dataStoreObj: any, filterObj: any): Observable<string> {
+
     const url = `${this.dgraphUrl}/mutate?commitNow=true`;
 
     let query = '';
@@ -559,6 +643,7 @@ export class DgraphService {
     console.log("TranpostObje prop0: ", transportObj.Properties[0].Value);
     let transportVar = '';
     let dataStoreVar = '';
+    let filterVar = '';
     let i = 0;
     let len = transportObj.Properties.length;
 
@@ -588,7 +673,7 @@ export class DgraphService {
     // Create DataStore entries
     i = 0;
     len = dataStoreObj.Properties.length;
-    
+
     for (; i < len; i++) {
       dataStoreVar = dataStoreVar +
         `_:Datastore <${dataStoreObj.Properties[i].UIName}> "${dataStoreObj.Properties[i].Value}" .
@@ -598,14 +683,37 @@ export class DgraphService {
     dataStoreVar = dataStoreVar +
       `_:Datastore <datastore> "" .
       `;
-      dataStoreVar = dataStoreVar +
+    dataStoreVar = dataStoreVar +
       `_:Datastore <type> "datastore" .
       `;
-      dataStoreVar = dataStoreVar +
+    dataStoreVar = dataStoreVar +
       `_:Pipeline <pipeline_datastore> _:Datastore .
       `;
 
     console.log("DataStore dgraph var: " + dataStoreVar);
+
+
+    // Create Filter entries
+    i = 0;
+    len = filterObj.Properties.length;
+
+    for (; i < len; i++) {
+      filterVar = filterVar +
+        `_:Filter <${filterObj.Properties[i].UIName}> "${filterObj.Properties[i].Value}" .
+      `;
+    }
+
+    filterVar = filterVar +
+      `_:Filter <filter> "" .
+      `;
+    filterVar = filterVar +
+      `_:Filter <type> "filter" .
+      `;
+    filterVar = filterVar +
+      `_:Pipeline <pipeline_filter> _:Filter .
+      `;
+
+    console.log("Filter dgraph var: " + filterVar);
 
 
     query = `{
@@ -622,6 +730,7 @@ export class DgraphService {
         <${gatewayUid}> <gateway_pipeline> _:Pipeline .
         ${transportVar}
         ${dataStoreVar}
+        ${filterVar}
       }
     }`;
     console.log('Mutate statement: ', query);
@@ -634,6 +743,10 @@ export class DgraphService {
 
   }
 
+  /**
+   * 
+   * @param pipeline 
+   */
   updatePipeline(pipeline: Pipeline): Observable<string> {
     const url = `${this.dgraphUrl}/mutate?commitNow=true`;
     let query = `{
@@ -652,17 +765,25 @@ export class DgraphService {
 
   }
 
+  /**
+   * 
+   * @param gatewayUid 
+   * @param pipeline 
+   */
   deletePipeline(gatewayUid: number, pipeline: Pipeline): Observable<string> {
     const url = `${this.dgraphUrl}/mutate?commitNow=true`;
     let protocol = pipeline.protocol;
     let dataStore = pipeline.dataStore;
+    let filter = pipeline.filter;
 
     let query = `{
       delete {
         <${protocol.uid}> * * .
         <${dataStore.uid}> * * .
+        <${filter.uid}> * * .
         <${pipeline.uid}> <pipeline_protocol> <${protocol.uid}> .
         <${pipeline.uid}> <pipeline_datastore> <${dataStore.uid}> .
+        <${pipeline.uid}> <pipeline_filter> <${filter.uid}> .
         <${pipeline.uid}> * * .
         <${gatewayUid}> <gateway_pipeline> <${pipeline.uid}> .
       }
@@ -676,6 +797,10 @@ export class DgraphService {
       );
   }
 
+  /**
+   * 
+   * @param gatewayName 
+   */
   getRules(gatewayName): Observable<Rule[]> {
     const url = `${this.dgraphUrl}/query`;
     let query = `{
@@ -720,6 +845,11 @@ export class DgraphService {
 
   }
 
+  /**
+   * 
+   * @param gatewayUid 
+   * @param rule 
+   */
   addRule(gatewayUid: number, rule: Rule): Observable<string> {
     const url = `${this.dgraphUrl}/mutate?commitNow=true`;
     let query = `{
@@ -760,6 +890,10 @@ export class DgraphService {
 
   }
 
+  /**
+   * 
+   * @param rule 
+   */
   updateRule(rule: Rule): Observable<string> {
     const url = `${this.dgraphUrl}/mutate?commitNow=true`;
     let query = `{
@@ -796,6 +930,11 @@ export class DgraphService {
 
   }
 
+  /**
+   * 
+   * @param gatewayUid 
+   * @param ruleUid 
+   */
   deleteRule(gatewayUid: number, ruleUid: number): Observable<string> {
     const url = `${this.dgraphUrl}/mutate?commitNow=true`;
     let query = `{
@@ -813,6 +952,12 @@ export class DgraphService {
       );
   }
 
+  /**
+   * 
+   * @param deviceName 
+   * @param instrumentName 
+   * @param numReadings 
+   */
   getReadings(deviceName, instrumentName, numReadings): Observable<TSReading[]> {
     const url = `${this.dgraphUrl}/query`;
 
@@ -840,6 +985,12 @@ export class DgraphService {
       );
   }
 
+  /**
+   * 
+   * @param deviceName 
+   * @param instrumentName 
+   * @param fromts 
+   */
   getReadingsStartingAt(deviceName, instrumentName, fromts): Observable<TSReading[]> {
     const url = `${this.dgraphUrl}/query`;
 
@@ -866,6 +1017,13 @@ export class DgraphService {
       );
   }
 
+  /**
+   * 
+   * @param deviceName 
+   * @param instrumentName 
+   * @param fromts 
+   * @param tots 
+   */
   getReadingsBetween(deviceName, instrumentName, fromts, tots): Observable<TSReading[]> {
     const url = `${this.dgraphUrl}/query`;
 
@@ -892,6 +1050,10 @@ export class DgraphService {
       );
   }
 
+  /**
+   * 
+   * @param deviceName 
+   */
   getLastReadingsForDevice(deviceName): Observable<TSReading[]> {
     const url = `${this.dgraphUrl}/query`;
 
@@ -917,6 +1079,9 @@ export class DgraphService {
       );
   }
 
+  /**
+   * 
+   */
   getNotifications(): Observable<Notification[]> {
     console.log("GetNotifications service called")
     const url = `${this.dgraphUrl}/query`;
@@ -937,6 +1102,10 @@ export class DgraphService {
       );
   }
 
+  /**
+   * 
+   * @param deviceName 
+   */
   getRoute(deviceName): any {
 
     let route = null;
@@ -954,6 +1123,10 @@ export class DgraphService {
     return route;
   }
 
+  /**
+   * 
+   * @param deviceName 
+   */
   getRouteCenter(deviceName): any {
     let center = null;
 
@@ -974,12 +1147,12 @@ export class DgraphService {
     return center;
   }
 
-  /*
-  * Handle Http operation that failed.
-  * Let the app continue.
-  * @param operation - name of the operation that failed
-  * @param result - optional value to return as the observable result
-  */
+  /**
+   * Handle Http operation that failed.
+   * Let the app continue.
+   * @param operation - - name of the operation that failed
+   * @param result - optional value to return as the observable result
+   */
   private handleError<T>(operation = 'operation', result?: T) {
     console.log("Got an error.  Handling Error");
 
