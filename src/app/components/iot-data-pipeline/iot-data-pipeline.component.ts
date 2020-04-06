@@ -487,7 +487,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
 
     console.log("Undeploying pipeline with: ", updateGraph);
 
-    if (this.pipelineSelection.hasValue) {
+    if (this.pipelineSelection.hasValue()) {
 
       this.pipelineSelected = false;
       let tsms = Date.now();
@@ -548,7 +548,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
    */
   deploySelectedDataPipeline() {
 
-    if (this.pipelineSelection.hasValue) {
+    if (this.pipelineSelection.hasValue()) {
 
       this.pipelineSelected = false;
       let tsms = Date.now();
@@ -608,7 +608,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
     console.log("Delete Data Pipeline called");
 
 
-    if (this.pipelineSelection.hasValue) {
+    if (this.pipelineSelection.hasValue()) {
 
       this.pipelineSelected = false;
 

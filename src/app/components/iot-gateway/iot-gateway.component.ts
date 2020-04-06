@@ -198,7 +198,7 @@ export class IotGatewayComponent implements OnInit, AfterViewInit {
 
   pingGateway() {
 
-    if (this.selection.hasValue) {
+    if (this.selection.hasValue()) {
       this.edgeService.pingCoreMetadata(this.selection.selected[0])
       .subscribe(res => {
         console.log("Received ping response: ", res);

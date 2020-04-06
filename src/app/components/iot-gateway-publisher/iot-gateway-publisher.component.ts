@@ -33,8 +33,9 @@ export class IotGatewayPublisherComponent implements OnInit, AfterViewInit {
   hidePassword = true;
   dateFormat = 'yyyy-MM-dd  HH:mm:ss'
 
-  graphOpsDisabled = true;
-  graphDeleteOpsDisabled = true;
+  graphAddOpDisabled = true;
+  graphUpdateOpDisabled = true;
+  graphDeleteOpDisabled = true;
 
   publishersDataSource = new MatTableDataSource<Publisher>();
   publisherDisplayedColumns: string[] = ['id', 'name', 'protocol', 'created', 'modified'];
@@ -57,6 +58,8 @@ export class IotGatewayPublisherComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+
+    this.publisherSelection.clear();
 
     this.publisherForm = this.formBuilder.group({
       name: [''],
@@ -95,8 +98,9 @@ export class IotGatewayPublisherComponent implements OnInit, AfterViewInit {
         console.log("Received response: ", res);
         this.gateway = res[0] as Gateway;
         this.publishersDataSource.data = res[0].publishers as Publisher[];
-        this.graphOpsDisabled = true;
-        this.graphDeleteOpsDisabled = true;
+        this.graphAddOpDisabled = true;
+        this.graphUpdateOpDisabled = true;
+        this.graphDeleteOpDisabled = true;
       })
   }
 
@@ -127,16 +131,19 @@ export class IotGatewayPublisherComponent implements OnInit, AfterViewInit {
       uid: row.uid
     }, { emitEvent: false });
 
-    this.graphDeleteOpsDisabled = false;
-    this.graphOpsDisabled = true;
+    this.graphDeleteOpDisabled = false;
+    this.graphAddOpDisabled = true;
+    this.graphUpdateOpDisabled = true;
   }
 
   resetPublisherForm() {
     this.publisherForm.reset({
     }, { emitEvent: false });
 
-    this.graphDeleteOpsDisabled = true;
-    this.graphOpsDisabled = true;
+    this.graphDeleteOpDisabled = true;
+    this.graphAddOpDisabled = true;
+    this.graphUpdateOpDisabled = true;
+    this.publisherSelection.clear();
   }
 
   addPublisher() {
@@ -201,8 +208,15 @@ export class IotGatewayPublisherComponent implements OnInit, AfterViewInit {
 
       if (this.publisherForm.dirty) {
         console.log("form is dirty");
-        this.graphDeleteOpsDisabled = true;
-        this.graphOpsDisabled = false;
+        this.graphDeleteOpDisabled = true;
+        this.graphAddOpDisabled = false;
+        
+        if (this.publisherSelection.hasValue()) {
+          this.graphUpdateOpDisabled = false;
+        }
+        else {
+          this.graphUpdateOpDisabled = true;
+        }
       }
 
     });

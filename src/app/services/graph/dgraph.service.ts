@@ -499,6 +499,8 @@ export class DgraphService {
     const url = `${this.dgraphUrl}/mutate?commitNow=true`;
     let query = `{
       set {
+        <${publisher.uid}> <name> "${publisher.name}" .
+        <${publisher.uid}> <uuid> "${publisher.name}" .
         <${publisher.uid}> <port> "${publisher.port}" .
         <${publisher.uid}> <protocol> "${publisher.protocol}" .
         <${publisher.uid}> <modified> "${publisher.modified}" .
