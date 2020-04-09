@@ -145,6 +145,7 @@ export class DgraphService {
     const url = `${this.dgraphUrl}/mutate?commitNow=true`;
     let query = `{
       set {
+        _:Gateway <dgraph.type> "Gateway" .
         _:Gateway <gateway> "" .
         _:Gateway <type> "gateway" .
         _:Gateway <uuid> "${gateway.uuid}" .
@@ -469,6 +470,7 @@ export class DgraphService {
     const url = `${this.dgraphUrl}/mutate?commitNow=true`;
     let query = `{
       set {
+        _:Publisher <dgraph.type> "Publisher" .
         _:Publisher <name> "${publisher.name}" .
         _:Publisher <uuid> "${publisher.name}" .
         _:Publisher <type> "publisher" .
@@ -720,6 +722,7 @@ export class DgraphService {
 
     query = `{
       set {
+        _:Pipeline <dgraph.type> "Pipeline" .
         _:Pipeline <name> "${pipeline.name}" .
         _:Pipeline <uuid> "${pipeline.name}" .
         _:Pipeline <type> "pipeline" .
@@ -856,6 +859,7 @@ export class DgraphService {
     const url = `${this.dgraphUrl}/mutate?commitNow=true`;
     let query = `{
       set {
+        _:Rule <dgraph.type> "Rule" .
         _:Rule <name> "${rule.name}" .
         _:Rule <uuid> "${rule.name}" .
         _:Rule <type> "rule" .
