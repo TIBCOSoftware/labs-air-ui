@@ -97,7 +97,24 @@ export class IotGatewayPublisherComponent implements OnInit, AfterViewInit {
       .subscribe(res => {
         console.log("Received response: ", res);
         this.gateway = res[0] as Gateway;
-        this.publishersDataSource.data = res[0].publishers as Publisher[];
+
+        if (res[0].publishers != undefined) {
+
+          console.log("Setting publishersDataSource.data fo incoming publishers");
+
+
+          this.publishersDataSource.data = res[0].publishers as Publisher[];
+
+          console.log("Got Publishers on publishersDataSource.data: " + this.publishersDataSource.data.toString());
+
+        }
+        else {
+          this.publishersDataSource = new MatTableDataSource<Publisher>();
+
+          console.log("Setting publishersDataSource.data to null");
+        }
+        
+        
         this.graphAddOpDisabled = true;
         this.graphUpdateOpDisabled = true;
         this.graphDeleteOpDisabled = true;

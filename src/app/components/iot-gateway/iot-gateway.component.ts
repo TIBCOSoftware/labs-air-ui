@@ -26,7 +26,7 @@ export class IotGatewayComponent implements OnInit, AfterViewInit {
   // Map configuration
   mapConfig = null;
 
-  subscriptionDisabled = true;
+  gatewayOpDisabled = true;
   publisherDisabled = true;
   dataPipelineDisabled = true;
   selectedGateway = '';
@@ -274,7 +274,7 @@ export class IotGatewayComponent implements OnInit, AfterViewInit {
     //console.log('Row clicked: ', row);
 
     // Enable/Disable variables
-    this.subscriptionDisabled = false;
+    this.gatewayOpDisabled = false;
     this.publisherDisabled = false;
     this.dataPipelineDisabled = false;
     this.selection.select(row);
@@ -312,7 +312,7 @@ export class IotGatewayComponent implements OnInit, AfterViewInit {
   resetGatewayForm() {
     this.gatewayForm.reset();
 
-    this.subscriptionDisabled = true;
+    this.gatewayOpDisabled = true;
     this.publisherDisabled = true;
     this.dataPipelineDisabled = true;
     

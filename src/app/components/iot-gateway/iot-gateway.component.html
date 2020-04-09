@@ -142,15 +142,15 @@
         </mat-card-content>
         <mat-card-actions>
           <button mat-raised-button (click)="addGateway()" color="primary">Add Gateway</button>
-          <button mat-raised-button [disabled]="subscriptionDisabled" (click)="updateGateway()" color="primary">Update
+          <button mat-raised-button [disabled]="gatewayOpDisabled" (click)="updateGateway()" color="primary">Update
             Gateway</button>
-          <button mat-raised-button [disabled]="subscriptionDisabled" (click)="deleteGateway()" color="primary">Remove
+          <button mat-raised-button [disabled]="gatewayOpDisabled" (click)="deleteGateway()" color="primary">Remove
             Gateway</button>
-          <button mat-raised-button [disabled]="subscriptionDisabled" (click)="pingGateway()" color="primary">Ping
+          <button mat-raised-button [disabled]="gatewayOpDisabled" (click)="pingGateway()" color="primary">Ping
             Gateway</button>
-          <button mat-raised-button [disabled]="subscriptionDisabled"
+          <!-- <button mat-raised-button [disabled]="gatewayOpDisabled"
             [routerLink]="['/starterApp/home/gatewaysubscription', selectedGateway]"
-            color="primary">Subscriptions</button>
+            color="primary">Subscriptions</button> -->
           <button mat-raised-button [disabled]="publisherDisabled"
             [routerLink]="['/starterApp/home/gatewaypublisher', selectedGateway]" color="primary">Data Publishers</button>
           <button mat-raised-button [disabled]="dataPipelineDisabled"

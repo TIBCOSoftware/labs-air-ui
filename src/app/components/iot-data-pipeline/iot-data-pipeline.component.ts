@@ -187,12 +187,13 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
   updateProtocolViewForm(protocolType, protocol) {
 
     if (protocolType == "MQTT") {
-
+      
       let delimInd = protocol.brokerURL.lastIndexOf(":");
+
       let hostname = protocol.brokerURL.substring(6, delimInd);
       let port = protocol.brokerURL.substring(delimInd + 1);
 
-      console.log("BrokerURL parsing: ", delimInd, " ", hostname, " ", port);
+      // console.log("BrokerURL parsing: ", delimInd, " ", hostname, " ", port);
 
       // Update protocol view form
       console.log("Setting transportviewform protocol to: ", protocolType);
@@ -560,6 +561,8 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
 
       let protocolObj = this.buildProtocolProperties(pipeline.protocolType, this.transportViewForm);
       let dataStoreObj = this.buildDataStoreProperties(pipeline.dataStoreType, this.dataStoreViewForm);
+      let filterObj = this.buildDataFilteringProperties(this.filteringForm);
+      let loggingObj = this.buildLoggingProperties();
 
       let applicationId = pipeline.name;
       let request = {
@@ -569,7 +572,9 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
         "replicas": 1,
         "Components": [
           protocolObj,
-          dataStoreObj
+          dataStoreObj,
+          filterObj,
+          loggingObj
         ]
       };
 
@@ -1155,6 +1160,18 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
     };
 
     return dataStoreObj;
+  }
+
+  buildLoggingProperties(): any {
+    let loggingObj = {
+      "Type": "common",
+      "Name": "Logging",
+      "Properties": [
+        { "Name": "Logging.LogLevel", "UIName": "logging", "Value": "INFO" },
+      ]
+    };
+
+    return loggingObj;
   }
 
   /**
