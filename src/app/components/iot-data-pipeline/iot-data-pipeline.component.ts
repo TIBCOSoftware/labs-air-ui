@@ -187,7 +187,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
   updateProtocolViewForm(protocolType, protocol) {
 
     if (protocolType == "MQTT") {
-      
+
       let delimInd = protocol.brokerURL.lastIndexOf(":");
 
       let hostname = protocol.brokerURL.substring(6, delimInd);
@@ -327,7 +327,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
     // console.log("In updateFilterViewForm: ", filter);
 
     const devicesArray: FormArray = this.filteringViewForm.get('deviceNames') as FormArray;
-    
+
     // Clear the array
     devicesArray.clear();
 
@@ -484,9 +484,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
    * 
    * @param updateGraph - flag indicating if pipeline needs to be removed from graph
    */
-  undeploySelectedDataPipeline(updateGraph: boolean) {
-
-    console.log("Undeploying pipeline with: ", updateGraph);
+  undeploySelectedDataPipeline() {
 
     if (this.pipelineSelection.hasValue()) {
 
@@ -495,6 +493,8 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
       let pipeline = this.pipelineSelection.selected[0];
       pipeline.modified = tsms;
       pipeline.status = "Undeployed";
+
+      console.log("Undeploying pipeline: " + pipeline.name);
 
       let request = {
         "ApplicationID": pipeline.name,
@@ -520,21 +520,19 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
 
         });
 
-      if (updateGraph) {
-        // Update graph pipeline
-        this.graphService.updatePipeline(pipeline)
-          .subscribe(res => {
-            console.log("Updated pipeline: ", res);
 
-            this.getGatewayAndPipelines(this.gatewayId)
-            this.resetPipelineForm();
-            this.resetViewForms();
-          });
+      // Update graph pipeline
+      this.graphService.updatePipeline(pipeline)
+        .subscribe(res => {
+          console.log("Updated pipeline: ", res);
 
-        // this.undeployDisabled = true;
-        // this.deployDisabled = false;
-      }
+          this.getGatewayAndPipelines(this.gatewayId)
+          this.resetPipelineForm();
+          this.resetViewForms();
+        });
 
+      // this.undeployDisabled = true;
+      // this.deployDisabled = false;
 
     }
     else {
@@ -557,7 +555,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
       pipeline.modified = tsms;
       pipeline.status = "Deployed/Ready";
 
-      console.log("ReDeploying for protocol: " + pipeline.protocolType);
+      console.log("Deploying for protocol: " + pipeline.protocolType);
 
       let protocolObj = this.buildProtocolProperties(pipeline.protocolType, this.transportViewForm);
       let dataStoreObj = this.buildDataStoreProperties(pipeline.dataStoreType, this.dataStoreViewForm);
@@ -620,7 +618,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
       let pipeline = this.pipelineSelection.selected[0]
 
       if (pipeline.status != "Undeployed") {
-        this.undeploySelectedDataPipeline(false);
+        this.undeploySelectedDataPipeline();
       }
       this.pipelineSelection.clear();
 
