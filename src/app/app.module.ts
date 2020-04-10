@@ -58,6 +58,8 @@ import { DataStreamingViewComponent } from './components/iot-data-pipeline/data-
 import { ProtocolsViewComponent } from './components/iot-data-pipeline/protocols-view/protocols-view.component';
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { GraphService } from './services/graph/graph.service';
+import { DgraphService } from './services/graph/dgraph.service';
 
 /** This is the tc core configuration object
  * To use oauth you must also add the OAuthInterceptor to providers
@@ -134,6 +136,7 @@ const tcCoreConfig: TcCoreConfig = {
   providers: [
     LogService,
     DatePipe,
+    { provide: GraphService, useClass: DgraphService },
     // for proxied API calls
     // { provide: HTTP_INTERCEPTORS, useClass: ProxyInterceptor, multi: true },
 

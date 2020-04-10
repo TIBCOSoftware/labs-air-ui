@@ -6,7 +6,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 
 import { Gateway, DataStoreMetadata, Device } from '../../shared/models/iot.model';
 import { EdgeService } from '../../services/edge/edge.service';
-import { DgraphService } from '../../services/graph/dgraph.service';
+import { GraphService } from '../../services/graph/graph.service';
 import { DatastoreService } from '../../services/datastore/datastore.service';
 import { debounceTime, distinctUntilChanged, startWith, tap, delay } from 'rxjs/operators';
 //import { merge } from "rxjs/observable/merge";
@@ -41,7 +41,7 @@ export class IotGatewayComponent implements OnInit, AfterViewInit {
   selection = new SelectionModel<Gateway>(false, []);
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
-  constructor(private graphService: DgraphService,
+  constructor(private graphService: GraphService,
     private edgeService: EdgeService,
     private datastoreService: DatastoreService,
     private formBuilder: FormBuilder,

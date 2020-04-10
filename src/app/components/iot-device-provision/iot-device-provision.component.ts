@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, Input } from '@angular/core';
 import { Profile, Service, Device, Gateway } from '../../shared/models/iot.model';
 import { EdgeService } from '../../services/edge/edge.service';
-import { DgraphService } from '../../services/graph/dgraph.service';
+import { GraphService } from '../../services/graph/graph.service';
 import { MatSort, MatTableDataSource, MatSnackBar } from '@angular/material';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -30,7 +30,7 @@ export class IotDeviceProvisionComponent implements OnInit, AfterViewInit {
   gatewaySelected: Gateway = null;
 
   constructor(private edgeService: EdgeService,
-    private graphService: DgraphService,
+    private graphService: GraphService,
     private formBuilder: FormBuilder,
     private _snackBar: MatSnackBar) {
 

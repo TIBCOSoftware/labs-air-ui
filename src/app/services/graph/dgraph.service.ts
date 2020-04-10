@@ -7,6 +7,7 @@ import { LogLevel, LogService } from '@tibco-tcstk/tc-core-lib';
 
 import { Gateway, Subscription, Publisher, Pipeline, Rule, Notification } from '../../shared/models/iot.model';
 import { TSReading } from '../../shared/models/iot.model';
+import { GraphService } from './graph.service';
 
 // const httpOptions = {
 //   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -72,10 +73,8 @@ const route3 = [
   [46.758181, -92.098748]
 ];
 
-@Injectable({
-  providedIn: 'root'
-})
-export class DgraphService {
+@Injectable()
+export class DgraphService implements GraphService {
 
   // Defined as a proxy.  (i.e. http://137.117.38.255:8080)
   private dgraphUrl = '/dgraph';

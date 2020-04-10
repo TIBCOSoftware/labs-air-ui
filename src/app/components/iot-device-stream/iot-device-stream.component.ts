@@ -5,7 +5,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 
 import { Device, TSReading, Resource } from '../../shared/models/iot.model';
 import { EdgeService } from '../../services/edge/edge.service';
-import { DgraphService } from '../../services/graph/dgraph.service';
+import { GraphService } from '../../services/graph/graph.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 
@@ -100,7 +100,7 @@ export class IotDeviceStreamComponent implements OnInit, AfterViewInit {
   @ViewChild(BaseChartDirective, {static: false}) deviceReportChart: BaseChartDirective;
 
   constructor(private edgeService: EdgeService,
-    private graphService: DgraphService,
+    private graphService: GraphService,
     private formBuilder: FormBuilder) {
 
     this.instrumentForm = this.formBuilder.group({

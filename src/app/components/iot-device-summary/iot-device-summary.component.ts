@@ -1,7 +1,7 @@
 import { Component, Input, ElementRef, ViewChild, OnInit, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
 
 import { Device, TSReading, Resource, Gateway } from '../../shared/models/iot.model';
-import { DgraphService } from '../../services/graph/dgraph.service';
+import { GraphService } from '../../services/graph/graph.service';
 import { GoogleChartInterface } from 'ng2-google-charts/google-charts-interfaces';
 import { interval, Subscription } from 'rxjs';
 
@@ -89,7 +89,7 @@ export class IotDeviceSummaryComponent implements OnInit, OnDestroy {
     }
   };
 
-  constructor(private graphService: DgraphService) { }
+  constructor(private graphService: GraphService) { }
 
   ngOnInit() {
 

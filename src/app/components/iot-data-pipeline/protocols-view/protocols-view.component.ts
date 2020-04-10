@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { DgraphService } from '../../../services/graph/dgraph.service';
+import { GraphService } from '../../../services/graph/graph.service';
 import { Publisher } from '../../../shared/models/iot.model';
 export interface SelectItem {
   value: string;
@@ -21,7 +21,7 @@ export class ProtocolsViewComponent implements OnInit {
 
   @Input() transportForm: FormGroup;
 
-  constructor(private graphService: DgraphService) {
+  constructor(private graphService: GraphService) {
 
   }
 
