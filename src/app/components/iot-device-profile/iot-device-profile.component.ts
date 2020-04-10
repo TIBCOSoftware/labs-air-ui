@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { Profile, Resource, ResourceProperty, ResourceAttribute, Gateway, PropertyValue, PropertyUnit } from '../../shared/models/iot.model';
 import { EdgeService } from '../../services/edge/edge.service';
-import { DgraphService } from '../../services/graph/dgraph.service';
+import { GraphService } from '../../services/graph/graph.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 import { NestedTreeControl } from '@angular/cdk/tree';
@@ -46,7 +46,7 @@ export class IotDeviceProfileComponent implements OnInit {
 
 
   constructor(private edgeService: EdgeService,
-    private graphService: DgraphService,
+    private graphService: GraphService,
     private formBuilder: FormBuilder,
     private _datePipe: DatePipe,
     private _snackBar: MatSnackBar) {

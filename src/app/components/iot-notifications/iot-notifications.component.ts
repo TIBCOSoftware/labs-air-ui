@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
-import { DgraphService } from '../../services/graph/dgraph.service';
+import { GraphService } from '../../services/graph/graph.service';
 import { Notification } from '../../shared/models/iot.model';
 import { MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -19,7 +19,7 @@ export class IotNotificationsComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
-  constructor(private graphService: DgraphService) { }
+  constructor(private graphService: GraphService) { }
 
   ngOnInit() {
     this.getNotifications();

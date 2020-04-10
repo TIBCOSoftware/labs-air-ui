@@ -5,7 +5,7 @@ import { MatStepper } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 
 import { Pipeline, DataStore, Protocol, Gateway, Device } from '../../shared/models/iot.model';
-import { DgraphService } from '../../services/graph/dgraph.service';
+import { GraphService } from '../../services/graph/graph.service';
 import { EdgeService } from '../../services/edge/edge.service';
 import { FlogoDeployService } from '../../services/deployment/flogo-deploy.service';
 import { FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
@@ -59,7 +59,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
   /**
    * 
    */
-  constructor(private graphService: DgraphService,
+  constructor(private graphService: GraphService,
     private edgeService: EdgeService,
     private flogoDeployService: FlogoDeployService,
     private route: ActivatedRoute,

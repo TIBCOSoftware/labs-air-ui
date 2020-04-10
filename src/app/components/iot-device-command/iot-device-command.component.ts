@@ -5,7 +5,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 
 import { Device, Resource, Command, Gateway } from '../../shared/models/iot.model';
 import { EdgeService } from '../../services/edge/edge.service';
-import { DgraphService } from '../../services/graph/dgraph.service';
+import { GraphService } from '../../services/graph/graph.service';
 import { debounceTime, distinctUntilChanged, startWith, tap, delay } from 'rxjs/operators';
 
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
@@ -50,7 +50,7 @@ export class IotDeviceCommandComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   constructor(private edgeService: EdgeService,
-    private graphService: DgraphService) {
+    private graphService: GraphService) {
 
   }
 

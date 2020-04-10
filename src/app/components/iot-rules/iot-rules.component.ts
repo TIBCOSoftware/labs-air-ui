@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EdgeService } from '../../services/edge/edge.service';
-import { DgraphService } from '../../services/graph/dgraph.service';
+import { GraphService } from '../../services/graph/graph.service';
 import { Device, TSReading, Resource, Gateway, Rule } from '../../shared/models/iot.model';
 import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -46,7 +46,7 @@ export class IotRulesComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   constructor(private edgeService: EdgeService,
-    private graphService: DgraphService,
+    private graphService: GraphService,
     private formBuilder: FormBuilder,
     private _snackBar: MatSnackBar) {
   }

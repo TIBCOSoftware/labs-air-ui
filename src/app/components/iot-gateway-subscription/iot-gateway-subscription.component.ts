@@ -5,7 +5,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 
 import { Subscription, Gateway } from '../../shared/models/iot.model';
 import { EdgeService } from '../../services/edge/edge.service';
-import { DgraphService } from '../../services/graph/dgraph.service';
+import { GraphService } from '../../services/graph/graph.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { switchMap, debounceTime, distinctUntilChanged, startWith, tap, delay } from 'rxjs/operators';
 
@@ -80,7 +80,7 @@ export class IotGatewaySubscriptionComponent implements OnInit, AfterViewInit {
 
 
   constructor(private edgeService: EdgeService,
-    private graphService: DgraphService,
+    private graphService: GraphService,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private _snackBar: MatSnackBar) {
