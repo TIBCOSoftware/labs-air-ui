@@ -559,7 +559,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
 
       let protocolObj = this.buildProtocolProperties(pipeline.protocolType, this.transportViewForm);
       let dataStoreObj = this.buildDataStoreProperties(pipeline.dataStoreType, this.dataStoreViewForm);
-      let filterObj = this.buildDataFilteringProperties(this.filteringForm);
+      let filterObj = this.buildDataFilteringProperties(this.filteringViewForm);
       let loggingObj = this.buildLoggingProperties();
 
       let applicationId = pipeline.name;
@@ -1137,7 +1137,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
    */
   buildDataFilteringProperties(form: FormGroup): any {
 
-    const devicesArray: FormArray = this.filteringForm.get('deviceNames') as FormArray;
+    const devicesArray: FormArray = form.get('deviceNames') as FormArray;
     let i: number = 0;
     var filters = [];
 
