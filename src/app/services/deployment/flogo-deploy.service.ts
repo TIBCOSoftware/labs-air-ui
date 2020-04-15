@@ -25,7 +25,7 @@ export class FlogoDeployService {
 
   deploy(request): Observable<string> {
 
-    const url = `/deployment/deploy`;
+    const url = `/deployment/releases`;
 
     return this.http.post<string>(url, request, this.httpOptions)
       .pipe(
@@ -36,9 +36,20 @@ export class FlogoDeployService {
 
   undeploy(request): Observable<string> {
 
-    const url = `/deployment/undeploy`;
+    let url = "/deployment/releases/".concat(request["id"]);
+    let searchParams = new URLSearchParams();
+    let params = request.params;
+    if (params){
+      for (var key of Object.keys(params)) {
+        searchParams.append(key, params[key]);
+      }
+    }
+    let searchParamsString = searchParams.toString();
+    if (searchParamsString){
+      url = url.concat("?",searchParamsString);
+    }
 
-    return this.http.post<string>(url, request, this.httpOptions)
+    return this.http.delete<string>(url, this.httpOptions)
       .pipe(
         tap(_ => this.logger.info('Undeployed Pipeline')),
         catchError(this.handleError<string>('undeploy'))

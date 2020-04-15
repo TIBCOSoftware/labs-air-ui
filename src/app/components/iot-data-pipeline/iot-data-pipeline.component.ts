@@ -427,13 +427,35 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
     let dataStore = this.dataStoreForm.get('dataStore').value;
     let dataStoreObj = this.buildDataStoreProperties(dataStore, this.dataStoreForm);
     let filterObj = this.buildDataFilteringProperties(this.filteringForm);
-
-    console.log("Deploying for protocol: " + protocol);
-
+    
     let tsms = Date.now();
 
     let applicationId = "iot-data-" + tsms;
-    let request = {
+
+    let env = {}
+    protocolObj["Properties"].forEach(function (protocol) {
+      env[protocol.Name] = protocol.Value;
+    });
+    dataStoreObj["Properties"].forEach(function (datastore) {
+      env[datastore.Name] = datastore.Value;
+    });
+    filterObj["Properties"].forEach(function (filter) {
+      env[filter.Name] = filter.Value;
+    });
+
+    let newRequest = {
+      "id": applicationId,
+      "name": "air-data-" + protocol.toLowerCase() + "-" + dataStore.toLowerCase(),
+      "version":"0.1.0",
+      "values": {
+        "env": env
+      }
+    }
+    console.log("New Request: "+JSON.stringify(newRequest));
+
+    console.log("Deploying for protocol: " + protocol);
+
+    /*let request = {
       "ApplicationID": applicationId,
       "containerName": "air-iotdata-" + protocol.toLowerCase() + "-" + dataStore.toLowerCase(),
       "dockerImage": "magallardo/iotdata_" + protocol.toLowerCase() + "_" + dataStore.toLowerCase(),
@@ -446,13 +468,13 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
     };
 
     console.log("Deploy Request: " + JSON.stringify(request));
-
+    */
     let pipelineStatus = "Undeployed";
     if (deployPipeline) {
 
       pipelineStatus = "Deployed/Ready"
       // Deploy pipeline
-      this.flogoDeployService.deploy(request)
+      this.flogoDeployService.deploy(newRequest)
         .subscribe(res => {
           console.log("Received response: ", res);
 
@@ -496,7 +518,17 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
 
       console.log("Undeploying pipeline: " + pipeline.name);
 
-      let request = {
+      let urlParams = [];
+      urlParams["namespace"] = "default";
+
+      let newRequest = {
+        "id":  pipeline.name,
+        params: {
+          "namespace":"default"
+        }
+      }
+
+      /*let request = {
         "ApplicationID": pipeline.name,
         "Components": [
           {
@@ -511,10 +543,12 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
       };
 
       console.log("Undeploy Request: " + JSON.stringify(request));
+      */
 
+      console.log("Undeploy Request: " + JSON.stringify(newRequest));
 
       // Undeploy pipeline
-      this.flogoDeployService.undeploy(request)
+      this.flogoDeployService.undeploy(newRequest)
         .subscribe(res => {
           console.log("Received response: ", res);
 
@@ -563,7 +597,30 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
       let loggingObj = this.buildLoggingProperties();
 
       let applicationId = pipeline.name;
-      let request = {
+      let env = {}
+      protocolObj["Properties"].forEach(function (protocol) {
+        env[protocol.Name] = protocol.Value;
+      });
+      dataStoreObj["Properties"].forEach(function (datastore) {
+        env[datastore.Name] = datastore.Value;
+      });
+      filterObj["Properties"].forEach(function (filter) {
+        env[filter.Name] = filter.Value;
+      });
+      loggingObj["Properties"].forEach(function (filter) {
+        env[filter.Name] = filter.Value;
+      });
+
+      let newRequest = {
+        "id": applicationId,
+	      "name": "air-data-" + pipeline.protocolType.toLowerCase() + "-" + pipeline.dataStoreType.toLowerCase(),
+	      "version":"0.1.0",
+        "values": {
+          "env": env
+        }
+      }
+      console.log("New Request: "+JSON.stringify(newRequest));
+      /*let request = {
         "ApplicationID": applicationId,
         "containerName": "air-iotdata-" + pipeline.protocolType.toLowerCase() + "-" + pipeline.dataStoreType.toLowerCase(),
         "dockerImage": "magallardo/iotdata_" + pipeline.protocolType.toLowerCase() + "_" + pipeline.dataStoreType.toLowerCase(),
@@ -577,9 +634,9 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
       };
 
       console.log("Deploy Request: " + JSON.stringify(request));
-
+      */
       // Deploy Pipeline
-      this.flogoDeployService.deploy(request)
+      this.flogoDeployService.deploy(newRequest)
         .subscribe(res => {
           console.log("Received response: ", res);
 
