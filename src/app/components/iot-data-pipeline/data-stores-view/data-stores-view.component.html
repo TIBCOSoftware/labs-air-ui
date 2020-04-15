@@ -4,8 +4,13 @@
 
         <div fxLayout="row" fxFlex="100%" fxFlexOffset="20px" fxLayoutGap="15px">
             <mat-form-field fxFlex="1 1 15%" appearance="outline">
-                <mat-label>Data Store</mat-label>
+                <mat-label>Data Store Type</mat-label>
                 <input matInput [readonly]=true formControlName="dataStore">
+            </mat-form-field>
+
+            <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                <mat-label>Data Store Name</mat-label>
+                <input matInput [readonly]=true formControlName="dataStoreId">
             </mat-form-field>
         </div>
 

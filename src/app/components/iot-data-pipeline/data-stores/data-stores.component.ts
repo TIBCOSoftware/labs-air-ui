@@ -1,5 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { GraphService } from '../../../services/graph/graph.service';
+import { DataStore } from '../../../shared/models/iot.model';
 
 export interface SelectItem {
   value: string;
@@ -22,7 +24,9 @@ export class DataStoresComponent implements OnInit {
   tgdbDataStore = false;
   dgraphDataStore = false;
 
-  dataStores: SelectItem[] = [
+  dataStores: DataStore[];
+
+  dataStoresOld: SelectItem[] = [
     { value: 'Postgres', viewValue: 'Postgres' },
     { value: 'Snowflake', viewValue: 'Snowflake' },
     { value: 'Oracle', viewValue: 'Oracle' },
@@ -33,16 +37,34 @@ export class DataStoresComponent implements OnInit {
 
   @Input() dataStoreForm: FormGroup;
 
-  constructor() { }
+  constructor(private graphService: GraphService) {
+    
+  }
 
   ngOnInit() {
+    this.getDataStores(this.dataStoreForm.get('gateway').value);
 
     this.onFormChanges();
+  }
+
+  public getDataStores(gatewayId: string) {
+    console.log("Getting data stores for: ", gatewayId);
+
+    this.graphService.getDataStores(gatewayId)
+      .subscribe(res => {
+        console.log("Received response: ", res);
+        this.dataStores = res as DataStore[];
+
+      })
   }
 
 
   onDataStoreSelected(event) {
     console.log("Option selected: ", event);
+
+    let dataStore = this.dataStores[event.value];
+
+    console.log("Selected data store: ", dataStore.dataStoreType);
 
     this.postgresDataStore = false;
     this.snowflakeDataStore = false;
@@ -51,24 +73,32 @@ export class DataStoresComponent implements OnInit {
     this.tgdbDataStore = false;
     this.dgraphDataStore = false;
 
-    if (event.value == "Postgres") {
+    if (dataStore.dataStoreType == "Postgres") {
 
       this.dataStoreForm.patchValue({
+        uid: dataStore.uid,
+        dataStore: dataStore.dataStoreType,
         postgres: {
-          host: '',
-          port: '',
-          databaseName: '',
-          user: '',
-          password: ''
+          host: dataStore.host,
+          port: dataStore.port,
+          databaseName: dataStore.databaseName,
+          user: dataStore.user,
+          password: dataStore.password
         },
         snowflake: {
           accountName: 'changeme',
           warehouse: 'changeme',
           database: 'changeme',
           schema: 'changeme',
+          authType: 'Basic Authentication',
           username: 'changeme',
           password: 'changeme',
-          role: 'changeme'
+          role: 'changeme',
+          clientId: '',
+          clientSecret: '',
+          authorizationCode: '',
+          redirectURI: '',
+          loginTimeout: '20'
         },
         tgdb: {
           url: 'changeme',
@@ -87,14 +117,22 @@ export class DataStoresComponent implements OnInit {
     else if (event.value == "Snowflake") {
 
       this.dataStoreForm.patchValue({
+        uid: dataStore.uid,
+        dataStore: dataStore.dataStoreType,
         snowflake: {
-          accountName: '',
-          warehouse: '',
-          database: '',
-          schema: '',
-          username: '',
-          password: '',
-          role: ''
+          accountName: dataStore.accountName,
+          warehouse: dataStore.warehouse,
+          database: dataStore.database,
+          schema: dataStore.schema,
+          authType: dataStore.authType,
+          username: dataStore.username,
+          password: dataStore.password,
+          role: dataStore.role,
+          clientId: dataStore.clientId,
+          clientSecret: dataStore.clientSecret,
+          authorizationCode: dataStore.authorizationCode,
+          redirectURI: dataStore.redirectURI,
+          loginTimeout: dataStore.loginTimeout
         },
         postgres: {
           host: 'changeme',
@@ -120,10 +158,12 @@ export class DataStoresComponent implements OnInit {
     else if (event.value == "TGDB") {
 
       this.dataStoreForm.patchValue({
+        uid: dataStore.uid,
+        dataStore: dataStore.dataStoreType,
         tgdb: {
-          url: '',
-          username: '',
-          password: ''
+          url: dataStore.url,
+          username: dataStore.username,
+          password: dataStore.password
         },
         postgres: {
           host: 'changeme',
@@ -137,9 +177,15 @@ export class DataStoresComponent implements OnInit {
           warehouse: 'changeme',
           database: 'changeme',
           schema: 'changeme',
+          authType: 'Basic Authentication',
           username: 'changeme',
           password: 'changeme',
-          role: 'changeme'
+          role: 'changeme',
+          clientId: '',
+          clientSecret: '',
+          authorizationCode: '',
+          redirectURI: '',
+          loginTimeout: '20'
         },
         dgraph: {
           url: 'changeme',
@@ -153,10 +199,12 @@ export class DataStoresComponent implements OnInit {
     else if (event.value == "Dgraph") {
 
       this.dataStoreForm.patchValue({
+        uid: dataStore.uid,
+        dataStore: dataStore.dataStoreType,
         dgraph: {
-          url: '',
-          username: '',
-          password: ''
+          url: dataStore.url,
+          username: dataStore.username,
+          password: dataStore.password
         },
         postgres: {
           host: 'changeme',
@@ -170,9 +218,15 @@ export class DataStoresComponent implements OnInit {
           warehouse: 'changeme',
           database: 'changeme',
           schema: 'changeme',
+          authType: 'Basic Authentication',
           username: 'changeme',
           password: 'changeme',
-          role: 'changeme'
+          role: 'changeme',
+          clientId: '',
+          clientSecret: '',
+          authorizationCode: '',
+          redirectURI: '',
+          loginTimeout: '20'
         },
         tgdb: {
           url: 'changeme',
@@ -196,7 +250,7 @@ export class DataStoresComponent implements OnInit {
   onFormChanges(): void {
     this.dataStoreForm.valueChanges.subscribe(val => {
 
-      if (this.dataStoreForm.get('protocol').value == "") {
+      if (this.dataStoreForm.get('dataStore').value == "") {
 
         this.postgresDataStore = false;
         this.snowflakeDataStore = false;

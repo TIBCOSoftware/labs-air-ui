@@ -8,10 +8,10 @@
 
         <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px">
             <mat-form-field fxFlex="1 1 15%" appearance="outline">
-                <mat-label>Publisher</mat-label>
+                <mat-label>Protocols</mat-label>
                 <mat-select formControlName="protocolId" (selectionChange)="onProtocolSelected($event)">
-                    <mat-option *ngFor="let item of publishers; let i = index" [value]="i">
-                        {{item.name}}
+                    <mat-option *ngFor="let item of protocols; let i = index" [value]="i">
+                        {{item.uuid}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
@@ -38,7 +38,7 @@
 
                 <mat-form-field fxFlex="1 1 15%" appearance="outline">
                     <mat-label>Maximum QOS</mat-label>
-                    <input matInput [readonly]=false formControlName="maximumQOS" required>
+                    <input matInput [readonly]=true formControlName="maximumQOS" required>
                 </mat-form-field>
 
             </div>
@@ -56,12 +56,12 @@
 
                 <mat-form-field fxFlex="1 1 15%" appearance="outline">
                     <mat-label>Username</mat-label>
-                    <input matInput [readonly]=false formControlName="username" required>
+                    <input matInput [readonly]=true formControlName="username" required>
                 </mat-form-field>
 
                 <mat-form-field fxFlex="1 1 15%" appearance="outline">
                     <mat-label>Password</mat-label>
-                    <input matInput placeholder="Enter your password" [readonly]=false
+                    <input matInput placeholder="Enter your password" [readonly]=true
                         [type]="hidePassword ? 'password' : 'text'" formControlName="password" required>
                     <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
                         [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
@@ -71,17 +71,17 @@
 
                 <mat-form-field fxFlex="1 1 15%" appearance="outline">
                     <mat-label>Client Certificate</mat-label>
-                    <input matInput [readonly]=false formControlName="clientCertificate">
+                    <input matInput [readonly]=true formControlName="clientCertificate">
                 </mat-form-field>
 
                 <mat-form-field fxFlex="1 1 15%" appearance="outline">
                     <mat-label>Client Key</mat-label>
-                    <input matInput [readonly]=false formControlName="clientKey">
+                    <input matInput [readonly]=true formControlName="clientKey">
                 </mat-form-field>
 
                 <mat-form-field fxFlex="1 1 15%" appearance="outline">
                     <mat-label>CA Certificate</mat-label>
-                    <input matInput [readonly]=false formControlName="caCertificate">
+                    <input matInput [readonly]=true formControlName="caCertificate">
                 </mat-form-field>
 
             </div>
@@ -109,17 +109,17 @@
 
                 <mat-form-field fxFlex="1 1 15%" appearance="outline">
                     <mat-label>Consumer Group Id</mat-label>
-                    <input matInput [readonly]=false formControlName="consumerGroupId" required>
+                    <input matInput [readonly]=true formControlName="consumerGroupId" required>
                 </mat-form-field>
 
                 <mat-form-field fxFlex="1 1 15%" appearance="outline">
                     <mat-label>Connection Timeout</mat-label>
-                    <input matInput [readonly]=false formControlName="connectionTimeout">
+                    <input matInput [readonly]=true formControlName="connectionTimeout">
                 </mat-form-field>
 
                 <mat-form-field fxFlex="1 1 15%" appearance="outline">
                     <mat-label>Session Timeout</mat-label>
-                    <input matInput [readonly]=false formControlName="sessionTimeout">
+                    <input matInput [readonly]=true formControlName="sessionTimeout">
                 </mat-form-field>
 
                 <mat-form-field fxFlex="1 1 15%" appearance="outline">
@@ -138,27 +138,27 @@
 
                 <mat-form-field fxFlex="1 1 15%" appearance="outline">
                     <mat-label>Retry Backoff</mat-label>
-                    <input matInput [readonly]=false formControlName="retryBackoff">
+                    <input matInput [readonly]=true formControlName="retryBackoff">
                 </mat-form-field>
 
                 <mat-form-field fxFlex="1 1 15%" appearance="outline">
                     <mat-label>Fetch Min Bytes</mat-label>
-                    <input matInput [readonly]=false formControlName="fetchMinBytes">
+                    <input matInput [readonly]=true formControlName="fetchMinBytes">
                 </mat-form-field>
 
                 <mat-form-field fxFlex="1 1 15%" appearance="outline">
                     <mat-label>Fetch Max Wait</mat-label>
-                    <input matInput [readonly]=false formControlName="fetchMaxWait">
+                    <input matInput [readonly]=true formControlName="fetchMaxWait">
                 </mat-form-field>
 
                 <mat-form-field fxFlex="1 1 15%" appearance="outline">
                     <mat-label>Commit Interval</mat-label>
-                    <input matInput [readonly]=false formControlName="commitInterval">
+                    <input matInput [readonly]=true formControlName="commitInterval">
                 </mat-form-field>
 
                 <mat-form-field fxFlex="1 1 15%" appearance="outline">
                     <mat-label>Heartbeat Interval</mat-label>
-                    <input matInput [readonly]=false formControlName="heartbeatInterval">
+                    <input matInput [readonly]=true formControlName="heartbeatInterval">
                 </mat-form-field>
 
             </div>
@@ -177,12 +177,12 @@
 
                 <mat-form-field fxFlex="1 1 15%" appearance="outline">
                     <mat-label>Username</mat-label>
-                    <input matInput [readonly]=false formControlName="username" required>
+                    <input matInput [readonly]=true formControlName="username" required>
                 </mat-form-field>
 
                 <mat-form-field fxFlex="1 1 15%" appearance="outline">
                     <mat-label>Password</mat-label>
-                    <input matInput placeholder="Enter your password" [readonly]=false
+                    <input matInput placeholder="Enter your password" [readonly]=true
                         [type]="hidePassword ? 'password' : 'text'" formControlName="password" required>
                     <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
                         [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
@@ -192,17 +192,17 @@
 
                 <mat-form-field fxFlex="1 1 15%" appearance="outline">
                     <mat-label>Client Certificate</mat-label>
-                    <input matInput [readonly]=false formControlName="clientCertificate">
+                    <input matInput [readonly]=true formControlName="clientCertificate">
                 </mat-form-field>
 
                 <mat-form-field fxFlex="1 1 15%" appearance="outline">
                     <mat-label>Client Key</mat-label>
-                    <input matInput [readonly]=false formControlName="clientKey">
+                    <input matInput [readonly]=true formControlName="clientKey">
                 </mat-form-field>
 
                 <mat-form-field fxFlex="1 1 15%" appearance="outline">
                     <mat-label>Server Certificate</mat-label>
-                    <input matInput [readonly]=false formControlName="serverCertificate">
+                    <input matInput [readonly]=true formControlName="serverCertificate">
                 </mat-form-field>
 
             </div>

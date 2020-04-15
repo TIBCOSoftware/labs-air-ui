@@ -4,10 +4,10 @@
 
         <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px">
             <mat-form-field fxFlex="1 1 15%" appearance="outline">
-                <mat-label>Data Store</mat-label>
-                <mat-select formControlName="dataStore" (selectionChange)="onDataStoreSelected($event)">
-                    <mat-option *ngFor="let item of dataStores" [value]="item.value">
-                        {{item.viewValue}}
+                <mat-label>Data Stores</mat-label>
+                <mat-select formControlName="dataStoreId" (selectionChange)="onDataStoreSelected($event)">
+                    <mat-option *ngFor="let item of dataStores; let i = index" [value]="i">
+                        {{item.uuid}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>

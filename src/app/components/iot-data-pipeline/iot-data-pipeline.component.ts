@@ -200,6 +200,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
 
       this.transportViewForm.patchValue({
         protocol: protocolType,
+        protocolId: protocol.uuid,
         mqtt: {
           hostname: hostname,
           port: port,
@@ -224,6 +225,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
 
       this.transportViewForm.patchValue({
         protocol: protocolType,
+        protocolId: protocol.uuid,
         kafka: {
           hostname: hostname,
           port: port,
@@ -261,6 +263,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
       // Update datastore view form
       this.dataStoreViewForm.patchValue({
         dataStore: dataStoreType,
+        dataStoreId: dataStore.uuid,
         postgres: {
           host: dataStore.host,
           port: dataStore.port.toString(),
@@ -274,6 +277,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
 
       this.dataStoreViewForm.patchValue({
         dataStore: dataStoreType,
+        dataStoreId: dataStore.uuid,
         snowflake: {
           accountName: dataStore.accountName,
           warehouse: dataStore.warehouse,
@@ -295,6 +299,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
 
       this.dataStoreViewForm.patchValue({
         dataStore: dataStoreType,
+        dataStoreId: dataStore.uuid,
         tgdb: {
           url: dataStore.url,
           username: dataStore.username,
@@ -306,6 +311,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
 
       this.dataStoreViewForm.patchValue({
         dataStore: dataStoreType,
+        dataStoreId: dataStore.uuid,
         dgraph: {
           url: dataStore.url,
           username: dataStore.username,
@@ -490,8 +496,10 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
     pipeline.dataStoreType = dataStore;
     pipeline.status = pipelineStatus;
 
+    let protocolUid = this.transportForm.get('uid').value;
+    let dataStoreUid = this.dataStoreForm.get('uid').value;
     // Add pipeline to graph
-    this.graphService.addPipeline(this.gateway.uid, pipeline, protocolObj, dataStoreObj, filterObj)
+    this.graphService.addPipeline(this.gateway.uid, pipeline, protocolUid, dataStoreUid, filterObj)
       .subscribe(res => {
         console.log("Added pipeline: ", res);
 
@@ -713,6 +721,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
     });
 
     this.transportForm = this.formBuilder.group({
+      uid: ['changeme', Validators.required],
       gateway: [this.gatewayId, Validators.required],
       protocolId: ['', Validators.required],
       protocol: ['', Validators.required],
@@ -751,6 +760,8 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
     });
 
     this.dataStoreForm = this.formBuilder.group({
+      uid: ['changeme', Validators.required],
+      gateway: [this.gatewayId, Validators.required],
       dataStoreId: ['changeme', Validators.required],
       dataStore: ['', Validators.required],
       postgres: this.formBuilder.group({
