@@ -389,35 +389,35 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public getStreamData(chart: any) {
 
-    // if (this.resourceSelection.hasValue()) {
+    if (this.resourceSelection.hasValue()) {
 
 
-    //   console.log("in getting streaming data");
+      console.log("in getting streaming data");
 
-    //   this.graphService.getReadingsStartingAt(this.deviceSelected,
-    //     this.resourceSelected, this.streamLastQuery)
-    //     .subscribe(res => {
-    //       this.resourceReadings = res as TSReading[];
+      this.graphService.getReadingsStartingAt(this.deviceSelected,
+        this.resourceSelected, this.streamLastQuery)
+        .subscribe(res => {
+          this.resourceReadings = res as TSReading[];
 
-    //       console.log("reading data in getStreamingData: ", this.resourceReadings);
+          console.log("reading data in getStreamingData: ", this.resourceReadings);
 
 
-    //       this.resourceReadings.forEach(
-    //         reading => {
+          this.resourceReadings.forEach(
+            reading => {
 
-    //           if (isNaN(reading.value)) {
-    //             chart.data.datasets[0].data.push({ x: new Date(reading.created).toISOString(), y: reading.value == 'true' ? 1 : 0 });
-    //           }
-    //           else {
-    //             chart.data.datasets[0].data.push({ x: new Date(reading.created).toISOString(), y: reading.value });
-    //           }
+              if (isNaN(reading.value)) {
+                chart.data.datasets[0].data.push({ x: new Date(reading.created).toISOString(), y: reading.value == 'true' ? 1 : 0 });
+              }
+              else {
+                chart.data.datasets[0].data.push({ x: new Date(reading.created).toISOString(), y: reading.value });
+              }
 
-    //           this.streamLastQuery = reading.created;
-    //         }
-    //       );
+              this.streamLastQuery = reading.created;
+            }
+          );
 
-    //     })
-    // }
+        })
+    }
 
   }
 
