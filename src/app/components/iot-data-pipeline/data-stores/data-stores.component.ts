@@ -114,7 +114,7 @@ export class DataStoresComponent implements OnInit {
 
       this.postgresDataStore = true;
     }
-    else if (event.value == "Snowflake") {
+    else if (dataStore.dataStoreType == "Snowflake") {
 
       this.dataStoreForm.patchValue({
         uid: dataStore.uid,
@@ -155,7 +155,7 @@ export class DataStoresComponent implements OnInit {
 
       this.snowflakeDataStore = true;
     }
-    else if (event.value == "TGDB") {
+    else if (dataStore.dataStoreType == "TGDB") {
 
       this.dataStoreForm.patchValue({
         uid: dataStore.uid,
@@ -196,7 +196,7 @@ export class DataStoresComponent implements OnInit {
 
       this.tgdbDataStore = true;
     }
-    else if (event.value == "Dgraph") {
+    else if (dataStore.dataStoreType == "Dgraph") {
 
       this.dataStoreForm.patchValue({
         uid: dataStore.uid,
@@ -235,6 +235,8 @@ export class DataStoresComponent implements OnInit {
         }
       });
 
+      console.log("Set to display Dgraph: ", dataStore);
+      
       this.dgraphDataStore = true;
     }
 
