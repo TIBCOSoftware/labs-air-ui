@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { GraphService } from '../../../services/graph/graph.service';
-import { Publisher } from '../../../shared/models/iot.model';
+import { Protocol } from '../../../shared/models/iot.model';
 export interface SelectItem {
   value: string;
   viewValue: string;
@@ -20,7 +20,7 @@ export class ProtocolsComponent implements OnInit {
   kafkaProtocol = false;
   httpProtocol = false;
 
-  publishers: Publisher[];
+  protocols: Protocol[];
 
   kafkaAuthModes: SelectItem[] = [
     { value: 'None', viewValue: 'None' },
@@ -47,54 +47,74 @@ export class ProtocolsComponent implements OnInit {
 
   ngOnInit() {
     console.log("On Protocols ngOnInit. Getting publisher for: ", this.transportForm.get('gateway').value);
-    this.getPublishers(this.transportForm.get('gateway').value);
+    this.getProtocols(this.transportForm.get('gateway').value);
 
     this.onFormChanges();
   }
 
-  public getPublishers(gatewayId: string) {
-    console.log("Getting transports for: ", gatewayId);
+  public getProtocols(gatewayId: string) {
+    console.log("Getting protocols for: ", gatewayId);
 
-    this.graphService.getPublishers(gatewayId)
+    this.graphService.getProtocols(gatewayId)
       .subscribe(res => {
         console.log("Received response: ", res);
-        this.publishers = res as Publisher[];
+        this.protocols = res as Protocol[];
 
       })
   }
 
-
   onProtocolSelected(event) {
     console.log("Option selected: ", event);
 
-    let publisher = this.publishers[event.value];
+    let protocol = this.protocols[event.value];
 
-    console.log("Publisher selected protocol: ", publisher.protocol);
+    console.log("Selected protocol: ", protocol.protocolType);
 
     this.mqttProtocol = false;
     this.kafkaProtocol = false;
     this.httpProtocol = false;
 
-    if (publisher.protocol == "MQTT") {
+    if (protocol.protocolType == "MQTT") {
+      let delimInd = protocol.brokerURL.lastIndexOf(":");
+      let hostname = protocol.brokerURL.substring(6, delimInd);
+      let port = protocol.brokerURL.substring(delimInd + 1);
 
       // Update transport Form
       this.transportForm.patchValue(
         {
-          protocol: publisher.protocol,
+          uid: protocol.uid,
+          protocol: protocol.protocolType,
           mqtt: {
-            hostname: publisher.hostname,
-            port: publisher.port,
-            topic: publisher.topic,
-            username: '',
-            password: ''
+            hostname: hostname,
+            port: port,
+            username: protocol.username,
+            password: protocol.password,
+            encryptionMode: protocol.encryptionMode,
+            caCertificate: protocol.caCerticate,
+            clientCertificate: protocol.clientCertificate,
+            clientKey: protocol.clientKey,
+            topic: protocol.topic,
+            maximumQOS: protocol.maximumQOS
           },
           kafka: {
             hostname: 'changeme',
             port: 'changeme',
-            topic: 'changeme',
+            authMode: 'changeme',
             username: 'changeme',
             password: 'changeme',
-            consumerGroupId: 'changeme'
+            clientCertificate: 'changeme',
+            clientKey: 'changeme',
+            serverCertificate: 'changeme',
+            connectionTimeout: 'changeme',
+            retryBackoff: 'changeme',
+            topic: 'changeme',
+            consumerGroupId: 'changeme',
+            commitInterval: 'changeme',
+            initialOffset: 'changeme',
+            fetchMinBytes: 'changeme',
+            fetchMaxWait: 'changeme',
+            heartbeatInterval: 'changeme',
+            sessionTimeout: 'changeme'
           }
         },
         { emitEvent: false }
@@ -102,26 +122,47 @@ export class ProtocolsComponent implements OnInit {
 
       this.mqttProtocol = true;
     }
-    else if (publisher.protocol == "Kafka") {
+    else if (protocol.protocolType == "Kafka") {
+      let delimInd = protocol.brokerURL.lastIndexOf(":");
+      let hostname = protocol.brokerURL.substring(0, delimInd);
+      let port = protocol.brokerURL.substring(delimInd + 1);
 
       // Update transport Form
       this.transportForm.patchValue(
         {
-          protocol: publisher.protocol,
+          uid: protocol.uid,
+          protocol: protocol.protocolType,
           mqtt: {
             hostname: 'changeme',
             port: 'changeme',
-            topic: 'changeme',
             username: 'changeme',
-            password: 'changeme'
+            password: 'changeme',
+            encryptionMode: 'None',
+            caCerticate: 'changeme',
+            clientCertificate: 'changeme',
+            clientKey: 'changeme',
+            topic: 'changeme',
+            maximumQOS: '2'
           },
           kafka: {
-            hostname: publisher.hostname,
-            port: publisher.port,
-            topic: publisher.topic,
-            username: '',
-            password: '',
-            consumerGroupId: ''
+            hostname: hostname,
+            port: port,
+            authMode: protocol.authMode,
+            username: protocol.username,
+            password: protocol.password,
+            clientCertificate: protocol.clientCertificate,
+            clientKey: protocol.clientKey,
+            serverCertificate: protocol.serverCertificate,
+            connectionTimeout: protocol.connectionTimeout,
+            retryBackoff: protocol.retryBackoff,
+            topic: protocol.topic,
+            consumerGroupId: protocol.consumerGroupId,
+            commitInterval: protocol.commitInterval,
+            initialOffset: protocol.initialOffset,
+            fetchMinBytes: protocol.fetchMinBytes,
+            fetchMaxWait: protocol.fetchMaxWait,
+            heartbeatInterval: protocol.heartbeatInterval,
+            sessionTimeout: protocol.sessionTimeout,
           }
         },
         { emitEvent: false }
@@ -129,7 +170,7 @@ export class ProtocolsComponent implements OnInit {
 
       this.kafkaProtocol = true;
     }
-    else if (publisher.protocol == "HTTP") {
+    else if (protocol.protocolType == "HTTP") {
       this.httpProtocol = true;
     }
 

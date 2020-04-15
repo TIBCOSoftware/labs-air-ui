@@ -60,6 +60,10 @@ import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { GraphService } from './services/graph/graph.service';
 import { DgraphService } from './services/graph/dgraph.service';
+import { TgdbService } from './services/graph/tgdb.service';
+import { IotGatewayEndpointComponent } from './components/iot-gateway-endpoint/iot-gateway-endpoint.component';
+import { IgeProtocolsComponent } from './components/iot-gateway-endpoint/ige-protocols/ige-protocols.component';
+import { IgeDataStoresComponent } from './components/iot-gateway-endpoint/ige-data-stores/ige-data-stores.component';
 
 /** This is the tc core configuration object
  * To use oauth you must also add the OAuthInterceptor to providers
@@ -115,7 +119,10 @@ const tcCoreConfig: TcCoreConfig = {
     DataFilteringViewComponent,
     DataStoresViewComponent,
     DataStreamingViewComponent,
-    ProtocolsViewComponent
+    ProtocolsViewComponent,
+    IotGatewayEndpointComponent,
+    IgeProtocolsComponent,
+    IgeDataStoresComponent
   ],
   imports: [
     AppRoutingModule,
@@ -155,3 +162,4 @@ export class AppModule {
     }
   }
 }
+

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Gateway, Subscription, Publisher, Pipeline, Rule, Notification, TSReading } from '../../shared/models/iot.model';
+import { Gateway, Subscription, Publisher, Protocol, DataStore, Pipeline, Rule, Notification, TSReading } from '../../shared/models/iot.model';
 
 @Injectable()
 export abstract class GraphService {
@@ -23,6 +23,26 @@ export abstract class GraphService {
 
   abstract deletePublisher(gatewayUid: number, publisherUid: number): Observable<string>;
 
+  abstract getGatewayAndProtocols(gatewayName): Observable<Gateway[]>;
+
+  abstract getProtocols(gatewayName): Observable<Protocol[]>;
+
+  abstract addProtocol(gatewayUid: number, protocol: Protocol): Observable<string>;
+
+  abstract updateProtocol(protocol: Protocol): Observable<string>;
+
+  abstract deleteProtocol(gatewayUid: number, protocolUid: number): Observable<string>;
+
+  abstract getGatewayAndDataStores(gatewayName): Observable<Gateway[]>;
+
+  abstract getDataStores(gatewayName): Observable<DataStore[]>;
+
+  abstract addDataStore(gatewayUid: number, dataStore: DataStore): Observable<string>;
+
+  abstract updateDataStore(dataStore: DataStore): Observable<string>;
+
+  abstract deleteDataStore(gatewayUid: number, dataStoreUid: number): Observable<string>;
+
   abstract getGatewayAndPipelines(gatewayName): Observable<Gateway[]>;
 
   abstract getPipelines(gatewayName): Observable<Pipeline[]>;
@@ -33,6 +53,10 @@ export abstract class GraphService {
   abstract updatePipeline(pipeline: Pipeline): Observable<string>;
 
   abstract deletePipeline(gatewayUid: number, pipeline: Pipeline): Observable<string>;
+
+  abstract getPipelineIdsFromProtocolUid(protocolUid): Observable<Pipeline[]>;
+
+  abstract getPipelineIdsFromDataStoreUid(dataStoreUid): Observable<Pipeline[]>;
 
   abstract getRules(gatewayName): Observable<Rule[]>;
 

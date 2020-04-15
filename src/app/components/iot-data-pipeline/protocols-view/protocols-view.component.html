@@ -7,6 +7,12 @@
                 <mat-label>Protocol Type</mat-label>
                 <input matInput [readonly]=true formControlName="protocol" required>
             </mat-form-field>
+
+            <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                <mat-label>Protocol Name</mat-label>
+                <input matInput [readonly]=true formControlName="protocolId" required>
+            </mat-form-field>
+
         </div>
 
         <div fxLayout="column" fxLayoutAlign="center start" *ngIf="mqttProtocol" formGroupName="mqtt"

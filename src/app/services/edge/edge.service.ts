@@ -85,7 +85,9 @@ export class EdgeService {
     const url = `/${gateway.uuid}${this.gatewayCoreMetadataPath}/device`;
     console.log("GetDevices service called for url:", url);
 
-    const authorizedHeaders = httpOptions.headers.set('Authorization', 'Bearer ' + gateway.accessToken);
+    // const authorizedHeaders = httpOptions.headers.set('Authorization', 'Bearer ' + gateway.accessToken);
+
+    const authorizedHeaders = httpOptions.headers.set('Authorization', 'Bearer ' + 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtaVpNV2JBUnI1cW9BWDlRenVlekRCWkZOdm9RS3B0NyIsImFjY291bnQiOiJ0aWJ1c2VyIn0.TFybY3tsKMuKAS_fCZbYsDyqA7gjGTW0-I6YbQVUuLM');
     httpOptions.headers = authorizedHeaders;
 
     return this.http.get<Device[]>(url, httpOptions)

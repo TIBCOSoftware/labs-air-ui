@@ -9,17 +9,9 @@ import { Gateway, Subscription, Publisher, Pipeline, Rule, Notification, Protoco
 import { TSReading } from '../../shared/models/iot.model';
 import { GraphService } from './graph.service';
 
-// const httpOptions = {
-//   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-// };
-
 const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/graphql+-' })
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
-
-// const httpMutateOptions = {
-//   headers: new HttpHeaders({ 'X-Dgraph-CommitNow': 'true' })
-// };
 
 const httpMutateOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/rdf' })
@@ -74,38 +66,36 @@ const route3 = [
 ];
 
 @Injectable()
-export class DgraphService implements GraphService {
+export class TgdbService implements GraphService {
 
   // Defined as a proxy.  (i.e. http://137.117.38.255:8080)
-  private dgraphUrl = '/dgraph';
+  private tgdbUrl = '/tgdb';
 
-  /**
-   * 
-   * @param logger 
-   * @param http 
-   */
   constructor(private logger: LogService,
     private http: HttpClient) {
 
     logger.level = LogLevel.Debug;
-
   }
 
   /**
    * 
    */
   getGateways(): Observable<Gateway[]> {
-    console.log("GetGateways service called")
-    const url = `${this.dgraphUrl}/query`;
+    console.log("GetGateways tgdb service called")
+    const url = `${this.tgdbUrl}/search`;
+
     let query = `{
-      resp(func: has(gateway)) {
-        uid uuid description address latitude longitude accessToken createdts updatedts
+      "query": {
+        "language" : "gremlin",
+        "queryString": "g.V().hasLabel('gateway');"
       }
     }`;
 
     return this.http.post<any>(url, query, httpOptions)
       .pipe(
-        map(response => response.data.resp as Gateway[]),
+        
+        tap(_ => console.log("Got response from tgdb")),
+        map(response => response.queryResult.content.nodes as Gateway[]),
         tap(_ => this.logger.info('fetched gateways')),
         catchError(this.handleError<Gateway[]>('getGateways', []))
       );
@@ -116,7 +106,7 @@ export class DgraphService implements GraphService {
    * @param gateway 
    */
   updateGateway(gateway: Gateway): Observable<string> {
-    const url = `${this.dgraphUrl}/mutate?commitNow=true`;
+    const url = `${this.tgdbUrl}/mutate?commitNow=true`;
     let query = `{
       set {
         <${gateway.uid}> <address> "${gateway.address}" .
@@ -141,7 +131,7 @@ export class DgraphService implements GraphService {
    * @param gateway 
    */
   addGateway(gateway: Gateway): Observable<string> {
-    const url = `${this.dgraphUrl}/mutate?commitNow=true`;
+    const url = `${this.tgdbUrl}/mutate?commitNow=true`;
     let query = `{
       set {
         _:Gateway <dgraph.type> "Gateway" .
@@ -171,7 +161,7 @@ export class DgraphService implements GraphService {
    * @param gatewayUid 
    */
   deleteGateway(gatewayUid: number): Observable<string> {
-    const url = `${this.dgraphUrl}/mutate?commitNow=true`;
+    const url = `${this.tgdbUrl}/mutate?commitNow=true`;
     let query = `{
       delete {
         <${gatewayUid}> * * .
@@ -191,7 +181,7 @@ export class DgraphService implements GraphService {
    * @param gatewayName 
    */
   getGatewayAndSubscriptions(gatewayName): Observable<Gateway[]> {
-    const url = `${this.dgraphUrl}/query`;
+    const url = `${this.tgdbUrl}/query`;
     let query = `{
       resp(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
         uid uuid description address latitude longitude accessToken createdts updatedts
@@ -240,7 +230,7 @@ export class DgraphService implements GraphService {
    * @param gatewayName 
    */
   getSubscriptions(gatewayName): Observable<Subscription[]> {
-    const url = `${this.dgraphUrl}/query`;
+    const url = `${this.tgdbUrl}/query`;
     let query = `{
       var(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
         subscriptions as gateway_subscription {
@@ -290,7 +280,7 @@ export class DgraphService implements GraphService {
    * @param subscription 
    */
   addSubscription(gatewayUid: number, subscription: Subscription): Observable<string> {
-    const url = `${this.dgraphUrl}/mutate?commitNow=true`;
+    const url = `${this.tgdbUrl}/mutate?commitNow=true`;
     let query = `{
       set {
         _:Subscription <name> "${subscription.name}" .
@@ -337,7 +327,7 @@ export class DgraphService implements GraphService {
    * @param subscription 
    */
   updateSubscription(subscription: Subscription): Observable<string> {
-    const url = `${this.dgraphUrl}/mutate?commitNow=true`;
+    const url = `${this.tgdbUrl}/mutate?commitNow=true`;
     let query = `{
       set {
         <${subscription.uid}> <port> "${subscription.port}" .
@@ -378,7 +368,7 @@ export class DgraphService implements GraphService {
    * @param subscriptionUid 
    */
   deleteSubscription(gatewayUid: number, subscriptionUid: number): Observable<string> {
-    const url = `${this.dgraphUrl}/mutate?commitNow=true`;
+    const url = `${this.tgdbUrl}/mutate?commitNow=true`;
     let query = `{
       delete {
         <${subscriptionUid}> * * .
@@ -399,7 +389,7 @@ export class DgraphService implements GraphService {
    * @param gatewayName 
    */
   getGatewayAndPublishers(gatewayName): Observable<Gateway[]> {
-    const url = `${this.dgraphUrl}/query`;
+    const url = `${this.tgdbUrl}/query`;
     let query = `{
       resp(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
         uid uuid
@@ -432,7 +422,7 @@ export class DgraphService implements GraphService {
    * @param gatewayName 
    */
   getPublishers(gatewayName): Observable<Publisher[]> {
-    const url = `${this.dgraphUrl}/query`;
+    const url = `${this.tgdbUrl}/query`;
     let query = `{
       var(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
         publishers as gateway_publisher {
@@ -466,7 +456,7 @@ export class DgraphService implements GraphService {
    * @param publisher 
    */
   addPublisher(gatewayUid: number, publisher: Publisher): Observable<string> {
-    const url = `${this.dgraphUrl}/mutate?commitNow=true`;
+    const url = `${this.tgdbUrl}/mutate?commitNow=true`;
     let query = `{
       set {
         _:Publisher <dgraph.type> "Publisher" .
@@ -497,7 +487,7 @@ export class DgraphService implements GraphService {
    * @param publisher 
    */
   updatePublisher(publisher: Publisher): Observable<string> {
-    const url = `${this.dgraphUrl}/mutate?commitNow=true`;
+    const url = `${this.tgdbUrl}/mutate?commitNow=true`;
     let query = `{
       set {
         <${publisher.uid}> <name> "${publisher.name}" .
@@ -525,7 +515,7 @@ export class DgraphService implements GraphService {
    * @param publisherUid 
    */
   deletePublisher(gatewayUid: number, publisherUid: number): Observable<string> {
-    const url = `${this.dgraphUrl}/mutate?commitNow=true`;
+    const url = `${this.tgdbUrl}/mutate?commitNow=true`;
     let query = `{
       delete {
         <${publisherUid}> * * .
@@ -546,7 +536,7 @@ export class DgraphService implements GraphService {
    * @param gatewayName 
    */
   getGatewayAndDataStores(gatewayName): Observable<Gateway[]> {
-    const url = `${this.dgraphUrl}/query`;
+    const url = `${this.tgdbUrl}/query`;
     let query = `{
       resp(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
         uid uuid
@@ -592,7 +582,7 @@ export class DgraphService implements GraphService {
    * @param gatewayName 
    */
   getDataStores(gatewayName): Observable<DataStore[]> {
-    const url = `${this.dgraphUrl}/query`;
+    const url = `${this.tgdbUrl}/query`;
     let query = `{
       var(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
         dataStores as gateway_datastore {
@@ -639,7 +629,7 @@ export class DgraphService implements GraphService {
    * @param dataStore 
    */
   addDataStore(gatewayUid: number, dataStore: DataStore): Observable<string> {
-    const url = `${this.dgraphUrl}/mutate?commitNow=true`;
+    const url = `${this.tgdbUrl}/mutate?commitNow=true`;
     let query = `{
       set {
         _:DataStore <dgraph.type> "DataStore" .
@@ -683,7 +673,7 @@ export class DgraphService implements GraphService {
    * @param dataStore 
    */
   updateDataStore(dataStore: DataStore): Observable<string> {
-    const url = `${this.dgraphUrl}/mutate?commitNow=true`;
+    const url = `${this.tgdbUrl}/mutate?commitNow=true`;
     let query = `{
       set {
         <${dataStore.uid}> <uuid> "${dataStore.uuid}" .
@@ -725,7 +715,7 @@ export class DgraphService implements GraphService {
    * @param dataStoreUid 
    */
   deleteDataStore(gatewayUid: number, dataStoreUid: number): Observable<string> {
-    const url = `${this.dgraphUrl}/mutate?commitNow=true`;
+    const url = `${this.tgdbUrl}/mutate?commitNow=true`;
     let query = `{
       delete {
         <${dataStoreUid}> * * .
@@ -747,7 +737,7 @@ export class DgraphService implements GraphService {
    * @param gatewayName 
    */
   getGatewayAndProtocols(gatewayName): Observable<Gateway[]> {
-    const url = `${this.dgraphUrl}/query`;
+    const url = `${this.tgdbUrl}/query`;
     let query = `{
       resp(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
         uid uuid
@@ -796,7 +786,7 @@ export class DgraphService implements GraphService {
    * @param gatewayName 
    */
   getProtocols(gatewayName): Observable<Protocol[]> {
-    const url = `${this.dgraphUrl}/query`;
+    const url = `${this.tgdbUrl}/query`;
     let query = `{
       var(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
         protocols as gateway_protocol {
@@ -846,7 +836,7 @@ export class DgraphService implements GraphService {
    * @param protocol 
    */
   addProtocol(gatewayUid: number, protocol: Protocol): Observable<string> {
-    const url = `${this.dgraphUrl}/mutate?commitNow=true`;
+    const url = `${this.tgdbUrl}/mutate?commitNow=true`;
     let query = `{
       set {
         _:Protocol <dgraph.type> "Protocol" .
@@ -865,7 +855,7 @@ export class DgraphService implements GraphService {
         _:Protocol <retryBackoff> "${protocol.retryBackoff}" .
         _:Protocol <fetchMinBytes> "${protocol.fetchMinBytes}" .
         _:Protocol <fetchMaxWait> "${protocol.fetchMaxWait}" .
-        _:Protocol <commitInterval> "${protocol.commitInterval}" .
+        _:Protocol <commitInterval > "${protocol.commitInterval}" .
         _:Protocol <heartbeatInterval> "${protocol.heartbeatInterval}" .
         _:Protocol <maximumQOS> "${protocol.maximumQOS}" .
         _:Protocol <username> "${protocol.username}" .
@@ -893,32 +883,32 @@ export class DgraphService implements GraphService {
    * @param protocol 
    */
   updateProtocol(protocol: Protocol): Observable<string> {
-    const url = `${this.dgraphUrl}/mutate?commitNow=true`;
+    const url = `${this.tgdbUrl}/mutate?commitNow=true`;
     let query = `{
       set {
-        <${protocol.uid}> <uuid> "${protocol.uuid}" .
-        <${protocol.uid}> <modified> "${protocol.modified}" .
-        <${protocol.uid}> <protocolType> "${protocol.protocolType}" .
-        <${protocol.uid}> <brokerURL> "${protocol.brokerURL}" .
-        <${protocol.uid}> <topic> "${protocol.topic}" .
-        <${protocol.uid}> <consumerGroupId> "${protocol.consumerGroupId}" .
-        <${protocol.uid}> <connectionTimeout> "${protocol.connectionTimeout}" .
-        <${protocol.uid}> <sessionTimeout> "${protocol.sessionTimeout}" .
-        <${protocol.uid}> <initialOffset> "${protocol.initialOffset}" .
-        <${protocol.uid}> <retryBackoff> "${protocol.retryBackoff}" .
-        <${protocol.uid}> <fetchMinBytes> "${protocol.fetchMinBytes}" .
-        <${protocol.uid}> <fetchMaxWait> "${protocol.fetchMaxWait}" .
-        <${protocol.uid}> <commitInterval> "${protocol.commitInterval}" .
-        <${protocol.uid}> <heartbeatInterval> "${protocol.heartbeatInterval}" .
-        <${protocol.uid}> <maximumQOS> "${protocol.maximumQOS}" .
-        <${protocol.uid}> <username> "${protocol.username}" .
-        <${protocol.uid}> <password> "${protocol.password}" .
-        <${protocol.uid}> <encryptionMode> "${protocol.encryptionMode}" .
-        <${protocol.uid}> <caCertificate> "${protocol.caCerticate}" .
-        <${protocol.uid}> <clientCertificate> "${protocol.clientCertificate}" .
-        <${protocol.uid}> <clientKey> "${protocol.clientKey}" .
-        <${protocol.uid}> <authMode> "${protocol.authMode}" .
-        <${protocol.uid}> <serverCerticate> "${protocol.serverCertificate}" .
+        _:Protocol <uuid> "${protocol.uuid}" .
+        _:Protocol <modified> "${protocol.modified}" .
+        _:Protocol <protocolType> "${protocol.protocolType}" .
+        _:Protocol <brokerURL> "${protocol.brokerURL}" .
+        _:Protocol <topic> "${protocol.topic}" .
+        _:Protocol <consumerGroupId> "${protocol.consumerGroupId}" .
+        _:Protocol <connectionTimeout> "${protocol.connectionTimeout}" .
+        _:Protocol <sessionTimeout> "${protocol.sessionTimeout}" .
+        _:Protocol <initialOffset> "${protocol.initialOffset}" .
+        _:Protocol <retryBackoff> "${protocol.retryBackoff}" .
+        _:Protocol <fetchMinBytes> "${protocol.fetchMinBytes}" .
+        _:Protocol <fetchMaxWait> "${protocol.fetchMaxWait}" .
+        _:Protocol <commitInterval > "${protocol.commitInterval}" .
+        _:Protocol <heartbeatInterval> "${protocol.heartbeatInterval}" .
+        _:Protocol <maximumQOS> "${protocol.maximumQOS}" .
+        _:Protocol <username> "${protocol.username}" .
+        _:Protocol <password> "${protocol.password}" .
+        _:Protocol <encryptionMode> "${protocol.encryptionMode}" .
+        _:Protocol <caCertificate> "${protocol.caCerticate}" .
+        _:Protocol <clientCertificate> "${protocol.clientCertificate}" .
+        _:Protocol <clientKey> "${protocol.clientKey}" .
+        _:Protocol <authMode> "${protocol.authMode}" .
+        _:Protocol <serverCerticate> "${protocol.serverCertificate}" .
       }
     }`;
     console.log('Mutate statement: ', query);
@@ -937,7 +927,7 @@ export class DgraphService implements GraphService {
    * @param protocolUid 
    */
   deleteProtocol(gatewayUid: number, protocolUid: number): Observable<string> {
-    const url = `${this.dgraphUrl}/mutate?commitNow=true`;
+    const url = `${this.tgdbUrl}/mutate?commitNow=true`;
     let query = `{
       delete {
         <${protocolUid}> * * .
@@ -958,12 +948,12 @@ export class DgraphService implements GraphService {
    * @param gatewayName 
    */
   getGatewayAndPipelines(gatewayName): Observable<Gateway[]> {
-    const url = `${this.dgraphUrl}/query`;
+    const url = `${this.tgdbUrl}/query`;
 
     let pipeline_protocol = `protocol: pipeline_protocol {uid uuid brokerURL topic maximumQOS username password encryptionMode caCertificate clientCertificate clientKey authMode serverCerticate consumerGroupId connectionTimeout sessionTimeout retryBackoff commitInterval initialOffset fetchMinBytes fetchMaxWait heartbeatInterval}`;
     let pipeline_datastore = `dataStore: pipeline_datastore {uid uuid host port databaseName user password accountName warehouse database schema authType username clientId clientSecret authorizationCode redirectURI loginTimeout url}`;
     let pipeline_filter = `filter: pipeline_filter {uid deviceNames}`;
-
+    
     let query = `{
       resp(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
         uid uuid accessToken
@@ -1000,7 +990,7 @@ export class DgraphService implements GraphService {
    * @param gatewayName 
    */
   getPipelines(gatewayName): Observable<Pipeline[]> {
-    const url = `${this.dgraphUrl}/query`;
+    const url = `${this.tgdbUrl}/query`;
 
     let pipeline_protocol = `protocol: pipeline_protocol {uid brokerURL topic maximumQOS username password encryptionMode caCertificate clientCertificate clientKey authMode serverCerticate consumerGroupId connectionTimeout sessionTimeout retryBackoff commitInterval initialOffset fetchMinBytes fetchMaxWait heartbeatInterval}`;
     let pipeline_datastore = `datastore: pipeline_datastore {uid host port databaseName user password accountName warehouse database schema authType username clientId clientSecret authorizationCode redirectURI loginTimeout url}`;
@@ -1045,17 +1035,72 @@ export class DgraphService implements GraphService {
    * @param dataStoreObj 
    * @param filterObj 
    */
-  addPipeline(gatewayUid: number, pipeline: Pipeline, protocolUid: string,
-    dataStoreUid: string, filterObj: any): Observable<string> {
+  addPipeline(gatewayUid: number, pipeline: Pipeline, transportObj: any,
+    dataStoreObj: any, filterObj: any): Observable<string> {
 
-    const url = `${this.dgraphUrl}/mutate?commitNow=true`;
+    const url = `${this.tgdbUrl}/mutate?commitNow=true`;
 
     let query = '';
+    console.log("direct from transport name: ", transportObj.Name);
 
-    // Create Filter entries
+
+
+    console.log("TranpostObje prop0: ", transportObj.Properties[0].Value);
+    let transportVar = '';
+    let dataStoreVar = '';
     let filterVar = '';
     let i = 0;
-    let len = filterObj.Properties.length;
+    let len = transportObj.Properties.length;
+
+    console.log("Looping start for properties: ", len);
+
+
+    // Create Protocol entries
+    for (; i < len; i++) {
+      transportVar = transportVar +
+        `_:Protocol <${transportObj.Properties[i].UIName}> "${transportObj.Properties[i].Value}" .
+      `;
+    }
+
+    transportVar = transportVar +
+      `_:Protocol <protocol> "" .
+      `;
+    transportVar = transportVar +
+      `_:Protocol <type> "protocol" .
+      `;
+    transportVar = transportVar +
+      `_:Pipeline <pipeline_protocol> _:Protocol .
+      `;
+
+    console.log("Build Transport dgraph var: " + transportVar);
+
+
+    // Create DataStore entries
+    i = 0;
+    len = dataStoreObj.Properties.length;
+
+    for (; i < len; i++) {
+      dataStoreVar = dataStoreVar +
+        `_:Datastore <${dataStoreObj.Properties[i].UIName}> "${dataStoreObj.Properties[i].Value}" .
+      `;
+    }
+
+    dataStoreVar = dataStoreVar +
+      `_:Datastore <datastore> "" .
+      `;
+    dataStoreVar = dataStoreVar +
+      `_:Datastore <type> "datastore" .
+      `;
+    dataStoreVar = dataStoreVar +
+      `_:Pipeline <pipeline_datastore> _:Datastore .
+      `;
+
+    console.log("DataStore dgraph var: " + dataStoreVar);
+
+
+    // Create Filter entries
+    i = 0;
+    len = filterObj.Properties.length;
 
     for (; i < len; i++) {
       filterVar = filterVar +
@@ -1089,8 +1134,8 @@ export class DgraphService implements GraphService {
         _:Pipeline <modified> "${pipeline.modified}" .
         _:Pipeline <status> "${pipeline.status}" .
         <${gatewayUid}> <gateway_pipeline> _:Pipeline .
-        _:Pipeline <pipeline_protocol> <${protocolUid}> .
-        _:Pipeline <pipeline_datastore> <${dataStoreUid}> .
+        ${transportVar}
+        ${dataStoreVar}
         ${filterVar}
       }
     }`;
@@ -1103,13 +1148,13 @@ export class DgraphService implements GraphService {
       );
 
   }
-  
+
   /**
    * 
    * @param pipeline 
    */
   updatePipeline(pipeline: Pipeline): Observable<string> {
-    const url = `${this.dgraphUrl}/mutate?commitNow=true`;
+    const url = `${this.tgdbUrl}/mutate?commitNow=true`;
     let query = `{
       set {
         <${pipeline.uid}> <status> "${pipeline.status}" .
@@ -1132,13 +1177,15 @@ export class DgraphService implements GraphService {
    * @param pipeline 
    */
   deletePipeline(gatewayUid: number, pipeline: Pipeline): Observable<string> {
-    const url = `${this.dgraphUrl}/mutate?commitNow=true`;
+    const url = `${this.tgdbUrl}/mutate?commitNow=true`;
     let protocol = pipeline.protocol;
     let dataStore = pipeline.dataStore;
     let filter = pipeline.filter;
 
     let query = `{
       delete {
+        <${protocol.uid}> * * .
+        <${dataStore.uid}> * * .
         <${filter.uid}> * * .
         <${pipeline.uid}> <pipeline_protocol> <${protocol.uid}> .
         <${pipeline.uid}> <pipeline_datastore> <${dataStore.uid}> .
@@ -1161,7 +1208,7 @@ export class DgraphService implements GraphService {
    * @param protocolUid - the uid of the protocol
    */
   getPipelineIdsFromProtocolUid(protocolUid): Observable<Pipeline[]> {
-    const url = `${this.dgraphUrl}/query`;
+    const url = `${this.tgdbUrl}/query`;
 
     let query = `{
       var(func: uid(${protocolUid})) {
@@ -1188,7 +1235,7 @@ export class DgraphService implements GraphService {
    * @param dataStoreUid - the uid of the data store
    */
   getPipelineIdsFromDataStoreUid(dataStoreUid): Observable<Pipeline[]> {
-    const url = `${this.dgraphUrl}/query`;
+    const url = `${this.tgdbUrl}/query`;
 
     let query = `{
       var(func: uid(${dataStoreUid})) {
@@ -1215,7 +1262,7 @@ export class DgraphService implements GraphService {
    * @param gatewayName 
    */
   getRules(gatewayName): Observable<Rule[]> {
-    const url = `${this.dgraphUrl}/query`;
+    const url = `${this.tgdbUrl}/query`;
     let query = `{
       var(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
         rules as gateway_rule {
@@ -1264,7 +1311,7 @@ export class DgraphService implements GraphService {
    * @param rule 
    */
   addRule(gatewayUid: number, rule: Rule): Observable<string> {
-    const url = `${this.dgraphUrl}/mutate?commitNow=true`;
+    const url = `${this.tgdbUrl}/mutate?commitNow=true`;
     let query = `{
       set {
         _:Rule <dgraph.type> "Rule" .
@@ -1309,7 +1356,7 @@ export class DgraphService implements GraphService {
    * @param rule 
    */
   updateRule(rule: Rule): Observable<string> {
-    const url = `${this.dgraphUrl}/mutate?commitNow=true`;
+    const url = `${this.tgdbUrl}/mutate?commitNow=true`;
     let query = `{
       set {
         <${rule.uid}> <name> "${rule.name}" .
@@ -1350,7 +1397,7 @@ export class DgraphService implements GraphService {
    * @param ruleUid 
    */
   deleteRule(gatewayUid: number, ruleUid: number): Observable<string> {
-    const url = `${this.dgraphUrl}/mutate?commitNow=true`;
+    const url = `${this.tgdbUrl}/mutate?commitNow=true`;
     let query = `{
       delete {
         <${ruleUid}> * * .
@@ -1373,12 +1420,9 @@ export class DgraphService implements GraphService {
    * @param numReadings 
    */
   getReadings(deviceName, instrumentName, numReadings): Observable<TSReading[]> {
-    const url = `${this.dgraphUrl}/query`;
+    const url = `${this.tgdbUrl}/search`;
 
-    // return this.http.post<any>(url, `{resp(func: has(reading)) @cascade {value created ~resource_reading @filter(eq(uuid, "${deviceName}_${instrumentName}")) {~device_resource @filter (eq(uuid, "${deviceName}")) {}}}}`, httpOptions)
-    // return this.http.post<any>(url, `{resp(func: has(reading)) @cascade {value created ~resource_reading @filter(eq(uuid, "${deviceName}_${instrumentName}")) { }}}`, httpOptions)
-
-    let query = `{
+    let query1 = `{
       var(func: has(resource)) @filter(eq(uuid, "${deviceName}_${instrumentName}")) {
         readings as resource_reading (first:-${numReadings}) {
         }
@@ -1389,11 +1433,19 @@ export class DgraphService implements GraphService {
       }
     }`;
 
+    // "g.V().has('gateway','uuid','gateway1').out().has('device','uuid','versicharge_0001').out().has('resource','name','Energy').out();"
+    let query = `{
+      "query": {
+        "language" : "gremlin",
+        "queryString": "g.V().has('gateway','uuid','gateway1').out('gateway_device').out('device_resource').has('resource','name','Speedometer').out();"
+      }
+    }`;
+
     console.log('Reading query statement: ', query);
 
     return this.http.post<any>(url, query, httpOptions)
       .pipe(
-        map(response => response.data.resp as TSReading[]),
+        map(response => response.queryResult.content.nodes as TSReading[]),
         tap(_ => this.logger.info('fetched readings')),
         catchError(this.handleError<TSReading[]>('getReadings', []))
       );
@@ -1406,7 +1458,7 @@ export class DgraphService implements GraphService {
    * @param fromts 
    */
   getReadingsStartingAt(deviceName, instrumentName, fromts): Observable<TSReading[]> {
-    const url = `${this.dgraphUrl}/query`;
+    const url = `${this.tgdbUrl}/query`;
 
     let myquery = `{resp(func: has(reading)) @filter(gt(created, ${fromts})) @cascade {value created ~resource_reading @filter(eq(uuid, "${deviceName}_${instrumentName}")) { }}}`;
     let query = `{
@@ -1439,7 +1491,7 @@ export class DgraphService implements GraphService {
    * @param tots 
    */
   getReadingsBetween(deviceName, instrumentName, fromts, tots): Observable<TSReading[]> {
-    const url = `${this.dgraphUrl}/query`;
+    const url = `${this.tgdbUrl}/query`;
 
     let myquery = `{resp(func: has(reading)) @filter(gt(created, ${fromts})) @cascade {value created ~resource_reading @filter(eq(uuid, "${deviceName}_${instrumentName}")) { }}}`;
     let query = `{
@@ -1469,7 +1521,7 @@ export class DgraphService implements GraphService {
    * @param deviceName 
    */
   getLastReadingsForDevice(deviceName): Observable<TSReading[]> {
-    const url = `${this.dgraphUrl}/query`;
+    const url = `${this.tgdbUrl}/query`;
 
     let query = `{
       resp(func: has(device)) @filter(eq(uuid, "${deviceName}")) @normalize {
@@ -1498,7 +1550,7 @@ export class DgraphService implements GraphService {
    */
   getNotifications(): Observable<Notification[]> {
     console.log("GetNotifications service called")
-    const url = `${this.dgraphUrl}/query`;
+    const url = `${this.tgdbUrl}/query`;
     let query = `{
       resp(func: has(notification)) @normalize {
         uid uuid:uuid created:created notifySource:notifySource notifyDevice:notifyDevice notifyResource:notifyResource notifyLevel:notifyLevel value:value description:description ~gateway_notification {
@@ -1584,4 +1636,6 @@ export class DgraphService implements GraphService {
       return of(result as T);
     };
   }
+
+
 }

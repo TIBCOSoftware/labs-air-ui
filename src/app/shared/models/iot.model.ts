@@ -134,12 +134,13 @@ export class Publisher {
   port: string;
   topic: string;
 }
-export class Protocol {
-  uid: number;
-}
 
-export class MQTTProtocol extends Protocol{
+export class Protocol{
   uid: number;
+  uuid: string;
+  created: number;
+  modified: number;
+  protocolType: string;
   brokerURL: string;
   topic: string;
   consumerGroupId: string;
@@ -151,24 +152,41 @@ export class MQTTProtocol extends Protocol{
   fetchMaxWait: string;
   commitInterval: string;
   heartbeatInterval: string;
-  authenticationMode: string;
+  maximumQOS: string;
   username: string;
   password: string;
+  encryptionMode: string;
+  caCerticate: string;
   clientCertificate: string;
-  serverCertificate: string;
   clientKey: string;
+  authMode: string;
+  serverCertificate: string;
 }
 
 export class DataStore {
   uid: number;
-}
-
-export class PostgresDataStore extends DataStore {
+  uuid: string;
+  created: number;
+  modified: number;
+  dataStoreType: string;
   host: string;
   port: string;
   databaseName: string;
-  username: string;
+  user: string;
   password: string;
+  accountName: string;
+  warehouse: string;
+  database: string;
+  schema: string;
+  authType: string;
+  username: string;
+  role: string;
+  clientId: string;
+  clientSecret: string;
+  authorizationCode: string;
+  redirectURI: string;
+  loginTimeout: string;
+  url: string;
 }
 
 export class Pipeline {
@@ -223,6 +241,8 @@ export class Gateway {
   subscriptions: Subscription[];
   publishers: Publisher[];
   pipelines: Pipeline[];
+  dataStores: DataStore[];
+  protocols: Protocol[];
 }
 
 
