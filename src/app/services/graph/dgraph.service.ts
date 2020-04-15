@@ -5,7 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { LogLevel, LogService } from '@tibco-tcstk/tc-core-lib';
 
-import { Gateway, Subscription, Publisher, Pipeline, Rule, Notification } from '../../shared/models/iot.model';
+import { Gateway, Subscription, Publisher, Pipeline, Rule, Notification, Protocol, DataStore } from '../../shared/models/iot.model';
 import { TSReading } from '../../shared/models/iot.model';
 import { GraphService } from './graph.service';
 
@@ -545,13 +545,425 @@ export class DgraphService implements GraphService {
    * 
    * @param gatewayName 
    */
+  getGatewayAndDataStores(gatewayName): Observable<Gateway[]> {
+    const url = `${this.dgraphUrl}/query`;
+    let query = `{
+      resp(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
+        uid uuid
+        dataStores: gateway_datastore {
+          uid
+          uuid
+          created
+          modified
+          dataStoreType
+          host
+          port
+          databaseName
+          user
+          password
+          accountName
+          warehouse
+          database
+          schema
+          authType
+          username
+          clientId
+          clientSecret
+          authorizationCode
+          redirectURI 
+          loginTimeout
+          url
+        }
+      }
+    }`;
+    console.log('Get Gateway and DataStores query statement: ', query);
+
+    return this.http.post<any>(url, query, httpOptions)
+      .pipe(
+        map(response => response.data.resp as Gateway[]),
+        tap(_ => this.logger.info('fetched Gateway')),
+        catchError(this.handleError<Gateway[]>('getGatewayWithDataStores', []))
+      );
+
+  }
+
+  /**
+   * 
+   * @param gatewayName 
+   */
+  getDataStores(gatewayName): Observable<DataStore[]> {
+    const url = `${this.dgraphUrl}/query`;
+    let query = `{
+      var(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
+        dataStores as gateway_datastore {
+        }
+      }
+      resp(func: uid(dataStores)) {
+        uid
+        uuid
+        created
+        modified
+        dataStoreType
+        host
+        port
+        databaseName
+        user
+        password
+        accountName
+        warehouse
+        database
+        schema
+        authType
+        username
+        clientId
+        clientSecret
+        authorizationCode
+        redirectURI 
+        loginTimeout
+        url
+      }
+    }`;
+
+    return this.http.post<any>(url, query, httpOptions)
+      .pipe(
+        map(response => response.data.resp as DataStore[]),
+        tap(_ => this.logger.info('fetched dataStores')),
+        catchError(this.handleError<DataStore[]>('getDataStores', []))
+      );
+
+  }
+
+  /**
+   * 
+   * @param gatewayUid 
+   * @param dataStore 
+   */
+  addDataStore(gatewayUid: number, dataStore: DataStore): Observable<string> {
+    const url = `${this.dgraphUrl}/mutate?commitNow=true`;
+    let query = `{
+      set {
+        _:DataStore <dgraph.type> "DataStore" .
+        _:DataStore <type> "dataStore" .
+        _:DataStore <dataStore> "" .
+        _:DataStore <uuid> "${dataStore.uuid}" .
+        _:DataStore <created> "${dataStore.created}" .
+        _:DataStore <modified> "${dataStore.modified}" .
+        _:DataStore <dataStoreType> "${dataStore.dataStoreType}" .
+        _:DataStore <host> "${dataStore.host}" .
+        _:DataStore <port> "${dataStore.port}" .
+        _:DataStore <databaseName> "${dataStore.databaseName}" .
+        _:DataStore <user> "${dataStore.user}" .
+        _:DataStore <password> "${dataStore.password}" .
+        _:DataStore <accountName> "${dataStore.accountName}" .
+        _:DataStore <warehouse> "${dataStore.warehouse}" .
+        _:DataStore <database> "${dataStore.databaseName}" .
+        _:DataStore <schema> "${dataStore.schema}" .
+        _:DataStore <authType> "${dataStore.authType}" .
+        _:DataStore <username> "${dataStore.username}" .
+        _:DataStore <clientId> "${dataStore.clientId}" .
+        _:DataStore <clientSecret> "${dataStore.clientSecret}" .
+        _:DataStore <authorizationCode> "${dataStore.authorizationCode}" .
+        _:DataStore <redirectURI> "${dataStore.redirectURI}" .
+        _:DataStore <loginTimeout> "${dataStore.loginTimeout}" .
+        _:DataStore <url> "${dataStore.url}" .
+        <${gatewayUid}> <gateway_datastore> _:DataStore .
+      }
+    }`;
+    console.log('Mutate statement: ', query);
+
+    return this.http.post<any>(url, query, httpMutateOptions)
+      .pipe(
+        tap(_ => this.logger.info('add dataStores')),
+        catchError(this.handleError<string>('addDataStores'))
+      );
+
+  }
+  /**
+   * 
+   * @param dataStore 
+   */
+  updateDataStore(dataStore: DataStore): Observable<string> {
+    const url = `${this.dgraphUrl}/mutate?commitNow=true`;
+    let query = `{
+      set {
+        <${dataStore.uid}> <uuid> "${dataStore.uuid}" .
+        <${dataStore.uid}> <modified> "${dataStore.modified}" .
+        <${dataStore.uid}> <dataStoreType> "${dataStore.dataStoreType}" .
+        <${dataStore.uid}> <host> "${dataStore.host}" .
+        <${dataStore.uid}> <port> "${dataStore.port}" .
+        <${dataStore.uid}> <databaseName> "${dataStore.databaseName}" .
+        <${dataStore.uid}> <user> "${dataStore.user}" .
+        <${dataStore.uid}> <password> "${dataStore.password}" .
+        <${dataStore.uid}> <accountName> "${dataStore.accountName}" .
+        <${dataStore.uid}> <warehouse> "${dataStore.warehouse}" .
+        <${dataStore.uid}> <database> "${dataStore.databaseName}" .
+        <${dataStore.uid}> <schema> "${dataStore.schema}" .
+        <${dataStore.uid}> <authType> "${dataStore.authType}" .
+        <${dataStore.uid}> <username> "${dataStore.username}" .
+        <${dataStore.uid}> <clientId> "${dataStore.clientId}" .
+        <${dataStore.uid}> <clientSecret> "${dataStore.clientSecret}" .
+        <${dataStore.uid}> <authorizationCode> "${dataStore.authorizationCode}" .
+        <${dataStore.uid}> <redirectURI> "${dataStore.redirectURI}" .
+        <${dataStore.uid}> <loginTimeout> "${dataStore.loginTimeout}" .
+        <${dataStore.uid}> <url> "${dataStore.url}" .
+
+      }
+    }`;
+    console.log('Mutate statement: ', query);
+
+    return this.http.post<any>(url, query, httpMutateOptions)
+      .pipe(
+        tap(_ => this.logger.info('updated dataStores')),
+        catchError(this.handleError<string>('updateDataStores'))
+      );
+
+  }
+
+  /**
+   * 
+   * @param gatewayUid 
+   * @param dataStoreUid 
+   */
+  deleteDataStore(gatewayUid: number, dataStoreUid: number): Observable<string> {
+    const url = `${this.dgraphUrl}/mutate?commitNow=true`;
+    let query = `{
+      delete {
+        <${dataStoreUid}> * * .
+        <${gatewayUid}> <gateway_datastore> <${dataStoreUid}> .
+      }
+    }`;
+    console.log('Delete DataStore Mutate statement: ', query);
+
+    return this.http.post<any>(url, query, httpMutateOptions)
+      .pipe(
+        tap(_ => this.logger.info('deleted dataStore')),
+        catchError(this.handleError<string>('deleteDataStore'))
+      );
+  }
+
+
+  /**
+   * 
+   * @param gatewayName 
+   */
+  getGatewayAndProtocols(gatewayName): Observable<Gateway[]> {
+    const url = `${this.dgraphUrl}/query`;
+    let query = `{
+      resp(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
+        uid uuid
+        protocols: gateway_protocol {
+          uid
+          uuid
+          created
+          modified
+          protocolType
+          brokerURL
+          topic
+          consumerGroupId
+          connectionTimeout
+          sessionTimeout
+          initialOffset
+          retryBackoff
+          fetchMinBytes
+          fetchMaxWait
+          commitInterval 
+          heartbeatInterval
+          maximumQOS
+          username
+          password
+          encryptionMode
+          caCertificate
+          clientCertificate
+          clientKey
+          authMode
+          serverCerticate
+        }
+      }
+    }`;
+    console.log('Get Gateway and Protocols query statement: ', query);
+
+    return this.http.post<any>(url, query, httpOptions)
+      .pipe(
+        map(response => response.data.resp as Gateway[]),
+        tap(_ => this.logger.info('fetched Gateway')),
+        catchError(this.handleError<Gateway[]>('getGatewayWithProtocols', []))
+      );
+
+  }
+
+  /**
+   * 
+   * @param gatewayName 
+   */
+  getProtocols(gatewayName): Observable<Protocol[]> {
+    const url = `${this.dgraphUrl}/query`;
+    let query = `{
+      var(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
+        protocols as gateway_protocol {
+        }
+      }
+      resp(func: uid(protocols)) {
+        uid
+        uuid
+        created
+        modified
+        protocolType
+        brokerURL
+        topic
+        consumerGroupId
+        connectionTimeout
+        sessionTimeout
+        initialOffset
+        retryBackoff
+        fetchMinBytes
+        fetchMaxWait
+        commitInterval 
+        heartbeatInterval
+        maximumQOS
+        username
+        password
+        encryptionMode
+        caCertificate
+        clientCertificate
+        clientKey
+        authMode
+        serverCerticate
+      }
+    }`;
+
+    return this.http.post<any>(url, query, httpOptions)
+      .pipe(
+        map(response => response.data.resp as Protocol[]),
+        tap(_ => this.logger.info('fetched protocols')),
+        catchError(this.handleError<Protocol[]>('getProtocols', []))
+      );
+
+  }
+
+  /**
+   * 
+   * @param gatewayUid 
+   * @param protocol 
+   */
+  addProtocol(gatewayUid: number, protocol: Protocol): Observable<string> {
+    const url = `${this.dgraphUrl}/mutate?commitNow=true`;
+    let query = `{
+      set {
+        _:Protocol <dgraph.type> "Protocol" .
+        _:Protocol <type> "protocol" .
+        _:Protocol <protocol> "" .
+        _:Protocol <uuid> "${protocol.uuid}" .
+        _:Protocol <created> "${protocol.created}" .
+        _:Protocol <modified> "${protocol.modified}" .
+        _:Protocol <protocolType> "${protocol.protocolType}" .
+        _:Protocol <brokerURL> "${protocol.brokerURL}" .
+        _:Protocol <topic> "${protocol.topic}" .
+        _:Protocol <consumerGroupId> "${protocol.consumerGroupId}" .
+        _:Protocol <connectionTimeout> "${protocol.connectionTimeout}" .
+        _:Protocol <sessionTimeout> "${protocol.sessionTimeout}" .
+        _:Protocol <initialOffset> "${protocol.initialOffset}" .
+        _:Protocol <retryBackoff> "${protocol.retryBackoff}" .
+        _:Protocol <fetchMinBytes> "${protocol.fetchMinBytes}" .
+        _:Protocol <fetchMaxWait> "${protocol.fetchMaxWait}" .
+        _:Protocol <commitInterval> "${protocol.commitInterval}" .
+        _:Protocol <heartbeatInterval> "${protocol.heartbeatInterval}" .
+        _:Protocol <maximumQOS> "${protocol.maximumQOS}" .
+        _:Protocol <username> "${protocol.username}" .
+        _:Protocol <password> "${protocol.password}" .
+        _:Protocol <encryptionMode> "${protocol.encryptionMode}" .
+        _:Protocol <caCertificate> "${protocol.caCerticate}" .
+        _:Protocol <clientCertificate> "${protocol.clientCertificate}" .
+        _:Protocol <clientKey> "${protocol.clientKey}" .
+        _:Protocol <authMode> "${protocol.authMode}" .
+        _:Protocol <serverCerticate> "${protocol.serverCertificate}" .
+        <${gatewayUid}> <gateway_protocol> _:Protocol .
+      }
+    }`;
+    console.log('Mutate statement: ', query);
+
+    return this.http.post<any>(url, query, httpMutateOptions)
+      .pipe(
+        tap(_ => this.logger.info('add protocols')),
+        catchError(this.handleError<string>('addProtocols'))
+      );
+
+  }
+  /**
+   * 
+   * @param protocol 
+   */
+  updateProtocol(protocol: Protocol): Observable<string> {
+    const url = `${this.dgraphUrl}/mutate?commitNow=true`;
+    let query = `{
+      set {
+        <${protocol.uid}> <uuid> "${protocol.uuid}" .
+        <${protocol.uid}> <modified> "${protocol.modified}" .
+        <${protocol.uid}> <protocolType> "${protocol.protocolType}" .
+        <${protocol.uid}> <brokerURL> "${protocol.brokerURL}" .
+        <${protocol.uid}> <topic> "${protocol.topic}" .
+        <${protocol.uid}> <consumerGroupId> "${protocol.consumerGroupId}" .
+        <${protocol.uid}> <connectionTimeout> "${protocol.connectionTimeout}" .
+        <${protocol.uid}> <sessionTimeout> "${protocol.sessionTimeout}" .
+        <${protocol.uid}> <initialOffset> "${protocol.initialOffset}" .
+        <${protocol.uid}> <retryBackoff> "${protocol.retryBackoff}" .
+        <${protocol.uid}> <fetchMinBytes> "${protocol.fetchMinBytes}" .
+        <${protocol.uid}> <fetchMaxWait> "${protocol.fetchMaxWait}" .
+        <${protocol.uid}> <commitInterval> "${protocol.commitInterval}" .
+        <${protocol.uid}> <heartbeatInterval> "${protocol.heartbeatInterval}" .
+        <${protocol.uid}> <maximumQOS> "${protocol.maximumQOS}" .
+        <${protocol.uid}> <username> "${protocol.username}" .
+        <${protocol.uid}> <password> "${protocol.password}" .
+        <${protocol.uid}> <encryptionMode> "${protocol.encryptionMode}" .
+        <${protocol.uid}> <caCertificate> "${protocol.caCerticate}" .
+        <${protocol.uid}> <clientCertificate> "${protocol.clientCertificate}" .
+        <${protocol.uid}> <clientKey> "${protocol.clientKey}" .
+        <${protocol.uid}> <authMode> "${protocol.authMode}" .
+        <${protocol.uid}> <serverCerticate> "${protocol.serverCertificate}" .
+      }
+    }`;
+    console.log('Mutate statement: ', query);
+
+    return this.http.post<any>(url, query, httpMutateOptions)
+      .pipe(
+        tap(_ => this.logger.info('updated protocols')),
+        catchError(this.handleError<string>('updateProtocols'))
+      );
+
+  }
+
+  /**
+   * 
+   * @param gatewayUid 
+   * @param protocolUid 
+   */
+  deleteProtocol(gatewayUid: number, protocolUid: number): Observable<string> {
+    const url = `${this.dgraphUrl}/mutate?commitNow=true`;
+    let query = `{
+      delete {
+        <${protocolUid}> * * .
+        <${gatewayUid}> <gateway_protocol> <${protocolUid}> .
+      }
+    }`;
+    console.log('Delete Protocol Mutate statement: ', query);
+
+    return this.http.post<any>(url, query, httpMutateOptions)
+      .pipe(
+        tap(_ => this.logger.info('deleted protocol')),
+        catchError(this.handleError<string>('deleteProtocol'))
+      );
+  }
+
+  /**
+   * 
+   * @param gatewayName 
+   */
   getGatewayAndPipelines(gatewayName): Observable<Gateway[]> {
     const url = `${this.dgraphUrl}/query`;
 
-    let pipeline_protocol = `protocol: pipeline_protocol {uid brokerURL topic maximumQOS username password encryptionMode caCertificate clientCertificate clientKey authMode serverCerticate consumerGroupId connectionTimeout sessionTimeout retryBackoff commitInterval initialOffset fetchMinBytes fetchMaxWait heartbeatInterval}`;
-    let pipeline_datastore = `dataStore: pipeline_datastore {uid host port databaseName user password accountName warehouse database schema authType username clientId clientSecret authorizationCode redirectURI loginTimeout url}`;
+    let pipeline_protocol = `protocol: pipeline_protocol {uid uuid brokerURL topic maximumQOS username password encryptionMode caCertificate clientCertificate clientKey authMode serverCerticate consumerGroupId connectionTimeout sessionTimeout retryBackoff commitInterval initialOffset fetchMinBytes fetchMaxWait heartbeatInterval}`;
+    let pipeline_datastore = `dataStore: pipeline_datastore {uid uuid host port databaseName user password accountName warehouse database schema authType username clientId clientSecret authorizationCode redirectURI loginTimeout url}`;
     let pipeline_filter = `filter: pipeline_filter {uid deviceNames}`;
-    
+
     let query = `{
       resp(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
         uid uuid accessToken
@@ -633,72 +1045,17 @@ export class DgraphService implements GraphService {
    * @param dataStoreObj 
    * @param filterObj 
    */
-  addPipeline(gatewayUid: number, pipeline: Pipeline, transportObj: any,
-    dataStoreObj: any, filterObj: any): Observable<string> {
+  addPipeline(gatewayUid: number, pipeline: Pipeline, protocolUid: string,
+    dataStoreUid: string, filterObj: any): Observable<string> {
 
     const url = `${this.dgraphUrl}/mutate?commitNow=true`;
 
     let query = '';
-    console.log("direct from transport name: ", transportObj.Name);
-
-
-
-    console.log("TranpostObje prop0: ", transportObj.Properties[0].Value);
-    let transportVar = '';
-    let dataStoreVar = '';
-    let filterVar = '';
-    let i = 0;
-    let len = transportObj.Properties.length;
-
-    console.log("Looping start for properties: ", len);
-
-
-    // Create Protocol entries
-    for (; i < len; i++) {
-      transportVar = transportVar +
-        `_:Protocol <${transportObj.Properties[i].UIName}> "${transportObj.Properties[i].Value}" .
-      `;
-    }
-
-    transportVar = transportVar +
-      `_:Protocol <protocol> "" .
-      `;
-    transportVar = transportVar +
-      `_:Protocol <type> "protocol" .
-      `;
-    transportVar = transportVar +
-      `_:Pipeline <pipeline_protocol> _:Protocol .
-      `;
-
-    console.log("Build Transport dgraph var: " + transportVar);
-
-
-    // Create DataStore entries
-    i = 0;
-    len = dataStoreObj.Properties.length;
-
-    for (; i < len; i++) {
-      dataStoreVar = dataStoreVar +
-        `_:Datastore <${dataStoreObj.Properties[i].UIName}> "${dataStoreObj.Properties[i].Value}" .
-      `;
-    }
-
-    dataStoreVar = dataStoreVar +
-      `_:Datastore <datastore> "" .
-      `;
-    dataStoreVar = dataStoreVar +
-      `_:Datastore <type> "datastore" .
-      `;
-    dataStoreVar = dataStoreVar +
-      `_:Pipeline <pipeline_datastore> _:Datastore .
-      `;
-
-    console.log("DataStore dgraph var: " + dataStoreVar);
-
 
     // Create Filter entries
-    i = 0;
-    len = filterObj.Properties.length;
+    let filterVar = '';
+    let i = 0;
+    let len = filterObj.Properties.length;
 
     for (; i < len; i++) {
       filterVar = filterVar +
@@ -732,8 +1089,8 @@ export class DgraphService implements GraphService {
         _:Pipeline <modified> "${pipeline.modified}" .
         _:Pipeline <status> "${pipeline.status}" .
         <${gatewayUid}> <gateway_pipeline> _:Pipeline .
-        ${transportVar}
-        ${dataStoreVar}
+        _:Pipeline <pipeline_protocol> <${protocolUid}> .
+        _:Pipeline <pipeline_datastore> <${dataStoreUid}> .
         ${filterVar}
       }
     }`;
@@ -746,7 +1103,7 @@ export class DgraphService implements GraphService {
       );
 
   }
-
+  
   /**
    * 
    * @param pipeline 
@@ -782,8 +1139,6 @@ export class DgraphService implements GraphService {
 
     let query = `{
       delete {
-        <${protocol.uid}> * * .
-        <${dataStore.uid}> * * .
         <${filter.uid}> * * .
         <${pipeline.uid}> <pipeline_protocol> <${protocol.uid}> .
         <${pipeline.uid}> <pipeline_datastore> <${dataStore.uid}> .
@@ -801,6 +1156,60 @@ export class DgraphService implements GraphService {
       );
   }
 
+  /**
+   * Get ids of all the pipelines associated with the specified protocol
+   * @param protocolUid - the uid of the protocol
+   */
+  getPipelineIdsFromProtocolUid(protocolUid): Observable<Pipeline[]> {
+    const url = `${this.dgraphUrl}/query`;
+
+    let query = `{
+      var(func: uid(${protocolUid})) {
+        pipelines as ~pipeline_protocol {
+        }
+      }
+      resp(func: uid(pipelines)) {
+        uid
+        uuid
+      }
+    }`;
+
+    return this.http.post<any>(url, query, httpOptions)
+      .pipe(
+        map(response => response.data.resp as Pipeline[]),
+        tap(_ => this.logger.info('fetched pipeline ids')),
+        catchError(this.handleError<Pipeline[]>('getPipelineIdsFromProtocolUid', []))
+      );
+
+  }
+  
+  /**
+   * Get ids of all the pipelines associated with the specified data store
+   * @param dataStoreUid - the uid of the data store
+   */
+  getPipelineIdsFromDataStoreUid(dataStoreUid): Observable<Pipeline[]> {
+    const url = `${this.dgraphUrl}/query`;
+
+    let query = `{
+      var(func: uid(${dataStoreUid})) {
+        pipelines as ~pipeline_datastore {
+        }
+      }
+      resp(func: uid(pipelines)) {
+        uid
+        uuid
+      }
+    }`;
+
+    return this.http.post<any>(url, query, httpOptions)
+      .pipe(
+        map(response => response.data.resp as Pipeline[]),
+        tap(_ => this.logger.info('fetched pipeline ids')),
+        catchError(this.handleError<Pipeline[]>('getPipelineIdsFromDataStoreUid', []))
+      );
+
+  }
+  
   /**
    * 
    * @param gatewayName 
