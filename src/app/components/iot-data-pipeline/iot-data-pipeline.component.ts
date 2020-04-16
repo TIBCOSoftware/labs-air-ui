@@ -454,7 +454,9 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
       "name": "air-data-" + protocol.toLowerCase() + "-" + dataStore.toLowerCase(),
       "version":"0.1.0",
       "values": {
-        "env": env
+        "deployment": {
+          "env": env
+        }
       }
     }
     console.log("New Request: "+JSON.stringify(newRequest));
@@ -624,7 +626,9 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
 	      "name": "air-data-" + pipeline.protocolType.toLowerCase() + "-" + pipeline.dataStoreType.toLowerCase(),
 	      "version":"0.1.0",
         "values": {
-          "env": env
+          "deployment": {
+            "env": env
+          }
         }
       }
       console.log("New Request: "+JSON.stringify(newRequest));
