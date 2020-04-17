@@ -429,60 +429,47 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
     console.log("Deploying pipeline");
 
     let protocol = this.transportForm.get('protocol').value;
-    let protocolObj = this.buildProtocolProperties(protocol, this.transportForm);
     let dataStore = this.dataStoreForm.get('dataStore').value;
-    let dataStoreObj = this.buildDataStoreProperties(dataStore, this.dataStoreForm);
-    let filterObj = this.buildDataFilteringProperties(this.filteringForm);
-    
     let tsms = Date.now();
 
     let applicationId = "iot-data-" + tsms;
+    let pipelineStatus = "Undeployed";
 
-    let env = {}
-    protocolObj["Properties"].forEach(function (protocol) {
-      env[protocol.Name] = protocol.Value;
-    });
-    dataStoreObj["Properties"].forEach(function (datastore) {
-      env[datastore.Name] = datastore.Value;
-    });
-    filterObj["Properties"].forEach(function (filter) {
-      env[filter.Name] = filter.Value;
-    });
+    // Check if deployment is needed
+    if (deployPipeline) {
 
-    let newRequest = {
-      "id": applicationId,
-      "name": "air-data-" + protocol.toLowerCase() + "-" + dataStore.toLowerCase(),
-      "version":"0.1.0",
-      "values": {
-        "deployment": {
-          "env": env
+      let protocolObj = this.buildProtocolProperties(protocol, this.transportForm);
+      let dataStoreObj = this.buildDataStoreProperties(dataStore, this.dataStoreForm);
+      let filterObj = this.buildDataFilteringProperties(this.filteringForm);
+
+      let env = [];
+      protocolObj.forEach(function (protocol) {
+        env.push(protocol);
+      });
+      dataStoreObj.forEach(function (datastore) {
+        env.push(datastore);
+      });
+      filterObj.forEach(function (filter) {
+        env.push(filter);
+      });
+
+      let request = {
+        "id": applicationId,
+        "name": "air-data-" + protocol.toLowerCase() + "-" + dataStore.toLowerCase(),
+        "version": "0.1.0",
+        "values": {
+          "deployment": {
+            "env": env
+          }
         }
       }
-    }
-    console.log("New Request: "+JSON.stringify(newRequest));
+      console.log("Deploy Request: " + JSON.stringify(request));
 
-    console.log("Deploying for protocol: " + protocol);
-
-    /*let request = {
-      "ApplicationID": applicationId,
-      "containerName": "air-iotdata-" + protocol.toLowerCase() + "-" + dataStore.toLowerCase(),
-      "dockerImage": "magallardo/iotdata_" + protocol.toLowerCase() + "_" + dataStore.toLowerCase(),
-      "replicas": 1,
-      "Components": [
-        protocolObj,
-        dataStoreObj,
-        filterObj
-      ]
-    };
-
-    console.log("Deploy Request: " + JSON.stringify(request));
-    */
-    let pipelineStatus = "Undeployed";
-    if (deployPipeline) {
+      console.log("Deploying for protocol: " + protocol);
 
       pipelineStatus = "Deployed/Ready"
       // Deploy pipeline
-      this.flogoDeployService.deploy(newRequest)
+      this.flogoDeployService.deploy(request)
         .subscribe(res => {
           console.log("Received response: ", res);
 
@@ -500,8 +487,10 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
 
     let protocolUid = this.transportForm.get('uid').value;
     let dataStoreUid = this.dataStoreForm.get('uid').value;
+    let graphFilterObj = this.buildGraphDataFilteringProperties(this.filteringForm);
+    
     // Add pipeline to graph
-    this.graphService.addPipeline(this.gateway.uid, pipeline, protocolUid, dataStoreUid, filterObj)
+    this.graphService.addPipeline(this.gateway.uid, pipeline, protocolUid, dataStoreUid, graphFilterObj)
       .subscribe(res => {
         console.log("Added pipeline: ", res);
 
@@ -531,39 +520,21 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
       let urlParams = [];
       urlParams["namespace"] = "default";
 
-      let newRequest = {
-        "id":  pipeline.name,
+      let request = {
+        "id": pipeline.name,
         params: {
-          "namespace":"default"
+          "namespace": "default"
         }
       }
 
-      /*let request = {
-        "ApplicationID": pipeline.name,
-        "Components": [
-          {
-            "Type": "protocol",
-            "Name": pipeline.protocolType
-          },
-          {
-            "Type": "datastore",
-            "Name": pipeline.dataStoreType
-          }
-        ]
-      };
-
       console.log("Undeploy Request: " + JSON.stringify(request));
-      */
-
-      console.log("Undeploy Request: " + JSON.stringify(newRequest));
 
       // Undeploy pipeline
-      this.flogoDeployService.undeploy(newRequest)
+      this.flogoDeployService.undeploy(request)
         .subscribe(res => {
           console.log("Received response: ", res);
 
         });
-
 
       // Update graph pipeline
       this.graphService.updatePipeline(pipeline)
@@ -581,7 +552,6 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
     }
     else {
       console.log("No selection to undeploy");
-
     }
 
   }
@@ -604,51 +574,37 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
       let protocolObj = this.buildProtocolProperties(pipeline.protocolType, this.transportViewForm);
       let dataStoreObj = this.buildDataStoreProperties(pipeline.dataStoreType, this.dataStoreViewForm);
       let filterObj = this.buildDataFilteringProperties(this.filteringViewForm);
-      let loggingObj = this.buildLoggingProperties();
+      // let loggingObj = this.buildLoggingProperties();
 
       let applicationId = pipeline.name;
-      let env = {}
-      protocolObj["Properties"].forEach(function (protocol) {
-        env[protocol.Name] = protocol.Value;
+      let env = [];
+      protocolObj.forEach(function (protocol) {
+        env.push(protocol);
       });
-      dataStoreObj["Properties"].forEach(function (datastore) {
-        env[datastore.Name] = datastore.Value;
+      dataStoreObj.forEach(function (datastore) {
+        env.push(datastore);
       });
-      filterObj["Properties"].forEach(function (filter) {
-        env[filter.Name] = filter.Value;
+      filterObj.forEach(function (filter) {
+        env.push(filter);
       });
-      loggingObj["Properties"].forEach(function (filter) {
-        env[filter.Name] = filter.Value;
-      });
+      // loggingObj.forEach(function (filter) {
+      //   env.push(filter);
+      // });
 
-      let newRequest = {
+      let request = {
         "id": applicationId,
-	      "name": "air-data-" + pipeline.protocolType.toLowerCase() + "-" + pipeline.dataStoreType.toLowerCase(),
-	      "version":"0.1.0",
+        "name": "air-data-" + pipeline.protocolType.toLowerCase() + "-" + pipeline.dataStoreType.toLowerCase(),
+        "version": "0.1.0",
         "values": {
           "deployment": {
             "env": env
           }
         }
       }
-      console.log("New Request: "+JSON.stringify(newRequest));
-      /*let request = {
-        "ApplicationID": applicationId,
-        "containerName": "air-iotdata-" + pipeline.protocolType.toLowerCase() + "-" + pipeline.dataStoreType.toLowerCase(),
-        "dockerImage": "magallardo/iotdata_" + pipeline.protocolType.toLowerCase() + "_" + pipeline.dataStoreType.toLowerCase(),
-        "replicas": 1,
-        "Components": [
-          protocolObj,
-          dataStoreObj,
-          filterObj,
-          loggingObj
-        ]
-      };
-
       console.log("Deploy Request: " + JSON.stringify(request));
-      */
+
       // Deploy Pipeline
-      this.flogoDeployService.deploy(newRequest)
+      this.flogoDeployService.deploy(request)
         .subscribe(res => {
           console.log("Received response: ", res);
 
@@ -1079,48 +1035,39 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
 
     if (protocol == "MQTT") {
 
-      protocolObj = {
-        "Type": "protocol",
-        "Name": protocol,
-        "Properties": [
-          { "Name": "MQTTTrigger.Topic", "UIName": "topic", "Value": form.get('mqtt.topic').value },
-          { "Name": "MQTTTrigger.MaximumQOS", "UIName": "maximumQOS", "Value": form.get('mqtt.maximumQOS').value },
-          { "Name": "Mqtt.IoTMQTT.Broker_URL", "UIName": "brokerURL", "Value": "tcp://" + form.get('mqtt.hostname').value + ":" + form.get('mqtt.port').value },
-          { "Name": "Mqtt.IoTMQTT.Username", "UIName": "username", "Value": form.get('mqtt.username').value },
-          { "Name": "Mqtt.IoTMQTT.Password", "UIName": "password", "Value": form.get('mqtt.password').value },
-          { "Name": "Mqtt.encryptionMode", "UIName": "encryptionMode", "Value": form.get('mqtt.encryptionMode').value },
-          { "Name": "Mqtt.caCertificate", "UIName": "caCertificate", "Value": form.get('mqtt.caCertificate').value },
-          { "Name": "Mqtt.clientCertificate", "UIName": "clientCertificate", "Value": form.get('mqtt.clientCertificate').value },
-          { "Name": "Mqtt.clientKey", "UIName": "clientKey", "Value": form.get('mqtt.clientKey').value }
-        ]
-      };
-
+      protocolObj = [
+        { "name": "MQTTTrigger.Topic", "value": form.get('mqtt.topic').value },
+        { "name": "MQTTTrigger.MaximumQOS", "value": form.get('mqtt.maximumQOS').value },
+        { "name": "Mqtt.IoTMQTT.Broker_URL", "value": "tcp://" + form.get('mqtt.hostname').value + ":" + form.get('mqtt.port').value },
+        { "name": "Mqtt.IoTMQTT.Username", "value": form.get('mqtt.username').value },
+        { "name": "Mqtt.IoTMQTT.Password", "value": form.get('mqtt.password').value },
+        { "name": "Mqtt.encryptionMode", "value": form.get('mqtt.encryptionMode').value },
+        { "name": "Mqtt.caCertificate", "value": form.get('mqtt.caCertificate').value },
+        { "name": "Mqtt.clientCertificate", "value": form.get('mqtt.clientCertificate').value },
+        { "name": "Mqtt.clientKey", "value": form.get('mqtt.clientKey').value }
+      ];
     }
     else if (protocol == "Kafka") {
 
-      protocolObj = {
-        "Type": "protocol",
-        "Name": protocol,
-        "Properties": [
-          { "Name": "", "UIName": "brokerURL", "Value": form.get('kafka.hostname').value + ":" + form.get('kafka.port').value },
-          { "Name": "", "UIName": "topic", "Value": form.get('kafka.topic').value },
-          { "Name": "", "UIName": "authMode", "Value": form.get('kafka.authMode').value },
-          { "Name": "", "UIName": "username", "Value": form.get('kafka.username').value },
-          { "Name": "", "UIName": "password", "Value": form.get('kafka.password').value },
-          { "Name": "", "UIName": "clientCertificate", "Value": form.get('kafka.clientCertificate').value },
-          { "Name": "", "UIName": "clientKey", "Value": form.get('kafka.clientKey').value },
-          { "Name": "", "UIName": "serverCertificate", "Value": form.get('kafka.serverCertificate').value },
-          { "Name": "", "UIName": "consumerGroupId", "Value": form.get('kafka.consumerGroupId').value },
-          { "Name": "", "UIName": "connectionTimeout", "Value": form.get('kafka.connectionTimeout').value },
-          { "Name": "", "UIName": "sessionTimeout", "Value": form.get('kafka.sessionTimeout').value },
-          { "Name": "", "UIName": "retryBackoff", "Value": form.get('kafka.retryBackoff').value },
-          { "Name": "", "UIName": "commitInterval", "Value": form.get('kafka.commitInterval').value },
-          { "Name": "", "UIName": "initialOffset", "Value": form.get('kafka.initialOffset').value },
-          { "Name": "", "UIName": "fetchMinBytes", "Value": form.get('kafka.fetchMinBytes').value },
-          { "Name": "", "UIName": "fetchMaxWait", "Value": form.get('kafka.fetchMaxWait').value },
-          { "Name": "", "UIName": "heartbeatInterval", "Value": form.get('kafka.heartbeatInterval').value }
-        ]
-      };
+      protocolObj = [
+        { "name": "", "value": form.get('kafka.hostname').value + ":" + form.get('kafka.port').value },
+        { "name": "", "value": form.get('kafka.topic').value },
+        { "name": "", "value": form.get('kafka.authMode').value },
+        { "name": "", "value": form.get('kafka.username').value },
+        { "name": "", "value": form.get('kafka.password').value },
+        { "name": "", "value": form.get('kafka.clientCertificate').value },
+        { "name": "", "value": form.get('kafka.clientKey').value },
+        { "name": "", "value": form.get('kafka.serverCertificate').value },
+        { "name": "", "value": form.get('kafka.consumerGroupId').value },
+        { "name": "", "value": form.get('kafka.connectionTimeout').value },
+        { "name": "", "value": form.get('kafka.sessionTimeout').value },
+        { "name": "", "value": form.get('kafka.retryBackoff').value },
+        { "name": "", "value": form.get('kafka.commitInterval').value },
+        { "name": "", "value": form.get('kafka.initialOffset').value },
+        { "name": "", "value": form.get('kafka.fetchMinBytes').value },
+        { "name": "", "value": form.get('kafka.fetchMaxWait').value },
+        { "name": "", "value": form.get('kafka.heartbeatInterval').value }
+      ];
     }
 
     return protocolObj;
@@ -1138,65 +1085,46 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
 
     if (dataStore == "Postgres") {
 
-      dataStoreObj = {
-        "Type": "datastore",
-        "Name": dataStore,
-        "Properties": [
-          { "Name": "PostgreSQL.IoTPostgres.Host", "UIName": "host", "Value": form.get('postgres.host').value },
-          { "Name": "PostgreSQL.IoTPostgres.Port", "UIName": "port", "Value": form.get('postgres.port').value },
-          { "Name": "PostgreSQL.IoTPostgres.Database_Name", "UIName": "databaseName", "Value": form.get('postgres.databaseName').value },
-          { "Name": "PostgreSQL.IoTPostgres.User", "UIName": "user", "Value": form.get('postgres.user').value },
-          { "Name": "PostgreSQL.IoTPostgres.Password", "UIName": "password", "Value": form.get('postgres.password').value }
-        ]
-      };
-
+      dataStoreObj = [
+        { "name": "PostgreSQL.IoTPostgres.Host", "value": form.get('postgres.host').value },
+        { "name": "PostgreSQL.IoTPostgres.Port", "value": form.get('postgres.port').value },
+        { "name": "PostgreSQL.IoTPostgres.Database_Name", "value": form.get('postgres.databaseName').value },
+        { "name": "PostgreSQL.IoTPostgres.User", "value": form.get('postgres.user').value },
+        { "name": "PostgreSQL.IoTPostgres.Password", "value": form.get('postgres.password').value }
+      ];
     }
     else if (dataStore == "Snowflake") {
 
-      dataStoreObj = {
-        "Type": "datastore",
-        "Name": dataStore,
-        "Properties": [
-          { "Name": "", "UIName": "accountName", "Value": form.get('snowflake.accountName').value },
-          { "Name": "", "UIName": "warehouse", "Value": form.get('snowflake.accountName').value },
-          { "Name": "", "UIName": "database", "Value": form.get('snowflake.database').value },
-          { "Name": "", "UIName": "schema", "Value": form.get('snowflake.schema').value },
-          { "Name": "", "UIName": "authType", "Value": form.get('snowflake.authType').value },
-          { "Name": "", "UIName": "username", "Value": form.get('snowflake.username').value },
-          { "Name": "", "UIName": "password", "Value": form.get('snowflake.password').value },
-          { "Name": "", "UIName": "clientId", "Value": form.get('snowflake.clientId').value },
-          { "Name": "", "UIName": "clientSecret", "Value": form.get('snowflake.clientSecret').value },
-          { "Name": "", "UIName": "authorizationCode", "Value": form.get('snowflake.authorizationCode').value },
-          { "Name": "", "UIName": "redirectURI", "Value": form.get('snowflake.redirectURI').value },
-          { "Name": "", "UIName": "loginTimeout", "Value": form.get('snowflake.loginTimeout').value }
-        ]
-      }
-
+      dataStoreObj = [
+        { "name": "", "value": form.get('snowflake.accountName').value },
+        { "name": "", "value": form.get('snowflake.accountName').value },
+        { "name": "", "value": form.get('snowflake.database').value },
+        { "name": "", "value": form.get('snowflake.schema').value },
+        { "name": "", "value": form.get('snowflake.authType').value },
+        { "name": "", "value": form.get('snowflake.username').value },
+        { "name": "", "value": form.get('snowflake.password').value },
+        { "name": "", "value": form.get('snowflake.clientId').value },
+        { "name": "", "value": form.get('snowflake.clientSecret').value },
+        { "name": "", "value": form.get('snowflake.authorizationCode').value },
+        { "name": "", "value": form.get('snowflake.redirectURI').value },
+        { "name": "", "value": form.get('snowflake.loginTimeout').value }
+      ];
     }
     else if (dataStore == "TGDB") {
 
-      dataStoreObj = {
-        "Type": "datastore",
-        "Name": dataStore,
-        "Properties": [
-          { "Name": "", "UIName": "url", "Value": form.get('tgdb.url').value },
-          { "Name": "", "UIName": "username", "Value": form.get('tgdb.username').value },
-          { "Name": "", "UIName": "password", "Value": form.get('tgdb.password').value }
-        ]
-      }
-
+      dataStoreObj = [
+        { "name": "", "value": form.get('tgdb.url').value },
+        { "name": "", "value": form.get('tgdb.username').value },
+        { "name": "", "value": form.get('tgdb.password').value }
+      ];
     }
     else if (dataStore = "Dgraph") {
 
-      dataStoreObj = {
-        "Type": "datastore",
-        "Name": dataStore,
-        "Properties": [
-          { "Name": "GraphBuilder_dgraph.IoTDgraph.Dgraph_Server_URL", "UIName": "url", "Value": form.get('dgraph.url').value },
-          { "Name": "GraphBuilder_dgraph.IoTDgraph.Username", "UIName": "username", "Value": form.get('dgraph.username').value },
-          { "Name": "GraphBuilder_dgraph.IoTDgraph.Password", "UIName": "password", "Value": form.get('dgraph.password').value }
-        ]
-      };
+      dataStoreObj = [
+        { "name": "GraphBuilder_dgraph.IoTDgraph.Dgraph_Server_URL", "value": form.get('dgraph.url').value },
+        { "name": "GraphBuilder_dgraph.IoTDgraph.Username", "value": form.get('dgraph.username').value },
+        { "name": "GraphBuilder_dgraph.IoTDgraph.Password", "value": form.get('dgraph.password').value }
+      ];
 
     };
 
@@ -1221,25 +1149,42 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
       i++;
     });
 
-    let dataStoreObj = {
-      "Type": "common",
-      "Name": "Filtering",
-      "Properties": [
-        { "Name": "Filtering.DeviceNames", "UIName": "deviceNames", "Value": filters.toString() },
-      ]
-    };
+    let filterObj = [
+      { "name": "Filtering.DeviceNames", "value": filters.toString() }
+    ];
+
+    return filterObj;
+  }
+
+  /**
+ * 
+ * @param form 
+ */
+  buildGraphDataFilteringProperties(form: FormGroup): any {
+
+    const devicesArray: FormArray = form.get('deviceNames') as FormArray;
+    let i: number = 0;
+    var filters = [];
+
+    devicesArray.controls.forEach((item: FormControl) => {
+
+      if (item.value) {
+        filters.push(this.devices[i].name);
+      }
+      i++;
+    });
+
+    let dataStoreObj = [
+      { "name": "deviceNames", "value": filters.toString() }
+    ];
 
     return dataStoreObj;
   }
 
   buildLoggingProperties(): any {
-    let loggingObj = {
-      "Type": "common",
-      "Name": "Logging",
-      "Properties": [
-        { "Name": "Logging.LogLevel", "UIName": "logging", "Value": "INFO" },
-      ]
-    };
+    let loggingObj = [
+      { "name": "Logging.LogLevel", "value": "INFO" },
+    ];
 
     return loggingObj;
   }
