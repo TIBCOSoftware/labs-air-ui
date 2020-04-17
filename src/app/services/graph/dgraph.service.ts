@@ -1059,7 +1059,7 @@ export class DgraphService implements GraphService {
 
     for (; i < len; i++) {
       filterVar = filterVar +
-        `_:Filter <${filterObj.Properties[i].UIName}> "${filterObj.Properties[i].Value}" .
+        `_:Filter <${filterObj[i].name}> "${filterObj[i].value}" .
       `;
     }
 

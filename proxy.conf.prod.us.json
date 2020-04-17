@@ -270,8 +270,14 @@
     "logLevel": "info",
     "pathRewrite":{"^/dgraph" : ""}
   },
+  "/tgdb/*": {
+    "target": "http://localhost:9999",
+    "secure": "false",
+    "changeOrigin": true,
+    "logLevel": "info"
+  },
   "/deployment/*": {
-    "target": "http://localhost:9999/air",
+    "target": "http://localhost:9999",
     "secure": "false",
     "changeOrigin": true,
     "logLevel": "info",
