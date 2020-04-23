@@ -29,32 +29,75 @@ const httpTextResponseOptions = {
 export class EdgeService {
 
   // EdgeX service urls are proxied in the proxy.conf.prod.* files
-  private edgeCoreMetadataUrl = '/coremeta/api/v1/';
-  private edgeCoreDataUrl = '/coredata/api/v1/';
-  private edgeCoreCommandUrl = '/corecommand/api/v1/';
-  private edgeExportClientUrl = '/exportclient/api/v1/';
-  private edgeExportDistroUrl = '/exportdistro/api/v1/';
-  private edgeFlogoRulesUrl = '/flogorules/api/v1/'
+  private edgexCoreMetadataPath = '/metadata/api/v1/';
+  private edgexCoreDataPath = '/coredata/api/v1/';
+  private edgexCoreCommandPath = '/command/api/v1/';
+  private edgexExportClientPath = '/export/api/v1/';
 
-  private gatewayCoreMetadataPath = '/edgexgateway/metadata/api/v1';
-  private gatewayCoreDataPath = '/edgexgateway/coredata/api/v1';
-  private gatewayCoreCommandPath = '/edgexgateway/command/api/v1';
-  private gatewayExportClientPath = '/edgexgateway/export/api/v1';
-  private gatewayExportDistroPath = '/edgexgateway/distro/api/v1';
-
+  private edgexFlogoRulesPath = '/flogorules/api/v1/';
+  
+  /**
+   * 
+   * @param http 
+   * @param logger 
+   */
   constructor(private http: HttpClient,
     private logger: LogService) {
     logger.level = LogLevel.Debug;
   }
 
+  /**
+   * 
+   * @param hostname 
+   * @param servicePath 
+   * @param operation 
+   */
+  private getEdgexURL(hostname: string, servicePath:string, operation: string): string {
+    let url = ``;
+
+    if (hostname == 'localhost') {
+      url = `/edgex/localgateway${servicePath}${operation}`;
+    }
+    else {
+      url = `/edgex/remotegateway/https://${hostname}:8443${servicePath}${operation}`;
+    }
+
+    console.log("getEdgexURL: ", url);
+    return url;
+  }
+
+  /**
+   * 
+   * @param hostname 
+   * @param servicePath 
+   * @param operation 
+   */
+  private getFlogoRulesURL(hostname: string, servicePath:string, operation: string): string {
+    let url = ``;
+
+    if (hostname == 'localhost') {
+      url = `/edgexrules/localgateway${servicePath}${operation}`;
+    }
+    else {
+      url = `/edgexrules/remotegateway/http://${hostname}:8442${servicePath}${operation}`;
+    }
+
+    console.log("getEdgexURL: ", url);
+    return url;
+  }
+
 
   // Core Metadata Operations
-  // URL: http://localhost:48081/api/v1
 
+  /**
+   * 
+   * @param gateway 
+   */
   pingCoreMetadata(gateway: Gateway): Observable<string> {
 
     // const url1 = `https://localhost:8443/metadata/api/v1/ping`;
-    const url = `/${gateway.uuid}${this.gatewayCoreMetadataPath}/ping`;
+    // const url = `/${gateway.uuid}${this.gatewayCoreMetadataPath}/ping`;
+    const url = this.getEdgexURL(gateway.address, this.edgexCoreMetadataPath, 'ping');
 
     const authorizedHeaders = httpTextResponseOptions.headers.set('Authorization', 'Bearer ' + gateway.accessToken);
     httpTextResponseOptions.headers = authorizedHeaders;
@@ -67,22 +110,14 @@ export class EdgeService {
       );
   }
 
-  pingCoreMetadataUnauthorized(gateway: string): Observable<string> {
-
-    const url = `/${gateway}${this.edgeCoreMetadataUrl}ping`;
-
-    console.log("In PingCoreMetadata with url: ", url);
-
-    return this.http.get<string>(url, httpTextResponseOptions)
-      .pipe(
-        timeout(2000),
-        tap(_ => this.logger.info('received ping response')),
-        catchError(this.handleError<string>('pingGateway'))
-      );
-  }
-
+  /**
+   * 
+   * @param gateway 
+   */
   getDevices(gateway: Gateway): Observable<Device[]> {
-    const url = `/${gateway.uuid}${this.gatewayCoreMetadataPath}/device`;
+    // const url = `/${gateway.uuid}${this.gatewayCoreMetadataPath}/device`;
+    const url = this.getEdgexURL(gateway.address, this.edgexCoreMetadataPath, 'device');
+
     console.log("GetDevices service called for url:", url);
 
     const authorizedHeaders = httpOptions.headers.set('Authorization', 'Bearer ' + gateway.accessToken);
@@ -96,59 +131,15 @@ export class EdgeService {
       );
   }
 
-  getDevicesUnauthorized(gateway: string): Observable<Device[]> {
-    const url = `/${gateway}${this.edgeCoreMetadataUrl}device`;
-
-    console.log("GetDevices service called for url:", url);
-
-    return this.http.get<Device[]>(url, httpOptions)
-      .pipe(
-        tap(_ => this.logger.info('fetched devices')),
-        catchError(this.handleError<Device[]>('getDevices', []))
-      );
-  }
-
-  getDevicesTestOld() {
-    const url = `${this.edgeCoreMetadataUrl}device`;
-
-    console.log("GetDevices service test called for url:", url);
-
-    this.http.get(url, httpOptions)
-      .subscribe(
-        (val) => {
-          console.log("GET call successful value returned in body",
-            val);
-        },
-        response => {
-          console.log("POST call in error", response);
-        },
-        () => {
-          console.log("The POST observable is now completed.");
-        });
-  }
-
-  getDevicesTest() {
-    const url = `${this.edgeCoreMetadataUrl}device`;
-
-    console.log("GetDevices service test called for url:", url);
-
-
-    this.http.get(url, httpOptions)
-      .subscribe(
-        (val) => {
-          console.log("GET call successful value returned in body",
-            val);
-        },
-        response => {
-          console.log("POST call in error", response);
-        },
-        () => {
-          console.log("The POST observable is now completed.");
-        });
-  }
-
+  /**
+   * 
+   * @param gateway 
+   * @param id 
+   */
   getDevice(gateway: Gateway, id: string): Observable<Device> {
-    const url = `/${gateway.uuid}${this.gatewayCoreMetadataPath}/device/${id}`;
+    // const url = `/${gateway.uuid}${this.gatewayCoreMetadataPath}/device/${id}`;
+    const op = `device/${id}`
+    const url = this.getEdgexURL(gateway.address, this.edgexCoreMetadataPath, op);
 
     const authorizedHeaders = httpOptions.headers.set('Authorization', 'Bearer ' + gateway.accessToken);
     httpOptions.headers = authorizedHeaders;
@@ -160,8 +151,14 @@ export class EdgeService {
       );
   }
 
+  /**
+   * 
+   * @param gateway 
+   * @param device 
+   */
   addDevice(gateway: Gateway, device: any): Observable<String> {
-    const url = `/${gateway.uuid}${this.gatewayCoreMetadataPath}/device`;
+    // const url = `/${gateway.uuid}${this.gatewayCoreMetadataPath}/device`;
+    const url = this.getEdgexURL(gateway.address, this.edgexCoreMetadataPath, 'device');
 
     const authorizedHeaders = httpTextResponseOptions.headers.set('Authorization', 'Bearer ' + gateway.accessToken);
     httpTextResponseOptions.headers = authorizedHeaders;
@@ -173,8 +170,15 @@ export class EdgeService {
       );
   }
 
+  /**
+   * 
+   * @param gateway 
+   * @param deviceName 
+   */
   deleteDeviceByName(gateway: Gateway, deviceName: string): Observable<String> {
-    const url = `/${gateway.uuid}${this.gatewayCoreMetadataPath}/device/name/${deviceName}`;
+    // const url = `/${gateway.uuid}${this.gatewayCoreMetadataPath}/device/name/${deviceName}`;
+    const op = `device/name/${deviceName}`;
+    const url = this.getEdgexURL(gateway.address, this.edgexCoreMetadataPath, op);
 
     const authorizedHeaders = httpTextResponseOptions.headers.set('Authorization', 'Bearer ' + gateway.accessToken);
     httpTextResponseOptions.headers = authorizedHeaders;
@@ -186,8 +190,13 @@ export class EdgeService {
       );
   }
 
+  /**
+   * 
+   * @param gateway 
+   */
   getProfiles(gateway: Gateway): Observable<Profile[]> {
-    const url = `/${gateway.uuid}${this.gatewayCoreMetadataPath}/deviceprofile`;
+    // const url = `/${gateway.uuid}${this.gatewayCoreMetadataPath}/deviceprofile`;
+    const url = this.getEdgexURL(gateway.address, this.edgexCoreMetadataPath, 'deviceprofile');
 
     console.log("GetProfiles service called for url:", url);
 
@@ -201,9 +210,15 @@ export class EdgeService {
       );
   }
 
+  /**
+   * 
+   * @param gateway 
+   * @param profile 
+   */
   addProfile(gateway:Gateway, profile:Profile): Observable<string> {
 
-    const url = `/${gateway.uuid}${this.gatewayCoreMetadataPath}/deviceprofile`;
+    // const url = `/${gateway.uuid}${this.gatewayCoreMetadataPath}/deviceprofile`;
+    const url = this.getEdgexURL(gateway.address, this.edgexCoreMetadataPath, 'deviceprofile');
 
     const authorizedHeaders = httpTextResponseOptions.headers.set('Authorization', 'Bearer ' + gateway.accessToken);
     httpTextResponseOptions.headers = authorizedHeaders;
@@ -215,9 +230,15 @@ export class EdgeService {
       );
   }
 
+  /**
+   * 
+   * @param gateway 
+   * @param profile 
+   */
   updateProfile(gateway:Gateway, profile:Profile): Observable<string> {
 
-    const url = `/${gateway.uuid}${this.gatewayCoreMetadataPath}/deviceprofile`;
+    // const url = `/${gateway.uuid}${this.gatewayCoreMetadataPath}/deviceprofile`;
+    const url = this.getEdgexURL(gateway.address, this.edgexCoreMetadataPath, 'deviceprofile');
 
     const authorizedHeaders = httpTextResponseOptions.headers.set('Authorization', 'Bearer ' + gateway.accessToken);
     httpTextResponseOptions.headers = authorizedHeaders;
@@ -229,8 +250,13 @@ export class EdgeService {
       );
   }
 
+  /**
+   * 
+   * @param gateway 
+   */
   getServices(gateway: Gateway): Observable<Service[]> {
-    const url = `/${gateway.uuid}${this.gatewayCoreMetadataPath}/deviceservice`;
+    // const url = `/${gateway.uuid}${this.gatewayCoreMetadataPath}/deviceservice`;
+    const url = this.getEdgexURL(gateway.address, this.edgexCoreMetadataPath, 'deviceservice');
 
     console.log("GetServices service called for url:", url);
     const authorizedHeaders = httpOptions.headers.set('Authorization', 'Bearer ' + gateway.accessToken);
@@ -244,11 +270,16 @@ export class EdgeService {
   }
 
   // Core Command Operations
-  // URL: http://localhost:48082/api/v1
 
+  /**
+   * 
+   * @param gateway 
+   * @param cmdPath 
+   */
   getCommand(gateway: Gateway, cmdPath: string): Observable<GetCommandResponse> {
-    const url = `/${gateway.uuid}${this.gatewayCoreCommandPath}/${cmdPath}`;
-    
+    // const url = `/${gateway.uuid}${this.gatewayCoreCommandPath}/${cmdPath}`;
+    const url = this.getEdgexURL(gateway.address, this.edgexCoreCommandPath, cmdPath);
+
     console.log("Get command Url: ", url);
     const authorizedHeaders = httpOptions.headers.set('Authorization', 'Bearer ' + gateway.accessToken);
     httpOptions.headers = authorizedHeaders;
@@ -262,10 +293,15 @@ export class EdgeService {
   }
 
   // Export Client Operations
-  // URL: http://localhost:48071/api/v1
 
+  /**
+   * 
+   * @param gateway 
+   * @param subscription 
+   */
   addRegisteration(gateway: Gateway, subscription: Subscription): Observable<String> {
-    const url = `/${gateway.uuid}${this.gatewayExportClientPath}/registration`;
+    // const url = `/${gateway.uuid}${this.gatewayExportClientPath}/registration`;
+    const url = this.getEdgexURL(gateway.address, this.edgexExportClientPath, 'registration');
 
     // const url = `https://localhost:8443/export/api/v1/registration`;
 
@@ -323,8 +359,14 @@ export class EdgeService {
       );
   }
 
+  /**
+   * 
+   * @param gateway 
+   * @param subscription 
+   */
   updateRegisteration(gateway: Gateway, subscription: Subscription): Observable<string> {
-    const url = `/${gateway.uuid}${this.gatewayExportClientPath}/registration`;
+    // const url = `/${gateway.uuid}${this.gatewayExportClientPath}/registration`;
+    const url = this.getEdgexURL(gateway.address, this.edgexExportClientPath, 'registration');
 
     let deviceFilter = [];
     if (subscription.deviceIdentifierFilter.length > 0) {
@@ -376,8 +418,15 @@ export class EdgeService {
       );
   }
 
+  /**
+   * 
+   * @param gateway 
+   * @param subscriptionName 
+   */
   deleteRegisteration(gateway: Gateway, subscriptionName: string): Observable<string> {
-    const url = `/${gateway.uuid}${this.gatewayExportClientPath}/registration/name/${subscriptionName}`;
+    // const url = `/${gateway.uuid}${this.gatewayExportClientPath}/registration/name/${subscriptionName}`;
+    const op = `registration/name/${subscriptionName}`;
+    const url = this.getEdgexURL(gateway.address, this.edgexExportClientPath, op);
 
     const authorizedHeaders = httpTextResponseOptions.headers.set('Authorization', 'Bearer ' + gateway.accessToken);
     httpTextResponseOptions.headers = authorizedHeaders;
@@ -389,9 +438,15 @@ export class EdgeService {
       );
   }
 
+  /**
+   * 
+   * @param gateway 
+   * @param rule 
+   */
   addRule(gateway: Gateway, rule: Rule): Observable<string> {
 
-    const url = `/${gateway.uuid}${this.edgeFlogoRulesUrl}addRule`;
+    // const url = `/${gateway.uuid}${this.edgeFlogoRulesUrl}addRule`;
+    const url = this.getFlogoRulesURL(gateway.address, this.edgexFlogoRulesPath, 'addRule');
 
     return this.http.post<string>(url, rule, httpTextResponseOptions)
       .pipe(
@@ -400,9 +455,15 @@ export class EdgeService {
       );
   }
 
+  /**
+   * 
+   * @param gateway 
+   * @param rule 
+   */
   deleteRule(gateway: Gateway, rule: Rule): Observable<string> {
 
-    const url = `/${gateway.uuid}${this.edgeFlogoRulesUrl}deleteRule`;
+    // const url = `/${gateway.uuid}${this.edgeFlogoRulesUrl}deleteRule`;
+    const url = this.getFlogoRulesURL(gateway.address, this.edgexFlogoRulesPath, 'deleteRule');
 
     return this.http.post<string>(url, rule, httpTextResponseOptions)
       .pipe(
