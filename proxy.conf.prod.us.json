@@ -256,12 +256,19 @@
       "Origin": "https://liveapps.cloud.tibco.com"
     }
   },
-  "/gateway1/edgexgateway/*": {
+  "/edgex/localgateway/*": {
     "target": "https://localhost:8443",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "info",
-    "pathRewrite":{"^/gateway1/edgexgateway" : ""}
+    "pathRewrite":{"^/edgex/localgateway" : ""}
+  },
+  "/edgex/remotegateway/*": {
+    "target": "https://52.45.185.99:8043",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "info",
+    "pathRewrite":{"^/edgex/remotegateway" : ""}
   },
   "/dgraph/*": {
     "target": "http://mydgraphdns:8080",
@@ -283,12 +290,19 @@
     "logLevel": "info",
     "pathRewrite":{"^/deployment" : ""}
   },
-  "/gateway1/flogorules/api/v1/*": {
+  "/edgexrules/localgateway/*": {
     "target": "http://localhost:48095",
     "secure": "false",
     "changeOrigin": true,
     "logLevel": "info",
-    "pathRewrite":{"^/gateway1" : ""}
+    "pathRewrite":{"^/edgexrules/localgateway" : ""}
+  },
+  "/edgexrules/remotegateway/*": {
+    "target": "http://52.45.185.99:8042",
+    "secure": "false",
+    "changeOrigin": true,
+    "logLevel": "info",
+    "pathRewrite":{"^/edgexrules/remotegateway" : ""}
   },
   "/datastore/*": {
     "target": "http://localhost:9999",
