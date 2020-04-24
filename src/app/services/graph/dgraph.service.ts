@@ -966,7 +966,7 @@ export class DgraphService implements GraphService {
 
     let query = `{
       resp(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
-        uid uuid accessToken
+        uid uuid accessToken address
         pipelines: gateway_pipeline {
           uid
           name
