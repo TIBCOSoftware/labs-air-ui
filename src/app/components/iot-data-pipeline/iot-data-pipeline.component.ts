@@ -443,6 +443,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
       let filterObj = this.buildDataFilteringProperties(this.filteringForm);
 
       let env = [];
+      env.push({ "name": "FLOGO_APP_PROPS_ENV", "value": "auto" });
       protocolObj.forEach(function (protocol) {
         env.push(protocol);
       });
@@ -578,6 +579,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
 
       let applicationId = pipeline.name;
       let env = [];
+      env.push({ "name": "FLOGO_APP_PROPS_ENV", "value": "auto" });
       protocolObj.forEach(function (protocol) {
         env.push(protocol);
       });
