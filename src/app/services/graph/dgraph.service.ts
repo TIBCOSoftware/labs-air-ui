@@ -1055,10 +1055,7 @@ export class DgraphService implements GraphService {
     // Create Filter entries
     let filterVar = '';
     let i = 0;
-    let len = 0;
-    if (filterObj && filterObj.Properties && filterObj.Properties.length > 0){
-      len = filterObj.Properties.length;
-    }
+    let len = filterObj.length;
 
     for (; i < len; i++) {
       filterVar = filterVar +
