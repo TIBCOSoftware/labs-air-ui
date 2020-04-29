@@ -1052,23 +1052,23 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
     else if (protocol == "Kafka") {
 
       protocolObj = [
-        { "name": "", "value": form.get('kafka.hostname').value + ":" + form.get('kafka.port').value },
-        { "name": "", "value": form.get('kafka.topic').value },
-        { "name": "", "value": form.get('kafka.authMode').value },
-        { "name": "", "value": form.get('kafka.username').value },
-        { "name": "", "value": form.get('kafka.password').value },
-        { "name": "", "value": form.get('kafka.clientCertificate').value },
-        { "name": "", "value": form.get('kafka.clientKey').value },
-        { "name": "", "value": form.get('kafka.serverCertificate').value },
-        { "name": "", "value": form.get('kafka.consumerGroupId').value },
-        { "name": "", "value": form.get('kafka.connectionTimeout').value },
-        { "name": "", "value": form.get('kafka.sessionTimeout').value },
-        { "name": "", "value": form.get('kafka.retryBackoff').value },
-        { "name": "", "value": form.get('kafka.commitInterval').value },
-        { "name": "", "value": form.get('kafka.initialOffset').value },
-        { "name": "", "value": form.get('kafka.fetchMinBytes').value },
-        { "name": "", "value": form.get('kafka.fetchMaxWait').value },
-        { "name": "", "value": form.get('kafka.heartbeatInterval').value }
+        { "name": "Kafka.IoTKafka.Brokers", "value": form.get('kafka.hostname').value + ":" + form.get('kafka.port').value },
+        { "name": "Kafka.IoTKafka.Connection_Timeout", "value": form.get('kafka.connectionTimeout').value },
+        { "name": "Kafka.IoTKafka.Retry_Backoff", "value": form.get('kafka.retryBackoff').value },
+        { "name": "Kafka.IoTKafka.AuthMode", "value": form.get('kafka.authMode').value },
+        { "name": "Kafka.IoTKafka.Username", "value": form.get('kafka.username').value },
+        { "name": "Kafka.IoTKafka.Password", "value": form.get('kafka.password').value },
+        { "name": "Kafka.IoTKafka.ClientCertificate", "value": form.get('kafka.clientCertificate').value },
+        { "name": "Kafka.IoTKafka.ClientKey", "value": form.get('kafka.clientKey').value },
+        { "name": "Kafka.IoTKafka.ServerCertificate", "value": form.get('kafka.serverCertificate').value },
+        { "name": "KafkaTrigger.ConsumerGroupId", "value": form.get('kafka.consumerGroupId').value },
+        { "name": "KafkaTrigger.Topic", "value": form.get('kafka.topic').value },
+        { "name": "KafkaTrigger.SessionTimeout", "value": form.get('kafka.sessionTimeout').value },
+        { "name": "KafkaTrigger.CommitInterval", "value": form.get('kafka.commitInterval').value },
+        { "name": "KafkaTrigger.InitialOffset", "value": form.get('kafka.initialOffset').value },
+        { "name": "KafkaTrigger.FetchMinBytes", "value": form.get('kafka.fetchMinBytes').value },
+        { "name": "KafkaTrigger.FetchMaxWait", "value": form.get('kafka.fetchMaxWait').value },
+        { "name": "KafkaTrigger.HeartbeatInterval", "value": form.get('kafka.heartbeatInterval').value }
       ];
     }
 
@@ -1115,9 +1115,9 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
     else if (dataStore == "TGDB") {
 
       dataStoreObj = [
-        { "name": "", "value": form.get('tgdb.url').value },
-        { "name": "", "value": form.get('tgdb.username').value },
-        { "name": "", "value": form.get('tgdb.password').value }
+        { "name": "GraphBuilder_TGDB.IoTTGDB.TGDB_Server_URL", "value": form.get('tgdb.url').value },
+        { "name": "GraphBuilder_TGDB.IoTTGDB.Username", "value": form.get('tgdb.username').value },
+        { "name": "GraphBuilder_TGDB.IoTTGDB.Password", "value": form.get('tgdb.password').value }
       ];
     }
     else if (dataStore = "Dgraph") {

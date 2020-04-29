@@ -261,7 +261,7 @@ export class IgeDataStoresComponent implements OnInit {
 
       this.dgraphDataStore = true;
     }
-    else if (dataStore.dataStoreType == "Tgdb") {
+    else if (dataStore.dataStoreType == "TGDB") {
 
       this.dataStoreForm.patchValue({
         uid: dataStore.uid,
@@ -363,7 +363,7 @@ export class IgeDataStoresComponent implements OnInit {
       dataStore.loginTimeout = this.dataStoreForm.get('snowflake.loginTimeout').value;
       dataStore.url = '';
     }
-    else if (dataStoreType == "Tgdb") {
+    else if (dataStoreType == "TGDB") {
 
       dataStore.created = ts;
       dataStore.modified = ts;
@@ -509,7 +509,7 @@ export class IgeDataStoresComponent implements OnInit {
             dataStore.loginTimeout = this.dataStoreForm.get('snowflake.loginTimeout').value;
             dataStore.url = '';
           }
-          else if (dataStoreType == "Tgdb") {
+          else if (dataStoreType == "TGDB") {
 
             dataStore.created = ts;
             dataStore.modified = ts;
