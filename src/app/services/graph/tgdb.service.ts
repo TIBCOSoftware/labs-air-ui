@@ -1036,7 +1036,7 @@ export class TgdbService implements GraphService {
    * @param filterObj 
    */
   addPipeline(gatewayUid: number, pipeline: Pipeline, transportObj: any,
-    dataStoreObj: any, filterObj: any): Observable<string> {
+    dataStoreObj: any, filterObj: any, streamingObj: any): Observable<string> {
 
     const url = `${this.tgdbUrl}/mutate?commitNow=true`;
 

@@ -48,7 +48,7 @@ export abstract class GraphService {
   abstract getPipelines(gatewayName): Observable<Pipeline[]>;
 
   abstract addPipeline(gatewayUid: number, pipeline: Pipeline, transportObj: any,
-    dataStoreObj: any, filterObj: any): Observable<string>;
+    dataStoreObj: any, filterObj: any, streamingObj: any): Observable<string>;
   
   abstract updatePipeline(pipeline: Pipeline): Observable<string>;
 
