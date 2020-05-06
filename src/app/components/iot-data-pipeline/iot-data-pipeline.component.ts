@@ -173,9 +173,11 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
 
     this.updateProtocolViewForm(row.protocolType, row.protocol);
 
-    this.updateDataStoreViewForm(row.dataStoreType, row.dataStore)
+    this.updateDataStoreViewForm(row.dataStoreType, row.dataStore);
 
     this.updateFilterViewForm(row.filter);
+
+    this.updateStreamingViewForm(row.streaming)
 
   }
 
@@ -360,6 +362,23 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
 
   /**
    * 
+   * @param streaming 
+   */
+  updateStreamingViewForm(streaming) {
+
+    // Update datastore view form
+    this.streamingViewForm.patchValue({
+      deviceName: streaming.deviceName,
+      instrumentName: streaming.instrumentName,
+      function: streaming.function,
+      windowType: streaming.windowType,
+      windowSize: streaming.windowSize
+    });
+
+  }
+
+  /**
+   * 
    */
   resetPipelineForm() {
     this.pipelineForm.reset({
@@ -441,6 +460,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
       let protocolObj = this.buildProtocolProperties(protocol, this.transportForm);
       let dataStoreObj = this.buildDataStoreProperties(dataStore, this.dataStoreForm);
       let filterObj = this.buildDataFilteringProperties(this.filteringForm);
+      let streamingObj = this.buildStreamingProperties(this.streamingForm);
 
       let env = [];
       env.push({ "name": "FLOGO_APP_PROPS_ENV", "value": "auto" });
@@ -452,6 +472,9 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
       });
       filterObj.forEach(function (filter) {
         env.push(filter);
+      });
+      streamingObj.forEach(function (stream) {
+        env.push(stream);
       });
 
       let request = {
@@ -489,9 +512,10 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
     let protocolUid = this.transportForm.get('uid').value;
     let dataStoreUid = this.dataStoreForm.get('uid').value;
     let graphFilterObj = this.buildGraphDataFilteringProperties(this.filteringForm);
-    
+    let graphStreamingObj = this.buildGraphStreamingProperties(this.streamingForm);
+
     // Add pipeline to graph
-    this.graphService.addPipeline(this.gateway.uid, pipeline, protocolUid, dataStoreUid, graphFilterObj)
+    this.graphService.addPipeline(this.gateway.uid, pipeline, protocolUid, dataStoreUid, graphFilterObj, graphStreamingObj)
       .subscribe(res => {
         console.log("Added pipeline: ", res);
 
@@ -575,6 +599,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
       let protocolObj = this.buildProtocolProperties(pipeline.protocolType, this.transportViewForm);
       let dataStoreObj = this.buildDataStoreProperties(pipeline.dataStoreType, this.dataStoreViewForm);
       let filterObj = this.buildDataFilteringProperties(this.filteringViewForm);
+      let streamingObj = this.buildStreamingProperties(this.streamingForm);
       // let loggingObj = this.buildLoggingProperties();
 
       let applicationId = pipeline.name;
@@ -588,6 +613,9 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
       });
       filterObj.forEach(function (filter) {
         env.push(filter);
+      });
+      streamingObj.forEach(function (stream) {
+        env.push(stream);
       });
       // loggingObj.forEach(function (filter) {
       //   env.push(filter);
@@ -765,7 +793,11 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
     });
 
     this.streamingForm = this.formBuilder.group({
-      deviceName: ['']
+      deviceName: ['changeme', Validators.required],
+      instrumentName: ['changeme', Validators.required],
+      function: ['avg', Validators.required],
+      windowType: ['tumbling', Validators.required],
+      windowSize: ['5', Validators.required]
     });
 
 
@@ -849,7 +881,11 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
     });
 
     this.streamingViewForm = this.formBuilder.group({
-      deviceName: ['']
+      deviceName: ['changeme', Validators.required],
+      instrumentName: ['changeme', Validators.required],
+      function: ['avg', Validators.required],
+      windowType: ['tumbling', Validators.required],
+      windowSize: ['5', Validators.required]
     });
 
   }
@@ -941,7 +977,11 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
     this.resetFilteringForm();
 
     this.streamingForm.patchValue({
-      deviceName: ''
+      deviceName: '',
+      instrumentName: '',
+      function: 'avg',
+      windowType: 'tumbling',
+      windowSize: 5
     });
 
 
@@ -1181,6 +1221,40 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
     ];
 
     return dataStoreObj;
+  }
+
+  /**
+   * 
+   * @param form 
+   */
+  buildGraphStreamingProperties(form: FormGroup): any {
+
+    let streamingObj = [
+      { "name": "deviceName", "value": form.get('deviceName').value },
+      { "name": "instrumentName", "value": form.get('instrumentName').value },
+      { "name": "function", "value": form.get('function').value },
+      { "name": "windowType", "value": form.get('windowType').value },
+      { "name": "windowSize", "value": form.get('windowSize').value }
+    ];
+
+    return streamingObj;
+  }
+
+  /**
+   * 
+   * @param form 
+   */
+  buildStreamingProperties(form: FormGroup): any {
+
+    let streamingObj = [
+      { "name": "Streaming.DeviceName", "value": form.get('deviceName').value },
+      { "name": "Streaming.InstrumentName", "value": form.get('instrumentName').value },
+      { "name": "Streaming.Function", "value": form.get('function').value },
+      { "name": "Streaming.WindowType", "value": form.get('windowType').value },
+      { "name": "Streaming.WindowSize", "value": form.get('windowSize').value }
+    ];
+
+    return streamingObj;
   }
 
   buildLoggingProperties(): any {

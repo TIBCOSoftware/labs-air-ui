@@ -199,6 +199,7 @@ export class Pipeline {
   dataStoreType: string;
   dataStore: any;
   filter: any;
+  streaming: any;
   status: string;
 }
 

@@ -31,7 +31,7 @@
                             <mat-step [stepControl]="streamingForm" optional>
                                 <form [formGroup]="streamingForm">
                                     <ng-template matStepLabel>Data Streaming</ng-template>
-                                    <app-data-streaming [streamingForm]="streamingForm"></app-data-streaming>
+                                    <app-data-streaming [devices]="devices" [streamingForm]="streamingForm"></app-data-streaming>
                                 </form>
                             </mat-step>
 
