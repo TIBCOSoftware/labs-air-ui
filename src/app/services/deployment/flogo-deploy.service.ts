@@ -25,7 +25,7 @@ export class FlogoDeployService {
 
   deploy(request): Observable<string> {
 
-    const url = `/deployment/releases`;
+    const url = `/airEndpoint/app-manager/releases`;
 
     return this.http.post<string>(url, request, this.httpOptions)
       .pipe(
@@ -36,7 +36,7 @@ export class FlogoDeployService {
 
   undeploy(request): Observable<string> {
 
-    let url = "/deployment/releases/".concat(request["id"]);
+    let url = "/airEndpoint/app-manager/releases/".concat(request["id"]);
     let searchParams = new URLSearchParams();
     let params = request.params;
     if (params){
