@@ -264,14 +264,21 @@
     "pathRewrite":{"^/edgex/localgateway" : ""}
   },
   "/edgex/remotegateway/*": {
-    "target": "https://52.45.185.99:8043",
+    "target": "http://aefd6c3a11ccb4efcb930d1e1171bdb7-102440446.us-west-2.elb.amazonaws.com",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "info",
     "pathRewrite":{"^/edgex/remotegateway" : ""}
   },
+  "/airEndpoint/*": {
+    "target": "http://a9446b9637f504386b029b103c3a94ad-243174241.us-west-2.elb.amazonaws.com",
+    "secure": "false",
+    "changeOrigin": true,
+    "logLevel": "info",
+    "pathRewrite":{"^/endpoint" : ""}
+  },
   "/dgraph/*": {
-    "target": "http://mydgraphdns:8080",
+    "target": "http://a9610eaa301cb4dd59251a82613f619b-1622475287.us-west-2.elb.amazonaws.com:443",
     "secure": "false",
     "changeOrigin": true,
     "logLevel": "info",
@@ -284,7 +291,7 @@
     "logLevel": "info"
   },
   "/deployment/*": {
-    "target": "http://localhost:9999",
+    "target": "http://a2f5e29be13104fa5a9a05c8d32fd8fc-606361597.us-west-2.elb.amazonaws.com",
     "secure": "false",
     "changeOrigin": true,
     "logLevel": "info",
