@@ -981,7 +981,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
       instrumentName: '',
       function: 'avg',
       windowType: 'tumbling',
-      windowSize: 5
+      windowSize: '5'
     });
 
 
