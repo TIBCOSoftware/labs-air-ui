@@ -77,7 +77,7 @@ const route3 = [
 export class DgraphService implements GraphService {
 
   // Defined as a proxy.  (i.e. http://137.117.38.255:8080)
-  private dgraphUrl = '/dgraph';
+  private dgraphUrl = '/airEndpoint/dgraph-alpha-http';
 
   /**
    * 
