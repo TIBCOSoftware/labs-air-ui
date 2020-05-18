@@ -20,12 +20,13 @@ interface ROUTE {
 export class IotHomeCockpitComponent extends LiveAppsHomeCockpitComponent {
 
     networkRoutes: ROUTE[] = [
+        // {
+        //     icon: 'iotdashboard',
+        //     route: '/starterApp/home/iotdashboard',
+        //     title: 'IoT Dashboard',
+        //     custom: true
+        // }, 
         {
-            icon: 'iotdashboard',
-            route: '/starterApp/home/iotdashboard',
-            title: 'IoT Dashboard',
-            custom: true
-        }, {
             icon: 'gateway',
             route: '/starterApp/home/gateway',
             title: 'Gateways',
@@ -59,32 +60,36 @@ export class IotHomeCockpitComponent extends LiveAppsHomeCockpitComponent {
             route: '/starterApp/home/rules',
             title: 'Edge Rules',
             custom: true
-        }, {
-            icon: 'rules',
-            route: '/starterApp/home/tcerules',
-            title: 'Cloud Rules',
-            custom: true
-        }, {
+        }, 
+        // {
+        //     icon: 'rules',
+        //     route: '/starterApp/home/tcerules',
+        //     title: 'Cloud Rules',
+        //     custom: true
+        // }, 
+        {
             icon: 'instrumenthistory',
             route: '/starterApp/home/notifications',
             title: 'Notifications',
             custom: true
-        },  {
-            icon: 'settings',
-            route: '/starterApp/home/casemanagement',
-            title: 'Case Management',
-            custom: false
-        }, {
-            icon: 'settings',
-            route: 'sales/leads',
-            title: 'Settings',
-            custom: false
-        }, {
-            icon: 'get_app',
-            route: 'sales/opportunities',
-            title: 'Software Update',
-            custom: false
         }
+        // {
+        //     icon: 'settings',
+        //     route: '/starterApp/home/casemanagement',
+        //     title: 'Case Management',
+        //     custom: false
+        // }, 
+        // {
+        //     icon: 'settings',
+        //     route: 'sales/leads',
+        //     title: 'Settings',
+        //     custom: false
+        // }, {
+        //     icon: 'get_app',
+        //     route: 'sales/opportunities',
+        //     title: 'Software Update',
+        //     custom: false
+        // }
     ];
 
 
