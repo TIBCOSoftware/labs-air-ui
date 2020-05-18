@@ -264,31 +264,24 @@
     "pathRewrite":{"^/edgex/localgateway" : ""}
   },
   "/edgex/remotegateway/*": {
-    "target": "https://52.45.185.99:8043",
+    "target": "http://<Add-Your-RemoteAnywhere-Enpoint-Here>",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "info",
     "pathRewrite":{"^/edgex/remotegateway" : ""}
   },
-  "/dgraph/*": {
-    "target": "http://mydgraphdns:8080",
+  "/airEndpoint/*": {
+    "target": "http://<Add-Your-Air-Enpoint-Here>",
     "secure": "false",
     "changeOrigin": true,
     "logLevel": "info",
-    "pathRewrite":{"^/dgraph" : ""}
+    "pathRewrite":{"^/airEndpoint" : ""}
   },
   "/tgdb/*": {
     "target": "http://localhost:9999",
     "secure": "false",
     "changeOrigin": true,
     "logLevel": "info"
-  },
-  "/deployment/*": {
-    "target": "http://localhost:9999",
-    "secure": "false",
-    "changeOrigin": true,
-    "logLevel": "info",
-    "pathRewrite":{"^/deployment" : ""}
   },
   "/edgexrules/localgateway/*": {
     "target": "http://localhost:48095",
