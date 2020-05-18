@@ -267,12 +267,14 @@ export class MaporamaComponent implements OnInit, OnChanges {
   mapMarkerDrilldown(uuid, label) {
     console.log("In mapMarkerDrilldown for: ", uuid, label);
 
-    if (label == "gateway1") {
-      this.router.navigate(['/starterApp/home/iotdashboard']);
-    }
-    else if (label == "gateway2") {
-      this.router.navigate(['/starterApp/home/gatewaydashboard']);
-    }
+    // Commented out until Spotfire dashboards interaction is completed
+    
+    // if (label == "gateway1") {
+    //   this.router.navigate(['/starterApp/home/iotdashboard']);
+    // }
+    // else if (label == "gateway2") {
+    //   this.router.navigate(['/starterApp/home/gatewaydashboard']);
+    // }
 
   }
 
