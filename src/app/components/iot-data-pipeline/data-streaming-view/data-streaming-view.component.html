@@ -2,10 +2,32 @@
 
     <div fxLayout="column" style="height: 100%;">
 
-        <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px">
+        <div fxLayout="row" fxFlex="100%" fxFlexOffset="20px" fxLayoutGap="15px">
             <mat-form-field fxFlex="1 1 15%" appearance="outline">
                 <mat-label>Device Name</mat-label>
                 <input matInput [readonly]=false formControlName="deviceName">
+            </mat-form-field>
+
+            <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                <mat-label>Instrument Name</mat-label>
+                <input matInput [readonly]=false formControlName="instrumentName">
+            </mat-form-field>
+        </div>
+
+        <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px">
+            <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                <mat-label>Function</mat-label>
+                <input matInput [readonly]=false formControlName="function">
+            </mat-form-field>
+
+            <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                <mat-label>Window Type</mat-label>
+                <input matInput [readonly]=false formControlName="windowType">
+            </mat-form-field>
+
+            <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                <mat-label>Window Size</mat-label>
+                <input matInput [readonly]=false formControlName="windowSize">
             </mat-form-field>
         </div>
 

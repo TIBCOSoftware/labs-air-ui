@@ -1,5 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { Device, Resource } from '../../../shared/models/iot.model';
+
+export interface SelectItem {
+  value: string;
+  viewValue: string;
+}
 
 export interface SelectItem {
   value: string;
@@ -14,6 +20,25 @@ export interface SelectItem {
 export class DataStreamingComponent implements OnInit {
 
   @Input() streamingForm: FormGroup;
+  @Input() devices: Device[];
+
+  instruments: Resource[] = [];
+
+  functions: SelectItem[] = [
+    { value: "avg", viewValue: 'AVG' },
+    { value: 'sum', viewValue: 'SUM' },
+    { value: 'min', viewValue: 'MIN' },
+    { value: 'max', viewValue: 'MAX' },
+    { value: 'count', viewValue: 'COUNT' },
+    { value: 'accumulate', viewValue: 'ACCUMULATE' }
+  ];
+
+  windowTypes: SelectItem[] = [
+    { value: "tumbling", viewValue: 'TUMBLING' },
+    { value: 'sliding', viewValue: 'SLIDING' },
+    { value: 'timeTumbling', viewValue: 'TIME TUMBLING' },
+    { value: 'timeSliding', viewValue: 'TIME SLIDING' }
+  ];
 
   constructor() { }
 
@@ -21,10 +46,30 @@ export class DataStreamingComponent implements OnInit {
   }
 
   stepSubmitted() {
-    // this.transportForm.get('transport').markAsTouched();
-    // this.transportForm.get('transport').updateValueAndValidity();
-    // this.transportForm.get('personalDetails').get('lastname').markAsTouched();
-    // this.transportForm.get('personalDetails').get('lastname').updateValueAndValidity();
+  
   }
   
+  onDeviceSelected(event) {
+
+    console.log('Device Selected: ', event);
+
+    // Set the resourceDataSource
+    let idx = this.getIndexForDevice(event.value);
+    this.instruments = this.devices[idx].profile.deviceResources as Resource[];
+  }
+
+  getIndexForDevice(name: string): number {
+    let idx = 0;
+
+    for (let i = 0; i < this.devices.length; i++) {
+       
+      if (this.devices[i].name == name) {
+        idx = i;
+        break;
+      } 
+    }
+    
+    return idx;
+  }
+
 }

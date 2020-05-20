@@ -117,7 +117,7 @@ export class IotGatewayComponent implements OnInit, AfterViewInit {
 
     this.mapConfig = {
       createMap: true,
-      centerLat: 39.0,
+      centerLat: 36.0,
       centerLon: -98.0,
       zoom: 4,
       showColorAxis: false,
@@ -144,10 +144,12 @@ export class IotGatewayComponent implements OnInit, AfterViewInit {
       let tsms = Date.now();
 
       gate.uuid = this.gatewayForm.controls['uuid'].value;
+      gate.description = this.gatewayForm.controls['description'].value;
       gate.address = this.gatewayForm.controls['address'].value;
       gate.createdts = tsms;
       gate.latitude = this.gatewayForm.controls['latitude'].value;
       gate.longitude = this.gatewayForm.controls['longitude'].value;
+      gate.accessToken = this.gatewayForm.controls['accessToken'].value;
       gate.updatedts = tsms;
 
       this.graphService.addGateway(gate)

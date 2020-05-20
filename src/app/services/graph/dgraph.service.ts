@@ -963,10 +963,11 @@ export class DgraphService implements GraphService {
     let pipeline_protocol = `protocol: pipeline_protocol {uid uuid brokerURL topic maximumQOS username password encryptionMode caCertificate clientCertificate clientKey authMode serverCerticate consumerGroupId connectionTimeout sessionTimeout retryBackoff commitInterval initialOffset fetchMinBytes fetchMaxWait heartbeatInterval}`;
     let pipeline_datastore = `dataStore: pipeline_datastore {uid uuid host port databaseName user password accountName warehouse database schema authType username clientId clientSecret authorizationCode redirectURI loginTimeout url}`;
     let pipeline_filter = `filter: pipeline_filter {uid deviceNames}`;
+    let pipeline_streaming = `streaming: pipeline_streaming {uid deviceName instrumentName function windowType windowSize}`;
 
     let query = `{
       resp(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
-        uid uuid accessToken
+        uid uuid accessToken address
         pipelines: gateway_pipeline {
           uid
           name
@@ -981,6 +982,7 @@ export class DgraphService implements GraphService {
           ${pipeline_protocol}
           ${pipeline_datastore}
           ${pipeline_filter}
+          ${pipeline_streaming}
         }
       }
     }`;
@@ -1005,6 +1007,7 @@ export class DgraphService implements GraphService {
     let pipeline_protocol = `protocol: pipeline_protocol {uid brokerURL topic maximumQOS username password encryptionMode caCertificate clientCertificate clientKey authMode serverCerticate consumerGroupId connectionTimeout sessionTimeout retryBackoff commitInterval initialOffset fetchMinBytes fetchMaxWait heartbeatInterval}`;
     let pipeline_datastore = `datastore: pipeline_datastore {uid host port databaseName user password accountName warehouse database schema authType username clientId clientSecret authorizationCode redirectURI loginTimeout url}`;
     let pipeline_filter = `filter: pipeline_filter {uid deviceNames}`;
+    let pipeline_streaming = `streaming: pipeline_streaming {uid deviceName instrumentName function windowType windowSize}`;
 
     let query = `{
       var(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
@@ -1025,6 +1028,7 @@ export class DgraphService implements GraphService {
         ${pipeline_protocol}
         ${pipeline_datastore}
         ${pipeline_filter}
+        ${pipeline_streaming}
       }
     }`;
 
@@ -1046,7 +1050,7 @@ export class DgraphService implements GraphService {
    * @param filterObj 
    */
   addPipeline(gatewayUid: number, pipeline: Pipeline, protocolUid: string,
-    dataStoreUid: string, filterObj: any): Observable<string> {
+    dataStoreUid: string, filterObj: any, streamingObj:any): Observable<string> {
 
     const url = `${this.dgraphUrl}/mutate?commitNow=true`;
 
@@ -1055,10 +1059,7 @@ export class DgraphService implements GraphService {
     // Create Filter entries
     let filterVar = '';
     let i = 0;
-    let len = 0;
-    if (filterObj && filterObj.Properties && filterObj.Properties.length > 0){
-      len = filterObj.Properties.length;
-    }
+    let len = filterObj.length;
 
     for (; i < len; i++) {
       filterVar = filterVar +
@@ -1066,6 +1067,9 @@ export class DgraphService implements GraphService {
       `;
     }
 
+    filterVar = filterVar +
+      `_:Filter <dgraph.type> "Filter" .
+      `;
     filterVar = filterVar +
       `_:Filter <filter> "" .
       `;
@@ -1077,6 +1081,32 @@ export class DgraphService implements GraphService {
       `;
 
     console.log("Filter dgraph var: " + filterVar);
+
+    // Create Streaming entries
+    let streamingVar = '';
+    i = 0;
+    len = streamingObj.length;
+
+    for (; i < len; i++) {
+      streamingVar = streamingVar +
+        `_:Streaming <${streamingObj[i].name}> "${streamingObj[i].value}" .
+      `;
+    }
+
+    streamingVar = streamingVar +
+      `_:Streaming <dgraph.type> "Streaming" .
+      `;
+    streamingVar = streamingVar +
+      `_:Streaming <streaming> "" .
+      `;
+    streamingVar = streamingVar +
+      `_:Streaming <type> "streaming" .
+      `;
+    streamingVar = streamingVar +
+      `_:Pipeline <pipeline_streaming> _:Streaming .
+      `;
+
+    console.log("Streaming dgraph var: " + streamingVar);
 
 
     query = `{
@@ -1095,6 +1125,7 @@ export class DgraphService implements GraphService {
         _:Pipeline <pipeline_protocol> <${protocolUid}> .
         _:Pipeline <pipeline_datastore> <${dataStoreUid}> .
         ${filterVar}
+        ${streamingVar}
       }
     }`;
     console.log('Mutate statement: ', query);
@@ -1139,13 +1170,16 @@ export class DgraphService implements GraphService {
     let protocol = pipeline.protocol;
     let dataStore = pipeline.dataStore;
     let filter = pipeline.filter;
+    let streaming = pipeline.streaming;
 
     let query = `{
       delete {
         <${filter.uid}> * * .
+        <${streaming.uid}> * * .
         <${pipeline.uid}> <pipeline_protocol> <${protocol.uid}> .
         <${pipeline.uid}> <pipeline_datastore> <${dataStore.uid}> .
         <${pipeline.uid}> <pipeline_filter> <${filter.uid}> .
+        <${pipeline.uid}> <pipeline_streaming> <${streaming.uid}> .
         <${pipeline.uid}> * * .
         <${gatewayUid}> <gateway_pipeline> <${pipeline.uid}> .
       }
