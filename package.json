@@ -69,8 +69,6 @@
     "del": "^5.0.0",
     "file-system": "^2.2.2",
     "fs-extra": "^8.1.0",
-    "gulp": "^4.0.2",
-    "gulp-clean": "^0.4.0",
     "inquirer": "^6.5.0",
     "inquirer-autocomplete-prompt": "^1.0.1",
     "jasmine-core": "~3.4.0",
