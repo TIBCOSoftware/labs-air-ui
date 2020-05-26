@@ -37,6 +37,8 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
   filteringViewForm: FormGroup;
   streamingViewForm: FormGroup;
 
+  pipelineType = "data"
+
   gatewayId = "";
   gateway = null as Gateway;
   pipelineSelected = false;  // Used to control the display of buttons
@@ -50,7 +52,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
   devices: Device[] = [];
 
   pipelinesDataSource = new MatTableDataSource<Pipeline>();
-  pipelineDisplayedColumns: string[] = ['id', 'name', 'protocolType', 'dataStoreType', 'status', 'created', 'modified'];
+  pipelineDisplayedColumns: string[] = ['id', 'name', 'pipelineType', 'protocolType', 'dataStoreType', 'status', 'created', 'modified'];
   pipelineSelection = new SelectionModel<Pipeline>(false, []);
 
   @ViewChild(MatSort, { static: false }) sort: MatSort;
@@ -479,7 +481,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
 
       let request = {
         "id": applicationId,
-        "name": "air-data-" + protocol.toLowerCase() + "-" + dataStore.toLowerCase(),
+        "name": "air-" + this.pipelineType + "-" + protocol.toLowerCase() + "-" + dataStore.toLowerCase(),
         "version": "0.1.0",
         "values": {
           "deployment": {
@@ -505,6 +507,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
     pipeline.created = tsms;
     pipeline.modified = tsms;
     pipeline.name = applicationId;
+    pipeline.pipelineType = this.pipelineType;
     pipeline.protocolType = protocol;
     pipeline.dataStoreType = dataStore;
     pipeline.status = pipelineStatus;
@@ -623,7 +626,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
 
       let request = {
         "id": applicationId,
-        "name": "air-data-" + pipeline.protocolType.toLowerCase() + "-" + pipeline.dataStoreType.toLowerCase(),
+        "name": "air-" + pipeline.pipelineType + "-" + pipeline.protocolType.toLowerCase() + "-" + pipeline.dataStoreType.toLowerCase(),
         "version": "0.1.0",
         "values": {
           "deployment": {
@@ -896,6 +899,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
   resetFormsToDefaults() {
 
     console.log("Resetting forms to defaults");
+    this.pipelineType = "data";
 
     this.transportForm.patchValue({
       gateway: this.gateway,
