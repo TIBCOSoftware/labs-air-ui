@@ -194,6 +194,7 @@ export class Pipeline {
   created: number;
   modified: number;
   name: string;
+  pipelineType: string;
   protocolType: string;
   protocol: any;
   dataStoreType: string;
