@@ -12,7 +12,8 @@ export class FlogoDeployService {
 
   httpOptions = {
     headers: new HttpHeaders({
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': 'Basic YWRtaW46YWRtaW4='
     })
   };
 
