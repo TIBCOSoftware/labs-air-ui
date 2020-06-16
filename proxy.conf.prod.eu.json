@@ -13,6 +13,10 @@
     },
     "cookiePathRewrite": {
       "*": "/"
+    },
+    "headers": {
+      "Origin": "https://eu.liveapps.cloud.tibco.com",
+      "Cookie": ""
     }
   },
   "/as/token.oauth2": {
@@ -109,7 +113,59 @@
       "*": "localhost"
     }
   },
+  "/work/": {
+    "target": {
+      "host": "eu.liveapps.cloud.tibco.com",
+      "protocol": "https:",
+      "port": 443
+    },
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "info",
+    "headers": {
+      "Origin": "https://eu.liveapps.cloud.tibco.com"
+    }
+  },
+  "/organisation": {
+    "target": {
+      "host": "eu.liveapps.cloud.tibco.com",
+      "protocol": "https:",
+      "port": 443
+    },
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "info",
+    "headers": {
+      "Origin": "https://eu.liveapps.cloud.tibco.com"
+    }
+  },
   "/organisation/v1/": {
+    "target": {
+      "host": "eu.liveapps.cloud.tibco.com",
+      "protocol": "https:",
+      "port": 443
+    },
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "info",
+    "headers": {
+      "Origin": "https://eu.liveapps.cloud.tibco.com"
+    }
+  },
+  "/apps": {
+    "target": {
+      "host": "eu.liveapps.cloud.tibco.com",
+      "protocol": "https:",
+      "port": 443
+    },
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "info",
+    "headers": {
+      "Origin": "https://eu.liveapps.cloud.tibco.com"
+    }
+  },
+  "/case": {
     "target": {
       "host": "eu.liveapps.cloud.tibco.com",
       "protocol": "https:",
@@ -162,6 +218,19 @@
     }
   },
   "/process/v1/": {
+    "target": {
+      "host": "eu.liveapps.cloud.tibco.com",
+      "protocol": "https:",
+      "port": 443
+    },
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "info",
+    "headers": {
+      "Origin": "https://eu.liveapps.cloud.tibco.com"
+    }
+  },
+  "/pageflow/": {
     "target": {
       "host": "eu.liveapps.cloud.tibco.com",
       "protocol": "https:",
@@ -251,26 +320,5 @@
     "headers": {
       "Origin": "https://eu.liveapps.cloud.tibco.com"
     }
-  },
-  "/edgex/localgateway/*": {
-    "target": "https://localhost:8443",
-    "secure": false,
-    "changeOrigin": true,
-    "logLevel": "info",
-    "pathRewrite":{"^/edgex/localgateway" : ""}
-  },
-  "/edgex/remotegateway/*": {
-    "target": "http://<Add-Your-air-cors-anywhere-service-Enpoint-Here>",
-    "secure": false,
-    "changeOrigin": true,
-    "logLevel": "info",
-    "pathRewrite":{"^/edgex/remotegateway" : ""}
-  },
-  "/airEndpoint/*": {
-    "target": "http://<Add-Your-ingress-nginx-controller-Enpoint-Here>",
-    "secure": "false",
-    "changeOrigin": true,
-    "logLevel": "info",
-    "pathRewrite":{"^/airEndpoint" : ""}
   }
 }
