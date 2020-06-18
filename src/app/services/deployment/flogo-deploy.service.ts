@@ -4,6 +4,7 @@ import { Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { LogLevel, LogService } from '@tibco-tcstk/tc-core-lib';
+import {AuthService} from '../auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,9 +18,14 @@ export class FlogoDeployService {
   };
 
   constructor(private logger: LogService,
-    private http: HttpClient) {
+    private http: HttpClient, private authService: AuthService) {
 
     logger.level = LogLevel.Debug;
+    let basicAuthHeaders = authService.getBasicAuthHeaders();
+    for (let key in basicAuthHeaders) {
+      let value = basicAuthHeaders[key];
+      this.httpOptions.headers = this.httpOptions.headers.append(key, value);
+    }
 
   }
 

@@ -8,6 +8,7 @@ import { LogLevel, LogService } from '@tibco-tcstk/tc-core-lib';
 import { Gateway, Subscription, Publisher, Pipeline, Rule, Notification, Protocol, DataStore } from '../../shared/models/iot.model';
 import { TSReading } from '../../shared/models/iot.model';
 import { GraphService } from './graph.service';
+import {AuthService} from '../auth/auth.service';
 
 // const httpOptions = {
 //   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -85,9 +86,15 @@ export class DgraphService implements GraphService {
    * @param http 
    */
   constructor(private logger: LogService,
-    private http: HttpClient) {
-
+    private http: HttpClient, private authService: AuthService) {
+    console.log("Constructor Getting basic auth for dgraph");
     logger.level = LogLevel.Debug;
+    let basicAuthHeaders = authService.getBasicAuthHeaders();
+    for (let key in basicAuthHeaders) {
+      let value = basicAuthHeaders[key];
+      httpOptions.headers = httpOptions.headers.append(key, value);
+      httpMutateOptions.headers = httpMutateOptions.headers.append(key, value);
+    }
 
   }
 
