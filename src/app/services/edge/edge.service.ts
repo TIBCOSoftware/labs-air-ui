@@ -66,27 +66,6 @@ export class EdgeService {
     return url;
   }
 
-  /**
-   * 
-   * @param hostname 
-   * @param servicePath 
-   * @param operation 
-   */
-  private getFlogoRulesURL(hostname: string, servicePath:string, operation: string): string {
-    let url = ``;
-
-    if (hostname == 'localhost') {
-      url = `/edgexrules/localgateway${servicePath}${operation}`;
-    }
-    else {
-      url = `/edgexrules/remotegateway/http://${hostname}:8442${servicePath}${operation}`;
-    }
-
-    console.log("getEdgexURL: ", url);
-    return url;
-  }
-
-
   // Core Metadata Operations
 
   /**
@@ -446,7 +425,10 @@ export class EdgeService {
   addRule(gateway: Gateway, rule: Rule): Observable<string> {
 
     // const url = `/${gateway.uuid}${this.edgeFlogoRulesUrl}addRule`;
-    const url = this.getFlogoRulesURL(gateway.address, this.edgexFlogoRulesPath, 'addRule');
+    const url = this.getEdgexURL(gateway.address, this.edgexFlogoRulesPath, 'addRule');
+
+    const authorizedHeaders = httpTextResponseOptions.headers.set('Authorization', 'Bearer ' + gateway.accessToken);
+    httpTextResponseOptions.headers = authorizedHeaders;
 
     return this.http.post<string>(url, rule, httpTextResponseOptions)
       .pipe(
@@ -463,7 +445,10 @@ export class EdgeService {
   deleteRule(gateway: Gateway, rule: Rule): Observable<string> {
 
     // const url = `/${gateway.uuid}${this.edgeFlogoRulesUrl}deleteRule`;
-    const url = this.getFlogoRulesURL(gateway.address, this.edgexFlogoRulesPath, 'deleteRule');
+    const url = this.getEdgexURL(gateway.address, this.edgexFlogoRulesPath, 'deleteRule');
+
+    const authorizedHeaders = httpTextResponseOptions.headers.set('Authorization', 'Bearer ' + gateway.accessToken);
+    httpTextResponseOptions.headers = authorizedHeaders;
 
     return this.http.post<string>(url, rule, httpTextResponseOptions)
       .pipe(
