@@ -12,3 +12,7 @@ build-air-ui:
 .PHONY: push-image
 push-image:
 	@$(SCRIPTS_PATH)/push_image.sh ${IMAGE_NAME} ${IMAGE_TAG} ${IMAGE_URL}
+
+.PHONY: delete-local-image
+delete-local-image:
+	@$(SCRIPTS_PATH)/delete_local_image.sh ${IMAGE_NAME} ${IMAGE_TAG} ${IMAGE_URL}
