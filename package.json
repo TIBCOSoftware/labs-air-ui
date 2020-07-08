@@ -13,6 +13,9 @@
     "serve_eu": "ng serve --proxy-config proxy.conf.prod.eu.json --ssl true --source-map --aot",
     "serve_us": "ng serve --proxy-config proxy.conf.prod.us.json --ssl true --source-map --aot",
     "serve_au": "ng serve --proxy-config proxy.conf.prod.au.json --ssl true --source-map --aot",
+    "serve_eu_cont": "ng serve --proxy-config proxy.conf.prod.eu.json --ssl true --source-map --aot --host 0.0.0.0",
+    "serve_us_cont": "ng serve --proxy-config proxy.conf.prod.us.json --ssl true --source-map --aot --host 0.0.0.0",
+    "serve_au_cont": "ng serve --proxy-config proxy.conf.prod.au.json --ssl true --source-map --aot --host 0.0.0.0",
     "build_prod_hash": "ng build --prod --base-href /webresource/apps/IoTCloudStarter/index.html --deploy-url /webresource/apps/IoTCloudStarter/ && cd ./dist/IoTCloudStarter/ && zip -r ./app.zip ./* && cd ../..",
     "build_prod": "ng build --prod --base-href /webresource/apps/IoTCloudStarter/ --deploy-url /webresource/apps/IoTCloudStarter/ && cd ./dist/IoTCloudStarter/ && zip -r ./app.zip ./* && cd ../.."
   },
