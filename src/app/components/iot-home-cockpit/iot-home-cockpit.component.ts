@@ -29,7 +29,7 @@ export class IotHomeCockpitComponent extends LiveAppsHomeCockpitComponent {
         {
             icon: 'gateway',
             route: '/starterApp/home/gateway',
-            title: 'Gateways',
+            title: 'Device Groups',
             custom: true
         }
     ];
