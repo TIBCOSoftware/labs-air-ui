@@ -64,6 +64,8 @@ import { TgdbService } from './services/graph/tgdb.service';
 import { IotGatewayEndpointComponent } from './components/iot-gateway-endpoint/iot-gateway-endpoint.component';
 import { IgeProtocolsComponent } from './components/iot-gateway-endpoint/ige-protocols/ige-protocols.component';
 import { IgeDataStoresComponent } from './components/iot-gateway-endpoint/ige-data-stores/ige-data-stores.component';
+import { IotAnomalyDetectionDashboardComponent } from './components/iot-anomaly-detection-dashboard/iot-anomaly-detection-dashboard.component';
+import { IotMlModelsComponent } from './components/iot-ml-models/iot-ml-models.component';
 
 /** This is the tc core configuration object
  * To use oauth you must also add the OAuthInterceptor to providers
@@ -122,7 +124,9 @@ const tcCoreConfig: TcCoreConfig = {
     ProtocolsViewComponent,
     IotGatewayEndpointComponent,
     IgeProtocolsComponent,
-    IgeDataStoresComponent
+    IgeDataStoresComponent,
+    IotAnomalyDetectionDashboardComponent,
+    IotMlModelsComponent
   ],
   imports: [
     AppRoutingModule,
