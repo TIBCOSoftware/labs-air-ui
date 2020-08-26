@@ -5,7 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { LogLevel, LogService } from '@tibco-tcstk/tc-core-lib';
 
-import { Gateway, Subscription, Publisher, Pipeline, Rule, Notification, Protocol, DataStore } from '../../shared/models/iot.model';
+import { Gateway, Subscription, Publisher, Pipeline, Rule, ModelConfig, Notification, Protocol, DataStore } from '../../shared/models/iot.model';
 import { TSReading } from '../../shared/models/iot.model';
 import { GraphService } from './graph.service';
 
@@ -1410,6 +1410,123 @@ export class TgdbService implements GraphService {
       .pipe(
         tap(_ => this.logger.info('deleted rule')),
         catchError(this.handleError<string>('deleteRule'))
+      );
+  }
+
+  /**
+   * 
+   * @param gatewayName 
+   */
+  getModelConfigs(gatewayName): Observable<ModelConfig[]> {
+    const url = `${this.tgdbUrl}/query`;
+    let query = `{
+      var(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
+        modelConfigs as gateway_modelconfig {
+        }
+      }
+      resp(func: uid(modelConfigs)) {
+        uid
+        name
+        uuid
+        description
+        device
+        resource
+        model
+        created
+        modified
+      }
+    }`;
+
+    console.log("getModelConfigs service query: ", query)
+
+    return this.http.post<any>(url, query, httpOptions)
+      .pipe(
+        map(response => response.data.resp as ModelConfig[]),
+        tap(_ => this.logger.info('fetched modelConfigs')),
+        catchError(this.handleError<ModelConfig[]>('getModelConfigs', []))
+      );
+
+  }
+
+  /**
+   * 
+   * @param gatewayUid 
+   * @param modelConfig
+   */
+  addModelConfig(gatewayUid: number, modelConfig: ModelConfig): Observable<string> {
+    const url = `${this.tgdbUrl}/mutate?commitNow=true`;
+    let query = `{
+      set {
+        _:ModelConfig <dgraph.type> "ModelConfig" .
+        _:ModelConfig <name> "${modelConfig.name}" .
+        _:ModelConfig <uuid> "${modelConfig.name}" .
+        _:ModelConfig <type> "modelConfig" .
+        _:ModelConfig <rule> "" .
+        _:ModelConfig <description> "${modelConfig.description}" .
+        _:ModelConfig <device> "${modelConfig.device}" .
+        _:ModelConfig <resource> "${modelConfig.resource}" .
+        _:ModelConfig <model> "${modelConfig.model}" .
+        _:ModelConfig <created> "${modelConfig.created}" .
+        _:ModelConfig <modified> "${modelConfig.modified}" .
+        <${gatewayUid}> <gateway_modelconfig> _:ModelConfig .
+      }
+    }`;
+    console.log('Mutate statement: ', query);
+
+    return this.http.post<any>(url, query, httpMutateOptions)
+      .pipe(
+        tap(_ => this.logger.info('add modelConfig')),
+        catchError(this.handleError<string>('addModelConfig'))
+      );
+
+  }
+
+  /**
+   * 
+   * @param modelConfig 
+   */
+  updateModelConfig(modelConfig: ModelConfig): Observable<string> {
+    const url = `${this.tgdbUrl}/mutate?commitNow=true`;
+    let query = `{
+      set {
+        <${modelConfig.uid}> <name> "${modelConfig.name}" .
+        <${modelConfig.uid}> <uuid> "${modelConfig.uuid}" .
+        <${modelConfig.uid}> <description> "${modelConfig.description}" .
+        <${modelConfig.uid}> <condDevice> "${modelConfig.device}" .
+        <${modelConfig.uid}> <condResource> "${modelConfig.resource}" .
+        <${modelConfig.uid}> <model> "${modelConfig.model}" .
+        <${modelConfig.uid}> <modified> "${modelConfig.modified}" .
+      }
+    }`;
+    console.log('Mutate statement: ', query);
+
+    return this.http.post<any>(url, query, httpMutateOptions)
+      .pipe(
+        tap(_ => this.logger.info('updated modelConfig')),
+        catchError(this.handleError<string>('updateModelConfig'))
+      );
+
+  }
+
+  /**
+   * 
+   * @param gatewayUid 
+   * @param modelConfigUid 
+   */
+  deleteModelConfig(gatewayUid: number, modelConfigUid: number): Observable<string> {
+    const url = `${this.tgdbUrl}/mutate?commitNow=true`;
+    let query = `{
+      delete {
+        <${modelConfigUid}> * * .
+        <${gatewayUid}> <gateway_modelconfig> <${modelConfigUid}> .
+      }
+    }`;
+    console.log('Delete ModelConfig Mutate statement: ', query);
+
+    return this.http.post<any>(url, query, httpMutateOptions)
+      .pipe(
+        tap(_ => this.logger.info('deleted modelConfig')),
+        catchError(this.handleError<string>('deleteModelConfig'))
       );
   }
 
