@@ -8,11 +8,13 @@ import {IotDeviceComponent} from '../../components/iot-device/iot-device.compone
 import {IotDeviceProfileComponent} from '../../components/iot-device-profile/iot-device-profile.component';
 import {IotDeviceCommandComponent} from '../../components/iot-device-command/iot-device-command.component';
 import {IotDeviceDashboardComponent} from '../../components/iot-device-dashboard/iot-device-dashboard.component';
+import {IotAnomalyDetectionDashboardComponent} from '../../components/iot-anomaly-detection-dashboard/iot-anomaly-detection-dashboard.component'
 import {IotGatewayDashboardComponent} from '../../components/iot-gateway-dashboard/iot-gateway-dashboard.component';
 import {IotDeviceStreamComponent} from '../../components/iot-device-stream/iot-device-stream.component';
 import {IotDeviceProvisionComponent} from '../../components/iot-device-provision/iot-device-provision.component';
 import {IotDashboardComponent} from '../../components/iot-dashboard/iot-dashboard.component';
 import {IotRulesComponent} from '../../components/iot-rules/iot-rules.component';
+import {IotMlModelsComponent} from '../../components/iot-ml-models/iot-ml-models.component';
 import {TceRulesComponent} from '../../components/tce-rules/tce-rules.component'
 import {IotNotificationsComponent} from '../../components/iot-notifications/iot-notifications.component';
 import {LiveAppsComponent} from '../../components/live-apps/live-apps.component';
@@ -59,6 +61,19 @@ export const STARTER_APP_ROUTES =
       {
         path: 'iotdashboard',
         component: IotDashboardComponent,
+        canActivate: [AuthGuard],
+        resolve: {
+          claims: ClaimsResolver,
+          laConfigHolder: LaConfigResolver,
+          groups: GroupsResolver,
+          roles: RolesResolver,
+          access: AccessResolver,
+          customFormDefs: FormResolver
+        }
+      },
+      {
+        path: 'iotanomalydetectiondashboard',
+        component: IotAnomalyDetectionDashboardComponent,
         canActivate: [AuthGuard],
         resolve: {
           claims: ClaimsResolver,
@@ -228,6 +243,19 @@ export const STARTER_APP_ROUTES =
       {
         path: 'rules',
         component: IotRulesComponent,
+        canActivate: [AuthGuard],
+        resolve: {
+          claims: ClaimsResolver,
+          laConfigHolder: LaConfigResolver,
+          groups: GroupsResolver,
+          roles: RolesResolver,
+          access: AccessResolver,
+          customFormDefs: FormResolver
+        }
+      },
+      {
+        path: 'mlmodels',
+        component: IotMlModelsComponent,
         canActivate: [AuthGuard],
         resolve: {
           claims: ClaimsResolver,

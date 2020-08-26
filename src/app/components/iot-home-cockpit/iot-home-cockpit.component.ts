@@ -20,12 +20,12 @@ interface ROUTE {
 export class IotHomeCockpitComponent extends LiveAppsHomeCockpitComponent {
 
     networkRoutes: ROUTE[] = [
-        // {
-        //     icon: 'iotdashboard',
-        //     route: '/starterApp/home/iotdashboard',
-        //     title: 'IoT Dashboard',
-        //     custom: true
-        // }, 
+        {
+            icon: 'iotdashboard',
+            route: '/starterApp/home/iotdashboard',
+            title: 'IoT Dashboard',
+            custom: true
+        }, 
         {
             icon: 'gateway',
             route: '/starterApp/home/gateway',
@@ -59,6 +59,11 @@ export class IotHomeCockpitComponent extends LiveAppsHomeCockpitComponent {
             icon: 'rules',
             route: '/starterApp/home/rules',
             title: 'Edge Rules',
+            custom: true
+        }, {
+            icon: 'rules',
+            route: '/starterApp/home/mlmodels',
+            title: 'Edge ML Models',
             custom: true
         }, 
         // {

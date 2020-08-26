@@ -286,6 +286,18 @@ export class Rule {
   actionValue: string;
 }
 
+export class ModelConfig {
+  uid: number;
+  created: number;
+  modified: number;
+  uuid: string;
+  name: string;
+  description: string;
+  device: string;
+  resource: string;
+  model: string;
+}
+
 export class Notification {
   uid: number;
   uuid: string;

@@ -50,6 +50,10 @@ export class IotDashboardComponent implements OnInit {
 
     this.spotfireServer = 'https://spotfire-next.cloud.tibco.com';
     this.analysisPath = '/Users/b5zl5zgs2jshn2xyyess4gzqufcuue6q/Public/Product Registration 06';
+
+    this.spotfireServer = 'https://ec2-3-223-106-221.compute-1.amazonaws.com';
+    this.analysisPath = '/Anonymous/MSAnomalyDetection';
+
     this.activePage = '0';
     this.parameters = "Test";
     this.configuration = {

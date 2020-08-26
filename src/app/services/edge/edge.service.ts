@@ -5,7 +5,7 @@ import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { catchError, map, tap, timeout } from 'rxjs/operators';
 import { LogLevel, LogService } from '@tibco-tcstk/tc-core-lib';
 
-import { Device, Profile, Service, Subscription, GetCommandResponse, Gateway, Rule } from '../../shared/models/iot.model';
+import { Device, Profile, Service, Subscription, GetCommandResponse, Gateway, Rule, ModelConfig } from '../../shared/models/iot.model';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -35,6 +35,7 @@ export class EdgeService {
   private edgexExportClientPath = '/export/api/v1/';
 
   private edgexFlogoRulesPath = '/flogorules/api/v1/';
+  private edgexBufferingPath = '/buffering/api/v1/';
   
   /**
    * 
@@ -453,7 +454,45 @@ export class EdgeService {
     return this.http.post<string>(url, rule, httpTextResponseOptions)
       .pipe(
         tap(_ => this.logger.info('added rule')),
-        catchError(this.handleError<string>('addRule'))
+        catchError(this.handleError<string>('deleteRule'))
+      );
+  }
+
+  /**
+   * 
+   * @param gateway 
+   * @param modelConfig 
+   */
+  addModelConfig(gateway: Gateway, modelConfig: ModelConfig): Observable<string> {
+
+    const url = this.getEdgexURL(gateway.address, this.edgexBufferingPath, 'addModelConf');
+
+    const authorizedHeaders = httpTextResponseOptions.headers.set('Authorization', 'Bearer ' + gateway.accessToken);
+    httpTextResponseOptions.headers = authorizedHeaders;
+
+    return this.http.post<string>(url, modelConfig, httpTextResponseOptions)
+      .pipe(
+        tap(_ => this.logger.info('added modelConfig')),
+        catchError(this.handleError<string>('addModelConfig'))
+      );
+  }
+
+  /**
+   * 
+   * @param gateway 
+   * @param modelConfig 
+   */
+  deleteModelConfig(gateway: Gateway, modelConfig: ModelConfig): Observable<string> {
+
+    const url = this.getEdgexURL(gateway.address, this.edgexBufferingPath, 'deleteModelConf');
+
+    const authorizedHeaders = httpTextResponseOptions.headers.set('Authorization', 'Bearer ' + gateway.accessToken);
+    httpTextResponseOptions.headers = authorizedHeaders;
+
+    return this.http.post<string>(url, modelConfig, httpTextResponseOptions)
+      .pipe(
+        tap(_ => this.logger.info('deleted modelConfig')),
+        catchError(this.handleError<string>('deleteModelConfig'))
       );
   }
 

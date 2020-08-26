@@ -44,6 +44,7 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
   endDateSelected = false;
   queryLastValuesDisabled = true;
   mapResource = false;
+  locationResource = false;
   timeSeriesResource = false;
   discreteValueResource = false;
   summaryView = false;
@@ -168,14 +169,64 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   };
 
+  public scatterChartDatasets = [
+    {
+      label: '',
+      // borderColor: 'blue',
+      // backgroundColor: 'rgba(54, 162, 235, 0.2)',
+      type: 'scatter',
+      pointRadius: 5,
+      fill: false,
+      // lineTension: 0,
+      borderWidth: 2,
+      data: []
+    },
+  ];
+
+  public scatterChartOptions = {
+    responsive: true,
+    aspectRatio: 5,
+    scales: {
+      xAxes: [{
+        type: 'linear',
+        position: 'bottom',
+        ticks: {
+          beginAtZero: true,
+          source: 'data',  // can use auto
+          autoSkip: true
+        }
+      }],
+      yAxes: [{
+        scaleLabel: {
+          display: true,
+          labelString: 'Y'
+        },
+        ticks: {
+          beginAtZero: true
+        }
+      }]
+    },
+    tooltips: {
+      enabled: true,
+      intersect: false
+    },
+    plugins: {
+      streaming: false,
+      datalabels: {
+        display: false
+      }
+    }
+  };
 
   public chartLegend = true;
   public chartStreamingLegend = true;
 
   public chartType = 'line';
+  public scatterChartType = 'scatter';
   public resourceReadings = [];
 
   public timeSeriesData = [];
+  public locationData = [];
 
   deviceSelected = "";
   resourceSelected = "";
@@ -248,7 +299,9 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
 
         if (this.mapResource) {
           this.setMapDataSet(deviceName);
-
+        }
+        else if (this.locationResource) {
+          this.setScatterChartDataSet()
         }
         else if (this.discreteValueResource) {
           console.log("calling setMapDataset");
@@ -273,6 +326,9 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
 
         if (this.mapResource) {
           this.setMapDataSet(deviceName);
+        }
+        else if (this.locationResource) {
+          this.setScatterChartDataSet()
         }
         else {
           // Set Data for chart dataset
@@ -301,7 +357,23 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.chartDatasets[0].data = this.timeSeriesData;
   }
+  
+  public setScatterChartDataSet() {
 
+    this.locationData = [];
+
+    this.resourceReadings.forEach(
+      reading => {
+
+        let coords = reading.value.split(",", 2);
+        this.locationData.push({ x: Number(coords[0]), y: Number(coords[1]) });
+      }
+    );
+    console.log("data transformed: ", this.locationData);
+
+    this.scatterChartDatasets[0].data = this.locationData;
+  }
+  
   public setMapDataSet(deviceName) {
     let mapData = [];
     let idx = this.resourceReadings.length - 1;
@@ -467,6 +539,7 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
     this.mapResource = false;
+    this.locationResource = false;
     this.timeSeriesResource = false;
     this.discreteValueResource = false;
     this.summaryView = true;
@@ -502,6 +575,9 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
 
     if (this.resourceSelected == "GPS") {
       this.mapResource = true;
+    }
+    else if (this.resourceSelected == "Location") {
+      this.locationResource = true;
     }
     else if (row.properties.value.type == "String") {
       this.discreteValueResource = true;
@@ -547,7 +623,7 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.getResourceReadings(this.deviceSelected, this.resourceSelected, numReadingsRequired);
 
-    if (this.mapResource) {
+    if (this.mapResource || this.locationResource) {
       this.subscription = this.source.subscribe(val => this.getResourceReadings(this.deviceSelected, this.resourceSelected, numReadingsRequired));
       this.subscribed = true;
     }
@@ -562,6 +638,10 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
   onQueryLastValuesClicked() {
     // Query new data
     this.getResourceReadings(this.deviceSelected, this.resourceSelected, 300);
+  }
+
+  onAnomalyAnalysis() {
+    
   }
 
   startDateEvent(event: MatDatepickerInputEvent<Date>) {
