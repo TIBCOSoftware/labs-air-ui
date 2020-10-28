@@ -1563,6 +1563,37 @@ export class DgraphService implements GraphService {
       );
   }
 
+    /**
+   * 
+   * @param deviceName 
+   * @param instrumentName 
+   * @param ts 
+   */
+  getReadingsAt(deviceName, instrumentName, ts): Observable<TSReading[]> {
+    const url = `${this.dgraphUrl}/query`;
+
+    let query = `{
+      var(func: has(resource)) @filter(eq(uuid, "${deviceName}_${instrumentName}")) {
+        readings as resource_reading @filter(eq(created, ${ts})) {
+        }
+      }
+      resp(func: uid(readings), orderasc:created) {
+        created
+        value
+      }
+    }`;
+
+    console.log("the query is: ", query);
+
+    // return this.http.post<any>(url, `{resp(func: has(reading)) @filter(gt(created, ${fromts})) @cascade {value created ~resource_reading @filter(eq(uuid, "${deviceName}_${instrumentName}")) { }}}`, httpOptions)
+    return this.http.post<any>(url, query, httpOptions)
+      .pipe(
+        map(response => response.data.resp as TSReading[]),
+        tap(_ => this.logger.info('fetched readings')),
+        catchError(this.handleError<TSReading[]>('getReadingsAt', []))
+      );
+  }
+
   /**
    * 
    * @param deviceName 

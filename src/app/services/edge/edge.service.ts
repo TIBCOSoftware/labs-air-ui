@@ -35,7 +35,7 @@ export class EdgeService {
   private edgexExportClientPath = '/export/api/v1/';
 
   private edgexFlogoRulesPath = '/flogorules/api/v1/';
-  private edgexBufferingPath = '/buffering/api/v1/';
+  private edgexInferencingPath = '/inferencing/api/v1/';
   
   /**
    * 
@@ -465,7 +465,7 @@ export class EdgeService {
    */
   addModelConfig(gateway: Gateway, modelConfig: ModelConfig): Observable<string> {
 
-    const url = this.getEdgexURL(gateway.address, this.edgexBufferingPath, 'addModelConf');
+    const url = this.getEdgexURL(gateway.address, this.edgexInferencingPath, 'addModelConf');
 
     const authorizedHeaders = httpTextResponseOptions.headers.set('Authorization', 'Bearer ' + gateway.accessToken);
     httpTextResponseOptions.headers = authorizedHeaders;
@@ -484,7 +484,7 @@ export class EdgeService {
    */
   deleteModelConfig(gateway: Gateway, modelConfig: ModelConfig): Observable<string> {
 
-    const url = this.getEdgexURL(gateway.address, this.edgexBufferingPath, 'deleteModelConf');
+    const url = this.getEdgexURL(gateway.address, this.edgexInferencingPath, 'deleteModelConf');
 
     const authorizedHeaders = httpTextResponseOptions.headers.set('Authorization', 'Bearer ' + gateway.accessToken);
     httpTextResponseOptions.headers = authorizedHeaders;

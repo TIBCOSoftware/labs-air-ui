@@ -34,7 +34,20 @@ export class IotMlModelsComponent implements OnInit {
   actionResourcesDataSource = new MatTableDataSource<Resource>();
 
   mlmodels: SelectItem[] = [
-    { value: 'AnomalyDetection', viewValue: 'Anomaly Detection' }
+    { value: 'ms|anomaly_detection|AnomalyDetection', viewValue: 'Anomaly Detection' },
+    { value: 'nvidia|image_recognition|alexnet', viewValue: 'Object Detection - AlexNet' },
+    { value: 'nvidia|image_recognition|googlenet', viewValue: 'Object Detection - GoogleNet' },
+    { value: 'nvidia|image_recognition|googlenet-12', viewValue: 'Object Detection - GoogleNet-12' },
+    { value: 'nvidia|image_recognition|resnet-18', viewValue: 'Object Detection - Resnet-18' },
+    { value: 'nvidia|image_recognition|resnet-50', viewValue: 'Object Detection - Resnet-50' },
+    { value: 'nvidia|image_recognition|resnet-101', viewValue: 'Object Detection - Resnet-101' },
+    { value: 'nvidia|image_recognition|resnet-152', viewValue: 'Object Detection - Resnet-152' },
+    { value: 'nvidia|image_recognition|vgg-16', viewValue: 'Object Detection - VGG-16' },
+    { value: 'nvidia|image_recognition|vgg-19', viewValue: 'Object Detection - VGG-19' },
+    { value: 'nvidia|image_recognition|inception_v4', viewValue: 'Object Detection - Inception-v4' },
+    { value: 'tfserving|image_recognition|rcnnresnet', viewValue: 'Object Detection - RCNN Resnet' },
+    { value: 'tfserving|image_recognition|resnet', viewValue: 'Object Detection - Resnet' },
+    { value: 'tfserving|image_recognition|inception', viewValue: 'Object Detection - Imagenet Inception' }
   ];
 
 

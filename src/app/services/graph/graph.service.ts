@@ -76,6 +76,8 @@ export abstract class GraphService {
 
   abstract getReadings(deviceName, instrumentName, numReadings): Observable<TSReading[]>;
 
+  abstract getReadingsAt(deviceName, instrumentName, ts): Observable<TSReading[]>;
+
   abstract getReadingsStartingAt(deviceName, instrumentName, fromts): Observable<TSReading[]>;
 
   abstract getReadingsBetween(deviceName, instrumentName, fromts, tots): Observable<TSReading[]>;

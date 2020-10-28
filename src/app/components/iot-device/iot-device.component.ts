@@ -44,6 +44,7 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
   endDateSelected = false;
   queryLastValuesDisabled = true;
   mapResource = false;
+  imageResource = false;
   locationResource = false;
   timeSeriesResource = false;
   discreteValueResource = false;
@@ -79,6 +80,17 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
     {
       label: '',
       borderColor: 'blue',
+      //backgroundColor: 'rgba(54, 162, 235, 0.2)',
+      type: 'line',
+      // pointRadius: 0,
+      fill: true,
+      lineTension: 0,
+      borderWidth: 2,
+      data: []
+    },
+    {
+      label: 'Inferred',
+      borderColor: 'green',
       //backgroundColor: 'rgba(54, 162, 235, 0.2)',
       type: 'line',
       // pointRadius: 0,
@@ -224,9 +236,13 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
   public chartType = 'line';
   public scatterChartType = 'scatter';
   public resourceReadings = [];
+  public resourceInferredReadings = []
 
   public timeSeriesData = [];
+  public timeSeriesInferredData = []
   public locationData = [];
+  public imageData = ""
+  public inferredImageData = ""
 
   deviceSelected = "";
   resourceSelected = "";
@@ -296,6 +312,7 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
 
         // Reset data for streaming chart dataset
         this.chartStreamingDatasets[0].data = [];
+        this.imageData = ""
 
         if (this.mapResource) {
           this.setMapDataSet(deviceName);
@@ -307,11 +324,50 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
           console.log("calling setMapDataset");
           this.setTimelineDataSet(deviceName);
         }
+        else if (this.imageResource) {
+
+          if (this.resourceReadings.length > 0) {
+            this.getResourceInferredReadings(this.deviceSelected, this.resourceSelected + "_Inferred", numReadings, this.resourceReadings[0].created)
+            this.setImageData();
+          }
+          
+        }
         else {
+          this.getResourceInferredReadings(this.deviceSelected, this.resourceSelected + "_Inferred", numReadings, 0)
           // Set Data for chart dataset
           this.setChartDataSet();
         }
       })
+  }
+
+  public getResourceInferredReadings(deviceName, resourceName, numReadings, ts) {
+
+    if (this.imageResource) {
+
+      this.graphService.getReadingsAt(deviceName, resourceName, ts)
+        .subscribe(res => {
+          this.resourceInferredReadings = res as TSReading[];
+          this.inferredImageData = ""
+
+          console.log("reading data: ", this.resourceInferredReadings);
+
+          this.setInferredImageData();
+
+        })
+    }
+    else {
+      this.graphService.getReadings(deviceName, resourceName, numReadings)
+        .subscribe(res => {
+          this.resourceInferredReadings = res as TSReading[];
+
+          console.log("reading data: ", this.resourceInferredReadings);
+
+          // Set Data for chart dataset
+          this.setChartInferredDataSet();
+
+
+        })
+    }
   }
 
   public getResourceReadingsBetween(deviceName, resourceName, fromts, tots) {
@@ -357,7 +413,44 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.chartDatasets[0].data = this.timeSeriesData;
   }
-  
+
+  public setChartInferredDataSet() {
+
+    this.timeSeriesInferredData = [];
+
+    this.resourceInferredReadings.forEach(
+      reading => {
+
+        if (isNaN(reading.value)) {
+          this.timeSeriesInferredData.push({ x: new Date(reading.created).toISOString(), y: reading.value == 'true' ? 1 : 0 });
+        }
+        else {
+          this.timeSeriesInferredData.push({ x: new Date(reading.created).toISOString(), y: reading.value });
+        }
+      }
+    );
+    console.log("data transformed: ", this.timeSeriesInferredData);
+
+    this.chartDatasets[1].data = this.timeSeriesInferredData;
+  }
+
+  public setImageData() {
+
+    this.imageData = this.resourceReadings[0].value;
+
+  }
+
+  public setInferredImageData() {
+
+    if (this.resourceInferredReadings.length > 0) {
+      this.inferredImageData = this.resourceInferredReadings[0].value;
+    }
+    else {
+      this.inferredImageData = ""
+    }
+
+  }
+
   public setScatterChartDataSet() {
 
     this.locationData = [];
@@ -373,7 +466,7 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.scatterChartDatasets[0].data = this.locationData;
   }
-  
+
   public setMapDataSet(deviceName) {
     let mapData = [];
     let idx = this.resourceReadings.length - 1;
@@ -539,10 +632,14 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
     this.mapResource = false;
+    this.imageResource = false;
     this.locationResource = false;
     this.timeSeriesResource = false;
     this.discreteValueResource = false;
-    this.summaryView = true;
+
+    // MAG
+    // this.summaryView = true;
+    this.summaryView = false;
 
     // Set variables for query enable/disable
     this.queryLastValuesDisabled = true;
@@ -568,6 +665,7 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
     console.log('Row clicked: ', row);
     this.resourceSelected = row.name;
     this.mapResource = false;
+    this.imageResource = false;
     this.timeSeriesResource = false;
     this.discreteValueResource = false;
 
@@ -582,6 +680,10 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
     else if (row.properties.value.type == "String") {
       this.discreteValueResource = true;
       numReadingsRequired = 40;
+    }
+    else if (row.properties.value.type == "Binary") {
+      this.imageResource = true;
+      numReadingsRequired = 1;
     }
     else {
       this.timeSeriesResource = true;
@@ -623,7 +725,7 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.getResourceReadings(this.deviceSelected, this.resourceSelected, numReadingsRequired);
 
-    if (this.mapResource || this.locationResource) {
+    if (this.mapResource || this.locationResource || this.imageResource) {
       this.subscription = this.source.subscribe(val => this.getResourceReadings(this.deviceSelected, this.resourceSelected, numReadingsRequired));
       this.subscribed = true;
     }
@@ -641,7 +743,7 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onAnomalyAnalysis() {
-    
+
   }
 
   startDateEvent(event: MatDatepickerInputEvent<Date>) {

@@ -257,6 +257,24 @@
       </mat-card>
     </div>
 
+    <div *ngIf="imageResource" fxLayout="row" fxLayoutGap="15px" style="min-height: 300px">
+      <mat-card fxFlex>
+        <mat-card-header>
+          <div mat-card-avatar class="instrument-streaming-image"></div>
+          <mat-card-title>Image Streaming</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div>
+            <h1>{{inferredImageData}}</h1>
+          </div>
+          <div>
+            <img src="data:image/JPEG;base64,{{imageData}}"/>
+            <!-- <img [src]="imageData" /> -->
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
     <div *ngIf="timeSeriesResource" fxLayout="row" fxLayoutGap="15px" style="min-height: 300px">
       <mat-card fxFlex>
         <mat-card-header>
