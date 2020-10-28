@@ -19,7 +19,6 @@ import {TceRulesComponent} from '../../components/tce-rules/tce-rules.component'
 import {IotNotificationsComponent} from '../../components/iot-notifications/iot-notifications.component';
 import {LiveAppsComponent} from '../../components/live-apps/live-apps.component';
 import {
-  AuthGuard,
   ConfigurationMenuConfigResolver,
   GeneralConfigResolver,
   GeneralLandingPageConfigResolver,
@@ -33,7 +32,8 @@ import {
   LiveAppsConfigResolver,
   RoleGuard,
   RolesResolver,
-  RoleActiveResolver
+  RoleActiveResolver,
+  AuthGuard
 } from '@tibco-tcstk/tc-liveapps-lib';
 import {SplashComponent} from '../../routes/splash/splash.component';
 import {CaseComponent} from '../../routes/case/case.component';

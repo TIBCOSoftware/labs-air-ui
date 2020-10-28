@@ -7,8 +7,8 @@ import { Device, Resource, Command, Gateway } from '../../shared/models/iot.mode
 import { EdgeService } from '../../services/edge/edge.service';
 import { GraphService } from '../../services/graph/graph.service';
 import { debounceTime, distinctUntilChanged, startWith, tap, delay } from 'rxjs/operators';
-
-import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 
 interface CommandEditor {
   idx: number;
@@ -82,7 +82,7 @@ export class IotDeviceCommandComponent implements OnInit, AfterViewInit {
 
         console.log("Gateways Returned: ", res);
         this.gatewayList = res;
-        
+
         console.log("Updated gateway list: ", this.gatewayList);
       })
   }
@@ -101,7 +101,7 @@ export class IotDeviceCommandComponent implements OnInit, AfterViewInit {
 
     // Clear resource selection
     this.resourceSelection.clear();
-    
+
     // this.getResourceReadings();
     this.resourcesDataSource.data = row.profile.deviceResources as Resource[];
 
@@ -162,7 +162,7 @@ export class IotDeviceCommandComponent implements OnInit, AfterViewInit {
   }
 
   sendCommand(row) {
-  
+
     console.log("Commad to use: ", row);
 
     if (row.method == "get") {
@@ -172,7 +172,7 @@ export class IotDeviceCommandComponent implements OnInit, AfterViewInit {
 
       this.edgeService.getCommand(this.gatewaySelected, cmdPath)
       .subscribe(res => {
-        
+
         this.commandsDataSource.data[row.idx].returnVal = res.readings[0].value;
       });
     }

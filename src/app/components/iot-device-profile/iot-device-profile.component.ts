@@ -4,10 +4,10 @@ import { Profile, Resource, ResourceProperty, ResourceAttribute, Gateway, Proper
 import { EdgeService } from '../../services/edge/edge.service';
 import { GraphService } from '../../services/graph/graph.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { longStackSupport } from 'q';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 interface ResourceNode {
   name: string;

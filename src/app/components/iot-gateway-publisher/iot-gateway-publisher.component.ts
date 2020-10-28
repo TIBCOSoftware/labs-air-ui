@@ -8,8 +8,9 @@ import { EdgeService } from '../../services/edge/edge.service';
 import { GraphService } from '../../services/graph/graph.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { switchMap, debounceTime, distinctUntilChanged, startWith, tap, delay } from 'rxjs/operators';
-
-import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 
 export interface SelectItem {
   value: string;
@@ -113,8 +114,8 @@ export class IotGatewayPublisherComponent implements OnInit, AfterViewInit {
 
           console.log("Setting publishersDataSource.data to null");
         }
-        
-        
+
+
         this.graphAddOpDisabled = true;
         this.graphUpdateOpDisabled = true;
         this.graphDeleteOpDisabled = true;
@@ -227,7 +228,7 @@ export class IotGatewayPublisherComponent implements OnInit, AfterViewInit {
         console.log("form is dirty");
         this.graphDeleteOpDisabled = true;
         this.graphAddOpDisabled = false;
-        
+
         if (this.publisherSelection.hasValue()) {
           this.graphUpdateOpDisabled = false;
         }

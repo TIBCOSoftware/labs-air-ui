@@ -3,8 +3,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EdgeService } from '../../services/edge/edge.service';
 import { GraphService } from '../../services/graph/graph.service';
 import { Device, TSReading, Resource, Gateway, ModelConfig } from '../../shared/models/iot.model';
-import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 
 export interface SelectItem {
   value: string;
@@ -158,7 +160,7 @@ export class IotMlModelsComponent implements OnInit {
       modified: row.modified,
       uid: row.uid
     }, { emitEvent: true });
-    
+
   }
 
   onDeviceSelected(event) {
@@ -174,16 +176,16 @@ export class IotMlModelsComponent implements OnInit {
   onResourceSelected(event) {
 
   }
- 
+
 
   resetModelForm() {
     console.log("Resetting modelConfig form");
-    
+
     this.modelForm.reset({
     }, { emitEvent: false });
 
     console.log("Form after resetting: ", this.modelForm);
-    
+
   }
 
   addModelConfig() {
@@ -247,13 +249,13 @@ export class IotMlModelsComponent implements OnInit {
     let idx = 0;
 
     for (let i = 0; i < this.devicesDataSource.data.length; i++) {
-       
+
       if (this.devicesDataSource.data[i].name == name) {
         idx = i;
         break;
-      } 
+      }
     }
-    
+
     return idx;
   }
 

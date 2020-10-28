@@ -2,8 +2,9 @@ import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, Input } from '
 import { Profile, Service, Device, Gateway } from '../../shared/models/iot.model';
 import { EdgeService } from '../../services/edge/edge.service';
 import { GraphService } from '../../services/graph/graph.service';
-import { MatSort, MatTableDataSource, MatSnackBar } from '@angular/material';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
 
 export interface SelectItem {
   value: string;
@@ -72,7 +73,7 @@ export class IotDeviceProvisionComponent implements OnInit, AfterViewInit {
 
         console.log("Gateways Returned: ", res);
         this.gatewayList = res;
-        
+
         console.log("Updated gateway list: ", this.gatewayList);
       })
   }
