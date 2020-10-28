@@ -8,13 +8,12 @@ import { EdgeService } from '../../services/edge/edge.service';
 import { GraphService } from '../../services/graph/graph.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-
-import { MatSort, MatTableDataSource } from '@angular/material';
-
 import { BaseChartDirective, defaultColors, Label, MultiDataSet, SingleDataSet } from 'ng2-charts';
 
 import { stringToKeyValue } from '@angular/flex-layout/extended/typings/style/style-transforms';
 import 'chartjs-plugin-streaming';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 
 
 @Component({
@@ -150,17 +149,17 @@ export class IotDeviceStreamComponent implements OnInit, AfterViewInit {
     console.log("in getting streaming data");
 
 
-    this.graphService.getReadingsStartingAt(this.streamDeviceName, 
+    this.graphService.getReadingsStartingAt(this.streamDeviceName,
       this.streamResourceName, this.streamLastQuery)
       .subscribe(res => {
         this.resourceReadings = res as TSReading[];
 
         console.log("reading data: ", this.resourceReadings);
 
-        
+
         this.resourceReadings.forEach(
           reading => {
-    
+
             if (isNaN(reading.value)) {
               chart.data.datasets[0].data.push({ x: new Date(reading.created).toISOString(), y: reading.value == 'true' ? 1 : 0 });
             }

@@ -3,8 +3,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EdgeService } from '../../services/edge/edge.service';
 import { GraphService } from '../../services/graph/graph.service';
 import { Device, TSReading, Resource, Gateway, Rule } from '../../shared/models/iot.model';
-import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 
 export interface SelectItem {
   value: string;
@@ -176,7 +178,7 @@ export class IotRulesComponent implements OnInit, AfterViewInit {
       modified: row.modified,
       uid: row.uid
     }, { emitEvent: true });
-    
+
   }
 
   onConditionDeviceSelected(event) {
@@ -206,19 +208,19 @@ export class IotRulesComponent implements OnInit, AfterViewInit {
 
   }
 
- 
+
   onSelection() {
 
   }
 
   resetRuleForm() {
     console.log("Resetting rule form");
-    
+
     this.ruleForm.reset({
     }, { emitEvent: false });
 
     console.log("Form after resetting: ", this.ruleForm);
-    
+
   }
 
   addRule() {
@@ -308,13 +310,13 @@ export class IotRulesComponent implements OnInit, AfterViewInit {
     let idx = 0;
 
     for (let i = 0; i < this.devicesDataSource.data.length; i++) {
-       
+
       if (this.devicesDataSource.data[i].name == name) {
         idx = i;
         break;
-      } 
+      }
     }
-    
+
     return idx;
   }
 

@@ -11,7 +11,7 @@ import { debounceTime, distinctUntilChanged, startWith, tap, delay } from 'rxjs/
 //import { merge } from "rxjs/observable/merge";
 //import { fromEvent } from 'rxjs/observable/fromEvent';
 import { interval, Subscription } from 'rxjs';
-import { MatPaginator, MatSort, MatTableDataSource, MatDatepickerInputEvent } from '@angular/material';
+
 
 import { GoogleChartInterface } from 'ng2-google-charts/google-charts-interfaces';
 
@@ -20,6 +20,9 @@ import { BaseChartDirective, defaultColors, Label, MultiDataSet, SingleDataSet }
 import { ChartType } from 'chart.js';
 import { stringToKeyValue } from '@angular/flex-layout/extended/typings/style/style-transforms';
 import 'chartjs-plugin-streaming';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 
 
 @Component({
@@ -357,7 +360,7 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.chartDatasets[0].data = this.timeSeriesData;
   }
-  
+
   public setScatterChartDataSet() {
 
     this.locationData = [];
@@ -373,7 +376,7 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.scatterChartDatasets[0].data = this.locationData;
   }
-  
+
   public setMapDataSet(deviceName) {
     let mapData = [];
     let idx = this.resourceReadings.length - 1;
@@ -641,7 +644,7 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onAnomalyAnalysis() {
-    
+
   }
 
   startDateEvent(event: MatDatepickerInputEvent<Date>) {

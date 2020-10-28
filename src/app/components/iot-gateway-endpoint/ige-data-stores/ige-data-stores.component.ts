@@ -3,7 +3,10 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { DataStore, Gateway } from '../../../shared/models/iot.model';
 import { GraphService } from '../../../services/graph/graph.service';
 import { FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
-import { MatSort, MatTableDataSource, MatSnackBar, DateAdapter } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+
 
 export interface SelectItem {
   value: string;
@@ -53,10 +56,10 @@ export class IgeDataStoresComponent implements OnInit {
   @Input() gatewayId: string;
 
   /**
-   * 
-   * @param graphService 
-   * @param formBuilder 
-   * @param _snackBar 
+   *
+   * @param graphService
+   * @param formBuilder
+   * @param _snackBar
    */
   constructor(private graphService: GraphService,
     private formBuilder: FormBuilder,
@@ -77,15 +80,15 @@ export class IgeDataStoresComponent implements OnInit {
 
 
   /**
-   * 
+   *
    */
   ngAfterViewInit() {
     this.dataStoresDataSource.sort = this.sort;
   }
 
   /**
-   * 
-   * @param filterValue 
+   *
+   * @param filterValue
    */
   applyFilter(filterValue: string) {
     this.dataStoresDataSource.filter = filterValue.trim().toLowerCase();
@@ -556,7 +559,7 @@ export class IgeDataStoresComponent implements OnInit {
             dataStore.loginTimeout = '';
             dataStore.url = this.dataStoreForm.get('dgraph.url').value;
           }
-          
+
           this.graphService.updateDataStore(dataStore)
             .subscribe(res => {
               console.log("Result from update dataStore", res);
@@ -628,7 +631,7 @@ export class IgeDataStoresComponent implements OnInit {
 
   /**
    * Function called when the  data store selector is changed on the data store form
-   * @param event 
+   * @param event
    */
   onDataStoreSelected(event) {
     console.log("Option selected: ", event);

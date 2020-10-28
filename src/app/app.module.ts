@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { AppComponent } from './app.component';
-import {TcLiveappsLibModule} from '@tibco-tcstk/tc-liveapps-lib';
+import {CredentialsService, TcLiveappsLibModule} from '@tibco-tcstk/tc-liveapps-lib';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { MaterialModule } from './material.module';
@@ -66,14 +66,22 @@ import { IgeProtocolsComponent } from './components/iot-gateway-endpoint/ige-pro
 import { IgeDataStoresComponent } from './components/iot-gateway-endpoint/ige-data-stores/ige-data-stores.component';
 import { IotAnomalyDetectionDashboardComponent } from './components/iot-anomaly-detection-dashboard/iot-anomaly-detection-dashboard.component';
 import { IotMlModelsComponent } from './components/iot-ml-models/iot-ml-models.component';
+import { MatIconModule } from '@angular/material/icon';
+import { LoginOauthComponent } from './routes/login-oauth/login-oauth.component';
 
 /** This is the tc core configuration object
  * To use oauth you must also add the OAuthInterceptor to providers
  *  Note: Only HTTP calls that start with / will have oAuth token attached
  * To use proxy you must also add the ProxyInterceptor to providers
  *  Note: Only HTTP calls that start with / will be proxied
+ *  Note: Enable TCE will request cookie for TCE API calls. This will only work if using the proxy
  */
 const tcCoreConfig: TcCoreConfig = {
+  disableFormLibs: false,
+  // for test mode ONLY you can enter an oAuth key as the local storage key as long as it starts CIC~
+  // do NOT use this for production code - instead enter the local storage key where external app will save oauth key.
+  // oauth keys should NEVER be saved in code for production or when checked into source control!
+  // oAuthLocalStorageKey: 'TC_DEV_KEY',
   oAuthLocalStorageKey: '',
   proxy_url: '',
   proxy_liveapps_path: '',
@@ -87,6 +95,7 @@ const tcCoreConfig: TcCoreConfig = {
   declarations: [
     AppComponent,
     LoginComponent,
+    LoginOauthComponent,
     StarterAppComponent,
     HomeComponent,
     CaseComponent,
@@ -136,6 +145,7 @@ const tcCoreConfig: TcCoreConfig = {
     FlexLayoutModule,
     BrowserModule,
     BrowserAnimationsModule,
+    MatIconModule,
     FormsModule,
     ChartsModule,
     Ng2GoogleChartsModule,
@@ -156,11 +166,11 @@ const tcCoreConfig: TcCoreConfig = {
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {   
-  constructor(public sessionRefreshService: SessionRefreshService, public tcConfigService: TcCoreConfigService) {
-    if (!tcConfigService.getConfig().oAuthLocalStorageKey) {
+export class AppModule {
+  constructor(public sessionRefreshService: SessionRefreshService, public tcConfigService: TcCoreConfigService, private credentialsService: CredentialsService) {
+    // note: if oauth in use then no need since key will be refreshed in local storage by session manager app
+    if (!credentialsService.isOauth()) {
       // setup cookie refresh for every 10 minutes
-      // note: if oauth in use then no need since key will be refreshed in local storage by session manager app
       const usingProxy = (this.tcConfigService.getConfig().proxy_url && this.tcConfigService.getConfig().proxy_url !== '') ? true : false;
       this.sessionRefreshService.scheduleCookieRefresh(600000, usingProxy);
     }

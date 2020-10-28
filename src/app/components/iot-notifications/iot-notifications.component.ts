@@ -1,8 +1,9 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { GraphService } from '../../services/graph/graph.service';
 import { Notification } from '../../shared/models/iot.model';
-import { MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-iot-notifications',
@@ -49,7 +50,7 @@ export class IotNotificationsComponent implements OnInit, AfterViewInit {
   onNotificationClicked(row) {
 
     console.log('Row clicked: ', row);
-    
+
   }
 
 }
