@@ -5,7 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { LogLevel, LogService } from '@tibco-tcstk/tc-core-lib';
 
-import { Gateway, Subscription, Publisher, Pipeline, Rule, ModelConfig, Notification, Protocol, DataStore } from '../../shared/models/iot.model';
+import { Gateway, Subscription, Publisher, Pipeline, Rule, ModelConfig, GatewayFiltersConfig, Notification, Protocol, DataStore } from '../../shared/models/iot.model';
 import { TSReading } from '../../shared/models/iot.model';
 import { GraphService } from './graph.service';
 import {AuthService} from '../auth/auth.service';
@@ -96,6 +96,26 @@ export class DgraphService implements GraphService {
       httpMutateOptions.headers = httpMutateOptions.headers.append(key, value);
     }
 
+  }
+
+  /**
+   * 
+   */
+  getGateway(gatewayName: string): Observable<Gateway[]> {
+    console.log("GetGateway service called for: ", gatewayName)
+    const url = `${this.dgraphUrl}/query`;
+    let query = `{
+      resp(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
+        uid uuid description address latitude longitude accessToken createdts updatedts
+      }
+    }`;
+
+    return this.http.post<any>(url, query, httpOptions)
+      .pipe(
+        map(response => response.data.resp as Gateway[]),
+        tap(_ => this.logger.info('fetched gateways')),
+        catchError(this.handleError<Gateway[]>('getGateway', []))
+      );
   }
 
   /**
@@ -1165,7 +1185,7 @@ export class DgraphService implements GraphService {
     return this.http.post<any>(url, query, httpMutateOptions)
       .pipe(
         tap(_ => this.logger.info('updated pipelines')),
-        catchError(this.handleError<string>('updatePipelines'))
+        catchError(this.handleError<string>('updatePipeline'))
       );
 
   }
@@ -1461,7 +1481,7 @@ export class DgraphService implements GraphService {
         _:ModelConfig <name> "${modelConfig.name}" .
         _:ModelConfig <uuid> "${modelConfig.name}" .
         _:ModelConfig <type> "modelConfig" .
-        _:ModelConfig <rule> "" .
+        _:ModelConfig <modelConfig> "" .
         _:ModelConfig <description> "${modelConfig.description}" .
         _:ModelConfig <device> "${modelConfig.device}" .
         _:ModelConfig <resource> "${modelConfig.resource}" .
@@ -1528,6 +1548,82 @@ export class DgraphService implements GraphService {
         tap(_ => this.logger.info('deleted modelConfig')),
         catchError(this.handleError<string>('deleteModelConfig'))
       );
+  }
+
+  /**
+   * 
+   * @param gatewayName 
+   */
+  getFiltersConfig(gatewayName): Observable<GatewayFiltersConfig[]> {
+    const url = `${this.dgraphUrl}/query`;
+    let query = `{
+      var(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
+        filtersConfig as gateway_filter {
+        }
+      }
+      resp(func: uid(filtersConfig)) {
+        uid
+        deviceNames
+      }
+    }`;
+
+    console.log("getFiltersConfig service query: ", query)
+
+    return this.http.post<any>(url, query, httpOptions)
+      .pipe(
+        map(response => response.data.resp as GatewayFiltersConfig[]),
+        tap(_ => this.logger.info('fetched filtersConfig')),
+        catchError(this.handleError<GatewayFiltersConfig[]>('getFiltersConfigs', []))
+      );
+
+  }
+
+  /**
+   * 
+   * @param gatewayUid 
+   * @param filtersConfig
+   */
+  addFiltersConfig(gatewayUid: number, filtersConfig: GatewayFiltersConfig): Observable<string> {
+    const url = `${this.dgraphUrl}/mutate?commitNow=true`;
+
+    let query = `{
+      set {
+        _:Filter <dgraph.type> "filter" .
+        _:Filter <type> "filter" .
+        _:Filter <filter> "" .
+        _:Filter <deviceNames> "${filtersConfig.deviceNames}" .
+        <${gatewayUid}> <gateway_filter> _:Filter .
+      }
+    }`;
+    console.log('Mutate statement: ', query);
+
+    return this.http.post<any>(url, query, httpMutateOptions)
+      .pipe(
+        tap(_ => this.logger.info('add filtersConfig')),
+        catchError(this.handleError<string>('addFiltersConfig'))
+      );
+
+  }
+
+  /**
+   * 
+   * @param filtersConfig 
+   */
+  updateFiltersConfig(filtersConfig: GatewayFiltersConfig): Observable<string> {
+    const url = `${this.dgraphUrl}/mutate?commitNow=true`;
+    let query = `{
+      set {
+        <${filtersConfig.uid}> <deviceNames> "${filtersConfig.deviceNames}" .
+      }
+    }`;
+    console.log('Mutate statement: ', query);
+
+    return this.http.post<any>(url, query, httpMutateOptions)
+      .pipe(
+        tap(_ => this.logger.info('updated filtersConfig')),
+        catchError(this.handleError<string>('updateFiltersConfig'))
+      );
+
   }
 
   /**
@@ -1763,7 +1859,7 @@ export class DgraphService implements GraphService {
    * @param result - optional value to return as the observable result
    */
   private handleError<T>(operation = 'operation', result?: T) {
-    console.log("Got an error.  Handling Error");
+    console.log("Got an error.  Handling Error for:", operation);
 
     return (error: any): Observable<T> => {
 

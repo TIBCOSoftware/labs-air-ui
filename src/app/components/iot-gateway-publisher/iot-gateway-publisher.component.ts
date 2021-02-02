@@ -96,7 +96,7 @@ export class IotGatewayPublisherComponent implements OnInit, AfterViewInit {
 
     this.graphService.getGatewayAndPublishers(gatewayId)
       .subscribe(res => {
-        console.log("Received response: ", res);
+        console.log("Received response for graphService.getGatewayAndPublishers: ", res);
         this.gateway = res[0] as Gateway;
 
         if (res[0].publishers != undefined) {

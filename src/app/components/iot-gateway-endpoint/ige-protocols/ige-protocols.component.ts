@@ -162,7 +162,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
 
     this.graphService.getGatewayAndProtocols(gatewayId)
       .subscribe(res => {
-        console.log("Received response: ", res);
+        console.log("Received response for graphService.getGatewayAndProtocols: ", res);
         this.gateway = res[0] as Gateway;
 
         if (res[0].protocols != undefined) {
@@ -393,7 +393,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
     // First Check if there are pipelines associated with the protocol
     this.graphService.getPipelineIdsFromProtocolUid(protocol.uid)
       .subscribe(res => {
-        console.log("Received response: ", res);
+        console.log("Received response for graphService.getPipelineIdsFromProtocolUid: ", res);
 
         if (res.length > 0) {
 
@@ -482,7 +482,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
     // First Check if there are pipelines associated with the protocol
     this.graphService.getPipelineIdsFromProtocolUid(protocolUid)
       .subscribe(res => {
-        console.log("Received response: ", res);
+        console.log("Received response for graphService.getPipelineIdsFromProtocolUid: ", res);
 
         if (res.length > 0) {
 

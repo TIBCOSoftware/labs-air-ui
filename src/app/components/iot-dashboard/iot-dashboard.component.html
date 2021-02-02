@@ -2,6 +2,7 @@
             <app-spotfire-dashboard 
                 [url]="spotfireServer" 
                 [path]="analysisPath"
+                [version]="version"
                 [customization]="configuration"
                 [markingOn]="markingOn"
                 (markingEvent)="marking($event)">

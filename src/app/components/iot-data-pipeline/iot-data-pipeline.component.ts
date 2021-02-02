@@ -110,7 +110,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
 
     this.graphService.getGatewayAndPipelines(gatewayId)
       .subscribe(res => {
-        console.log("Received response: ", res);
+        console.log("Received response for graphService.getGatewayAndPipelines: ", res);
         this.gateway = res[0] as Gateway;
 
         if (res[0].pipelines != undefined) {
@@ -499,7 +499,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
       // Deploy pipeline
       this.flogoDeployService.deploy(request)
         .subscribe(res => {
-          console.log("Received response: ", res);
+          console.log("Received Deployment response: ", res);
 
         });
     }
@@ -562,7 +562,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
       // Undeploy pipeline
       this.flogoDeployService.undeploy(request)
         .subscribe(res => {
-          console.log("Received response: ", res);
+          console.log("Received response for flogoDeployService.undeploy: ", res);
 
         });
 
@@ -641,7 +641,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
       // Deploy Pipeline
       this.flogoDeployService.deploy(request)
         .subscribe(res => {
-          console.log("Received response: ", res);
+          console.log("Received response for flogoDeployService.deploy: ", res);
 
         });
 

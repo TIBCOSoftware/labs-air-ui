@@ -4,6 +4,7 @@ import {IotGatewaySubscriptionComponent} from '../../components/iot-gateway-subs
 import {IotGatewayEndpointComponent} from '../../components/iot-gateway-endpoint/iot-gateway-endpoint.component';
 import {IotGatewayPublisherComponent} from '../../components/iot-gateway-publisher/iot-gateway-publisher.component';
 import {IotDataPipelineComponent} from '../../components/iot-data-pipeline/iot-data-pipeline.component';
+import {IotEdgeDataPipelineComponent} from '../../components/iot-edge-data-pipeline/iot-edge-data-pipeline.component';
 import {IotDeviceComponent} from '../../components/iot-device/iot-device.component';
 import {IotDeviceProfileComponent} from '../../components/iot-device-profile/iot-device-profile.component';
 import {IotDeviceCommandComponent} from '../../components/iot-device-command/iot-device-command.component';
@@ -139,6 +140,19 @@ export const STARTER_APP_ROUTES =
       {
         path: 'datapipeline/:gatewayId',
         component: IotDataPipelineComponent,
+        canActivate: [AuthGuard],
+        resolve: {
+          claims: ClaimsResolver,
+          laConfigHolder: LaConfigResolver,
+          groups: GroupsResolver,
+          roles: RolesResolver,
+          access: AccessResolver,
+          customFormDefs: FormResolver
+        }
+      },
+      {
+        path: 'edgedatapipeline/:gatewayId',
+        component: IotEdgeDataPipelineComponent,
         canActivate: [AuthGuard],
         resolve: {
           claims: ClaimsResolver,

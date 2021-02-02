@@ -69,6 +69,8 @@ export class FlogoDeployService {
     * @param result - optional value to return as the observable result
     */
   private handleError<T>(operation = 'operation', result?: T) {
+    console.log("Got an error.  Handling Error for:", operation);
+    
     return (error: any): Observable<T> => {
       console.error('Inside the handleError function');
       // TODO: send the error to remote logging infrastructure

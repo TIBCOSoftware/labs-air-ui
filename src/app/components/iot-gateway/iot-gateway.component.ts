@@ -30,7 +30,8 @@ export class IotGatewayComponent implements OnInit, AfterViewInit {
 
   gatewayOpDisabled = true;
   publisherDisabled = true;
-  dataPipelineDisabled = true;
+  cloudDataPipelineDisable = true;
+  edgeDataPipelineDisable = true;
   selectedGateway = '';
   hideAccessToken = true;
   dateFormat = 'yyyy-MM-dd  HH:mm:ss';
@@ -93,7 +94,7 @@ export class IotGatewayComponent implements OnInit, AfterViewInit {
     this.graphService.getGateways()
       .subscribe(res => {
         this.dataSource.data = res as Gateway[];
-        console.log("Received response: ", res);
+        console.log("Received response for graphService.getGateways: ", res);
         this.buildMaporamaData();
 
         // Move code to update data stores to a button action
@@ -280,7 +281,8 @@ export class IotGatewayComponent implements OnInit, AfterViewInit {
     // Enable/Disable variables
     this.gatewayOpDisabled = false;
     this.publisherDisabled = false;
-    this.dataPipelineDisabled = false;
+    this.cloudDataPipelineDisable = false;
+    this.edgeDataPipelineDisable = false;
     this.selection.select(row);
     this.selectedGateway = row.uuid;
 
@@ -318,7 +320,8 @@ export class IotGatewayComponent implements OnInit, AfterViewInit {
 
     this.gatewayOpDisabled = true;
     this.publisherDisabled = true;
-    this.dataPipelineDisabled = true;
+    this.cloudDataPipelineDisable = true;
+    this.edgeDataPipelineDisable = true;
 
   }
 }

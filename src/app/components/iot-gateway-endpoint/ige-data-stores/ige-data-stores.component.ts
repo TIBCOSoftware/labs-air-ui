@@ -151,7 +151,7 @@ export class IgeDataStoresComponent implements OnInit {
 
     this.graphService.getGatewayAndDataStores(gatewayId)
       .subscribe(res => {
-        console.log("Received response: ", res);
+        console.log("Received response for graphService.getGatewayAndDataStores: ", res);
         this.gateway = res[0] as Gateway;
 
         if (res[0].dataStores != undefined) {
@@ -447,7 +447,7 @@ export class IgeDataStoresComponent implements OnInit {
     // First Check if there are pipelines associated with the data store
     this.graphService.getPipelineIdsFromDataStoreUid(dataStore.uid)
       .subscribe(res => {
-        console.log("Received response: ", res);
+        console.log("Received response for graphService.getPipelineIdsFromDataStoreUid: ", res);
 
         if (res.length > 0) {
 
@@ -583,7 +583,7 @@ export class IgeDataStoresComponent implements OnInit {
     // First Check if there are pipelines associated with the data store
     this.graphService.getPipelineIdsFromDataStoreUid(dataStoreUid)
       .subscribe(res => {
-        console.log("Received response: ", res);
+        console.log("Received response for graphService.getPipelineIdsFromDataStoreUid: ", res);
 
         if (res.length > 0) {
 

@@ -139,7 +139,7 @@ export class IotGatewaySubscriptionComponent implements OnInit, AfterViewInit {
 
     this.graphService.getGatewayAndSubscriptions(gatewayId)
       .subscribe(res => {
-        console.log("Received response: ", res);
+        console.log("Received response for graphService.getGatewayAndSubscriptions: ", res);
         this.gateway = res[0] as Gateway;
         this.subscriptionsDataSource.data = res[0].subscriptions as Subscription[];
         this.edgeOpsDisabled = true;

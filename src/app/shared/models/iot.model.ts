@@ -268,6 +268,7 @@ export class Rule {
   uuid: string;
   name: string;
   description: string;
+  useInferredValue: boolean;
   condDevice: string;
   condResource: string;
   condCompareNewMetricToValue: boolean;
@@ -296,6 +297,20 @@ export class ModelConfig {
   device: string;
   resource: string;
   model: string;
+}
+
+export class Filter {
+  device: string;
+  resource: string;
+}
+
+export class FiltersConfig {
+  filters: Filter[];
+}
+
+export class GatewayFiltersConfig {
+  uid: number;
+  deviceNames: string;
 }
 
 export class Notification {

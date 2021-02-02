@@ -68,6 +68,11 @@ import { IotAnomalyDetectionDashboardComponent } from './components/iot-anomaly-
 import { IotMlModelsComponent } from './components/iot-ml-models/iot-ml-models.component';
 import { MatIconModule } from '@angular/material/icon';
 import { LoginOauthComponent } from './routes/login-oauth/login-oauth.component';
+import { NgxHeatmapModule } from 'ngx-heatmap';
+import { IotEdgeDataPipelineComponent } from './components/iot-edge-data-pipeline/iot-edge-data-pipeline.component';
+import { RulesComponent } from './components/iot-edge-data-pipeline/rules/rules.component';
+import { InferencingComponent } from './components/iot-edge-data-pipeline/inferencing/inferencing.component';
+import { FilteringComponent } from './components/iot-edge-data-pipeline/filtering/filtering.component';
 
 /** This is the tc core configuration object
  * To use oauth you must also add the OAuthInterceptor to providers
@@ -135,7 +140,11 @@ const tcCoreConfig: TcCoreConfig = {
     IgeProtocolsComponent,
     IgeDataStoresComponent,
     IotAnomalyDetectionDashboardComponent,
-    IotMlModelsComponent
+    IotMlModelsComponent,
+    IotEdgeDataPipelineComponent,
+    RulesComponent,
+    InferencingComponent,
+    FilteringComponent
   ],
   imports: [
     AppRoutingModule,
@@ -152,7 +161,8 @@ const tcCoreConfig: TcCoreConfig = {
     MaterialModule,
     ReactiveFormsModule,
     SpotfireViewerModule,
-    HttpClientModule
+    HttpClientModule,
+    NgxHeatmapModule
   ],
   providers: [
     LogService,
