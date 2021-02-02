@@ -5,7 +5,7 @@ import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { catchError, map, tap, timeout } from 'rxjs/operators';
 import { LogLevel, LogService } from '@tibco-tcstk/tc-core-lib';
 
-import { Device, Profile, Service, Subscription, GetCommandResponse, Gateway, Rule, ModelConfig } from '../../shared/models/iot.model';
+import { Device, Profile, Service, Subscription, GetCommandResponse, Gateway, Rule, ModelConfig, FiltersConfig } from '../../shared/models/iot.model';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -35,7 +35,8 @@ export class EdgeService {
   private edgexExportClientPath = '/export/api/v1/';
 
   private edgexFlogoRulesPath = '/flogorules/api/v1/';
-  private edgexBufferingPath = '/buffering/api/v1/';
+  private edgexInferencingPath = '/inferencing/api/v1/';
+  private edgexFilteringPath = '/filtering/api/v1/';
   
   /**
    * 
@@ -465,7 +466,7 @@ export class EdgeService {
    */
   addModelConfig(gateway: Gateway, modelConfig: ModelConfig): Observable<string> {
 
-    const url = this.getEdgexURL(gateway.address, this.edgexBufferingPath, 'addModelConf');
+    const url = this.getEdgexURL(gateway.address, this.edgexInferencingPath, 'addModelConf');
 
     const authorizedHeaders = httpTextResponseOptions.headers.set('Authorization', 'Bearer ' + gateway.accessToken);
     httpTextResponseOptions.headers = authorizedHeaders;
@@ -484,7 +485,7 @@ export class EdgeService {
    */
   deleteModelConfig(gateway: Gateway, modelConfig: ModelConfig): Observable<string> {
 
-    const url = this.getEdgexURL(gateway.address, this.edgexBufferingPath, 'deleteModelConf');
+    const url = this.getEdgexURL(gateway.address, this.edgexInferencingPath, 'deleteModelConf');
 
     const authorizedHeaders = httpTextResponseOptions.headers.set('Authorization', 'Bearer ' + gateway.accessToken);
     httpTextResponseOptions.headers = authorizedHeaders;
@@ -496,7 +497,24 @@ export class EdgeService {
       );
   }
 
+  /**
+   * 
+   * @param gateway 
+   * @param filtersConfig 
+   */
+  setFiltersConfig(gateway: Gateway, filtersConfig: FiltersConfig): Observable<string> {
 
+    const url = this.getEdgexURL(gateway.address, this.edgexFilteringPath, 'setFiltersConf');
+
+    const authorizedHeaders = httpTextResponseOptions.headers.set('Authorization', 'Bearer ' + gateway.accessToken);
+    httpTextResponseOptions.headers = authorizedHeaders;
+
+    return this.http.post<string>(url, filtersConfig, httpTextResponseOptions)
+      .pipe(
+        tap(_ => this.logger.info('set filtersConfig')),
+        catchError(this.handleError<string>('setFiltersConfig'))
+      );
+  }
 
   /**
    * Handle Http operation that failed.

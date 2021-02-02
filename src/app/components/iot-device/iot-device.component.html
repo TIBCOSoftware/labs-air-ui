@@ -70,7 +70,7 @@
     </div>
 
 
-    <div  fxLayout="row" fxLayoutGap="15px" style="min-height:200px; max-height: 300px ">
+    <div *ngIf="summaryView" fxLayout="row" fxLayoutGap="15px" style="min-height:200px; max-height: 300px ">
       <mat-card fxFlex>
         <mat-card-header>
           <div mat-card-avatar class="device-header-image"></div>
@@ -78,7 +78,7 @@
         </mat-card-header>
         <mat-card-content>
 
-          <div *ngIf="summaryView" style="width: 100%; margin: 0 auto;">
+          <div style="width: 100%; margin: 0 auto;">
             <app-iot-device-summary [config]="deviceOverview">
             </app-iot-device-summary>
           </div>
@@ -210,7 +210,7 @@
             </form>
           </div>
 
-          <canvas baseChart [datasets]="chartDatasets" [options]="chartOptions" [legend]="chartLegend"
+          <canvas baseChart [datasets]="chartDatasets" [options]="chartOptions" [colors]="lineChartColors" [legend]="chartLegend"
             [chartType]="chartType">
           </canvas>
         </mat-card-content>
@@ -257,6 +257,44 @@
       </mat-card>
     </div>
 
+    <div *ngIf="xyzValueResource" fxLayout="row" fxLayoutGap="15px" style="min-height: 300px">
+      <mat-card fxFlex>
+        <mat-card-header>
+          <div mat-card-avatar class="instrument-history-image"></div>
+          <mat-card-title>Patterns Streaming</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div>
+            <h1>{{inferredXYZData}}</h1>
+          </div>
+          <ngx-heatmap [width]="heatmapWidth"
+                      [height]="heatmapHeight"
+                      [maxDataPoints]= "heatmapMaxDataPoints"
+                      [minDataPoints]="heatmapMinDataPoints"
+                      [heatPoints]="heatmapData">
+          </ngx-heatmap>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div *ngIf="imageResource" fxLayout="row" fxLayoutGap="15px" style="min-height: 300px">
+      <mat-card fxFlex>
+        <mat-card-header>
+          <div mat-card-avatar class="instrument-streaming-image"></div>
+          <mat-card-title>Image Streaming</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div>
+            <h1>{{inferredImageData}}</h1>
+          </div>
+          <div>
+            <img src="data:image/JPEG;base64,{{imageData}}"/>
+            <!-- <img [src]="imageData" /> -->
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
     <div *ngIf="timeSeriesResource" fxLayout="row" fxLayoutGap="15px" style="min-height: 300px">
       <mat-card fxFlex>
         <mat-card-header>
@@ -264,7 +302,7 @@
           <mat-card-title>Intrument Readings Streaming</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <canvas baseChart [datasets]="chartStreamingDatasets" [options]="chartStreamingOptions"
+          <canvas baseChart [datasets]="chartStreamingDatasets" [options]="chartStreamingOptions" [colors]="lineChartColors"
             [legend]="chartStreamingLegend" [chartType]="chartType">
           </canvas>
         </mat-card-content>

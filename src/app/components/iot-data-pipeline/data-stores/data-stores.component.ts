@@ -52,7 +52,7 @@ export class DataStoresComponent implements OnInit {
 
     this.graphService.getDataStores(gatewayId)
       .subscribe(res => {
-        console.log("Received response: ", res);
+        console.log("Received response for graphService.getDataStores: ", res);
         this.dataStores = res as DataStore[];
 
       })

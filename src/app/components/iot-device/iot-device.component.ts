@@ -11,7 +11,7 @@ import { debounceTime, distinctUntilChanged, startWith, tap, delay } from 'rxjs/
 //import { merge } from "rxjs/observable/merge";
 //import { fromEvent } from 'rxjs/observable/fromEvent';
 import { interval, Subscription } from 'rxjs';
-import { MatPaginator, MatSort, MatTableDataSource, MatDatepickerInputEvent } from '@angular/material';
+
 
 import { GoogleChartInterface } from 'ng2-google-charts/google-charts-interfaces';
 
@@ -20,6 +20,9 @@ import { BaseChartDirective, defaultColors, Label, MultiDataSet, SingleDataSet }
 import { ChartType } from 'chart.js';
 import { stringToKeyValue } from '@angular/flex-layout/extended/typings/style/style-transforms';
 import 'chartjs-plugin-streaming';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 
 
 @Component({
@@ -44,7 +47,9 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
   endDateSelected = false;
   queryLastValuesDisabled = true;
   mapResource = false;
+  imageResource = false;
   locationResource = false;
+  xyzValueResource = false;
   timeSeriesResource = false;
   discreteValueResource = false;
   summaryView = false;
@@ -78,7 +83,18 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
   public chartDatasets = [
     {
       label: '',
-      borderColor: 'blue',
+      // borderColor: 'blue',
+      //backgroundColor: 'rgba(54, 162, 235, 0.2)',
+      type: 'line',
+      // pointRadius: 0,
+      fill: true,
+      lineTension: 0,
+      borderWidth: 2,
+      data: []
+    },
+    {
+      label: 'Inferred',
+      // borderColor: 'green',
       //backgroundColor: 'rgba(54, 162, 235, 0.2)',
       type: 'line',
       // pointRadius: 0,
@@ -123,10 +139,29 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   };
 
+  public lineChartColors = [
+    { // grey
+      backgroundColor: 'rgba(148,159,177,0.2)',
+      borderColor: 'rgba(148,159,177,1)',
+      pointBackgroundColor: 'rgba(148,159,177,1)',
+      pointBorderColor: '#fff',
+      pointHoverBackgroundColor: '#fff',
+      pointHoverBorderColor: 'rgba(148,159,177,0.8)'
+    },
+    { // red
+      backgroundColor: 'rgba(255,0,0,0.3)',
+      borderColor: 'red',
+      pointBackgroundColor: 'rgba(148,159,177,1)',
+      pointBorderColor: '#fff',
+      pointHoverBackgroundColor: '#fff',
+      pointHoverBorderColor: 'rgba(148,159,177,0.8)'
+    }
+  ];
+
   public chartStreamingDatasets = [
     {
       label: '',
-      borderColor: 'blue',
+      // borderColor: 'blue',
       type: 'line',
       fill: true,
       lineTension: 0,
@@ -224,9 +259,27 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
   public chartType = 'line';
   public scatterChartType = 'scatter';
   public resourceReadings = [];
+  public resourceInferredReadings = []
 
   public timeSeriesData = [];
+  public timeSeriesInferredData = []
   public locationData = [];
+  public imageData = ""
+  public inferredImageData = ""
+  public inferredXYZData = ""
+
+  public heatmapRefWidth = 45
+  public heatmapRefHeight = 27
+  public heatmapWidth = this.heatmapRefWidth * 20 + 20
+  public heatmapHeight = this.heatmapRefHeight * 20 + 20
+  public heatmapMaxDataPoints = 1000
+  public heatmapMinDataPoints = 0
+  public heatmapConfig = {
+    radius: 1
+  }
+  public heatmapData = {
+    max: 5, data: []
+  };
 
   deviceSelected = "";
   resourceSelected = "";
@@ -296,6 +349,7 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
 
         // Reset data for streaming chart dataset
         this.chartStreamingDatasets[0].data = [];
+        this.imageData = ""
 
         if (this.mapResource) {
           this.setMapDataSet(deviceName);
@@ -307,11 +361,71 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
           console.log("calling setMapDataset");
           this.setTimelineDataSet(deviceName);
         }
+        else if (this.imageResource) {
+
+          if (this.resourceReadings.length > 0) {
+            this.getResourceInferredReadings(this.deviceSelected, this.resourceSelected + "_Inferred", numReadings, this.resourceReadings[0].created)
+            this.setImageData();
+          }
+
+        }
+        else if (this.xyzValueResource) {
+
+          if (this.resourceReadings.length > 0) {
+            this.getResourceInferredReadings(this.deviceSelected, this.resourceSelected + "_Inferred", numReadings, this.resourceReadings[0].created)
+            this.setXYZHeatmapDataSet();
+          }
+
+        }
         else {
+          this.getResourceInferredReadings(this.deviceSelected, this.resourceSelected + "_Inferred", numReadings, 0)
           // Set Data for chart dataset
           this.setChartDataSet();
         }
       })
+  }
+
+  public getResourceInferredReadings(deviceName, resourceName, numReadings, ts) {
+
+    if (this.imageResource) {
+
+      this.graphService.getReadingsAt(deviceName, resourceName, ts)
+        .subscribe(res => {
+          this.resourceInferredReadings = res as TSReading[];
+          this.inferredImageData = ""
+
+          console.log("reading data: ", this.resourceInferredReadings);
+
+          this.setInferredImageData();
+
+        })
+    }
+    else if (this.xyzValueResource) {
+
+      this.graphService.getReadingsAt(deviceName, resourceName, ts)
+        .subscribe(res => {
+          this.resourceInferredReadings = res as TSReading[];
+          this.inferredXYZData = ""
+
+          console.log("reading data: ", this.resourceInferredReadings);
+
+          this.setInferredXYZData();
+
+        })
+    }
+    else {
+      this.graphService.getReadings(deviceName, resourceName, numReadings)
+        .subscribe(res => {
+          this.resourceInferredReadings = res as TSReading[];
+
+          console.log("reading data: ", this.resourceInferredReadings);
+
+          // Set Data for chart dataset
+          this.setChartInferredDataSet();
+
+
+        })
+    }
   }
 
   public getResourceReadingsBetween(deviceName, resourceName, fromts, tots) {
@@ -357,7 +471,116 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.chartDatasets[0].data = this.timeSeriesData;
   }
-  
+
+  public setChartInferredDataSet() {
+
+    this.timeSeriesInferredData = [];
+
+    this.resourceInferredReadings.forEach(
+      reading => {
+
+        if (isNaN(reading.value)) {
+          this.timeSeriesInferredData.push({ x: new Date(reading.created).toISOString(), y: reading.value == 'true' ? 1 : 0 });
+        }
+        else {
+          this.timeSeriesInferredData.push({ x: new Date(reading.created).toISOString(), y: reading.value });
+        }
+      }
+    );
+    console.log("data transformed: ", this.timeSeriesInferredData);
+
+    this.chartDatasets[1].data = this.timeSeriesInferredData;
+  }
+
+  public setImageData() {
+
+    this.imageData = this.resourceReadings[0].value;
+
+  }
+
+  public setInferredImageData() {
+
+    if (this.resourceInferredReadings.length > 0) {
+      this.inferredImageData = this.resourceInferredReadings[0].value;
+    }
+    else {
+      this.inferredImageData = ""
+    }
+
+  }
+
+  public setInferredXYZData() {
+
+    if (this.resourceInferredReadings.length > 0) {
+      this.inferredXYZData = this.resourceInferredReadings[0].value;
+    }
+    else {
+      this.inferredXYZData = ""
+    }
+
+  }
+
+  public setXYZHeatmapDataSet() {
+
+    var xyzData = [];
+
+    var objstr = atob(this.resourceReadings[0].value)
+
+    // console.log("Object str: ", objstr);
+
+    var obj = JSON.parse(objstr);
+    var max = 0;
+    var min = 99999;
+    var scaledVal = 0;
+    var scaledDiex = 0;
+    var scaledDiey = 0;
+    var maxVal = 0;
+    var minVal = 9999999;
+
+    // console.log("Object json: ", obj);
+    obj.readings.forEach(
+      reading => {
+
+
+        maxVal = Math.max(maxVal, reading.measurement);
+        minVal = Math.min(minVal, reading.measurement);
+      }
+    );
+
+    console.log("MAX Pre scaled value  MAX  MIN : ", maxVal, minVal)
+
+
+    obj.readings.forEach(
+      reading => {
+        // var val = Math.floor(reading.measurement*1000000000);
+        var val = reading.measurement;
+        // if (reading.measurement > 0)
+        //   val = Math.floor(reading.measurement*1000000000);
+        if (reading.measurement < 0)
+          val = 0;
+
+        // console.log("Pre scaled value: ", val)
+        
+        // scaledVal = this.scaleValue(val, [0,+847], [0,this.heatmapMaxDataPoints]);
+        scaledVal = this.scaleValue(val, [minVal,maxVal], [0,this.heatmapMaxDataPoints]);
+
+        max = Math.max(max, scaledVal);
+
+        scaledDiex = this.scaleValue(reading.diex, [0,this.heatmapRefWidth], [0, this.heatmapWidth]);
+        scaledDiey = this.scaleValue(reading.diey, [0,this.heatmapRefHeight], [0, this.heatmapHeight]);
+
+        // console.log("Reading: ", reading);
+        xyzData.push({ x: Number(scaledDiex), y: Number(scaledDiey), value: scaledVal, radius: 20});
+      }
+    );
+    console.log("data transformed: ", xyzData);
+    console.log("Max Min: ", max, min);
+    this.heatmapData = {
+      max: max, data: xyzData
+    };
+
+  }
+
   public setScatterChartDataSet() {
 
     this.locationData = [];
@@ -373,7 +596,7 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.scatterChartDatasets[0].data = this.locationData;
   }
-  
+
   public setMapDataSet(deviceName) {
     let mapData = [];
     let idx = this.resourceReadings.length - 1;
@@ -461,10 +684,11 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public getStreamData(chart: any) {
 
+    //MAG
     if (this.resourceSelection.hasValue()) {
 
 
-      console.log("in getting streaming data");
+      // console.log("in getting streaming data");
 
       this.graphService.getReadingsStartingAt(this.deviceSelected,
         this.resourceSelected, this.streamLastQuery)
@@ -539,16 +763,21 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
     this.mapResource = false;
+    this.imageResource = false;
     this.locationResource = false;
+    this.xyzValueResource = false;
     this.timeSeriesResource = false;
     this.discreteValueResource = false;
-    this.summaryView = true;
+
+    // MAG
+    // this.summaryView = true;
+    this.summaryView = false;
 
     // Set variables for query enable/disable
     this.queryLastValuesDisabled = true;
     this.queryByDateDisabled = true;
 
-    console.log('Row clicked: ', row);
+    console.log('Device clicked: ', row);
     this.deviceSelection.select(row);
     this.deviceSelected = row.name;
 
@@ -565,9 +794,10 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
       this.subscribed = false;
     }
 
-    console.log('Row clicked: ', row);
+    console.log('Resource clicked: ', row);
     this.resourceSelected = row.name;
     this.mapResource = false;
+    this.imageResource = false;
     this.timeSeriesResource = false;
     this.discreteValueResource = false;
 
@@ -579,9 +809,17 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
     else if (this.resourceSelected == "Location") {
       this.locationResource = true;
     }
+    else if (row.attributes != undefined && row.attributes.Visualization != undefined && row.attributes.Visualization == "XYZScatter") {
+      this.xyzValueResource = true;
+      numReadingsRequired = 1;
+    }
     else if (row.properties.value.type == "String") {
       this.discreteValueResource = true;
       numReadingsRequired = 40;
+    }
+    else if (row.properties.value.type == "Binary") {
+      this.imageResource = true;
+      numReadingsRequired = 1;
     }
     else {
       this.timeSeriesResource = true;
@@ -623,7 +861,7 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.getResourceReadings(this.deviceSelected, this.resourceSelected, numReadingsRequired);
 
-    if (this.mapResource || this.locationResource) {
+    if (this.mapResource || this.locationResource || this.imageResource || this.xyzValueResource) {
       this.subscription = this.source.subscribe(val => this.getResourceReadings(this.deviceSelected, this.resourceSelected, numReadingsRequired));
       this.subscribed = true;
     }
@@ -641,7 +879,7 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onAnomalyAnalysis() {
-    
+
   }
 
   startDateEvent(event: MatDatepickerInputEvent<Date>) {
@@ -669,4 +907,31 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
       this.queryByDateDisabled = false;
     }
   }
+
+  /* Scale a value from one range to another
+  * Example of use:
+  *
+  * Convert 33 from a 0-100 range to a 0-65535 range
+  * var n = scaleValue(33, [0,100], [0,65535]);
+  *
+  * Ranges don't have to be positive
+  * var n = scaleValue(0, [-50,+50], [0,65535]);
+  *
+  * Ranges are defined as arrays of two values, inclusive
+  *
+  * The ~~ trick on return value does the equivalent of Math.floor, just faster.
+  *
+  */
+  scaleValue(value, from, to) {
+    var scale = (to[1] - to[0]) / (from[1] - from[0]);
+    var capped = Math.min(from[1], Math.max(from[0], value)) - from[0];
+    return ~~(capped * scale + to[0]);
+  }
+
+  // Applied like so, scaling the range 10-50 to a range between 0-100.
+  // var scaled = scaleBetween(unscaled, 0, 100, minRange, maxRange);
+  scaleBetween(unscaledNum, minAllowed, maxAllowed, min, max) {
+    return (maxAllowed - minAllowed) * (unscaledNum - min) / (max - min) + minAllowed;
+  }
+
 }

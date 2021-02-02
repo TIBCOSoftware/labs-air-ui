@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Gateway, Subscription, Publisher, Protocol, DataStore, Pipeline, Rule, ModelConfig, Notification, TSReading } from '../../shared/models/iot.model';
+import { Gateway, Subscription, Publisher, Protocol, DataStore, Pipeline, Rule, ModelConfig, GatewayFiltersConfig, Notification, TSReading } from '../../shared/models/iot.model';
 
 @Injectable()
 export abstract class GraphService {
 
+  abstract getGateway(gatewayName:string): Observable<Gateway[]>;
+  
   abstract getGateways(): Observable<Gateway[]>;
 
   abstract updateGateway(gateway: Gateway): Observable<string>;
@@ -74,7 +76,15 @@ export abstract class GraphService {
 
   abstract deleteModelConfig(gatewayUid: number, modelConfigUid: number): Observable<string>;
 
+  abstract getFiltersConfig(gatewayName): Observable<GatewayFiltersConfig[]>;
+
+  abstract addFiltersConfig(gatewayUid: number, filtersConfig: GatewayFiltersConfig): Observable<string>;
+
+  abstract updateFiltersConfig(filtersConfig: GatewayFiltersConfig): Observable<string>;
+  
   abstract getReadings(deviceName, instrumentName, numReadings): Observable<TSReading[]>;
+
+  abstract getReadingsAt(deviceName, instrumentName, ts): Observable<TSReading[]>;
 
   abstract getReadingsStartingAt(deviceName, instrumentName, fromts): Observable<TSReading[]>;
 

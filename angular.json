@@ -22,10 +22,13 @@
               "src/favicon.ico",
               "src/assets"
             ],
-            "styles": ["src/assets/geoanalytics/GeoAnalytics.css",
+            "styles": [
+              "src/assets/geoanalytics/GeoAnalytics.css",
               "src/styles.css"
             ],
-            "scripts": ["src/assets/geoanalytics/GeoAnalytics.js"]
+            "scripts": [
+              "src/assets/geoanalytics/GeoAnalytics.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -131,5 +134,8 @@
       }
     }
   },
-  "defaultProject": "IoTCloudStarter"
+  "defaultProject": "IoTCloudStarter",
+  "cli": {
+    "analytics": false
+  }
 }

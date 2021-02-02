@@ -8,8 +8,9 @@ import { EdgeService } from '../../services/edge/edge.service';
 import { GraphService } from '../../services/graph/graph.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { switchMap, debounceTime, distinctUntilChanged, startWith, tap, delay } from 'rxjs/operators';
-
-import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 
 export interface SelectItem {
   value: string;
@@ -138,7 +139,7 @@ export class IotGatewaySubscriptionComponent implements OnInit, AfterViewInit {
 
     this.graphService.getGatewayAndSubscriptions(gatewayId)
       .subscribe(res => {
-        console.log("Received response: ", res);
+        console.log("Received response for graphService.getGatewayAndSubscriptions: ", res);
         this.gateway = res[0] as Gateway;
         this.subscriptionsDataSource.data = res[0].subscriptions as Subscription[];
         this.edgeOpsDisabled = true;

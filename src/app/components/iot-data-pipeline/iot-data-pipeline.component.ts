@@ -1,6 +1,5 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, Input } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { MatStepper } from '@angular/material';
 
 import { SelectionModel } from '@angular/cdk/collections';
 
@@ -10,8 +9,11 @@ import { EdgeService } from '../../services/edge/edge.service';
 import { FlogoDeployService } from '../../services/deployment/flogo-deploy.service';
 import { FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
 import { switchMap, debounceTime, distinctUntilChanged, startWith, tap, delay } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSort } from '@angular/material/sort';
+import { MatStepper } from '@angular/material/stepper';
+import { MatTableDataSource } from '@angular/material/table';
 
-import { MatSort, MatTableDataSource, MatSnackBar } from '@angular/material';
 
 export interface SelectItem {
   value: string;
@@ -59,7 +61,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
   @ViewChild('stepper', { static: false }) stepper: MatStepper;
 
   /**
-   * 
+   *
    */
   constructor(private graphService: GraphService,
     private edgeService: EdgeService,
@@ -71,7 +73,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * 
+   *
    */
   ngOnInit() {
 
@@ -87,28 +89,28 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * 
+   *
    */
   ngAfterViewInit() {
     this.pipelinesDataSource.sort = this.sort;
   }
 
   /**
-   * 
+   *
    */
   applyFilter(filterValue: string) {
     this.pipelinesDataSource.filter = filterValue.trim().toLowerCase();
   }
 
   /**
-   * 
+   *
    */
   public getGatewayAndPipelines(gatewayId: string) {
     console.log("Getting gateway and pipelines for: ", gatewayId);
 
     this.graphService.getGatewayAndPipelines(gatewayId)
       .subscribe(res => {
-        console.log("Received response: ", res);
+        console.log("Received response for graphService.getGatewayAndPipelines: ", res);
         this.gateway = res[0] as Gateway;
 
         if (res[0].pipelines != undefined) {
@@ -184,9 +186,9 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * 
-   * @param protocolType 
-   * @param protocol 
+   *
+   * @param protocolType
+   * @param protocol
    */
   updateProtocolViewForm(protocolType, protocol) {
 
@@ -256,9 +258,9 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * 
-   * @param dataStoreType 
-   * @param dataStore 
+   *
+   * @param dataStoreType
+   * @param dataStore
    */
   updateDataStoreViewForm(dataStoreType, dataStore) {
 
@@ -328,8 +330,8 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * 
-   * @param filter 
+   *
+   * @param filter
    */
   updateFilterViewForm(filter) {
 
@@ -363,8 +365,8 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * 
-   * @param streaming 
+   *
+   * @param streaming
    */
   updateStreamingViewForm(streaming) {
 
@@ -380,7 +382,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * 
+   *
    */
   resetPipelineForm() {
     this.pipelineForm.reset({
@@ -389,7 +391,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * 
+   *
    */
   updatePipeline() {
 
@@ -415,7 +417,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * 
+   *
    */
   deletePipeline() {
     this.graphService.deletePipeline(this.gateway.uid, this.pipelineForm.controls['uid'].value)
@@ -429,7 +431,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * 
+   *
    */
   onFormChanges(): void {
     this.pipelineForm.valueChanges.subscribe(val => {
@@ -444,7 +446,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * 
+   *
    */
   saveDataPipeline(deployPipeline: boolean) {
     console.log("Deploying pipeline");
@@ -497,7 +499,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
       // Deploy pipeline
       this.flogoDeployService.deploy(request)
         .subscribe(res => {
-          console.log("Received response: ", res);
+          console.log("Received Deployment response: ", res);
 
         });
     }
@@ -530,7 +532,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * 
+   *
    * @param updateGraph - flag indicating if pipeline needs to be removed from graph
    */
   undeploySelectedDataPipeline() {
@@ -560,7 +562,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
       // Undeploy pipeline
       this.flogoDeployService.undeploy(request)
         .subscribe(res => {
-          console.log("Received response: ", res);
+          console.log("Received response for flogoDeployService.undeploy: ", res);
 
         });
 
@@ -585,7 +587,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * 
+   *
    */
   deploySelectedDataPipeline() {
 
@@ -639,7 +641,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
       // Deploy Pipeline
       this.flogoDeployService.deploy(request)
         .subscribe(res => {
-          console.log("Received response: ", res);
+          console.log("Received response for flogoDeployService.deploy: ", res);
 
         });
 
@@ -662,7 +664,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * 
+   *
    */
   deleteSelectedDataPipeline() {
 
@@ -894,7 +896,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * 
+   *
    */
   resetFormsToDefaults() {
 
@@ -1043,7 +1045,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * 
+   *
    */
   resetFilteringForm() {
 
@@ -1060,7 +1062,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * 
+   *
    */
   resetViewForms() {
     this.transportViewForm.reset({
@@ -1071,9 +1073,9 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * 
-   * @param protocol 
-   * @param form 
+   *
+   * @param protocol
+   * @param form
    */
   buildProtocolProperties(protocol, form: FormGroup): any {
 
@@ -1121,9 +1123,9 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * 
-   * @param dataStore 
-   * @param form 
+   *
+   * @param dataStore
+   * @param form
    */
   buildDataStoreProperties(dataStore, form: FormGroup): any {
 
@@ -1178,8 +1180,8 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * 
-   * @param form 
+   *
+   * @param form
    */
   buildDataFilteringProperties(form: FormGroup): any {
 
@@ -1203,8 +1205,8 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
   }
 
   /**
- * 
- * @param form 
+ *
+ * @param form
  */
   buildGraphDataFilteringProperties(form: FormGroup): any {
 
@@ -1228,8 +1230,8 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * 
-   * @param form 
+   *
+   * @param form
    */
   buildGraphStreamingProperties(form: FormGroup): any {
 
@@ -1245,8 +1247,8 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * 
-   * @param form 
+   *
+   * @param form
    */
   buildStreamingProperties(form: FormGroup): any {
 
@@ -1271,7 +1273,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
 
   /**
    * Get Devices to be used for filtering
-   * @param gateway 
+   * @param gateway
    */
   getDevices(gateway) {
     console.log("Calling EdgeService to get devices for: ", gateway);
@@ -1288,7 +1290,7 @@ export class IotDataPipelineComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * 
+   *
    */
   initializeFilteringForm() {
 

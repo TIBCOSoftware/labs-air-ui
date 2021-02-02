@@ -3,7 +3,9 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { Protocol, Gateway } from '../../../shared/models/iot.model';
 import { GraphService } from '../../../services/graph/graph.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatSort, MatTableDataSource, MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 
 export interface SelectItem {
   value: string;
@@ -63,10 +65,10 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
   @Input() gatewayId: string;
 
   /**
-   * 
-   * @param graphService 
-   * @param formBuilder 
-   * @param _snackBar 
+   *
+   * @param graphService
+   * @param formBuilder
+   * @param _snackBar
    */
   constructor(private graphService: GraphService,
     private formBuilder: FormBuilder,
@@ -75,7 +77,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * 
+   *
    */
   ngOnInit() {
 
@@ -93,15 +95,15 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * 
+   *
    */
   ngAfterViewInit() {
     this.protocolsDataSource.sort = this.sort;
   }
 
   /**
-   * 
-   * @param filterValue 
+   *
+   * @param filterValue
    */
   applyFilter(filterValue: string) {
     this.protocolsDataSource.filter = filterValue.trim().toLowerCase();
@@ -160,7 +162,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
 
     this.graphService.getGatewayAndProtocols(gatewayId)
       .subscribe(res => {
-        console.log("Received response: ", res);
+        console.log("Received response for graphService.getGatewayAndProtocols: ", res);
         this.gateway = res[0] as Gateway;
 
         if (res[0].protocols != undefined) {
@@ -373,7 +375,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
         this.resetProtocolForm();
       });
     }
-    
+
   }
 
   /**
@@ -391,7 +393,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
     // First Check if there are pipelines associated with the protocol
     this.graphService.getPipelineIdsFromProtocolUid(protocol.uid)
       .subscribe(res => {
-        console.log("Received response: ", res);
+        console.log("Received response for graphService.getPipelineIdsFromProtocolUid: ", res);
 
         if (res.length > 0) {
 
@@ -480,7 +482,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
     // First Check if there are pipelines associated with the protocol
     this.graphService.getPipelineIdsFromProtocolUid(protocolUid)
       .subscribe(res => {
-        console.log("Received response: ", res);
+        console.log("Received response for graphService.getPipelineIdsFromProtocolUid: ", res);
 
         if (res.length > 0) {
 

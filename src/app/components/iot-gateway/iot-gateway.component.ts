@@ -12,9 +12,11 @@ import { debounceTime, distinctUntilChanged, startWith, tap, delay } from 'rxjs/
 //import { merge } from "rxjs/observable/merge";
 //import { fromEvent } from 'rxjs/observable/fromEvent';
 // // import { DevicesDataSource } from "../services/edge/devices.datasource";
-import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar } from '@angular/material';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LogLevel, LogService } from '@tibco-tcstk/tc-core-lib';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-iot-gateway',
@@ -28,7 +30,8 @@ export class IotGatewayComponent implements OnInit, AfterViewInit {
 
   gatewayOpDisabled = true;
   publisherDisabled = true;
-  dataPipelineDisabled = true;
+  cloudDataPipelineDisable = true;
+  edgeDataPipelineDisable = true;
   selectedGateway = '';
   hideAccessToken = true;
   dateFormat = 'yyyy-MM-dd  HH:mm:ss';
@@ -91,7 +94,7 @@ export class IotGatewayComponent implements OnInit, AfterViewInit {
     this.graphService.getGateways()
       .subscribe(res => {
         this.dataSource.data = res as Gateway[];
-        console.log("Received response: ", res);
+        console.log("Received response for graphService.getGateways: ", res);
         this.buildMaporamaData();
 
         // Move code to update data stores to a button action
@@ -122,7 +125,7 @@ export class IotGatewayComponent implements OnInit, AfterViewInit {
       zoom: 4,
       showColorAxis: false,
       data: mapData
-    };    
+    };
 
   }
 
@@ -216,7 +219,7 @@ export class IotGatewayComponent implements OnInit, AfterViewInit {
 
       })
     }
-    
+
   }
 
   updateDataStoreForGateway(gateway: Gateway) {
@@ -236,7 +239,7 @@ export class IotGatewayComponent implements OnInit, AfterViewInit {
               console.log("Metadata response: ", restxt);
             }
           )
-        
+
       })
   }
 
@@ -247,10 +250,10 @@ export class IotGatewayComponent implements OnInit, AfterViewInit {
 
         if (index == 0) {
           console.log("Calling save metadata on datastore");
-          
+
           this.updateDataStoreForGateway(gateway);
         }
-        
+
       }
     );
 
@@ -258,7 +261,7 @@ export class IotGatewayComponent implements OnInit, AfterViewInit {
   }
 
 
-  
+
 
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
@@ -278,10 +281,11 @@ export class IotGatewayComponent implements OnInit, AfterViewInit {
     // Enable/Disable variables
     this.gatewayOpDisabled = false;
     this.publisherDisabled = false;
-    this.dataPipelineDisabled = false;
+    this.cloudDataPipelineDisable = false;
+    this.edgeDataPipelineDisable = false;
     this.selection.select(row);
     this.selectedGateway = row.uuid;
-    
+
     // Update Gateway Form
     this.gatewayForm.patchValue({
       uid: row.uid,
@@ -316,7 +320,8 @@ export class IotGatewayComponent implements OnInit, AfterViewInit {
 
     this.gatewayOpDisabled = true;
     this.publisherDisabled = true;
-    this.dataPipelineDisabled = true;
-    
+    this.cloudDataPipelineDisable = true;
+    this.edgeDataPipelineDisable = true;
+
   }
 }

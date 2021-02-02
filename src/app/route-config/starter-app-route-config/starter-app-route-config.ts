@@ -4,6 +4,7 @@ import {IotGatewaySubscriptionComponent} from '../../components/iot-gateway-subs
 import {IotGatewayEndpointComponent} from '../../components/iot-gateway-endpoint/iot-gateway-endpoint.component';
 import {IotGatewayPublisherComponent} from '../../components/iot-gateway-publisher/iot-gateway-publisher.component';
 import {IotDataPipelineComponent} from '../../components/iot-data-pipeline/iot-data-pipeline.component';
+import {IotEdgeDataPipelineComponent} from '../../components/iot-edge-data-pipeline/iot-edge-data-pipeline.component';
 import {IotDeviceComponent} from '../../components/iot-device/iot-device.component';
 import {IotDeviceProfileComponent} from '../../components/iot-device-profile/iot-device-profile.component';
 import {IotDeviceCommandComponent} from '../../components/iot-device-command/iot-device-command.component';
@@ -19,7 +20,6 @@ import {TceRulesComponent} from '../../components/tce-rules/tce-rules.component'
 import {IotNotificationsComponent} from '../../components/iot-notifications/iot-notifications.component';
 import {LiveAppsComponent} from '../../components/live-apps/live-apps.component';
 import {
-  AuthGuard,
   ConfigurationMenuConfigResolver,
   GeneralConfigResolver,
   GeneralLandingPageConfigResolver,
@@ -33,7 +33,8 @@ import {
   LiveAppsConfigResolver,
   RoleGuard,
   RolesResolver,
-  RoleActiveResolver
+  RoleActiveResolver,
+  AuthGuard
 } from '@tibco-tcstk/tc-liveapps-lib';
 import {SplashComponent} from '../../routes/splash/splash.component';
 import {CaseComponent} from '../../routes/case/case.component';
@@ -139,6 +140,19 @@ export const STARTER_APP_ROUTES =
       {
         path: 'datapipeline/:gatewayId',
         component: IotDataPipelineComponent,
+        canActivate: [AuthGuard],
+        resolve: {
+          claims: ClaimsResolver,
+          laConfigHolder: LaConfigResolver,
+          groups: GroupsResolver,
+          roles: RolesResolver,
+          access: AccessResolver,
+          customFormDefs: FormResolver
+        }
+      },
+      {
+        path: 'edgedatapipeline/:gatewayId',
+        component: IotEdgeDataPipelineComponent,
         canActivate: [AuthGuard],
         resolve: {
           claims: ClaimsResolver,

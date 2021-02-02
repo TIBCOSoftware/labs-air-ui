@@ -152,12 +152,16 @@
             [routerLink]="['/starterApp/home/gatewaysubscription', selectedGateway]"
             color="primary">Subscriptions</button> -->
           <button mat-raised-button [disabled]="gatewayOpDisabled"
-            [routerLink]="['/starterApp/home/gatewayendpoint', selectedGateway]"
-            color="primary">Endpoints Configuration</button>
+            [routerLink]="['/starterApp/home/gatewayendpoint', selectedGateway]" color="primary">Endpoints
+            Configuration</button>
           <!-- <button mat-raised-button [disabled]="publisherDisabled"
             [routerLink]="['/starterApp/home/gatewaypublisher', selectedGateway]" color="primary">Data Publishers</button> -->
-          <button mat-raised-button [disabled]="dataPipelineDisabled"
-            [routerLink]="['/starterApp/home/datapipeline', selectedGateway]" color="primary">Data Pipelines</button>
+          <button mat-raised-button [disabled]="cloudDataPipelineDisable"
+            [routerLink]="['/starterApp/home/datapipeline', selectedGateway]" color="primary">Cloud Data
+            Pipelines</button>
+          <button mat-raised-button [disabled]="edgeDataPipelineDisable"
+            [routerLink]="['/starterApp/home/edgedatapipeline', selectedGateway]" color="primary">Edge Data
+            Pipelines</button>
         </mat-card-actions>
       </mat-card>
     </div>

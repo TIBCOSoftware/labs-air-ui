@@ -5,7 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { LogLevel, LogService } from '@tibco-tcstk/tc-core-lib';
 
-import { Gateway, Subscription, Publisher, Pipeline, Rule, ModelConfig, Notification, Protocol, DataStore } from '../../shared/models/iot.model';
+import { Gateway, Subscription, Publisher, Pipeline, Rule, ModelConfig, GatewayFiltersConfig, Notification, Protocol, DataStore } from '../../shared/models/iot.model';
 import { TSReading } from '../../shared/models/iot.model';
 import { GraphService } from './graph.service';
 
@@ -75,6 +75,26 @@ export class TgdbService implements GraphService {
     private http: HttpClient) {
 
     logger.level = LogLevel.Debug;
+  }
+
+    /**
+   * 
+   */
+  getGateway(gatewayName: string): Observable<Gateway[]> {
+    console.log("GetGateway service called for: ", gatewayName)
+    const url = `${this.tgdbUrl}/query`;
+    let query = `{
+      resp(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
+        uid uuid description address latitude longitude accessToken createdts updatedts
+      }
+    }`;
+
+    return this.http.post<any>(url, query, httpOptions)
+      .pipe(
+        map(response => response.data.resp as Gateway[]),
+        tap(_ => this.logger.info('fetched gateways')),
+        catchError(this.handleError<Gateway[]>('getGateway', []))
+      );
   }
 
   /**
@@ -1532,6 +1552,82 @@ export class TgdbService implements GraphService {
 
   /**
    * 
+   * @param gatewayName 
+   */
+  getFiltersConfig(gatewayName): Observable<GatewayFiltersConfig[]> {
+    const url = `${this.tgdbUrl}/query`;
+    let query = `{
+      var(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
+        filtersConfig as gateway_filter {
+        }
+      }
+      resp(func: uid(filtersConfig)) {
+        uid
+        deviceNames
+      }
+    }`;
+
+    console.log("getFiltersConfig service query: ", query)
+
+    return this.http.post<any>(url, query, httpOptions)
+      .pipe(
+        map(response => response.data.resp as GatewayFiltersConfig[]),
+        tap(_ => this.logger.info('fetched filtersConfig')),
+        catchError(this.handleError<GatewayFiltersConfig[]>('getFiltersConfigs', []))
+      );
+
+  }
+
+  /**
+   * 
+   * @param gatewayUid 
+   * @param filtersConfig
+   */
+  addFiltersConfig(gatewayUid: number, filtersConfig: GatewayFiltersConfig): Observable<string> {
+    const url = `${this.tgdbUrl}/mutate?commitNow=true`;
+
+    let query = `{
+      set {
+        _:Filter <dgraph.type> "filter" .
+        _:Filter <type> "filter" .
+        _:Filter <filter> "" .
+        _:Filter <deviceNames> "${filtersConfig.deviceNames}" .
+        <${gatewayUid}> <gateway_filter> _:Filter .
+      }
+    }`;
+    console.log('Mutate statement: ', query);
+
+    return this.http.post<any>(url, query, httpMutateOptions)
+      .pipe(
+        tap(_ => this.logger.info('add filtersConfig')),
+        catchError(this.handleError<string>('addFiltersConfig'))
+      );
+
+  }
+
+  /**
+   * 
+   * @param filtersConfig 
+   */
+  updateFiltersConfig(filtersConfig: GatewayFiltersConfig): Observable<string> {
+    const url = `${this.tgdbUrl}/mutate?commitNow=true`;
+    let query = `{
+      set {
+        <${filtersConfig.uid}> <deviceNames> "${filtersConfig.deviceNames}" .
+      }
+    }`;
+    console.log('Mutate statement: ', query);
+
+    return this.http.post<any>(url, query, httpMutateOptions)
+      .pipe(
+        tap(_ => this.logger.info('updated filtersConfig')),
+        catchError(this.handleError<string>('updateFiltersConfig'))
+      );
+
+  }
+
+  /**
+   * 
    * @param deviceName 
    * @param instrumentName 
    * @param numReadings 
@@ -1565,6 +1661,37 @@ export class TgdbService implements GraphService {
         map(response => response.queryResult.content.nodes as TSReading[]),
         tap(_ => this.logger.info('fetched readings')),
         catchError(this.handleError<TSReading[]>('getReadings', []))
+      );
+  }
+  /**
+   * 
+   * @param deviceName 
+   * @param instrumentName 
+   * @param ts 
+   */
+  getReadingsAt(deviceName, instrumentName, ts): Observable<TSReading[]> {
+    const url = `${this.tgdbUrl}/query`;
+
+    let myquery = `{resp(func: has(reading)) @filter(gt(created, ${ts})) @cascade {value created ~resource_reading @filter(eq(uuid, "${deviceName}_${instrumentName}")) { }}}`;
+    let query = `{
+      var(func: has(resource)) @filter(eq(uuid, "${deviceName}_${instrumentName}")) {
+        readings as resource_reading @filter(eq(created, ${ts})) {
+        }
+      }
+      resp(func: uid(readings), orderasc:created) {
+        created
+        value
+      }
+    }`;
+
+    console.log("the query is: ", query);
+
+    // return this.http.post<any>(url, `{resp(func: has(reading)) @filter(gt(created, ${fromts})) @cascade {value created ~resource_reading @filter(eq(uuid, "${deviceName}_${instrumentName}")) { }}}`, httpOptions)
+    return this.http.post<any>(url, query, httpOptions)
+      .pipe(
+        map(response => response.data.resp as TSReading[]),
+        tap(_ => this.logger.info('fetched readings')),
+        catchError(this.handleError<TSReading[]>('getReadingsAt', []))
       );
   }
 

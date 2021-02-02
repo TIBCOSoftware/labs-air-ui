@@ -57,7 +57,7 @@ export class ProtocolsComponent implements OnInit {
 
     this.graphService.getProtocols(gatewayId)
       .subscribe(res => {
-        console.log("Received response: ", res);
+        console.log("Received response for graphService.getProtocols: ", res);
         this.protocols = res as Protocol[];
 
       })
