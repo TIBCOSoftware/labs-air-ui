@@ -32,7 +32,7 @@ export class IotGatewayComponent implements OnInit, AfterViewInit {
   publisherDisabled = true;
   cloudDataPipelineDisable = true;
   edgeDataPipelineDisable = true;
-  selectedGateway = '';
+  selectedGateway: Gateway;
   hideAccessToken = true;
   dateFormat = 'yyyy-MM-dd  HH:mm:ss';
 
@@ -284,7 +284,7 @@ export class IotGatewayComponent implements OnInit, AfterViewInit {
     this.cloudDataPipelineDisable = false;
     this.edgeDataPipelineDisable = false;
     this.selection.select(row);
-    this.selectedGateway = row.uuid;
+    // this.selectedGateway = row.uuid;
 
     // Update Gateway Form
     this.gatewayForm.patchValue({
@@ -322,6 +322,17 @@ export class IotGatewayComponent implements OnInit, AfterViewInit {
     this.publisherDisabled = true;
     this.cloudDataPipelineDisable = true;
     this.edgeDataPipelineDisable = true;
+
+  }
+
+  selectGateway(gateway?: Gateway) {
+    if (gateway) {
+      this.selectedGateway = gateway;
+      this.gatewayOpDisabled = false;
+    } else {
+      this.selectedGateway = null;
+      this.gatewayOpDisabled = true;
+    }
 
   }
 }
