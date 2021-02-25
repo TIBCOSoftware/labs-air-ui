@@ -331,7 +331,7 @@
     }
   },
   "/edgex/remotegateway/*": {
-    "target": "CHANGED!!!!!",
+    "target": "http://<Add-Your-air-cors-anywhere-service-Enpoint-Here>",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "info",
