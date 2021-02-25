@@ -60,16 +60,22 @@ table {
 
 .card-header {
     color: #212121;
-    font-size: 18px;
-    margin: 24px;
+    padding: 24px 24px 16px 24px;
     height: auto;
-    line-height: 27px;
     background-color: #7DC95E;
+}
+
+.card-title-label {
+    font-size: 18px;
+    line-height: 27px;
+    color: #FFFFFF;
+    font-weight: 600;
 }
 
 .card-title-details {
     font-size: 14px;
     float: right;
+    font-weight: 400;
 }
 
 .card-title-action {
@@ -81,8 +87,30 @@ table {
     display: inline-block;
 }
 
+.card-body-summary {
+    margin-top:  12px;
+    font-size: 12px;
+    line-height: 18px;
+    font-weight: 600;
+}
+
+.card-body-summary-text {
+    font-weight: 400;
+}
+
+.card-body-highlights {
+    margin-top: 9px;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 21px;
+}
+
+.card-body-highlights-text {
+
+}
+
 .card-footer {
-    margin: 16px 24px;
+    margin: 34px 24px 16px 24px;
     height: 24px;
 }
 
