@@ -20,6 +20,7 @@ import {HomeComponent} from './routes/home/home.component';
 import {StarterAppComponent} from './routes/starter-app/starter-app.component';
 import {CaseComponent} from './routes/case/case.component';
 import { ConfigurationComponent } from './routes/configuration/configuration.component';
+import { SettingsLandingComponent } from './routes/settings-landing/settings-landing.component';
 import { SplashComponent } from './routes/splash/splash.component';
 import { AppRoutingModule } from './app-routing.module';
 import { IotHomeCockpitComponent } from './components/iot-home-cockpit/iot-home-cockpit.component';
@@ -105,6 +106,7 @@ const tcCoreConfig: TcCoreConfig = {
     HomeComponent,
     CaseComponent,
     ConfigurationComponent,
+    SettingsLandingComponent,
     SplashComponent,
     IotHomeCockpitComponent,
     NavBarComponent,

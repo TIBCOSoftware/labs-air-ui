@@ -1,7 +1,7 @@
 {
-  "browserTitle": "IoTCloudStarter",
-  "applicationTitle": "IoTCloudStarter (TIBCO LABS™)",
-  "welcomeMessage": "Welcome to the IoTCloudStarter",
+  "browserTitle": "ProjectAir",
+  "applicationTitle": "ProjectAir (TIBCO LABS™)",
+  "welcomeMessage": "Welcome to the ProjectAir",
   "roles": [
         {
       "id": "User",
