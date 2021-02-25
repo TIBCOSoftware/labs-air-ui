@@ -2,6 +2,7 @@
   "name": "IoTCloudStarter",
   "version": "1.0.0",
   "scripts": {
+    "setup_minikube": "node scripts/setup.js minikube",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
@@ -35,9 +36,9 @@
     "@angular/platform-browser": "~10.1.6",
     "@angular/platform-browser-dynamic": "~10.1.6",
     "@angular/router": "~10.1.6",
-    "@tibco-tcstk/tc-core-lib": "^2.0.3-rc.1603889979059",
-    "@tibco-tcstk/tc-forms-lib": "^2.0.3-rc.1603889981195",
-    "@tibco-tcstk/tc-liveapps-lib": "^2.0.3-rc.1603889982561",
+    "@tibco-tcstk/tc-core-lib": "^2.1.0",
+    "@tibco-tcstk/tc-forms-lib": "^2.1.0",
+    "@tibco-tcstk/tc-liveapps-lib": "^2.1.0",
     "@tibco/spotfire-wrapper": "0.13.0",
     "brace": "^0.11.1",
     "chart.js": "^2.9.3",
@@ -87,6 +88,7 @@
     "set-value": ">=2.0.1",
     "kind-of": ">=6.0.3",
     "https-proxy-agent": ">=2.2.3",
-    "child_process": "^1.0.2"
+    "child_process": "^1.0.2",
+    "@kubernetes/client-node": "^0.13.2"
   }
 }
