@@ -326,20 +326,26 @@
     "secure": false,
     "changeOrigin": true,
     "logLevel": "info",
-    "pathRewrite":{"^/edgex/localgateway" : ""}
+    "pathRewrite": {
+      "^/edgex/localgateway": ""
+    }
   },
   "/edgex/remotegateway/*": {
     "target": "http://<Add-Your-air-cors-anywhere-service-Enpoint-Here>",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "info",
-    "pathRewrite":{"^/edgex/remotegateway" : ""}
+    "pathRewrite": {
+      "^/edgex/remotegateway": ""
+    }
   },
   "/airEndpoint/*": {
     "target": "http://<Add-Your-ingress-nginx-controller-Enpoint-Here>",
     "secure": "false",
     "changeOrigin": true,
     "logLevel": "info",
-    "pathRewrite":{"^/airEndpoint" : ""}
+    "pathRewrite": {
+      "^/airEndpoint": ""
+    }
   }
 }

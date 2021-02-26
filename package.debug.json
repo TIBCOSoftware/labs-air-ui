@@ -1,5 +1,5 @@
 {
-  "name": "IoTCloudStarter",
+  "name": "ProjectAir",
   "version": "1.0.0",
   "scripts": {
     "ng": "ng",
@@ -11,8 +11,8 @@
     "serve_eu": "ng serve --proxy-config proxy.conf.prod.eu.json --ssl true --source-map --aot",
     "serve_us": "ng serve --proxy-config proxy.conf.prod.us.json --ssl true --source-map --aot",
     "serve_au": "ng serve --proxy-config proxy.conf.prod.au.json --ssl true --source-map --aot",
-    "build_prod_hash": "ng build --prod --base-href /webresource/apps/IoTCloudStarter/index.html --deploy-url /webresource/apps/IoTCloudStarter/ && cd ./dist/IoTCloudStarter/ && zip -r ./app.zip ./* && cd ../..",
-    "build_prod": "ng build --prod --base-href /webresource/apps/IoTCloudStarter/ --deploy-url /webresource/apps/IoTCloudStarter/ && cd ./dist/IoTCloudStarter/ && zip -r ./app.zip ./* && cd ../.."
+    "build_prod_hash": "ng build --prod --base-href /webresource/apps/ProjectAir/index.html --deploy-url /webresource/apps/ProjectAir/ && cd ./dist/ProjectAir/ && zip -r ./app.zip ./* && cd ../..",
+    "build_prod": "ng build --prod --base-href /webresource/apps/ProjectAir/ --deploy-url /webresource/apps/ProjectAir/ && cd ./dist/ProjectAir/ && zip -r ./app.zip ./* && cd ../.."
   },
   "private": true,
   "dependencies": {
