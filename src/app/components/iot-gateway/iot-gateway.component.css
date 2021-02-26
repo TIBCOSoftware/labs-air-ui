@@ -123,3 +123,10 @@ table {
     float: right;
     font-size: 12px;
 }
+
+.icon-document {
+    width: 14px;
+    height: 14px;
+    color: #A160FB;
+    vertical-align: text-top;
+}

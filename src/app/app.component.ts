@@ -52,5 +52,8 @@ export class AppComponent {
     this.matIconRegistry.addSvgIcon(
       "rules",
       this.domSanitizer.bypassSecurityTrustResourceUrl("../assets/icons/rules.svg"));
+    this.matIconRegistry.addSvgIcon(
+      "document",
+      this.domSanitizer.bypassSecurityTrustResourceUrl("../assets/icons/document.svg"));
   }
 }
