@@ -73,6 +73,7 @@ import { IotEdgeDataPipelineComponent } from './components/iot-edge-data-pipelin
 import { RulesComponent } from './components/iot-edge-data-pipeline/rules/rules.component';
 import { InferencingComponent } from './components/iot-edge-data-pipeline/inferencing/inferencing.component';
 import { FilteringComponent } from './components/iot-edge-data-pipeline/filtering/filtering.component';
+import { IotGatewayDetailsComponent } from './components/iot-gateway-details/iot-gateway-details.component';
 
 /** This is the tc core configuration object
  * To use oauth you must also add the OAuthInterceptor to providers
@@ -144,7 +145,8 @@ const tcCoreConfig: TcCoreConfig = {
     IotEdgeDataPipelineComponent,
     RulesComponent,
     InferencingComponent,
-    FilteringComponent
+    FilteringComponent,
+    IotGatewayDetailsComponent
   ],
   imports: [
     AppRoutingModule,
