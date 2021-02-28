@@ -349,18 +349,25 @@ const PROXY_CONFIG = {
     "pathRewrite":{"^/edgex/localgateway" : ""}
   },
   "/edgex/remotegateway/*": {
-    "target": "http://<Add-Your-air-cors-anywhere-service-Enpoint-Here>",
+    "target": "http://localhost:8043",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "info",
     "pathRewrite":{"^/edgex/remotegateway" : ""}
   },
   "/airEndpoint/*": {
-    "target": "http://<Add-Your-ingress-nginx-controller-Enpoint-Here>",
+    "target": "http://a77d5e583ea66440bb0e26be76aec6bf-1483924641.us-west-2.elb.amazonaws.com",
     "secure": "false",
     "changeOrigin": true,
     "logLevel": "info",
     "pathRewrite":{"^/airEndpoint" : ""}
+  },
+  "/f1Endpoint/*": {
+    "target": "http://54.81.13.248:5408",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite":{"^/f1Endpoint" : ""}
   }
 }
 
