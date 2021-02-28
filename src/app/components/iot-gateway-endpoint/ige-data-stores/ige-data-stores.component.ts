@@ -43,7 +43,7 @@ export class IgeDataStoresComponent implements OnInit {
   dataStoreSelection = new SelectionModel<DataStore>(false, []);
 
   dataStores: SelectItem[] = [
-    { value: 'Postgres', viewValue: 'Postgres' },
+    { value: 'PostgreSQL', viewValue: 'PostgreSQL' },
     { value: 'Snowflake', viewValue: 'Snowflake' },
     { value: 'Oracle', viewValue: 'Oracle' },
     { value: 'MySQL', viewValue: 'MySQL' },
@@ -206,7 +206,7 @@ export class IgeDataStoresComponent implements OnInit {
     let dataStore = row;
 
     // Update form
-    if (dataStore.dataStoreType == "Postgres") {
+    if (dataStore.dataStoreType == "PostgreSQL") {
 
       this.dataStoreForm.patchValue({
         uid: dataStore.uid,
@@ -316,7 +316,7 @@ export class IgeDataStoresComponent implements OnInit {
 
     let dataStoreType = this.dataStoreForm.get('dataStoreType').value;
 
-    if (dataStoreType == "Postgres") {
+    if (dataStoreType == "PostgreSQL") {
 
       dataStore.created = ts;
       dataStore.modified = ts;
@@ -462,7 +462,7 @@ export class IgeDataStoresComponent implements OnInit {
           let dataStoreType = this.dataStoreForm.get('dataStoreType').value;
           let uuidDirty = false;
 
-          if (dataStoreType == "Postgres") {
+          if (dataStoreType == "PostgreSQL") {
 
             dataStore.created = ts;
             dataStore.modified = ts;
@@ -643,7 +643,7 @@ export class IgeDataStoresComponent implements OnInit {
     this.tgdbDataStore = false;
     this.dgraphDataStore = false;
 
-    if (event.value == "Postgres") {
+    if (event.value == "PostgreSQL") {
 
       this.dataStoreForm.patchValue({
         postgres: {
