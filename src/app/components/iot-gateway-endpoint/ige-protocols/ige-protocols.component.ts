@@ -28,6 +28,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
 
   mqttProtocol = false;
   kafkaProtocol = false;
+  amqpProtocol = false;
   httpProtocol = false;
 
   graphAddOpDisabled = true;
@@ -40,7 +41,8 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
 
   protocols: SelectItem[] = [
     { value: 'MQTT', viewValue: 'MQTT' },
-    { value: 'Kafka', viewValue: 'Kafka' }
+    { value: 'Kafka', viewValue: 'Kafka' },
+    { value: 'AMQP', viewValue: 'AMQP' }
   ];
 
   kafkaAuthModes: SelectItem[] = [
@@ -149,6 +151,17 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
         fetchMaxWait: ['500', Validators.required],
         heartbeatInterval: ['3000', Validators.required],
         sessionTimeout: ['30000', Validators.required]
+      }),
+      amqp: this.formBuilder.group({
+        uuid: ['changeme', Validators.required],
+        hostname: ['changeme', Validators.required],
+        port: ['changeme', Validators.required],
+        username: ['changeme', Validators.required],
+        password: ['changeme', Validators.required],
+        exchangeName: ['changeme', Validators.required],
+        exchangeType: ['topic', Validators.required],
+        routingKey: ['air', Validators.required],
+        reliable: ['true', Validators.required]
       })
     });
   }
@@ -207,6 +220,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
     this.protocolSelection.select(row);
     this.mqttProtocol = false;
     this.kafkaProtocol = false;
+    this.amqpProtocol = false;
     this.httpProtocol = false;
 
     let protocol = row;
@@ -273,6 +287,30 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
       this.kafkaProtocol = true;
 
     }
+    else if (protocol.protocolType == "AMQP") {
+      let delimInd = protocol.brokerURL.lastIndexOf(":");
+      let hostname = protocol.brokerURL.substring(0, delimInd);
+      let port = protocol.brokerURL.substring(delimInd + 1);
+
+      this.protocolForm.patchValue({
+        uid: protocol.uid,
+        protocolType: protocol.protocolType,
+        amqp: {
+          uuid: protocol.uuid,
+          hostname: hostname,
+          port: port,
+          username: protocol.username,
+          password: protocol.password,
+          exchangeName: protocol.topic,
+          exchangeType: "topic",
+          routingKey: "air",
+          reliable: "true"
+        }
+      });
+
+      this.amqpProtocol = true;
+
+    }
 
     this.graphDeleteOpDisabled = false;
     this.graphAddOpDisabled = true;
@@ -292,6 +330,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
 
     this.mqttProtocol = false;
     this.kafkaProtocol = false;
+    this.amqpProtocol = false;
     this.httpProtocol = false;
 
     this.protocolSelection.clear();
@@ -357,6 +396,16 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
       protocol.topic = this.protocolForm.get('kafka.topic').value;
       protocol.username = this.protocolForm.get('kafka.username').value;
       protocol.uuid = this.protocolForm.get('mqtt.uuid').value;
+    }
+    else if (protocolType == "AMQP") {
+      protocol.brokerURL = this.protocolForm.get('amqp.hostname').value + ":" + this.protocolForm.get('amqp.port').value;
+      protocol.username = this.protocolForm.get('amqp.username').value;
+      protocol.password = this.protocolForm.get('amqp.password').value;
+      protocol.created = ts;
+      protocol.modified = ts;
+      protocol.protocolType = protocolType;
+      protocol.topic = this.protocolForm.get('amqp.exchangeName').value;
+      protocol.uuid = this.protocolForm.get('amqp.uuid').value;
     }
 
     // First check that protocol with the same name already exist
@@ -458,6 +507,16 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
             protocol.username = this.protocolForm.get('kafka.username').value;
             protocol.uuid = this.protocolForm.get('mqtt.uuid').value;
           }
+          else if (protocolType == "AMQP") {
+            protocol.brokerURL = this.protocolForm.get('amqp.hostname').value + ":" + this.protocolForm.get('amqp.port').value;
+            protocol.username = this.protocolForm.get('amqp.username').value;
+            protocol.password = this.protocolForm.get('amqp.password').value;
+            protocol.created = ts;
+            protocol.modified = ts;
+            protocol.protocolType = protocolType;
+            protocol.topic = this.protocolForm.get('amqp.exchangeName').value;
+            protocol.uuid = this.protocolForm.get('amqp.uuid').value;
+          }
 
           this.graphService.updateProtocol(protocol)
             .subscribe(res => {
@@ -538,6 +597,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
 
     this.mqttProtocol = false;
     this.kafkaProtocol = false;
+    this.amqpProtocol = false;
     this.httpProtocol = false;
 
     if (event.value == "MQTT") {
@@ -578,6 +638,17 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
             fetchMaxWait: 'changeme',
             heartbeatInterval: 'changeme',
             sessionTimeout: 'changeme'
+          },
+          amqp: {
+            uuid: '',
+            hostname: 'changeme',
+            port: 'changeme',
+            username: 'changeme',
+            password: 'changeme',
+            exchangeName: '',
+            exchangeType: 'topic',
+            routingKey: 'air',
+            reliable: 'true'
           }
         },
         { emitEvent: false }
@@ -623,12 +694,79 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
             fetchMaxWait: '500',
             heartbeatInterval: '3000',
             sessionTimeout: '30000'
+          },
+          amqp: {
+            uuid: '',
+            hostname: 'changeme',
+            port: 'changeme',
+            username: 'changeme',
+            password: 'changeme',
+            exchangeName: '',
+            exchangeType: 'topic',
+            routingKey: 'air',
+            reliable: 'true'
           }
         },
         { emitEvent: false }
       );
 
       this.kafkaProtocol = true;
+    }
+    else if (event.value == "AMQP") {
+
+      // Update transport Form
+      this.protocolForm.patchValue(
+        {
+          mqtt: {
+            uuid: 'changeme',
+            hostname: 'changeme',
+            port: 'changeme',
+            username: 'changeme',
+            password: 'changeme',
+            encryptionMode: 'None',
+            caCerticate: 'changeme',
+            clientCertificate: 'changeme',
+            clientKey: 'changeme',
+            topic: 'changeme',
+            maximumQOS: '2'
+          },
+          kafka: {
+            uuid: '',
+            hostname: '',
+            port: '',
+            authMode: 'None',
+            username: '',
+            password: '',
+            clientCertificate: '',
+            clientKey: '',
+            serverCertificate: '',
+            connectionTimeout: '30',
+            retryBackoff: '3',
+            topic: '',
+            consumerGroupId: '',
+            commitInterval: '500',
+            initialOffset: 'Oldest',
+            fetchMinBytes: '1',
+            fetchMaxWait: '500',
+            heartbeatInterval: '3000',
+            sessionTimeout: '30000'
+          },
+          amqp: {
+            uuid: '',
+            hostname: '',
+            port: '',
+            username: '',
+            password: '',
+            exchangeName: '',
+            exchangeType: 'topic',
+            routingKey: 'air',
+            reliable: 'true'
+          }
+        },
+        { emitEvent: false }
+      );
+
+      this.amqpProtocol = true;
     }
     else if (event.value == "HTTP") {
       this.httpProtocol = true;

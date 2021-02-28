@@ -5,7 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { LogLevel, LogService } from '@tibco-tcstk/tc-core-lib';
 
-import { Gateway, Subscription, Publisher, Pipeline, Rule, ModelConfig, GatewayFiltersConfig, Notification, Protocol, DataStore } from '../../shared/models/iot.model';
+import { Gateway, Subscription, Publisher, Pipeline, Rule, ModelConfig, GatewayFiltersConfig, Notification, Protocol, DataStore, Model } from '../../shared/models/iot.model';
 import { TSReading } from '../../shared/models/iot.model';
 import { GraphService } from './graph.service';
 import {AuthService} from '../auth/auth.service';
@@ -980,6 +980,153 @@ export class DgraphService implements GraphService {
       );
   }
 
+
+  /**
+   * 
+   * @param gatewayName 
+   */
+  getGatewayAndModels(gatewayName): Observable<Gateway[]> {
+    const url = `${this.dgraphUrl}/query`;
+    let query = `{
+      resp(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
+        uid uuid
+        models: gateway_model {
+          uid
+          uuid
+          created
+          name
+          description
+          inputType
+          url
+          platform
+        }
+      }
+    }`;
+    console.log('Get Gateway and Protocols query statement: ', query);
+
+    return this.http.post<any>(url, query, httpOptions)
+      .pipe(
+        map(response => response.data.resp as Gateway[]),
+        tap(_ => this.logger.info('fetched Gateway')),
+        catchError(this.handleError<Gateway[]>('getGatewayWithModels', []))
+      );
+
+  }
+
+  /**
+   * 
+   * @param gatewayName 
+   */
+  getModels(gatewayName): Observable<Model[]> {
+    const url = `${this.dgraphUrl}/query`;
+    let query = `{
+      var(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
+        models as gateway_model {
+        }
+      }
+      resp(func: uid(models)) {
+        uid
+        uuid
+        created
+        modified
+        name
+        description
+        inputType
+        url
+        platform
+      }
+    }`;
+
+    return this.http.post<any>(url, query, httpOptions)
+      .pipe(
+        map(response => response.data.resp as Model[]),
+        tap(_ => this.logger.info('fetched models')),
+        catchError(this.handleError<Model[]>('getModels', []))
+      );
+
+  }
+
+  /**
+   * 
+   * @param gatewayUid 
+   * @param model 
+   */
+  addModel(gatewayUid: number, model: Model): Observable<string> {
+    const url = `${this.dgraphUrl}/mutate?commitNow=true`;
+    let query = `{
+      set {
+        _:Model <dgraph.type> "Model" .
+        _:Model <type> "model" .
+        _:Model <model> "" .
+        _:Model <uuid> "${model.uuid}" .
+        _:Model <created> "${model.created}" .
+        _:Model <modified> "${model.modified}" .
+        _:Model <name> "${model.name}" .
+        _:Model <description> "${model.description}" .
+        _:Model <inputType> "${model.inputType}" .
+        _:Model <url> "${model.url}" .
+        _:Model <platform> "${model.platform}" .
+        <${gatewayUid}> <gateway_model> _:Model .
+      }
+    }`;
+    console.log('Mutate statement: ', query);
+
+    return this.http.post<any>(url, query, httpMutateOptions)
+      .pipe(
+        tap(_ => this.logger.info('add models')),
+        catchError(this.handleError<string>('addModels'))
+      );
+
+  }
+  /**
+   * 
+   * @param model 
+   */
+  updateModel(model: Model): Observable<string> {
+    const url = `${this.dgraphUrl}/mutate?commitNow=true`;
+    let query = `{
+      set {
+        <${model.uid}> <uuid> "${model.uuid}" .
+        <${model.uid}> <modified> "${model.modified}" .
+        <${model.uid}> <name> "${model.name}" .
+        <${model.uid}> <description> "${model.description}" .
+        <${model.uid}> <inputType> "${model.inputType}" .
+        <${model.uid}> <url> "${model.url}" .
+        <${model.uid}> <platform> "${model.platform}" .
+      }
+    }`;
+    console.log('Mutate statement: ', query);
+
+    return this.http.post<any>(url, query, httpMutateOptions)
+      .pipe(
+        tap(_ => this.logger.info('updated models')),
+        catchError(this.handleError<string>('updateModels'))
+      );
+
+  }
+
+  /**
+   * 
+   * @param gatewayUid 
+   * @param modelUid 
+   */
+  deleteModel(gatewayUid: number, modelUid: number): Observable<string> {
+    const url = `${this.dgraphUrl}/mutate?commitNow=true`;
+    let query = `{
+      delete {
+        <${modelUid}> * * .
+        <${gatewayUid}> <gateway_model> <${modelUid}> .
+      }
+    }`;
+    console.log('Delete Model Mutate statement: ', query);
+
+    return this.http.post<any>(url, query, httpMutateOptions)
+      .pipe(
+        tap(_ => this.logger.info('deleted protocol')),
+        catchError(this.handleError<string>('deleteModel'))
+      );
+  }
+
   /**
    * 
    * @param gatewayName 
@@ -1078,7 +1225,7 @@ export class DgraphService implements GraphService {
    * @param dataStoreObj 
    * @param filterObj 
    */
-  addPipeline(gatewayUid: number, pipeline: Pipeline, protocolUid: string,
+  addPipelineOld(gatewayUid: number, pipeline: Pipeline, protocolUid: string,
     dataStoreUid: string, filterObj: any, streamingObj:any): Observable<string> {
 
     const url = `${this.dgraphUrl}/mutate?commitNow=true`;
@@ -1167,6 +1314,47 @@ export class DgraphService implements GraphService {
       );
 
   }
+
+    /**
+   * 
+   * @param gatewayUid 
+   * @param pipeline 
+   * @param transportObj 
+   * @param dataStoreObj 
+   * @param filterObj 
+   */
+  addPipeline(gatewayUid: number, pipeline: Pipeline, protocolUid: string,
+    dataStoreUid: string, filterObj: any, streamingObj:any): Observable<string> {
+
+    const url = `${this.dgraphUrl}/mutate?commitNow=true`;
+
+    let query = '';
+
+    query = `{
+      set {
+        _:Pipeline <dgraph.type> "Pipeline" .
+        _:Pipeline <name> "${pipeline.name}" .
+        _:Pipeline <uuid> "${pipeline.name}" .
+        _:Pipeline <type> "pipeline" .
+        _:Pipeline <pipeline> "" .
+        _:Pipeline <pipelineType> "${pipeline.pipelineType}" .
+        _:Pipeline <protocolType> "${pipeline.protocolType}" .
+        _:Pipeline <dataStoreType> "${pipeline.dataStoreType}" .
+        _:Pipeline <created> "${pipeline.created}" .
+        _:Pipeline <modified> "${pipeline.modified}" .
+        _:Pipeline <status> "${pipeline.status}" .
+        <${gatewayUid}> <gateway_pipeline> _:Pipeline .
+      }
+    }`;
+    console.log('Mutate statement: ', query);
+
+    return this.http.post<any>(url, query, httpMutateOptions)
+      .pipe(
+        tap(_ => this.logger.info('add pipeline')),
+        catchError(this.handleError<string>('addPipelines'))
+      );
+
+  }
   
   /**
    * 
@@ -1195,7 +1383,7 @@ export class DgraphService implements GraphService {
    * @param gatewayUid 
    * @param pipeline 
    */
-  deletePipeline(gatewayUid: number, pipeline: Pipeline): Observable<string> {
+  deletePipelineOld(gatewayUid: number, pipeline: Pipeline): Observable<string> {
     const url = `${this.dgraphUrl}/mutate?commitNow=true`;
     let protocol = pipeline.protocol;
     let dataStore = pipeline.dataStore;
@@ -1223,6 +1411,28 @@ export class DgraphService implements GraphService {
       );
   }
 
+    /**
+   * 
+   * @param gatewayUid 
+   * @param pipeline 
+   */
+  deletePipeline(gatewayUid: number, pipeline: Pipeline): Observable<string> {
+    const url = `${this.dgraphUrl}/mutate?commitNow=true`;
+
+    let query = `{
+      delete {
+        <${pipeline.uid}> * * .
+        <${gatewayUid}> <gateway_pipeline> <${pipeline.uid}> .
+      }
+    }`;
+    console.log('Delete Pipeline Mutate statement: ', query);
+
+    return this.http.post<any>(url, query, httpMutateOptions)
+      .pipe(
+        tap(_ => this.logger.info('deleted pipeline')),
+        catchError(this.handleError<string>('deletePipeline'))
+      );
+  }
   /**
    * Get ids of all the pipelines associated with the specified protocol
    * @param protocolUid - the uid of the protocol

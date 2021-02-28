@@ -288,6 +288,75 @@
 
                         </div>
 
+                        <div fxLayout="column" fxFlex="100%" *ngIf="amqpProtocol" formGroupName="amqp"
+                        style="height: 100%;">
+
+                        <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px" style="width: 100%;">
+                            <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                <mat-label>Name</mat-label>
+                                <input matInput [readonly]=false formControlName="uuid" required>
+                            </mat-form-field>
+
+                            <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                <mat-label>Hostname</mat-label>
+                                <input matInput [readonly]=false formControlName="hostname" required>
+                            </mat-form-field>
+
+                            <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                <mat-label>Port</mat-label>
+                                <input matInput [readonly]=false formControlName="port" required>
+                            </mat-form-field>
+
+                        </div>
+                        
+                        <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px" style="width: 100%;">
+                           
+
+
+                            <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                <mat-label>Username</mat-label>
+                                <input matInput [readonly]=false formControlName="username" required>
+                            </mat-form-field>
+
+                            <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                <mat-label>Password</mat-label>
+                                <input matInput placeholder="Enter your password" [readonly]=false
+                                    [type]="hidePassword ? 'password' : 'text'" formControlName="password" required>
+                                <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
+                                    [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+                                    <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                </button>
+                            </mat-form-field>
+
+                            <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                <mat-label>Reliable</mat-label>
+                                <input matInput [readonly]=true formControlName="reliable" required>
+                            </mat-form-field>
+
+                        </div>
+
+                        <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px" style="width: 100%;">
+
+                            <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                <mat-label>Routing Key</mat-label>
+                                <input matInput [readonly]=true formControlName="routingKey">
+                            </mat-form-field>
+
+                            <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                <mat-label>Exchange Type</mat-label>
+                                <input matInput [readonly]=true formControlName="exchangeType" required>
+                            </mat-form-field>
+
+
+                            <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                <mat-label>Exchange Name</mat-label>
+                                <input matInput [readonly]=false formControlName="exchangeName">
+                            </mat-form-field>
+
+                        </div>
+
+                    </div>
+
                     </form>
                 </mat-card-content>
                 <mat-card-actions>

@@ -6,6 +6,7 @@ import {CredentialsService, TcLiveappsLibModule} from '@tibco-tcstk/tc-liveapps-
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { MaterialModule } from './material.module';
+import { ReteEditorModule } from './components/rete/rete.module';
 import {
   LogService, OAuthInterceptor,
   ProxyInterceptor,
@@ -74,6 +75,17 @@ import { IotEdgeDataPipelineComponent } from './components/iot-edge-data-pipelin
 import { RulesComponent } from './components/iot-edge-data-pipeline/rules/rules.component';
 import { InferencingComponent } from './components/iot-edge-data-pipeline/inferencing/inferencing.component';
 import { FilteringComponent } from './components/iot-edge-data-pipeline/filtering/filtering.component';
+import { from } from 'rxjs';
+import { IotPipelineComponent } from './components/iot-pipeline/iot-pipeline.component';
+import { PipelineFilteringComponent } from './components/iot-pipeline/pipeline-filtering/pipeline-filtering.component';
+import { PipelineStreamingComponent } from './components/iot-pipeline/pipeline-streaming/pipeline-streaming.component';
+import { PipelineInferencingComponent } from './components/iot-pipeline/pipeline-inferencing/pipeline-inferencing.component';
+import { PipelineRulesComponent } from './components/iot-pipeline/pipeline-rules/pipeline-rules.component';
+import { PipelineDataSourceComponent } from './components/iot-pipeline/pipeline-data-source/pipeline-data-source.component';
+import { PipelineDataStoreComponent } from './components/iot-pipeline/pipeline-data-store/pipeline-data-store.component';
+import { PipelineDataPipeComponent } from './components/iot-pipeline/pipeline-data-pipe/pipeline-data-pipe.component';
+import { PipelineConfigComponent } from './components/iot-pipeline/pipeline-config/pipeline-config.component';
+import { IgeModelsComponent } from './components/iot-gateway-endpoint/ige-models/ige-models.component';
 
 /** This is the tc core configuration object
  * To use oauth you must also add the OAuthInterceptor to providers
@@ -146,7 +158,17 @@ const tcCoreConfig: TcCoreConfig = {
     IotEdgeDataPipelineComponent,
     RulesComponent,
     InferencingComponent,
-    FilteringComponent
+    FilteringComponent,
+    IotPipelineComponent,
+    PipelineFilteringComponent,
+    PipelineStreamingComponent,
+    PipelineInferencingComponent,
+    PipelineRulesComponent,
+    PipelineDataSourceComponent,
+    PipelineDataStoreComponent,
+    PipelineDataPipeComponent,
+    PipelineConfigComponent,
+    IgeModelsComponent
   ],
   imports: [
     AppRoutingModule,
@@ -161,6 +183,7 @@ const tcCoreConfig: TcCoreConfig = {
     ChartsModule,
     Ng2GoogleChartsModule,
     MaterialModule,
+    ReteEditorModule,
     ReactiveFormsModule,
     SpotfireViewerModule,
     HttpClientModule,

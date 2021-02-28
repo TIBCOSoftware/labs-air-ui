@@ -1,0 +1,131 @@
+<div class="tcs-home-content" fxLayout="column" fxFlex="grow" fxLayoutAlign="start stretch"
+    style="padding-left: 20px; padding-right: 20px; margin-top: 10px;">
+
+    <div fxLayout="row" fxLayoutAlign="center center">
+        <mat-form-field fxFlex="40%">
+            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter Models">
+        </mat-form-field>
+    </div>
+
+    <div fxLayout="column" fxLayoutGap="20px" style="height: 100%;">
+        <div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between stretch" style="min-height: 300px;">
+            <mat-card fxFlex>
+                <mat-card-header>
+                    <div mat-card-avatar class="device-header-image"></div>
+                    <mat-card-title>Models</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="table-container mat-elevation-z8">
+                        <table mat-table [dataSource]="modelsDataSource" matSort>
+
+                            <!-- Id Column -->
+                            <ng-container matColumnDef="id">
+                                <th mat-header-cell *matHeaderCellDef> Id </th>
+                                <td mat-cell *matCellDef="let model"> {{model.uid}} </td>
+                            </ng-container>
+
+                            <!-- Name Column -->
+                            <ng-container matColumnDef="name">
+                                <th mat-header-cell *matHeaderCellDef> Name </th>
+                                <td mat-cell *matCellDef="let model"> {{model.name}} </td>
+                            </ng-container>
+
+                            <!-- InputType Column -->
+                            <ng-container matColumnDef="inputType">
+                                <th mat-header-cell *matHeaderCellDef> Input Type </th>
+                                <td mat-cell *matCellDef="let model"> {{model.inputType}} </td>
+                            </ng-container>
+
+                            <!-- Created -->
+                            <ng-container matColumnDef="created">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Created </th>
+                                <td mat-cell *matCellDef="let model"> {{model.created | date: dateFormat}} </td>
+                            </ng-container>
+
+                            <!-- Updated -->
+                            <ng-container matColumnDef="modified">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Modified </th>
+                                <td mat-cell *matCellDef="let model"> {{model.modified | date: dateFormat}}
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="modelDisplayedColumns; sticky: true"></tr>
+                            <tr mat-row *matRowDef="let row; columns: modelDisplayedColumns;"
+                                (click)="onModelClicked(row)" [ngClass]="{'selected': modelSelection.isSelected(row) }">
+                            </tr>
+                        </table>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="15px" style="min-height: 300px">
+            <mat-card fxFlex>
+                <mat-card-header>
+                    <div mat-card-avatar class="device-header-image"></div>
+                    <mat-card-title>Model Details</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <form [formGroup]="modelForm" class="model-form" fxLayout="row wrap" fxLayoutGap="15px">
+
+                        <div fxLayout="column" style="height: 100%; width: 100%">
+
+                            <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px">
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Name</mat-label>
+                                    <input matInput [readonly]=false formControlName="name" required>
+                                </mat-form-field>
+
+                            </div>
+
+                            <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px">
+
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Platform</mat-label>
+                                    <mat-select formControlName="platform">
+                                        <mat-option *ngFor="let item of platforms" [value]="item.value">
+                                            {{item.viewValue}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Input Type</mat-label>
+                                    <mat-select formControlName="inputType">
+                                        <mat-option *ngFor="let item of inputTypes" [value]="item.value">
+                                            {{item.viewValue}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+
+                            <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px">
+                                <mat-form-field fxFlex="1 1 30%" appearance="outline">
+                                    <mat-label>URL</mat-label>
+                                    <input matInput [readonly]=false formControlName="url" required>
+                                </mat-form-field>
+                            </div>
+
+                            <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px">
+                                <mat-form-field fxFlex="1 1 30%" appearance="outline">
+                                    <mat-label>Description</mat-label>
+                                    <textarea matInput [readonly]=false formControlName="description" required></textarea>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                    </form>
+                </mat-card-content>
+                <mat-card-actions>
+                    <button mat-raised-button [disabled]="graphAddOpDisabled" (click)="addModel()" color="primary">Add
+                        Model</button>
+                    <button mat-raised-button [disabled]="graphUpdateOpDisabled" (click)="updateModel()"
+                        color="primary">Update Model</button>
+                    <button mat-raised-button [disabled]="graphDeleteOpDisabled" (click)="deleteModel()"
+                        color="primary">Remove Model</button>
+                </mat-card-actions>
+            </mat-card>
+        </div>
+
+    </div>
+
+</div>

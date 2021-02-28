@@ -1,0 +1,14 @@
+<div fxLayout="row" fxLayoutGap="10px" >
+
+    <div class="wrapper" style="width: 70%; background-color: black;">
+        <div #nodeEditor class="node-editor"></div>
+    </div>
+
+    <app-pipeline-config *ngIf="pipelineConfig" [pipelineForm]="pipelineForm" fxFlex style="height: 600px;"></app-pipeline-config>
+    <app-pipeline-data-source *ngIf="dataSourceConfig" [dataSourceForm]="protocolForm" fxFlex style="height: 600px;"></app-pipeline-data-source>
+    <app-pipeline-filtering *ngIf="filteringConfig" [devices]="devices" [gateway]="gateway" fxFlex style="height: 600px;"></app-pipeline-filtering>
+    <app-pipeline-data-store *ngIf="dataStoreConfig" [dataStoreForm]="dataStoreForm" fxFlex style="height: 600px;"></app-pipeline-data-store>
+    <app-pipeline-data-pipe *ngIf="dataPipeConfig" [dataPipeForm]="protocolForm" fxFlex style="height: 600px;"></app-pipeline-data-pipe>
+
+
+</div>
