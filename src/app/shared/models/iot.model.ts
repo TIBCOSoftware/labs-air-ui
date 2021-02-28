@@ -245,6 +245,7 @@ export class Gateway {
   pipelines: Pipeline[];
   dataStores: DataStore[];
   protocols: Protocol[];
+  models: Model[];
 }
 
 
@@ -285,6 +286,18 @@ export class Rule {
   actionDevice: string;
   actionResource: string;
   actionValue: string;
+}
+
+export class Model {
+  uid: number;
+  created: number;
+  modified: number;
+  uuid: string;
+  name: string;
+  description: string;
+  inputType: string;
+  url: string;
+  platform: string;
 }
 
 export class ModelConfig {
