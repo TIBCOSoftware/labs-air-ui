@@ -141,11 +141,11 @@
 
         </mat-card-content>
         <mat-card-actions>
-          <button mat-raised-button (click)="addGateway()" color="primary">Add Gateway</button>
+          <!-- <button mat-raised-button (click)="addGateway()" color="primary">Add Gateway</button>
           <button mat-raised-button [disabled]="gatewayOpDisabled" (click)="updateGateway()" color="primary">Update
             Gateway</button>
           <button mat-raised-button [disabled]="gatewayOpDisabled" (click)="deleteGateway()" color="primary">Remove
-            Gateway</button>
+            Gateway</button> -->
           <button mat-raised-button [disabled]="gatewayOpDisabled" (click)="pingGateway()" color="primary">Ping
             Gateway</button>
           <!-- <button mat-raised-button [disabled]="gatewayOpDisabled"
@@ -156,12 +156,15 @@
             Configuration</button>
           <!-- <button mat-raised-button [disabled]="publisherDisabled"
             [routerLink]="['/starterApp/home/gatewaypublisher', selectedGateway]" color="primary">Data Publishers</button> -->
-          <button mat-raised-button [disabled]="cloudDataPipelineDisable"
+          <!-- <button mat-raised-button [disabled]="cloudDataPipelineDisable"
             [routerLink]="['/starterApp/home/datapipeline', selectedGateway]" color="primary">Cloud Data
             Pipelines</button>
           <button mat-raised-button [disabled]="edgeDataPipelineDisable"
             [routerLink]="['/starterApp/home/edgedatapipeline', selectedGateway]" color="primary">Edge Data
-            Pipelines</button>
+            Pipelines</button> -->
+          <button mat-raised-button [disabled]="edgeDataPipelineDisable"
+            [routerLink]="['/starterApp/home/pipeline', selectedGateway]" color="primary">
+            Pipeline Editor</button>
         </mat-card-actions>
       </mat-card>
     </div>
