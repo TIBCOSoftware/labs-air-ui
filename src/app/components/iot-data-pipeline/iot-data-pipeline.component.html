@@ -180,10 +180,10 @@
 
         <div fxLayout="row" fxLayoutGap="15px"  *ngIf="pipelineSelected" style="width: 100%">
 
+            <button mat-raised-button [disabled]="deployDisabled" (click)="deploySelectedDataPipeline()" color="primary">Save Pipeline</button>
+            <button mat-raised-button [disabled]="deployDisabled" (click)="deleteSelectedDataPipeline()" color="primary">Delete Pipeline</button>
             <button mat-raised-button [disabled]="deployDisabled" (click)="deploySelectedDataPipeline()" color="primary">Deploy Pipeline</button>
             <button mat-raised-button [disabled]="undeployDisabled" (click)="undeploySelectedDataPipeline()" color="primary">Undeploy Pipeline</button>
-            <button mat-raised-button [disabled]="deployDisabled" (click)="deleteSelectedDataPipeline()" color="primary">Delete Pipeline</button>
-
         </div>
     </div>
 

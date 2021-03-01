@@ -1,0 +1,99 @@
+<div class="tcs-home-content" fxLayout="column" fxFlex="grow" fxLayoutAlign="start stretch"
+    style="padding-left: 20px; padding-right: 20px; margin-top: 10px;">
+
+    <div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="flex-end"
+        style="width: 100%; margin-top: 10px; margin-bottom: 10px;">
+
+        <button mat-raised-button (click)="newPipeline()" color="primary">New Pipeline</button>
+        <button mat-raised-button (click)="savePipelineToGraph()" color="primary">Save Pipeline</button>
+        <button mat-raised-button (click)="clearPipeline()" color="primary">Clear Pipeline</button>
+        <button mat-raised-button (click)="deletePipelineFromGraph()" color="primary">Delete Pipeline</button>
+        <button mat-raised-button (click)="printPipeline()" color="primary">Print Pipeline</button>
+        <button mat-raised-button (click)="deployPipeline()" color="primary">Deploy Pipeline</button>
+        <button mat-raised-button (click)="undeployPipeline()" color="primary">Undeploy Pipeline</button>
+
+    </div>
+
+    <div fxLayout="row" fxLayoutGap="10px" style="width: 100%; height: 600px;">
+
+        <!-- <app-pipeline-editor [gatewayId]="gatewayId" [gateway]="gateway" [devices]="devices" style="width: 100%; height: 600px;"></app-pipeline-editor> -->
+
+
+        <div class="wrapper" style="width: 70%; background-color: black;">
+            <div #nodeEditor class="node-editor"></div>
+        </div>
+
+        <app-pipeline-config *ngIf="pipelineConfig" [pipelineForm]="pipelineForm" fxFlex style="height: 600px;">
+        </app-pipeline-config>
+        <app-pipeline-data-source *ngIf="dataSourceConfig" [dataSourceForm]="protocolForm" fxFlex
+            style="height: 600px;"></app-pipeline-data-source>
+        <app-pipeline-filtering *ngIf="filteringConfig" #filterComponent [devices]="devices" [filters]="filters" fxFlex
+            style="height: 600px;"></app-pipeline-filtering>
+        <app-pipeline-inferencing *ngIf="inferencingConfig" #inferenceComponent [devices]="devices" [models]="models"
+            [modelForm]="modelForm" [filters]="filters" fxFlex style="height: 600px;"></app-pipeline-inferencing>
+        <app-pipeline-data-store *ngIf="dataStoreConfig" [dataStoreForm]="dataStoreForm" fxFlex style="height: 600px;">
+        </app-pipeline-data-store>
+        <app-pipeline-data-pipe *ngIf="dataPipeConfig" [dataPipeForm]="protocolForm" fxFlex style="height: 600px;">
+        </app-pipeline-data-pipe>
+
+
+    </div>
+
+    <div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between stretch"
+        style="min-height:300px; max-height: 300px ">
+        <mat-card fxFlex>
+            <mat-card-content>
+                <div class="table-container mat-elevation-z8">
+                    <table mat-table [dataSource]="pipelinesDataSource" matSort>
+
+                        <!-- Id Column -->
+                        <ng-container matColumnDef="id">
+                            <th mat-header-cell *matHeaderCellDef> Id </th>
+                            <td mat-cell *matCellDef="let pipeline"> {{pipeline.uid}} </td>
+                        </ng-container>
+
+                        <!-- Name Column -->
+                        <ng-container matColumnDef="name">
+                            <th mat-header-cell *matHeaderCellDef> Name </th>
+                            <td mat-cell *matCellDef="let pipeline"> {{pipeline.name}} </td>
+                        </ng-container>
+
+                        <!-- PipelineType Column -->
+                        <ng-container matColumnDef="pipelineType">
+                            <th mat-header-cell *matHeaderCellDef> Pipeline Type </th>
+                            <td mat-cell *matCellDef="let pipeline"> {{pipeline.pipelineType}} </td>
+                        </ng-container>
+
+                        <!-- Status Column -->
+                        <ng-container matColumnDef="status">
+                            <th mat-header-cell *matHeaderCellDef> Status </th>
+                            <td mat-cell *matCellDef="let pipeline"> {{pipeline.status}} </td>
+                        </ng-container>
+
+                        <!-- Created -->
+                        <ng-container matColumnDef="created">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Created </th>
+                            <td mat-cell *matCellDef="let pipeline"> {{pipeline.created | date: dateFormat}}
+                            </td>
+                        </ng-container>
+
+                        <!-- Updated -->
+                        <ng-container matColumnDef="modified">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Modified </th>
+                            <td mat-cell *matCellDef="let pipeline">
+                                {{pipeline.modified | date: dateFormat}} </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="pipelineDisplayedColumns; sticky: true"></tr>
+                        <tr mat-row *matRowDef="let row; columns: pipelineDisplayedColumns;"
+                            (click)="onPipelineClicked(row)"
+                            [ngClass]="{'selected': pipelineSelection.isSelected(row) }">
+                        </tr>
+                    </table>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+    </div>
+
+</div>

@@ -5,7 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { LogLevel, LogService } from '@tibco-tcstk/tc-core-lib';
 
-import { Gateway, Subscription, Publisher, Pipeline, Rule, ModelConfig, GatewayFiltersConfig, Notification, Protocol, DataStore } from '../../shared/models/iot.model';
+import { Gateway, Subscription, Publisher, Pipeline, Rule, ModelConfig, GatewayFiltersConfig, Notification, Protocol, DataStore, Model } from '../../shared/models/iot.model';
 import { TSReading } from '../../shared/models/iot.model';
 import { GraphService } from './graph.service';
 
@@ -960,6 +960,149 @@ export class TgdbService implements GraphService {
       .pipe(
         tap(_ => this.logger.info('deleted protocol')),
         catchError(this.handleError<string>('deleteProtocol'))
+      );
+  }
+
+
+  /**
+   * 
+   * @param gatewayName 
+   */
+  getGatewayAndModels(gatewayName): Observable<Gateway[]> {
+    const url = `${this.tgdbUrl}/query`;
+    let query = `{
+      resp(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
+        uid uuid
+        models: gateway_model {
+          uid
+          uuid
+          created
+          name
+          description
+          inputType
+          url
+        }
+      }
+    }`;
+    console.log('Get Gateway and Protocols query statement: ', query);
+
+    return this.http.post<any>(url, query, httpOptions)
+      .pipe(
+        map(response => response.data.resp as Gateway[]),
+        tap(_ => this.logger.info('fetched Gateway')),
+        catchError(this.handleError<Gateway[]>('getGatewayWithModels', []))
+      );
+
+  }
+
+  /**
+   * 
+   * @param gatewayName 
+   */
+  getModels(gatewayName): Observable<Model[]> {
+    const url = `${this.tgdbUrl}/query`;
+    let query = `{
+      var(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
+        models as gateway_model {
+        }
+      }
+      resp(func: uid(models)) {
+        uid
+        uuid
+        created
+        modified
+        name
+        description
+        inputType
+        url
+      }
+    }`;
+
+    return this.http.post<any>(url, query, httpOptions)
+      .pipe(
+        map(response => response.data.resp as Model[]),
+        tap(_ => this.logger.info('fetched models')),
+        catchError(this.handleError<Model[]>('getModels', []))
+      );
+
+  }
+
+  /**
+   * 
+   * @param gatewayUid 
+   * @param model 
+   */
+  addModel(gatewayUid: number, model: Model): Observable<string> {
+    const url = `${this.tgdbUrl}/mutate?commitNow=true`;
+    let query = `{
+      set {
+        _:Model <dgraph.type> "Model" .
+        _:Model <type> "model" .
+        _:Model <model> "" .
+        _:Model <uuid> "${model.uuid}" .
+        _:Model <created> "${model.created}" .
+        _:Model <modified> "${model.modified}" .
+        _:Model <name> "${model.name}" .
+        _:Model <description> "${model.description}" .
+        _:Model <inputType> "${model.inputType}" .
+        _:Model <url> "${model.url}" .
+        <${gatewayUid}> <gateway_model> _:Model .
+      }
+    }`;
+    console.log('Mutate statement: ', query);
+
+    return this.http.post<any>(url, query, httpMutateOptions)
+      .pipe(
+        tap(_ => this.logger.info('add models')),
+        catchError(this.handleError<string>('addModels'))
+      );
+
+  }
+  /**
+   * 
+   * @param model 
+   */
+  updateModel(model: Model): Observable<string> {
+    const url = `${this.tgdbUrl}/mutate?commitNow=true`;
+    let query = `{
+      set {
+        <${model.uid}> <uuid> "${model.uuid}" .
+        <${model.uid}> <modified> "${model.modified}" .
+        <${model.uid}> <name> "${model.name}" .
+        <${model.uid}> <description> "${model.description}" .
+        <${model.uid}> <inputType> "${model.inputType}" .
+        <${model.uid}> <url> "${model.url}" .
+      }
+    }`;
+    console.log('Mutate statement: ', query);
+
+    return this.http.post<any>(url, query, httpMutateOptions)
+      .pipe(
+        tap(_ => this.logger.info('updated models')),
+        catchError(this.handleError<string>('updateModels'))
+      );
+
+  }
+
+  /**
+   * 
+   * @param gatewayUid 
+   * @param modelUid 
+   */
+  deleteModel(gatewayUid: number, modelUid: number): Observable<string> {
+    const url = `${this.tgdbUrl}/mutate?commitNow=true`;
+    let query = `{
+      delete {
+        <${modelUid}> * * .
+        <${gatewayUid}> <gateway_model> <${modelUid}> .
+      }
+    }`;
+    console.log('Delete Model Mutate statement: ', query);
+
+    return this.http.post<any>(url, query, httpMutateOptions)
+      .pipe(
+        tap(_ => this.logger.info('deleted protocol')),
+        catchError(this.handleError<string>('deleteModel'))
       );
   }
 

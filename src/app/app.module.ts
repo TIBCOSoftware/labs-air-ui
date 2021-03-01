@@ -6,6 +6,7 @@ import {CredentialsService, TcLiveappsLibModule} from '@tibco-tcstk/tc-liveapps-
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { MaterialModule } from './material.module';
+import { ReteEditorModule } from './components/rete/rete.module';
 import {
   LogService, OAuthInterceptor,
   ProxyInterceptor,
@@ -148,7 +149,17 @@ const tcCoreConfig: TcCoreConfig = {
     RulesComponent,
     InferencingComponent,
     FilteringComponent,
-    IotGatewayDetailsComponent
+    IotGatewayDetailsComponent,
+    IotPipelineComponent,
+    PipelineFilteringComponent,
+    PipelineStreamingComponent,
+    PipelineInferencingComponent,
+    PipelineRulesComponent,
+    PipelineDataSourceComponent,
+    PipelineDataStoreComponent,
+    PipelineDataPipeComponent,
+    PipelineConfigComponent,
+    IgeModelsComponent
   ],
   imports: [
     AppRoutingModule,
@@ -163,6 +174,7 @@ const tcCoreConfig: TcCoreConfig = {
     ChartsModule,
     Ng2GoogleChartsModule,
     MaterialModule,
+    ReteEditorModule,
     ReactiveFormsModule,
     SpotfireViewerModule,
     HttpClientModule,
