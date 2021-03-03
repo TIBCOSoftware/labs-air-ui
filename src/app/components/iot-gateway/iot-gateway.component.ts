@@ -201,10 +201,10 @@ export class IotGatewayComponent implements OnInit, AfterViewInit {
       })
   }
 
-  pingGateway() {
+  pingGateway(gateway?: Gateway) {
 
-    if (this.selection.hasValue()) {
-      this.edgeService.pingCoreMetadata(this.selection.selected[0])
+    if (gateway) {
+      this.edgeService.pingCoreMetadata(gateway)
       .subscribe(res => {
         console.log("Received ping response: ", res);
 
@@ -333,6 +333,5 @@ export class IotGatewayComponent implements OnInit, AfterViewInit {
       this.selectedGateway = null;
       this.gatewayOpDisabled = true;
     }
-
   }
 }

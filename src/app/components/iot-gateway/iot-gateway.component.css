@@ -122,6 +122,10 @@ table {
 .card-footer-details-button {
     float: right;
     font-size: 12px;
+    line-height: 18px;
+    color: #1774E5;
+    cursor: pointer;
+    
 }
 
 .icon-document {
@@ -129,4 +133,10 @@ table {
     height: 14px;
     color: #A160FB;
     vertical-align: text-top;
+}
+
+.icon-chevron-right {
+    height: 20px;
+    width: 20px;
+    vertical-align: middle;
 }

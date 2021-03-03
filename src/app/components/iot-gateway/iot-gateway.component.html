@@ -6,219 +6,47 @@
       <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter Device Groups">
     </mat-form-field>
   </div>
-  <mat-card-actions>
-    <!-- <button mat-raised-button (click)="addGateway()" color="primary">Add Gateway</button -->
-    <span *ngIf="!gatewayOpDisabled">
-      <button mat-raised-button [disabled]="gatewayOpDisabled" (click)="updateGateway()" color="primary">Update
-        Gateway</button>
-      <button mat-raised-button [disabled]="gatewayOpDisabled" (click)="deleteGateway()" color="primary">Remove
-        Gateway</button>
-      <button mat-raised-button [disabled]="gatewayOpDisabled" (click)="pingGateway()" color="primary">Ping
-        Gateway</button>
-      <!-- <button mat-raised-button [disabled]="gatewayOpDisabled"
-        [routerLink]="['/starterApp/home/gatewaysubscription', selectedGateway]"
-        color="primary">Subscriptions</button> -->
-      <button mat-raised-button [disabled]="gatewayOpDisabled"
-        [routerLink]="['/starterApp/home/gatewayendpoint', selectedGateway]" color="primary">Endpoints
-        Configuration</button>
-      <!-- <button mat-raised-button [disabled]="publisherDisabled"
-        [routerLink]="['/starterApp/home/gatewaypublisher', selectedGateway]" color="primary">Data Publishers</button> -->
-      <button mat-raised-button [disabled]="cloudDataPipelineDisable"
-        [routerLink]="['/starterApp/home/datapipeline', selectedGateway]" color="primary">Cloud Data
-        Pipelines</button>
-      <button mat-raised-button [disabled]="edgeDataPipelineDisable"
-        [routerLink]="['/starterApp/home/edgedatapipeline', selectedGateway]" color="primary">Edge Data
-        Pipelines</button>
-    </span>
-  </mat-card-actions>
   <div>
-  <div class='card-container'>
-    <div class='card' *ngFor='let gateway of dataSource.data' (click)='selectGateway(gateway)'>
-      <div class='card-header'>
-        <div class='card-title-label'>
-          <span>
-            {{gateway.uuid}}
-          </span>
-          <span class='card-title-details'>
-            {{gateway.createdts | date: 'dd MMM yyyy'}}
-          </span>
-        </div>
-      </div>
-      <div class='card-body'>
-        <div class='card-body-summary'>
-          <mat-icon class='icon-document' svgIcon="document"></mat-icon>
-          Gateway summary
-          <div class='card-body-summary-text'>
-            Summary Text
+    <div class='card-container'>
+      <div class='card' *ngFor='let gateway of dataSource.data'>
+        <div class='card-header'>
+          <div class='card-title-label'>
+            <span>
+              {{gateway.uuid}}
+            </span>
+            <span class='card-title-details'>
+              {{gateway.createdts | date: 'dd MMM yyyy'}}
+            </span>
           </div>
         </div>
-        <div class='card-body-highlights'>
-          Device Highlights
-          <div class='card-body-hightlights-text'>
-            Highlight Text
+        <div class='card-body'>
+          <div class='card-body-summary'>
+            <mat-icon class='icon-document' svgIcon="document"></mat-icon>
+            Gateway description
+            <div class='card-body-summary-text'>
+              {{ gateway.description }}
+            </div>
           </div>
-        </div>
-        <!--
-        <div>
-          <mat-form-field appearance="outline">
-            <mat-label>Device Group Id</mat-label>
-            <input matInput [value]='gateway.uid' placeholder="Enter group's id">
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Description</mat-label>
-            <textarea matInput  [value]='gateway.description' placeholder="Enter group's description"
-              style="height: 100px;"></textarea>
-          </mat-form-field>
-        </div>
-        <div>
-          <mat-form-field appearance="outline">
-            <mat-label>Address</mat-label>
-            <input matInput [value]='gateway.address' placeholder="Enter group's connection IP Address">
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Latitude</mat-label>
-            <input matInput [value]='gateway.latitude' placeholder="Enter device group's latitude">
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Longitude</mat-label>
-            <input matInput [value]='gateway.longitude' placeholder="Enter device group's longitude">
-          </mat-form-field>
-        -->
+          <div class='card-body-highlights'>
+            Device Highlights
+            <div class='card-body-hightlights-text'>
+              Generic Highlights
+            </div>
+          </div>
         </div>
         <div class='card-footer'>
           <span class='card-footer-details'>
-            Last updated {{gateway.updatedts | date: dateFormat}}
+            <!-- Last updated {{gateway.updatedts | date: dateFormat}} -->
+            <button (click)='pingGateway(gateway)'>Ping</button>
+            <button [routerLink]="['/starterApp/home/gatewayendpoint', gateway.uuid]">Endpoints</button>
+            <button [routerLink]="['/starterApp/home/pipeline', gateway.uuid]">Pipeline</button>
           </span>
-          <span class='card-footer-details-button'>
+          <span class='card-footer-details-button' [routerLink]="['/starterApp/home/device', {gateway: gateway.uuid}]">
             View details
+            <mat-icon class='icon-chevron-right' svgIcon="chevron-right"></mat-icon>
           </span>
         </div>
       </div>
-        </mat-card-content>
-      </mat-card>
-      <mat-card fxFlex>
-        <mat-card-header>
-          <div mat-card-avatar class="gateway-location-image"></div>
-          <mat-card-title>Device Group Locations</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <app-maporama [mapConfig]="mapConfig">
-          </app-maporama>
-        </mat-card-content>
-      </mat-card>
-    </div>
-    <div fxLayout="row" fxLayoutGap="15px" style="min-height: 300px">
-      <mat-card fxFlex>
-        <mat-card-header>
-          <div mat-card-avatar class="gateway-header-image"></div>
-          <mat-card-title>Device Group Details</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <form [formGroup]="gatewayForm" class="gateway-form" fxLayout="row wrap" fxLayoutGap="15px">
-
-            <div fxLayout="column" fxFlex="40%" fxFlexFill>
-              <mat-form-field appearance="outline">
-                <mat-label>Device Group Id</mat-label>
-                <input matInput formControlName="uuid" placeholder="Enter group's id">
-              </mat-form-field>
-              <mat-form-field appearance="outline">
-                <mat-label>Description</mat-label>
-                <textarea matInput formControlName="description" placeholder="Enter group's description"
-                  style="height: 100px;"></textarea>
-              </mat-form-field>
-            </div>
-            <div fxLayout="column" fxFlex="40%">
-              <mat-form-field fxFlex="30%" appearance="outline">
-                <mat-label>Address</mat-label>
-                <input matInput formControlName="address" placeholder="Enter group's connection IP Address">
-              </mat-form-field>
-              <mat-form-field fxFlex="30%" appearance="outline">
-                <mat-label>Latitude</mat-label>
-                <input matInput formControlName="latitude" placeholder="Enter device group's latitude">
-              </mat-form-field>
-              <mat-form-field fxFlex="30%" appearance="outline">
-                <mat-label>Longitude</mat-label>
-                <input matInput formControlName="longitude" placeholder="Enter device group's longitude">
-              </mat-form-field>
-              <mat-form-field fxFlex="60%" appearance="outline">
-                <mat-label>Access Token</mat-label>
-                <input matInput placeholder="Enter device group's access token" [readonly]=false
-                  [type]="hideAccessToken ? 'password' : 'text'" formControlName="accessToken">
-                <button mat-icon-button matSuffix (click)="hideAccessToken = !hideAccessToken"
-                  [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideAccessToken">
-                  <mat-icon>{{hideAccessToken ? 'visibility_off' : 'visibility'}}</mat-icon>
-                </button>
-              </mat-form-field>
-            </div>
-
-
-            <!-- 
-            <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px">
-              <mat-form-field fxFlex="30%" appearance="outline">
-                <mat-label>Gateway Id</mat-label>
-                <input matInput formControlName="uuid" placeholder="Enter gateway's id">
-              </mat-form-field>
-              <mat-form-field fxFlex="30%" appearance="outline">
-                <mat-label>Description</mat-label>
-                <input matInput formControlName="description" placeholder="Enter gateway's description">
-              </mat-form-field>
-            </div>
-            <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px">
-              <mat-form-field fxFlex="30%" appearance="outline">
-                <mat-label>Address</mat-label>
-                <input matInput formControlName="address" placeholder="Enter gateway's IP Address">
-              </mat-form-field>
-              <mat-form-field fxFlex="30%" appearance="outline">
-                <mat-label>Latitude</mat-label>
-                <input matInput formControlName="latitude" placeholder="Enter gateway's latitude">
-              </mat-form-field>
-              <mat-form-field fxFlex="30%" appearance="outline">
-                <mat-label>Longitude</mat-label>
-                <input matInput formControlName="longitude" placeholder="Enter gateway's longitude">
-              </mat-form-field>
-            </div>
-            <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px">
-              <mat-form-field fxFlex="60%" appearance="outline">
-                <mat-label>Access Token</mat-label>
-                <input matInput placeholder="Enter gateway's access token" [readonly]=false
-                  [type]="hideAccessToken ? 'password' : 'text'" formControlName="accessToken">
-                <button mat-icon-button matSuffix (click)="hideAccessToken = !hideAccessToken"
-                  [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideAccessToken">
-                  <mat-icon>{{hideAccessToken ? 'visibility_off' : 'visibility'}}</mat-icon>
-                </button>
-              </mat-form-field>
-            </div> -->
-
-          </form>
-
-        </mat-card-content>
-        <mat-card-actions>
-          <!-- <button mat-raised-button (click)="addGateway()" color="primary">Add Gateway</button>
-          <button mat-raised-button [disabled]="gatewayOpDisabled" (click)="updateGateway()" color="primary">Update
-            Gateway</button>
-          <button mat-raised-button [disabled]="gatewayOpDisabled" (click)="deleteGateway()" color="primary">Remove
-            Gateway</button> -->
-          <button mat-raised-button [disabled]="gatewayOpDisabled" (click)="pingGateway()" color="primary">Ping
-            Gateway</button>
-          <!-- <button mat-raised-button [disabled]="gatewayOpDisabled"
-            [routerLink]="['/starterApp/home/gatewaysubscription', selectedGateway]"
-            color="primary">Subscriptions</button> -->
-          <button mat-raised-button [disabled]="gatewayOpDisabled"
-            [routerLink]="['/starterApp/home/gatewayendpoint', selectedGateway]" color="primary">Endpoints
-            Configuration</button>
-          <!-- <button mat-raised-button [disabled]="publisherDisabled"
-            [routerLink]="['/starterApp/home/gatewaypublisher', selectedGateway]" color="primary">Data Publishers</button> -->
-          <!-- <button mat-raised-button [disabled]="cloudDataPipelineDisable"
-            [routerLink]="['/starterApp/home/datapipeline', selectedGateway]" color="primary">Cloud Data
-            Pipelines</button>
-          <button mat-raised-button [disabled]="edgeDataPipelineDisable"
-            [routerLink]="['/starterApp/home/edgedatapipeline', selectedGateway]" color="primary">Edge Data
-            Pipelines</button> -->
-          <button mat-raised-button [disabled]="edgeDataPipelineDisable"
-            [routerLink]="['/starterApp/home/pipeline', selectedGateway]" color="primary">
-            Pipeline Editor</button>
-        </mat-card-actions>
-      </mat-card>
     </div>
   </div>
 </div>

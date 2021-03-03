@@ -54,7 +54,7 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
   discreteValueResource = false;
   summaryView = false;
   gatewayList: Gateway[] = [];
-  gatewayIdSelected: '';
+  gatewayIdSelected: string = '';
 
   // Map configuration
   mapConfig = null;
@@ -300,7 +300,8 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(private edgeService: EdgeService,
     private graphService: GraphService,
-    private formBuilder: FormBuilder) {
+    private formBuilder: FormBuilder,
+    private route: ActivatedRoute) {
 
     this.instrumentForm = this.formBuilder.group({
       valueType: [''],
@@ -318,6 +319,10 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit() {
     this.getGateways();
+    if (this.route.snapshot.paramMap.get('gateway')) {
+      this.gatewayIdSelected = this.route.snapshot.paramMap.get('gateway');
+      // this.getDevices(this.gatewayIdSelected);
+    }
   }
 
   ngOnDestroy() {
@@ -732,7 +737,6 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
 
   getGateways() {
     console.log("Getting Gateways called")
-
     this.graphService.getGateways()
       .subscribe(res => {
 

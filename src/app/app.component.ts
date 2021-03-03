@@ -55,5 +55,8 @@ export class AppComponent {
     this.matIconRegistry.addSvgIcon(
       "document",
       this.domSanitizer.bypassSecurityTrustResourceUrl("../assets/icons/document.svg"));
+    this.matIconRegistry.addSvgIcon(
+      "chevron-right",
+      this.domSanitizer.bypassSecurityTrustResourceUrl("../assets/icons/chevron-right.svg"));
   }
 }
