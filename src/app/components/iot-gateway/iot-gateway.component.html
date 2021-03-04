@@ -37,9 +37,15 @@
         <div class='card-footer'>
           <span class='card-footer-details'>
             <!-- Last updated {{gateway.updatedts | date: dateFormat}} -->
-            <button (click)='pingGateway(gateway)'>Ping</button>
-            <button [routerLink]="['/starterApp/home/gatewayendpoint', gateway.uuid]">Endpoints</button>
-            <button [routerLink]="['/starterApp/home/pipeline', gateway.uuid]">Pipeline</button>
+            <span (click)='pingGateway(gateway)' matTooltip="Ping">            
+              <mat-icon>cached</mat-icon>
+            </span>
+            <span [routerLink]="['/starterApp/home/gatewayendpoint', gateway.uuid]" matTooltip="Endpoints">
+              <mat-icon>sync_alt</mat-icon>
+            </span>
+            <span [routerLink]="['/starterApp/home/pipeline', gateway.uuid]" matTooltip="Pipeline">
+              <mat-icon>code</mat-icon>
+            </span>
           </span>
           <span class='card-footer-details-button' [routerLink]="['/starterApp/home/device', {gateway: gateway.uuid}]">
             View details

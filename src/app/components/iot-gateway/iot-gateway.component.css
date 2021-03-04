@@ -117,6 +117,13 @@ table {
 .card-footer-details {
     font-size: 10px;
     line-height: 13px;
+    color: #1774E5;
+}
+
+.card-footer-details span mat-icon {
+    font-size: 20px;
+    cursor: pointer;
+    margin-right: 10px;
 }
 
 .card-footer-details-button {
@@ -125,7 +132,6 @@ table {
     line-height: 18px;
     color: #1774E5;
     cursor: pointer;
-    
 }
 
 .icon-document {
