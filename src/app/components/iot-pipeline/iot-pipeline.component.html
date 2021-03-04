@@ -4,13 +4,13 @@
     <div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="flex-end"
         style="width: 100%; margin-top: 10px; margin-bottom: 10px;">
 
-        <button mat-raised-button (click)="newPipeline()" color="primary">New Pipeline</button>
+        <button mat-raised-button [disabled]="!pipelineSelected" (click)="newPipeline()" color="primary">New Pipeline</button>
         <button mat-raised-button (click)="savePipelineToGraph()" color="primary">Save Pipeline</button>
-        <button mat-raised-button (click)="clearPipeline()" color="primary">Clear Pipeline</button>
-        <button mat-raised-button (click)="deletePipelineFromGraph()" color="primary">Delete Pipeline</button>
-        <button mat-raised-button (click)="printPipeline()" color="primary">Print Pipeline</button>
-        <button mat-raised-button (click)="deployPipeline()" color="primary">Deploy Pipeline</button>
-        <button mat-raised-button (click)="undeployPipeline()" color="primary">Undeploy Pipeline</button>
+        <button mat-raised-button [disabled]="!pipelineSelected" (click)="clearPipeline()" color="primary">Clear Pipeline</button>
+        <button mat-raised-button [disabled]="!pipelineSelected || deployDisabled" (click)="deletePipelineFromGraph()" color="primary">Delete Pipeline</button>
+        <button mat-raised-button [disabled]="!pipelineSelected" (click)="printPipeline()" color="primary">Print Pipeline</button>
+        <button mat-raised-button [disabled]="!pipelineSelected || deployDisabled" (click)="deployPipeline()" color="primary">Deploy Pipeline</button>
+        <button mat-raised-button [disabled]="!pipelineSelected || undeployDisabled" (click)="undeployPipeline()" color="primary">Undeploy Pipeline</button>
 
     </div>
 
@@ -23,19 +23,27 @@
             <div #nodeEditor class="node-editor"></div>
         </div>
 
+        <!-- Configuration Panel Components -->
         <app-pipeline-config *ngIf="pipelineConfig" [pipelineForm]="pipelineForm" fxFlex style="height: 600px;">
         </app-pipeline-config>
+
         <app-pipeline-data-source *ngIf="dataSourceConfig" [dataSourceForm]="protocolForm" fxFlex
             style="height: 600px;"></app-pipeline-data-source>
+
         <app-pipeline-filtering *ngIf="filteringConfig" #filterComponent [devices]="devices" [filters]="filters" fxFlex
             style="height: 600px;"></app-pipeline-filtering>
+
         <app-pipeline-inferencing *ngIf="inferencingConfig" #inferenceComponent [devices]="devices" [models]="models"
             [modelForm]="modelForm" [filters]="filters" fxFlex style="height: 600px;"></app-pipeline-inferencing>
+
         <app-pipeline-data-store *ngIf="dataStoreConfig" [dataStoreForm]="dataStoreForm" fxFlex style="height: 600px;">
         </app-pipeline-data-store>
+
         <app-pipeline-data-pipe *ngIf="dataPipeConfig" [dataPipeForm]="protocolForm" fxFlex style="height: 600px;">
         </app-pipeline-data-pipe>
 
+        <app-pipeline-streaming *ngIf="streamingConfig" [streamingForm]="streamingForm" [devices]="devices" fxFlex style="height: 600px;">
+        </app-pipeline-streaming>
 
     </div>
 
