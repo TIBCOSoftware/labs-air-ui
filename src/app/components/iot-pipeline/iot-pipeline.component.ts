@@ -4,6 +4,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { GraphService } from '../../services/graph/graph.service';
 import { EdgeService } from '../../services/edge/edge.service';
@@ -45,6 +46,8 @@ export class IotPipelineComponent implements OnInit {
   devices: Device[] = [];
   models: Model[] = [];
   pipelineSelected = false;  // Used to control the display of buttons
+  deployDisabled = true;
+  undeployDisabled = true;
 
   pipelinesDataSource = new MatTableDataSource<Pipeline>();
   pipelineDisplayedColumns: string[] = ['id', 'name', 'pipelineType', 'status', 'created', 'modified'];
@@ -92,7 +95,8 @@ export class IotPipelineComponent implements OnInit {
     private edgeService: EdgeService,
     private flogoDeployService: FlogoDeployService,
     private route: ActivatedRoute,
-    private formBuilder: FormBuilder) {
+    private formBuilder: FormBuilder,
+    private _snackBar: MatSnackBar) {
 
   }
 
@@ -284,6 +288,10 @@ export class IotPipelineComponent implements OnInit {
         contextObj = this.buildNodeDataInferencingProperties();
         break;
       }
+      case "Streaming": {
+        contextObj = this.buildNodeDataStreamingProperties();
+        break;
+      }
       default: {
 
         break;
@@ -296,13 +304,13 @@ export class IotPipelineComponent implements OnInit {
 
   resetNodeContext(node) {
 
-
     this.pipelineConfig = false;
     this.dataSourceConfig = false;
     this.filteringConfig = false;
     this.dataStoreConfig = false;
     this.dataPipeConfig = false;
     this.inferencingConfig = false;
+    this.streamingConfig = false;
 
     if (node != null || node != undefined) {
       console.log("Resetting context for node: ", node);
@@ -327,13 +335,18 @@ export class IotPipelineComponent implements OnInit {
           break;
         }
         case "Filters": {
-          this.updateFiltersComponent(contextObj);
           this.filteringConfig = true;
+          this.updateFiltersComponent(contextObj);
           break;
         }
         case "Inferencing": {
           this.updateInferencingComponent(contextObj);
           this.inferencingConfig = true;
+          break;
+        }
+        case "Streaming": {
+          this.updateStreamingComponent(contextObj);
+          this.streamingConfig = true;
           break;
         }
         default: {
@@ -646,6 +659,9 @@ export class IotPipelineComponent implements OnInit {
       "filters": this.filterComponent.getFilters()
     };
 
+    console.log("iot-pipeline_buildNodeDataFilteringProperties: filters:", filterObj);
+    
+
     return filterObj;
   }
 
@@ -664,6 +680,23 @@ export class IotPipelineComponent implements OnInit {
     };
 
     return inferenceObj;
+  }
+
+  /**
+   *
+   * @param form
+   */
+  buildNodeDataStreamingProperties(): any {
+
+    let streamingObj = {
+      "deviceName": this.streamingForm.get('deviceName').value,
+      "instrumentName": this.streamingForm.get('instrumentName').value,
+      "function": this.streamingForm.get('function').value,
+      "windowType": this.streamingForm.get('windowType').value,
+      "windowSize": this.streamingForm.get('windowSize').value
+    };
+
+    return streamingObj;
   }
 
   /**
@@ -865,6 +898,26 @@ export class IotPipelineComponent implements OnInit {
   }
 
   /**
+   *
+   * @param context
+   */
+  updateStreamingComponent(context) {
+
+    if (context != null || context != undefined) {
+      console.log("Updating streaming component with context: ", context);
+
+      this.streamingForm.patchValue({
+        deviceName: context.deviceName,
+        instrumentName: context.instrumentName,
+        function: context.function,
+        windowType: context.windowType,
+        windowSize: context.windowSize
+      })
+
+    }
+  }
+
+  /**
    * Get Gateway, Pipelines and Devices information
    */
   public getGatewayAndPipelines(gatewayId: string, selectedPipeline: Pipeline) {
@@ -986,7 +1039,7 @@ export class IotPipelineComponent implements OnInit {
       console.log("pipelineSelection has value");
 
       if (this.pipelineSelection.selected[0].uid == row.uid &&
-        this.pipelineSelected[0] != row) {
+        this.pipelineSelection.selected[0] != row) {
 
         this.pipelineSelection.select(row);
         this.pipelineSelected = true;
@@ -1028,15 +1081,21 @@ export class IotPipelineComponent implements OnInit {
       this.editor.fromJSON(jsonData);
 
       // Reset command buttons
-      // if (row.status == "Undeployed") {
-      //   this.deployDisabled = false;
-      //   this.undeployDisabled = true;
+      console.log("Resetting buttons for status: ", row.status);
+      
+      if (row.status == "Saved") {
+        this.deployDisabled = false;
+        this.undeployDisabled = true;
 
-      // }
-      // else {
-      //   this.deployDisabled = true;
-      //   this.undeployDisabled = false;
-      // }
+      }
+      else if (row.status == "Deployed") {
+        this.deployDisabled = true;
+        this.undeployDisabled = false;
+      }
+      else {
+        this.deployDisabled = true;
+        this.undeployDisabled = true;
+      }
 
       // this.updateProtocolViewForm(row.protocolType, row.protocol);
 
@@ -1091,7 +1150,16 @@ export class IotPipelineComponent implements OnInit {
       .subscribe(res => {
         console.log("Added pipeline: ", res);
 
-        this.getGatewayAndPipelines(this.gatewayId, pipeline)
+        this.getGatewayAndPipelines(this.gatewayId, pipeline);
+
+        let message = 'Success';
+        if (res == undefined) {
+          message = 'Failure';
+        }
+
+        this._snackBar.open(message, "Save Pipeline", {
+          duration: 3000,
+        });
 
       });
 
@@ -1129,6 +1197,8 @@ export class IotPipelineComponent implements OnInit {
     if (this.pipelineSelection.hasValue()) {
 
       this.pipelineSelected = false;
+      this.deployDisabled = true;
+      this.undeployDisabled = true;
 
       let pipeline = this.pipelineSelection.selected[0]
 
@@ -1169,6 +1239,7 @@ export class IotPipelineComponent implements OnInit {
     this.dataStoreConfig = false;
     this.dataPipeConfig = false;
     this.inferencingConfig = false;
+    this.streamingConfig = false;
 
     this.pipelineForm.patchValue({
       name: "",
@@ -1255,6 +1326,10 @@ export class IotPipelineComponent implements OnInit {
             pipelineFlow.AirDescriptor.logic.push(this.buildInferencingDeployObj(flow.nodes[key].data.customdata));
             break;
           }
+          case "Streaming": {
+            pipelineFlow.AirDescriptor.logic.push(this.buildStreamingDeployObj(flow.nodes[key].data.customdata));
+            break;
+          }
           default: {
 
             break;
@@ -1269,7 +1344,7 @@ export class IotPipelineComponent implements OnInit {
       {
         "name": "Filter.Dummy",
         "properties": [
-          { "Name": "Logging.LogLevel", "Value": "INFO" }
+          { "Name": "Logging.LogLevel", "Value": "DEBUG" }
         ]
       }
     );
@@ -1343,6 +1418,18 @@ export class IotPipelineComponent implements OnInit {
 
         this.updatePipelineToGraph();
 
+        this.deployDisabled = true;
+        this.undeployDisabled = false;
+
+        let message = 'Success';
+        if (res == undefined) {
+          message = 'Failure';
+        }
+
+        this._snackBar.open(message, "Deploy Pipeline", {
+          duration: 3000,
+        });
+
       });
 
 
@@ -1379,6 +1466,18 @@ export class IotPipelineComponent implements OnInit {
         });
 
         this.updatePipelineToGraph();
+
+        this.deployDisabled = false;
+        this.undeployDisabled = true;
+
+        let message = 'Success';
+        if (res == undefined) {
+          message = 'Failure';
+        }
+
+        this._snackBar.open(message, "Undeploy Pipeline", {
+          duration: 3000,
+        });
 
       });
 
@@ -1436,7 +1535,7 @@ export class IotPipelineComponent implements OnInit {
         { "Name": "Mqtt.caCertificate", "Value": "changeme" },
         { "Name": "Mqtt.clientCertificate", "Value": "changeme" },
         { "Name": "Mqtt.clientKey", "Value": "changeme" },
-        { "Name": "Logging.LogLevel", "Value": "INFO" }
+        { "Name": "Logging.LogLevel", "Value": "DEBUG" }
       ];
     }
     else if (contextObj.protocol == "Kafka") {
@@ -1492,7 +1591,7 @@ export class IotPipelineComponent implements OnInit {
         { "Name": "Mqtt.caCertificate", "Value": "changeme" },
         { "Name": "Mqtt.clientCertificate", "Value": "changeme" },
         { "Name": "Mqtt.clientKey", "Value": "changeme" },
-        { "Name": "Logging.LogLevel", "Value": "INFO" }
+        { "Name": "Logging.LogLevel", "Value": "DEBUG" }
       ];
     }
     else if (contextObj.protocol == "Kafka") {
@@ -1564,7 +1663,7 @@ export class IotPipelineComponent implements OnInit {
         { "Name": "PostgreSQL.IoTPostgres.Database_Name", "Value": contextObj.databaseName },
         { "Name": "PostgreSQL.IoTPostgres.User", "Value": contextObj.user },
         { "Name": "PostgreSQL.IoTPostgres.Password", "Value": contextObj.password },
-        { "Name": "Logging.LogLevel", "Value": "INFO" }
+        { "Name": "Logging.LogLevel", "Value": "DEBUG" }
       ];
     }
     else if (contextObj.dataStore == "Snowflake") {
@@ -1623,8 +1722,8 @@ export class IotPipelineComponent implements OnInit {
   buildFiltersDeployProperties(contextObj): any {
 
     let filterObj = [
-      { "Name": "Logging.LogLevel", "Value": "INFO" },
-      { "Name": "Filter.DeviceNames", "Value": JSON.stringify(contextObj.filters) }
+      { "Name": "Logging.LogLevel", "Value": "DEBUG" },
+      { "Name": "Filter.Conditions", "Value": JSON.stringify(contextObj.filters) }
     ];
 
     return filterObj;
@@ -1671,7 +1770,7 @@ export class IotPipelineComponent implements OnInit {
 
 
     let filterObj = [
-      { "Name": "Logging.LogLevel", "Value": "INFO" },
+      { "Name": "Logging.LogLevel", "Value": "DEBUG" },
 
       { "Name": "REST.InferenceData", "Value": JSON.stringify(inferenceData) },
       { "Name": "REST.Conditions", "Value": JSON.stringify(contextObj.filters) },
@@ -1679,6 +1778,40 @@ export class IotPipelineComponent implements OnInit {
     ];
 
     return filterObj;
+  }
+
+  buildStreamingDeployObj(contextObj): any {
+
+    console.log("Streaming Context: ", contextObj);
+
+    let streamingType = "Aggregate.Stream";
+    let streamingObj = {
+      name: streamingType,
+      properties: this.buildStreamingDeployProperties(contextObj)
+    };
+
+    return streamingObj;
+
+  }
+
+  /**
+   * @param contextObj
+   */
+  buildStreamingDeployProperties(contextObj): any {
+
+    let streamingObj = [
+      { "Name": "Logging.LogLevel", "Value": "DEBUG" },
+      { "Name": "Streaming.ProceedOnEmit", "Value": "true" },
+      { "Name": "Streaming.Resolution", "Value": "1" },
+      // { "Name": "Streaming.InputField", "Value": "f1..value" },
+      { "Name": "Streaming.DeviceName", "Value": contextObj.deviceName },
+      { "Name": "Streaming.InstrumentName", "Value": contextObj.instrumentName },
+      { "Name": "Streaming.Function", "Value": contextObj.function },
+      { "Name": "Streaming.WindowType", "Value": contextObj.windowType },
+      { "Name": "Streaming.WindowSize", "Value": contextObj.windowSize }
+    ];
+
+    return streamingObj;
   }
 
 }

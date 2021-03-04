@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnInit, Input, SimpleChanges } from '@angular/core';
+import { Component, OnChanges, OnInit, OnDestroy, Input, SimpleChanges } from '@angular/core';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 
 import { NestedTreeControl } from '@angular/cdk/tree';
@@ -20,7 +20,7 @@ interface DeviceNode {
   templateUrl: './pipeline-filtering.component.html',
   styleUrls: ['./pipeline-filtering.component.css']
 })
-export class PipelineFilteringComponent implements OnInit, OnChanges {
+export class PipelineFilteringComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() devices: Device[];
   @Input() filters: any[];
@@ -38,9 +38,11 @@ export class PipelineFilteringComponent implements OnInit, OnChanges {
   constructor(private edgeService: EdgeService,
     private graphService: GraphService) {
 
+      console.log("------> PipelineFiltering - constructor");
   }
 
   ngOnInit(): void {
+    console.log("------> PipelineFiltering - ngOnInit");
     // this.devicesDataSource.data = TREE_DATA;
     this.initializeDataSource();
 
@@ -48,7 +50,14 @@ export class PipelineFilteringComponent implements OnInit, OnChanges {
 
   }
 
+  ngOnDestroy(): void {
+    console.log("------> PipelineFiltering - ngOnDestroy");
+
+    this.checklistSelection.clear();
+  }
+
   ngOnChanges(changes: SimpleChanges) {
+    console.log("------> PipelineFiltering - ngOnChanges");
 
     this.initializeDataSource();
 
@@ -60,7 +69,7 @@ export class PipelineFilteringComponent implements OnInit, OnChanges {
 
   initializeDataSource() {
 
-    console.log("Devices used in initialize: ", this.devices);
+    console.log("------> PipelineFiltering - initializeDataSource - Devices used in initialize: ", this.devices);
 
     // Clear deviceNodeList
     this.deviceNodeList = [];
@@ -97,6 +106,7 @@ export class PipelineFilteringComponent implements OnInit, OnChanges {
 
   /** Toggle a leaf to-do item selection. Check all the parents to see if they changed */
   leafItemSelectionToggle(node: DeviceNode): void {
+    console.log("====> PipelineFiltering - leafItemSelectionToggle");
 
     this.checklistSelection.toggle(node);
 
@@ -104,6 +114,8 @@ export class PipelineFilteringComponent implements OnInit, OnChanges {
 
   /** Toggle the to-do item selection. Select/deselect all the descendants node */
   itemSelectionToggle(node: DeviceNode): void {
+
+    console.log("====> PipelineFiltering - itemSelectionToggle");
 
     this.checklistSelection.toggle(node);
     const descendants = this.treeControl.getDescendants(node);
@@ -119,6 +131,7 @@ export class PipelineFilteringComponent implements OnInit, OnChanges {
 
   /** Whether all the descendants of the node are selected. */
   descendantsAllSelected(node: DeviceNode): boolean {
+    // console.log("====> PipelineFiltering - descendantsAllSelected");
 
     const descendants = this.treeControl.getDescendants(node);
     const descAllSelected = descendants.length > 0 && descendants.every(child => {
@@ -129,6 +142,7 @@ export class PipelineFilteringComponent implements OnInit, OnChanges {
 
   /** Whether part of the descendants are selected */
   descendantsPartiallySelected(node: DeviceNode): boolean {
+    // console.log("====> PipelineFiltering - descendantsPartiallySelected");
 
     const descendants = this.treeControl.getDescendants(node);
     const result = descendants.some(child => this.checklistSelection.isSelected(child));
@@ -136,14 +150,15 @@ export class PipelineFilteringComponent implements OnInit, OnChanges {
   }
 
   selectNode(parent: string, name: string) {
+    console.log("====> PipelineFiltering - selectNode");
 
-    console.log("selectNode: ", parent, " ", name);
-    console.log("deviceDataSource.data: ", this.devicesDataSource.data);
-    console.log("deviceDataSource.data length: ", this.devicesDataSource.data.length);
-    console.log("deviceDataSource.data[0]: ", this.devicesDataSource.data[0]);
+    // console.log("selectNode: ", parent, " ", name);
+    // console.log("deviceDataSource.data: ", this.devicesDataSource.data);
+    // console.log("deviceDataSource.data length: ", this.devicesDataSource.data.length);
+    // console.log("deviceDataSource.data[0]: ", this.devicesDataSource.data[0]);
 
-    console.log("deviceNodeList length: ", this.deviceNodeList.length);
-    console.log("deviceNodeList[0]: ", this.deviceNodeList[0]);
+    // console.log("deviceNodeList length: ", this.deviceNodeList.length);
+    // console.log("deviceNodeList[0]: ", this.deviceNodeList[0]);
 
     for(const parentNode of this.devicesDataSource.data) {
 
@@ -224,7 +239,7 @@ export class PipelineFilteringComponent implements OnInit, OnChanges {
   }
 
   getFilters(): any {
-    console.log("PipelineFiltering-Getting filters");
+    console.log("------> PipelineFiltering-Getting filters");
 
     let filters = [];
 
@@ -245,7 +260,9 @@ export class PipelineFilteringComponent implements OnInit, OnChanges {
   }
 
   setupFilters() {
-    console.log("PipelineFiltering-setupFilters:", this.filters);
+    console.log("------> PipelineFiltering-setupFilters:", this.filters);
+
+    this.checklistSelection.clear();
     
 
     this.filters.forEach(element => {
