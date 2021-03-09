@@ -58,5 +58,14 @@ export class AppComponent {
     this.matIconRegistry.addSvgIcon(
       "chevron-right",
       this.domSanitizer.bypassSecurityTrustResourceUrl("../assets/icons/chevron-right.svg"));
+    this.matIconRegistry.addSvgIcon(
+      "endpoint",
+      this.domSanitizer.bypassSecurityTrustResourceUrl("../assets/icons/endpoint.svg"));
+    this.matIconRegistry.addSvgIcon(
+      "pipeline",
+      this.domSanitizer.bypassSecurityTrustResourceUrl("../assets/icons/pipeline.svg"));
+    this.matIconRegistry.addSvgIcon(
+      "ping",
+      this.domSanitizer.bypassSecurityTrustResourceUrl("../assets/icons/ping.svg"));
   }
 }

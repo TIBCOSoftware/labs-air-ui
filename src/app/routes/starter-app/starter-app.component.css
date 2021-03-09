@@ -2,6 +2,7 @@
 /* note: this outer component must have encapsulation: ViewEncapsulation.None */
 router-outlet + * {
   width: 100%;
+  height: 100%;
 }
 
 .tcs-starter-app-router-pane {
