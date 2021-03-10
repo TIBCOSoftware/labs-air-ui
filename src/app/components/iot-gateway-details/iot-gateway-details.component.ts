@@ -12,4 +12,11 @@ export class IotGatewayDetailsComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  // copy logic from devices page in order to get a list of devices.
+
+  // Automatically populate the data.
+
+  // set some kind of debounce option?
+
+  // display.
 }

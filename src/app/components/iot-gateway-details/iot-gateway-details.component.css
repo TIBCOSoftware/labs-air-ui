@@ -1,0 +1,115 @@
+.status-bar {
+    height: 74px;
+    display: flex;
+}
+
+.status-bar-color {
+    width: 24px;
+    background-color: #7DC95E;
+}
+
+.status-bar-details {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    line-height: 18px;
+    margin-left: 45px;
+}
+
+.status-bar-details span {
+    margin-right: 24px;
+}
+
+.card-actions {
+    margin-right: 37px;
+}
+
+.details-body {
+    display: flex;
+    height: 100%;
+}
+
+.cards {
+    box-sizing: border-box;
+    width: 1px;
+    border-right: 1px solid #979797;
+    width: 365px;
+}
+
+.card-actions .device {
+    font-size: 16px;
+    vertical-align: sub;
+    margin-left: 69px;
+}
+
+.card-actions .filter-search {
+    float: right;
+    color: #727272;
+}
+
+.card-actions .filter-search mat-icon {
+    margin-left: 44px;
+    font-size: 28px;
+}
+
+.card-list {
+    display: block;
+}
+
+.card {
+    margin-top: 18px;
+    margin-left: 69px;
+    box-sizing: border-box;
+    height: 184px;
+    width: 255px;
+    border: 2px solid #1774E5;
+    border-radius: 3px;
+    background-color: #FFFFFF;
+    border-top-width: 4px;
+    border-top-color: #94AFF0;
+}
+
+.card-header {
+    display: flex;
+    margin: 24px 16px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
+}
+ 
+.card-header-text {
+    margin-left: 8px;
+}
+
+.card-header-icon {
+    height: 64px;
+    width: 64px;
+}
+
+.card-header-icon mat-icon {
+    font-size: 64px;
+}
+
+.card-details {
+    flex-grow: 2;
+}
+
+.card-body {
+    display: flex;
+    margin: 24px 24px 10px 24px;
+}
+
+.card-body-text {
+    letter-spacing: 0;
+    line-height: 13px;
+    color: #727272;
+    height: 55px;
+    width: 127px;
+}
+
+.card-body-load span{
+    float: right;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 36px;
+}
