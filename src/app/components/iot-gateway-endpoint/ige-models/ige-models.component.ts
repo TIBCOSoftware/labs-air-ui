@@ -222,12 +222,15 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
 
     model.created = ts;
     model.modified = ts;
-    model.uuid = this.modelForm.get('uuid').value;
+    model.uuid = this.modelForm.get('name').value;
     model.name = this.modelForm.get('name').value;
     model.description = this.modelForm.get('description').value;
     model.inputType = this.modelForm.get('inputType').value;
     model.url = this.modelForm.get('url').value;
     model.platform = this.modelForm.get('platform').value;
+
+    console.log("Adding model with uuid: ", model.uuid);
+    
 
     // First check that model with the same name already exist
     if (this.modelExist(model.uuid)) {
@@ -257,13 +260,17 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
 
     let ts = Date.now();
     let model = new Model();
+    model.modified = ts;
     model.uid = this.modelForm.get('uid').value;
-    model.uuid = this.modelForm.get('uuid').value;
+    model.uuid = this.modelForm.get('name').value;
     model.name = this.modelForm.get('name').value;
     model.description = this.modelForm.get('description').value;
     model.inputType = this.modelForm.get('inputType').value;
     model.url = this.modelForm.get('url').value;
     model.platform = this.modelForm.get('platform').value;
+
+    console.log("Update model to url: ", model.url);
+    
 
     this.graphService.updateModel(model)
       .subscribe(res => {

@@ -432,6 +432,9 @@ export class EdgeService {
     const authorizedHeaders = httpTextResponseOptions.headers.set('Authorization', 'Bearer ' + gateway.accessToken);
     httpTextResponseOptions.headers = authorizedHeaders;
 
+    console.log("Adding Rule: ", rule);
+    
+
     return this.http.post<string>(url, rule, httpTextResponseOptions)
       .pipe(
         tap(_ => this.logger.info('added rule')),

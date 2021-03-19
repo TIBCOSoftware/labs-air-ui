@@ -318,11 +318,9 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
+    this.gatewayIdSelected = this.route.snapshot.paramMap.get('gateway');
     this.getGateways();
-    if (this.route.snapshot.paramMap.get('gateway')) {
-      this.gatewayIdSelected = this.route.snapshot.paramMap.get('gateway');
-      // this.getDevices(this.gatewayIdSelected);
-    }
+    
   }
 
   ngOnDestroy() {
@@ -350,6 +348,7 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe(res => {
         this.resourceReadings = res as TSReading[];
 
+        console.log("reading data for; ", resourceName);
         console.log("reading data: ", this.resourceReadings);
 
         // Reset data for streaming chart dataset
@@ -399,7 +398,8 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
           this.resourceInferredReadings = res as TSReading[];
           this.inferredImageData = ""
 
-          console.log("reading data: ", this.resourceInferredReadings);
+          console.log("reading inferred data for; ", resourceName);
+          console.log("reading inferred data: ", this.resourceInferredReadings);
 
           this.setInferredImageData();
 
@@ -506,7 +506,10 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
   public setInferredImageData() {
 
     if (this.resourceInferredReadings.length > 0) {
-      this.inferredImageData = this.resourceInferredReadings[0].value;
+      console.log("Encoded inferred reading: ", this.resourceInferredReadings[0].value);
+      console.log("Decoded inferred reading: ", atob(this.resourceInferredReadings[0].value));
+
+      this.inferredImageData = atob(this.resourceInferredReadings[0].value);
     }
     else {
       this.inferredImageData = ""
@@ -737,7 +740,7 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
 
   getGateways() {
     console.log("Getting Gateways called")
-    this.graphService.getGateways()
+    this.graphService.getGateway(this.gatewayIdSelected)
       .subscribe(res => {
 
         // this.gatewayList = [];
@@ -750,6 +753,8 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
         //   });
         // });
         console.log("Updated gateway list: ", this.gatewayList);
+
+        this.getDevices(this.gatewayList[0]);
       })
   }
 

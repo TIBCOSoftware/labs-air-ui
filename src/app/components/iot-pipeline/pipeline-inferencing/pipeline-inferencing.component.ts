@@ -10,6 +10,10 @@ import { Device, FiltersConfig, Gateway, Model } from '../../../shared/models/io
 import { FormGroup } from '@angular/forms';
 import { platform } from 'chart.js';
 
+export interface SelectItem {
+  value: string;
+  viewValue: string;
+}
 
 interface DeviceNode {
   name: string;
@@ -30,6 +34,13 @@ export class PipelineInferencingComponent implements OnInit, OnChanges  {
   @Input() modelForm: FormGroup;
   @Input() filters: any[];
 
+  logLevels: SelectItem[] = [
+    { value: 'INFO', viewValue: 'INFO' },
+    { value: 'WARN', viewValue: 'WARN' },
+    { value: 'ERROR', viewValue: 'ERROR' },
+    { value: 'DEBUG', viewValue: 'DEBUG' }
+  ];
+  
   deviceNodeList: DeviceNode[] = [];
 
   filtersConfig: FiltersConfig[] = [];

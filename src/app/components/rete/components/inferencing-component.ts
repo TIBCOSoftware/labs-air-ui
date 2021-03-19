@@ -12,7 +12,7 @@ export class InferencingComponent extends Component {
         const inp = new Input("event", "Event", eventSocket);
         const out = new Output("event", "Event", eventSocket);
         // const err = new Output("error", "Error", errorSocket);
-        const control = new ImageControl(this.editor, "event", "ml.png");
+        const control = new ImageControl(this.editor, "event", "Icon_Inferencing.svg");
 
         return node.addControl(control)
             .addInput(inp)

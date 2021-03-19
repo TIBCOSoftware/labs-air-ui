@@ -8,7 +8,16 @@
 
         <div fxLayout="column" fxLayoutAlign="center start" style="height: 100%;">
 
-            <mat-form-field fxFlex="1 1 18%" appearance="standard">
+            <mat-form-field fxFlex="1 1 18%" appearance="outline">
+                <mat-label>Log Level</mat-label>
+                <mat-select formControlName="logLevel">
+                    <mat-option *ngFor="let item of logLevels;" [value]="item.value">
+                        {{item.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field fxFlex="1 1 18%" appearance="outline">
                 <mat-label>Select a Device</mat-label>
                 <mat-select 
                     formControlName="deviceName">
@@ -19,7 +28,7 @@
                 </mat-select>
             </mat-form-field>
 
-            <mat-form-field fxFlex="1 1 18%" appearance="standard">
+            <mat-form-field fxFlex="1 1 18%" appearance="outline">
                 <mat-label>Select an Instrument</mat-label>
                 <mat-select formControlName="instrumentName">
                     <mat-option *ngFor="let item of instruments"
@@ -30,7 +39,7 @@
             </mat-form-field>
 
 
-            <mat-form-field fxFlex="1 1 18%" appearance="standard">
+            <mat-form-field fxFlex="1 1 18%" appearance="outline">
                 <mat-label>Select Function</mat-label>
                 <mat-select formControlName="function">
                     <mat-option *ngFor="let item of functions" [value]="item.value">
@@ -39,7 +48,7 @@
                 </mat-select>
             </mat-form-field>
 
-            <mat-form-field fxFlex="1 1 18%" appearance="standard">
+            <mat-form-field fxFlex="1 1 18%" appearance="outline">
                 <mat-label>Select Window Type</mat-label>
                 <mat-select formControlName="windowType">
                     <mat-option *ngFor="let item of windowTypes" [value]="item.value">
@@ -48,7 +57,7 @@
                 </mat-select>
             </mat-form-field>
 
-            <mat-form-field fxFlex="1 1 18%" appearance="standard">
+            <mat-form-field fxFlex="1 1 18%" appearance="outline">
                 <mat-label>Window Size</mat-label>
                 <input matInput [readonly]=false formControlName="windowSize">
             </mat-form-field>

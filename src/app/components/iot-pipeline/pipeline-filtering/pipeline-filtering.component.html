@@ -7,6 +7,18 @@
 
     <mat-card-content>
 
+        <div fxLayout="row" style="width: 100%;" fxLayoutGap="15px">
+            
+            <mat-form-field fxFlex="1 1 35%" appearance="outline">
+                <mat-label>Log Level</mat-label>
+                <mat-select>
+                    <mat-option *ngFor="let item of logLevels;" [value]="item.value">
+                        {{item.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
         <div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="start" style="min-height: 20px">
             <button mat-raised-button (click)="selectAll()">Filter All</button>
             <button mat-raised-button (click)="unselectAll()">Unfilter All</button>

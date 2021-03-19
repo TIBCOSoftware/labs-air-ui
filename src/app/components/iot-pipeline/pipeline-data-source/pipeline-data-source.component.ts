@@ -17,6 +17,13 @@ export class PipelineDataSourceComponent implements OnInit {
 
   @Input() dataSourceForm: FormGroup;
 
+  logLevels: SelectItem[] = [
+    { value: 'INFO', viewValue: 'INFO' },
+    { value: 'WARN', viewValue: 'WARN' },
+    { value: 'ERROR', viewValue: 'ERROR' },
+    { value: 'DEBUG', viewValue: 'DEBUG' }
+  ];
+  
   hidePassword = true;
 
   mqttProtocol = false;

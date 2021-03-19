@@ -18,6 +18,13 @@ export class PipelineConfigComponent implements OnInit {
     { value: 'Edge', viewValue: 'Edge' }
   ];
 
+  logLevels: SelectItem[] = [
+    { value: 'INFO', viewValue: 'INFO' },
+    { value: 'WARN', viewValue: 'WARN' },
+    { value: 'ERROR', viewValue: 'ERROR' },
+    { value: 'DEBUG', viewValue: 'DEBUG' }
+  ];
+
   @Input() pipelineForm: FormGroup;
 
   constructor() { }

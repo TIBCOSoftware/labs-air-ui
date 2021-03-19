@@ -13,7 +13,7 @@ export class DataStoreComponent extends Component {
         const out = new Output("event", "Event", eventSocket);
         // const out = new Output("event", "Result", sqlResultSocket);
         // const err = new Output("error", "Error", errorSocket);
-        const control = new ImageControl(this.editor, "event", "registry.png");
+        const control = new ImageControl(this.editor, "event", "Icon_Data_Store.svg");
         
         return node.addControl(control)
                     .addInput(inp1)
