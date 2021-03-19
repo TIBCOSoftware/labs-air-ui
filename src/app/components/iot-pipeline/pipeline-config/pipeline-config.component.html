@@ -24,6 +24,14 @@
                 <mat-label>Description</mat-label>
                 <textarea matInput formControlName="description"></textarea>
             </mat-form-field>
+            <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                <mat-label>Log Level</mat-label>
+                <mat-select formControlName="logLevel">
+                    <mat-option *ngFor="let item of logLevels;" [value]="item.value">
+                        {{item.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
 
 
         </div>

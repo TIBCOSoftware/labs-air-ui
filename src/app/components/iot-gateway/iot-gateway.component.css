@@ -40,3 +40,109 @@ table {
     background-size: 80%;
     background-repeat: no-repeat;
 }
+
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 500px);
+}
+
+.card {
+    max-width: 404px;
+    max-height: 310px;
+    border-radius: 3px;
+    background-color: #FFFFFF;
+    box-shadow: 0 2px 6px 0 rgba(114,114,114,0.33);
+    margin: 28px 24px 24px 0px;
+    font-family: "Source Sans Pro";
+    display: flex;
+    flex-direction:column; 
+}
+
+.card-header {
+    color: #212121;
+    padding: 24px 24px 16px 24px;
+    height: auto;
+    background-color: #7DC95E;
+}
+
+.card-title-label {
+    font-size: 18px;
+    line-height: 27px;
+    color: #FFFFFF;
+    font-weight: 600;
+}
+
+.card-title-details {
+    font-size: 14px;
+    float: right;
+    font-weight: 400;
+}
+
+.card-title-action {
+    float: right;
+}
+
+.card-body {
+    margin: 0px 24px;
+    display: inline-block;
+}
+
+.card-body-summary {
+    margin-top:  12px;
+    font-size: 12px;
+    line-height: 18px;
+    font-weight: 600;
+}
+
+.card-body-summary-text {
+    font-weight: 400;
+}
+
+.card-body-highlights {
+    margin-top: 9px;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 21px;
+}
+
+.card-body-highlights-text {
+
+}
+
+.card-footer {
+    margin: 34px 24px 16px 24px;
+    height: 24px;
+}
+
+.card-footer-details {
+    font-size: 10px;
+    line-height: 13px;
+    color: #1774E5;
+}
+
+.card-footer-details span mat-icon {
+    font-size: 20px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.card-footer-details-button {
+    float: right;
+    font-size: 12px;
+    line-height: 18px;
+    color: #1774E5;
+    cursor: pointer;
+}
+
+.icon-document {
+    width: 14px;
+    height: 14px;
+    color: #A160FB;
+    vertical-align: text-top;
+}
+
+.icon-chevron-right {
+    height: 20px;
+    width: 20px;
+    vertical-align: middle;
+}

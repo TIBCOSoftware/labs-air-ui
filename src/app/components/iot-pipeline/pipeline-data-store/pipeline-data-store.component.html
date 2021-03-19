@@ -9,6 +9,18 @@
         <div fxLayout="column" fxLayoutAlign="center start" style="height: 100%;">
 
             <div fxLayout="row" style="width: 100%;" fxLayoutGap="15px">
+            
+                <mat-form-field fxFlex="1 1 35%" appearance="outline">
+                    <mat-label>Log Level</mat-label>
+                    <mat-select formControlName="logLevel">
+                        <mat-option *ngFor="let item of logLevels;" [value]="item.value">
+                            {{item.viewValue}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            
+            <div fxLayout="row" style="width: 100%;" fxLayoutGap="15px">
                 <mat-form-field fxFlex="1 1 35%" appearance="outline">
                     <mat-label>Data Stores</mat-label>
                     <mat-select formControlName="dataStoreId" (selectionChange)="onDataStoreSelected($event)">

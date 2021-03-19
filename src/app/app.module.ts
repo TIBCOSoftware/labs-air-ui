@@ -75,17 +75,17 @@ import { IotEdgeDataPipelineComponent } from './components/iot-edge-data-pipelin
 import { RulesComponent } from './components/iot-edge-data-pipeline/rules/rules.component';
 import { InferencingComponent } from './components/iot-edge-data-pipeline/inferencing/inferencing.component';
 import { FilteringComponent } from './components/iot-edge-data-pipeline/filtering/filtering.component';
-import { from } from 'rxjs';
+import { IotGatewayDetailsComponent } from './components/iot-gateway-details/iot-gateway-details.component';
 import { IotPipelineComponent } from './components/iot-pipeline/iot-pipeline.component';
 import { PipelineFilteringComponent } from './components/iot-pipeline/pipeline-filtering/pipeline-filtering.component';
 import { PipelineStreamingComponent } from './components/iot-pipeline/pipeline-streaming/pipeline-streaming.component';
-import { PipelineInferencingComponent } from './components/iot-pipeline/pipeline-inferencing/pipeline-inferencing.component';
-import { PipelineRulesComponent } from './components/iot-pipeline/pipeline-rules/pipeline-rules.component';
+import { IgeModelsComponent } from './components/iot-gateway-endpoint/ige-models/ige-models.component';
+import { PipelineConfigComponent } from './components/iot-pipeline/pipeline-config/pipeline-config.component';
+import { PipelineDataPipeComponent } from './components/iot-pipeline/pipeline-data-pipe/pipeline-data-pipe.component';
 import { PipelineDataSourceComponent } from './components/iot-pipeline/pipeline-data-source/pipeline-data-source.component';
 import { PipelineDataStoreComponent } from './components/iot-pipeline/pipeline-data-store/pipeline-data-store.component';
-import { PipelineDataPipeComponent } from './components/iot-pipeline/pipeline-data-pipe/pipeline-data-pipe.component';
-import { PipelineConfigComponent } from './components/iot-pipeline/pipeline-config/pipeline-config.component';
-import { IgeModelsComponent } from './components/iot-gateway-endpoint/ige-models/ige-models.component';
+import { PipelineInferencingComponent } from './components/iot-pipeline/pipeline-inferencing/pipeline-inferencing.component';
+import { PipelineRulesComponent } from './components/iot-pipeline/pipeline-rules/pipeline-rules.component';
 
 /** This is the tc core configuration object
  * To use oauth you must also add the OAuthInterceptor to providers
@@ -159,6 +159,7 @@ const tcCoreConfig: TcCoreConfig = {
     RulesComponent,
     InferencingComponent,
     FilteringComponent,
+    IotGatewayDetailsComponent,
     IotPipelineComponent,
     PipelineFilteringComponent,
     PipelineStreamingComponent,

@@ -3,6 +3,11 @@ import { FormGroup } from '@angular/forms';
 import { GraphService } from '../../../services/graph/graph.service';
 import { DataStore } from '../../../shared/models/iot.model';
 
+export interface SelectItem {
+  value: string;
+  viewValue: string;
+}
+
 @Component({
   selector: 'app-pipeline-data-store',
   templateUrl: './pipeline-data-store.component.html',
@@ -11,6 +16,13 @@ import { DataStore } from '../../../shared/models/iot.model';
 export class PipelineDataStoreComponent implements OnInit {
 
   @Input() dataStoreForm: FormGroup;
+
+  logLevels: SelectItem[] = [
+    { value: 'INFO', viewValue: 'INFO' },
+    { value: 'WARN', viewValue: 'WARN' },
+    { value: 'ERROR', viewValue: 'ERROR' },
+    { value: 'DEBUG', viewValue: 'DEBUG' }
+  ];
 
   hidePassword = true;
 

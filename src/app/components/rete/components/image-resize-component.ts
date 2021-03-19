@@ -12,7 +12,7 @@ export class ImageResizeComponent extends Component {
         const inp = new Input("event", "Event", eventSocket);
         const out = new Output("event", "Event", eventSocket);
         // const err = new Output("error", "Error", errorSocket);
-        const control = new ImageControl(this.editor, "event", "device.png");
+        const control = new ImageControl(this.editor, "event", "Icon_Image_Resize.svg");
 
         return node.addControl(control)
             .addInput(inp)

@@ -11,7 +11,7 @@ export class ErrorHandlerComponent extends Component {
 
     builder(node) {
         const inp1 = new Input("err", "Error", errorSocket);
-        const control = new ImageControl(this.editor, "event", "control.png");
+        const control = new ImageControl(this.editor, "event", "Icon_Error_Handler.svg");
 
         return node.addControl(control)
                     .addInput(inp1);

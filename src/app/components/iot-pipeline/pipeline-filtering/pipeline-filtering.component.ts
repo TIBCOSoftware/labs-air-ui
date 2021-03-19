@@ -14,6 +14,10 @@ interface DeviceNode {
   deviceResources?: DeviceNode[];
 }
 
+export interface SelectItem {
+  value: string;
+  viewValue: string;
+}
 
 @Component({
   selector: 'app-pipeline-filtering',
@@ -24,6 +28,13 @@ export class PipelineFilteringComponent implements OnInit, OnChanges, OnDestroy 
 
   @Input() devices: Device[];
   @Input() filters: any[];
+
+  logLevels: SelectItem[] = [
+    { value: 'INFO', viewValue: 'INFO' },
+    { value: 'WARN', viewValue: 'WARN' },
+    { value: 'ERROR', viewValue: 'ERROR' },
+    { value: 'DEBUG', viewValue: 'DEBUG' }
+  ];
 
   deviceNodeList: DeviceNode[] = [];
 

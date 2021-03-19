@@ -32,7 +32,7 @@ export class IotGatewayComponent implements OnInit, AfterViewInit {
   publisherDisabled = true;
   cloudDataPipelineDisable = true;
   edgeDataPipelineDisable = true;
-  selectedGateway = '';
+  selectedGateway: Gateway;
   hideAccessToken = true;
   dateFormat = 'yyyy-MM-dd  HH:mm:ss';
 
@@ -201,10 +201,10 @@ export class IotGatewayComponent implements OnInit, AfterViewInit {
       })
   }
 
-  pingGateway() {
+  pingGateway(gateway?: Gateway) {
 
-    if (this.selection.hasValue()) {
-      this.edgeService.pingCoreMetadata(this.selection.selected[0])
+    if (gateway) {
+      this.edgeService.pingCoreMetadata(gateway)
       .subscribe(res => {
         console.log("Received ping response: ", res);
 
@@ -284,7 +284,7 @@ export class IotGatewayComponent implements OnInit, AfterViewInit {
     this.cloudDataPipelineDisable = false;
     this.edgeDataPipelineDisable = false;
     this.selection.select(row);
-    this.selectedGateway = row.uuid;
+    // this.selectedGateway = row.uuid;
 
     // Update Gateway Form
     this.gatewayForm.patchValue({
@@ -323,5 +323,15 @@ export class IotGatewayComponent implements OnInit, AfterViewInit {
     this.cloudDataPipelineDisable = true;
     this.edgeDataPipelineDisable = true;
 
+  }
+
+  selectGateway(gateway?: Gateway) {
+    if (gateway) {
+      this.selectedGateway = gateway;
+      this.gatewayOpDisabled = false;
+    } else {
+      this.selectedGateway = null;
+      this.gatewayOpDisabled = true;
+    }
   }
 }
