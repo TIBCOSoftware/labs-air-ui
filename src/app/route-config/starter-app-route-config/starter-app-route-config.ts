@@ -98,7 +98,8 @@ export const STARTER_APP_ROUTES =
           roles: RolesResolver,
           access: AccessResolver,
           customFormDefs: FormResolver
-        }
+        },
+        data: { breadcrumb: ['Gateways'] }
       },
       {
         path: 'gatewaydashboard',
@@ -335,7 +336,7 @@ export const STARTER_APP_ROUTES =
         }
       },
       {
-        path: 'device-details',
+        path: 'device-details/:gatewayId',
         component: IotGatewayDetailsComponent,
         canActivate: [AuthGuard],
         resolve: {
@@ -345,7 +346,8 @@ export const STARTER_APP_ROUTES =
           roles: RolesResolver,
           access: AccessResolver,
           customFormDefs: FormResolver
-        }
+        },
+        data: { breadcrumb: ['Gateways','Devices']}
       },
       {
         path: '', redirectTo: '/starterApp/home/casemanagement', pathMatch: 'full'

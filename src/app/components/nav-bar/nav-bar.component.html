@@ -6,7 +6,11 @@
       <mat-icon>menu</mat-icon>
     </button>
 
-    <span class="toolbar-title"> {{ title }} </span>
+    <span class="toolbar-title" *ngFor='let path of paths; let last=last' (click)='goBack()'> 
+      <span> {{ path }} </span>
+      <!--mat-icon class='icon-chevron-right' svgIcon="chevron-right" *ngIf='!last'></mat-icon -->
+      <span *ngIf='!last'> >&nbsp;</span>
+    </span>
 
     <div fxFlex fxLayout fxLayoutAlign="flex-end">
 

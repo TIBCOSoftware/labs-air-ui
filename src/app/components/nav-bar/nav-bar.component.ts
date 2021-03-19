@@ -1,7 +1,6 @@
 import { Component, OnInit, EventEmitter, Input, Output } from '@angular/core';
-
-import { Router } from '@angular/router';
-
+import { BreadcrumbsService } from '../../services/breadcrumbs/breadcrumbs.service'
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-nav-bar',
@@ -16,12 +15,19 @@ export class NavBarComponent implements OnInit {
      * page title comes from config resolver
      */
   @Input() title: string;
+  paths: String[] = [];
 
-  constructor(private router: Router) {
-
+  constructor(private breadcrumb: BreadcrumbsService, private location: Location) {
   }
 
   ngOnInit() {
+    this.breadcrumb.path.subscribe((x) => {
+      this.paths = x;
+    })
+  }
+
+  public goBack() {
+    this.location.back();
   }
 
   public logout() {

@@ -24,24 +24,26 @@
                 <mat-icon>search</mat-icon>
             </span>
         </div>
-        <div class='card-list'>
+        <div class='card-list' *ngFor='let device of devicesDataSource.filteredData'>
             <div class='card'>
                 <div class='card-header'>
                     <div class='card-header-icon'>
                         <mat-icon>search</mat-icon>
                     </div>
                     <div class='card-header-text'>
-                        Title
+                        {{ device.name }}
                     </div>
                 </div>
                 <div class='card-body'>
                     <div class='card-body-text'>
-                        Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text
+                        <div>
+                            Stuff goes here
+                        </div>
                     </div>
                     <div class='card-body-load'>
                         <span>99%</span>
                         <div class='card-body-percentage'>
-                            percentage bar
+                            <mat-progress-bar mode="determinate" value="40"></mat-progress-bar>
                         </div>
                     </div>
                 </div>
@@ -50,6 +52,6 @@
     </div>
 
     <div class='card-details'>
-        device table
+       
     </div>
 </div>
