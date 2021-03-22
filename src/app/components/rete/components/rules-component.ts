@@ -12,7 +12,7 @@ export class RulesComponent extends Component {
         const inp = new Input("event", "Event", eventSocket);
         const out = new Output("event", "Event", eventSocket);
         // const err = new Output("error", "Error", errorSocket);
-        const control = new ImageControl(this.editor, "event", "devicemgt.png");
+        const control = new ImageControl(this.editor, "event", "Icon_Rules.svg");
 
         return node.addControl(control)
             .addInput(inp)

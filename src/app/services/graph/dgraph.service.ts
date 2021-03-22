@@ -106,7 +106,7 @@ export class DgraphService implements GraphService {
     const url = `${this.dgraphUrl}/query`;
     let query = `{
       resp(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
-        uid uuid description address latitude longitude accessToken createdts updatedts
+        uid uuid description address router latitude longitude accessToken username platform createdts updatedts
       }
     }`;
 
@@ -126,7 +126,7 @@ export class DgraphService implements GraphService {
     const url = `${this.dgraphUrl}/query`;
     let query = `{
       resp(func: has(gateway)) {
-        uid uuid description address latitude longitude accessToken createdts updatedts
+        uid uuid description address router latitude longitude accessToken username platform createdts updatedts
       }
     }`;
 
@@ -147,10 +147,13 @@ export class DgraphService implements GraphService {
     let query = `{
       set {
         <${gateway.uid}> <address> "${gateway.address}" .
+        <${gateway.uid}> <router> "${gateway.router}" .
         <${gateway.uid}> <description> "${gateway.description}" .
         <${gateway.uid}> <latitude> "${gateway.latitude}" .
         <${gateway.uid}> <longitude> "${gateway.longitude}" .
         <${gateway.uid}> <accessToken> "${gateway.accessToken}" .
+        <${gateway.uid}> <username> "${gateway.username}" .
+        <${gateway.uid}> <platform> "${gateway.platform}" .
         <${gateway.uid}> <updatedts> "${gateway.updatedts}" .
       }
     }`;
@@ -177,9 +180,12 @@ export class DgraphService implements GraphService {
         _:Gateway <uuid> "${gateway.uuid}" .
         _:Gateway <description> "${gateway.description}" .
         _:Gateway <address> "${gateway.address}" .
+        _:Gateway <router> "${gateway.router}" .
         _:Gateway <latitude> "${gateway.latitude}" .
         _:Gateway <longitude> "${gateway.longitude}" .
         _:Gateway <accessToken> "${gateway.accessToken}" .
+        _:Gateway <username> "${gateway.username}" .
+        _:Gateway <platform> "${gateway.platform}" .
         _:Gateway <createdts> "${gateway.createdts}" .
         _:Gateway <updatedts> "${gateway.updatedts}" .
       }
@@ -221,7 +227,7 @@ export class DgraphService implements GraphService {
     const url = `${this.dgraphUrl}/query`;
     let query = `{
       resp(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
-        uid uuid description address latitude longitude accessToken createdts updatedts
+        uid uuid description address router latitude longitude accessToken username platform createdts updatedts
         subscriptions: gateway_subscription {
           uid
           name
@@ -994,6 +1000,7 @@ export class DgraphService implements GraphService {
           uid
           uuid
           created
+          modified
           name
           description
           inputType
@@ -1141,7 +1148,7 @@ export class DgraphService implements GraphService {
 
     let query = `{
       resp(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
-        uid uuid accessToken address
+        uid uuid accessToken username platform address router
         pipelines: gateway_pipeline {
           uid
           name
@@ -1154,6 +1161,8 @@ export class DgraphService implements GraphService {
           created
           modified
           status
+          flowConfiguration
+          logLevel
           ${pipeline_protocol}
           ${pipeline_datastore}
           ${pipeline_filter}
@@ -1201,6 +1210,8 @@ export class DgraphService implements GraphService {
         created
         modified
         status
+        flowConfiguration
+        logLevel
         ${pipeline_protocol}
         ${pipeline_datastore}
         ${pipeline_filter}
@@ -1338,11 +1349,11 @@ export class DgraphService implements GraphService {
         _:Pipeline <type> "pipeline" .
         _:Pipeline <pipeline> "" .
         _:Pipeline <pipelineType> "${pipeline.pipelineType}" .
-        _:Pipeline <protocolType> "${pipeline.protocolType}" .
-        _:Pipeline <dataStoreType> "${pipeline.dataStoreType}" .
         _:Pipeline <created> "${pipeline.created}" .
         _:Pipeline <modified> "${pipeline.modified}" .
         _:Pipeline <status> "${pipeline.status}" .
+        _:Pipeline <flowConfiguration> "${pipeline.flowConfiguration}" .
+        _:Pipeline <logLevel> "${pipeline.logLevel}" .
         <${gatewayUid}> <gateway_pipeline> _:Pipeline .
       }
     }`;
@@ -1366,6 +1377,8 @@ export class DgraphService implements GraphService {
       set {
         <${pipeline.uid}> <status> "${pipeline.status}" .
         <${pipeline.uid}> <modified> "${pipeline.modified}" .
+        <${pipeline.uid}> <flowConfiguration> "${pipeline.flowConfiguration}" .
+        <${pipeline.uid}> <logLevel> "${pipeline.logLevel}" .
       }
     }`;
     console.log('Mutate statement: ', query);
@@ -1859,7 +1872,7 @@ export class DgraphService implements GraphService {
       }
     }`;
 
-    console.log('Reading query statement: ', query);
+    console.log('getReadings query statement: ', query);
 
     return this.http.post<any>(url, query, httpOptions)
       .pipe(
@@ -1889,7 +1902,7 @@ export class DgraphService implements GraphService {
       }
     }`;
 
-    console.log("the query is: ", query);
+    console.log("getReadingsAt query statement: ", query);
 
     // return this.http.post<any>(url, `{resp(func: has(reading)) @filter(gt(created, ${fromts})) @cascade {value created ~resource_reading @filter(eq(uuid, "${deviceName}_${instrumentName}")) { }}}`, httpOptions)
     return this.http.post<any>(url, query, httpOptions)

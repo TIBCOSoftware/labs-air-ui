@@ -3,6 +3,11 @@ import { FormGroup } from '@angular/forms';
 import { GraphService } from '../../../services/graph/graph.service';
 import { Protocol } from '../../../shared/models/iot.model';
 
+export interface SelectItem {
+  value: string;
+  viewValue: string;
+}
+
 @Component({
   selector: 'app-pipeline-data-pipe',
   templateUrl: './pipeline-data-pipe.component.html',
@@ -11,6 +16,13 @@ import { Protocol } from '../../../shared/models/iot.model';
 export class PipelineDataPipeComponent implements OnInit {
 
   @Input() dataPipeForm: FormGroup;
+
+  logLevels: SelectItem[] = [
+    { value: 'INFO', viewValue: 'INFO' },
+    { value: 'WARN', viewValue: 'WARN' },
+    { value: 'ERROR', viewValue: 'ERROR' },
+    { value: 'DEBUG', viewValue: 'DEBUG' }
+  ];
 
   hidePassword = true;
 
@@ -80,6 +92,7 @@ export class PipelineDataPipeComponent implements OnInit {
 
   setForm(protocol) {
 
+    console.log("setForm protocol: ", protocol);
     console.log("Selected protocol: ", protocol.protocolType);
 
     this.mqttProtocol = false;

@@ -2,14 +2,14 @@
   style="padding-left: 20px; padding-right: 20px; margin-top: 10px;">
 
   <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="15px">
-    <mat-form-field fxFlex="1 1 18%" appearance="outline">
+    <!-- <mat-form-field fxFlex="1 1 18%" appearance="outline">
       <mat-label>Select a Device Group</mat-label>
       <mat-select [(value)]="gatewayIdSelected" (selectionChange)="onGatewaySelected($event)">
         <mat-option *ngFor="let item of gatewayList; let i = index" [value]="i">
           {{item.uuid}}
         </mat-option>
       </mat-select>
-    </mat-form-field>
+    </mat-form-field> -->
     <mat-form-field fxFlex="1 1 40%" appearance="outline">
       <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter Devices">
     </mat-form-field>

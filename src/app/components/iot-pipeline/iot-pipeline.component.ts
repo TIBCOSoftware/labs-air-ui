@@ -31,6 +31,8 @@ import { RulesComponent } from "../rete/components/rules-component";
 import { StreamingComponent } from "../rete/components/streaming-component";
 import { pipe } from 'rxjs';
 import { DataFilteringComponent } from '../iot-data-pipeline/data-filtering/data-filtering.component';
+import { LogLevel } from '@tibco-tcstk/tc-core-lib';
+import { stringify } from '@angular/compiler/src/util';
 
 
 
@@ -71,6 +73,56 @@ export class IotPipelineComponent implements OnInit {
   dataStoreForm: FormGroup;
   streamingForm: FormGroup;
   modelForm: FormGroup;
+  ruleForm: FormGroup;
+
+  ruleTuplesDescriptor = [
+    {
+      "name": "ReadingEvent",
+      "ttl": 0,
+      "properties": [
+        {
+          "name": "id",
+          "type": "string",
+          "pk-index": 0
+        },
+        {
+          "name": "device",
+          "type": "String"
+        },
+        {
+          "name": "resource",
+          "type": "String"
+        },
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "ResourceConcept",
+      "ttl": -1,
+      "properties": [
+        {
+          "name": "id",
+          "type": "string",
+          "pk-index": 0
+        },
+        {
+          "name": "device",
+          "type": "String"
+        },
+        {
+          "name": "resource",
+          "type": "String"
+        },
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ]
+    }
+  ]
 
 
   private filterComponent: PipelineFilteringComponent;
@@ -292,6 +344,10 @@ export class IotPipelineComponent implements OnInit {
         contextObj = this.buildNodeDataStreamingProperties();
         break;
       }
+      case "Rules": {
+        contextObj = this.buildNodeRuleProperties();
+        break;
+      }
       default: {
 
         break;
@@ -310,6 +366,7 @@ export class IotPipelineComponent implements OnInit {
     this.dataStoreConfig = false;
     this.dataPipeConfig = false;
     this.inferencingConfig = false;
+    this.rulesConfig = false;
     this.streamingConfig = false;
 
     if (node != null || node != undefined) {
@@ -349,6 +406,11 @@ export class IotPipelineComponent implements OnInit {
           this.streamingConfig = true;
           break;
         }
+        case "Rules": {
+          this.updateRulesComponent(contextObj);
+          this.rulesConfig = true;
+          break;
+        }
         default: {
           this.pipelineConfig = true;
           break;
@@ -372,11 +434,13 @@ export class IotPipelineComponent implements OnInit {
       inputType: '',
       url: '',
       platform: '',
+      logLevel: 'INFO',
     }, { emitEvent: false });
 
     this.protocolForm.patchValue({
       protocolId: '',
       protocol: '',
+      logLevel: 'INFO',
     }, { emitEvent: true });
 
   }
@@ -394,11 +458,9 @@ export class IotPipelineComponent implements OnInit {
       description: ['', Validators.required],
       created: ['', Validators.required],
       modified: ['', Validators.required],
-      protocolType: ['', Validators.required],
-      protocolId: ['', Validators.required],
-      dataStoreType: ['', Validators.required],
-      dataStoreId: ['', Validators.required],
-      status: ['', Validators.required]
+      status: ['', Validators.required],
+      flowConfiguration: ['', Validators.required],
+      logLevel: ['INFO', Validators.required]
     });
 
     this.protocolForm = this.formBuilder.group({
@@ -406,6 +468,7 @@ export class IotPipelineComponent implements OnInit {
       gateway: [this.gatewayId, Validators.required],
       protocolId: ['', Validators.required],
       protocol: ['', Validators.required],
+      logLevel: ['INFO', Validators.required],
       mqtt: this.formBuilder.group({
         hostname: ['changeme', Validators.required],
         port: ['changeme', Validators.required],
@@ -455,6 +518,7 @@ export class IotPipelineComponent implements OnInit {
       gateway: [this.gatewayId, Validators.required],
       dataStoreId: ['', Validators.required],
       dataStore: ['', Validators.required],
+      logLevel: ['INFO', Validators.required],
       postgres: this.formBuilder.group({
         host: ['changeme', Validators.required],
         port: ['changeme', Validators.required],
@@ -494,7 +558,8 @@ export class IotPipelineComponent implements OnInit {
       instrumentName: ['changeme', Validators.required],
       function: ['avg', Validators.required],
       windowType: ['tumbling', Validators.required],
-      windowSize: ['5', Validators.required]
+      windowSize: ['5', Validators.required],
+      logLevel: ['INFO', Validators.required]
     });
 
     this.modelForm = this.formBuilder.group({
@@ -503,8 +568,30 @@ export class IotPipelineComponent implements OnInit {
       inputType: ['', Validators.required],
       url: ['', Validators.required],
       platform: ['', Validators.required],
+      logLevel: ['INFO', Validators.required]
     });
 
+    this.ruleForm = this.formBuilder.group({
+      name: ['', Validators.required],
+      description: [''],
+      condDevice: ['', Validators.required],
+      condResource: ['', Validators.required],
+      condCompareNewMetricToValue: [true],
+      condCompareNewMetricToValueOp: ['', Validators.required],
+      condCompareNewMetricValue: ['', Validators.required],
+      condCompareNewMetricToLastMetric: [false],
+      condCompareNewMetricToLastMetricOp: [''],
+      condCompareLastMetricToValue: [false],
+      condCompareLastMetricToValueOp: [''],
+      condCompareLastMetricValue: [''],
+      actionSendNotification: [true],
+      actionNotification: ['', Validators.required],
+      actionSendCommand: [true],
+      actionDevice: ['', Validators.required],
+      actionResource: ['', Validators.required],
+      actionValue: ['', Validators.required],
+      logLevel: ['INFO', Validators.required]
+    });
 
   }
 
@@ -522,6 +609,7 @@ export class IotPipelineComponent implements OnInit {
       protocolObj = {
         "protocol": form.get('protocol').value,
         "protocolId": form.get('protocolId').value,
+        "logLevel": form.get('logLevel').value,
         "hostname": form.get('mqtt.hostname').value,
         "port": form.get('mqtt.port').value,
         "username": form.get('mqtt.username').value,
@@ -539,7 +627,8 @@ export class IotPipelineComponent implements OnInit {
 
       protocolObj = {
         "protocol": form.get('protocol').value,
-        "prtocolId": form.get('protocolId').value,
+        "protocolId": form.get('protocolId').value,
+        "logLevel": form.get('logLevel').value,
         "hostname": form.get('kafka.hostname').value,
         "port": form.get('kafka.port').value,
         "authMode": form.get('kafka.authMode').value,
@@ -565,7 +654,8 @@ export class IotPipelineComponent implements OnInit {
 
       protocolObj = {
         "protocol": form.get('protocol').value,
-        "prtocolId": form.get('protocolId').value,
+        "protocolId": form.get('protocolId').value,
+        "logLevel": form.get('logLevel').value,
         "hostname": form.get('amqp.hostname').value,
         "port": form.get('amqp.port').value,
         "username": form.get('amqp.username').value,
@@ -597,6 +687,7 @@ export class IotPipelineComponent implements OnInit {
       dataStoreObj = {
         "dataStore": form.get('dataStore').value,
         "dataStoreId": form.get('dataStoreId').value,
+        "logLevel": form.get('logLevel').value,
         "host": form.get('postgres.host').value,
         "port": form.get('postgres.port').value,
         "databaseName": form.get('postgres.databaseName').value,
@@ -609,6 +700,7 @@ export class IotPipelineComponent implements OnInit {
       dataStoreObj = {
         "dataStore": form.get('dataStore').value,
         "dataStoreId": form.get('dataStoreId').value,
+        "logLevel": form.get('logLevel').value,
         "accountName": form.get('snowflake.accountName').value,
         "warehouse": form.get('snowflake.warehouse').value,
         "database": form.get('snowflake.database').value,
@@ -629,6 +721,7 @@ export class IotPipelineComponent implements OnInit {
       dataStoreObj = {
         "dataStore": form.get('dataStore').value,
         "dataStoreId": form.get('dataStoreId').value,
+        "logLevel": form.get('logLevel').value,
         "url": form.get('tgdb.url').value,
         "username": form.get('tgdb.username').value,
         "password": form.get('tgdb.password').value,
@@ -639,6 +732,7 @@ export class IotPipelineComponent implements OnInit {
       dataStoreObj = {
         "dataStore": form.get('dataStore').value,
         "dataStoreId": form.get('dataStoreId').value,
+        "logLevel": form.get('logLevel').value,
         "url": form.get('dgraph.url').value,
         "username": form.get('dgraph.username').value,
         "password": form.get('dgraph.password').value,
@@ -660,7 +754,7 @@ export class IotPipelineComponent implements OnInit {
     };
 
     console.log("iot-pipeline_buildNodeDataFilteringProperties: filters:", filterObj);
-    
+
 
     return filterObj;
   }
@@ -676,7 +770,8 @@ export class IotPipelineComponent implements OnInit {
       "modelDescription": this.modelForm.get('description').value,
       "modelUrl": this.modelForm.get('url').value,
       "modelPlatform": this.modelForm.get('platform').value,
-      "filters": this.inferenceComponent.getFilters()
+      "filters": this.inferenceComponent.getFilters(),
+      "logLevel": this.modelForm.get('logLevel').value,
     };
 
     return inferenceObj;
@@ -693,10 +788,44 @@ export class IotPipelineComponent implements OnInit {
       "instrumentName": this.streamingForm.get('instrumentName').value,
       "function": this.streamingForm.get('function').value,
       "windowType": this.streamingForm.get('windowType').value,
-      "windowSize": this.streamingForm.get('windowSize').value
+      "windowSize": this.streamingForm.get('windowSize').value,
+      "logLevel": this.streamingForm.get('logLevel').value
     };
 
     return streamingObj;
+  }
+
+  /**
+   *
+   * @param form
+   */
+  buildNodeRuleProperties(): any {
+
+    let ruleObj = {
+      "name": this.ruleForm.get('name').value,
+      "description": this.ruleForm.get('description').value,
+      "condDevice": this.ruleForm.get('condDevice').value,
+      "condResource": this.ruleForm.get('condResource').value,
+      "condCompareNewMetricToValue": this.ruleForm.get('condCompareNewMetricToValue').value,
+      "condCompareNewMetricToValueOp": this.ruleForm.get('condCompareNewMetricToValueOp').value,
+      "condCompareNewMetricValue": this.ruleForm.get('condCompareNewMetricValue').value,
+      "condCompareNewMetricToLastMetric": this.ruleForm.get('condCompareNewMetricToLastMetric').value,
+      "condCompareNewMetricToLastMetricOp": this.ruleForm.get('condCompareNewMetricToLastMetricOp').value,
+      "condCompareLastMetricToValue": this.ruleForm.get('condCompareLastMetricToValue').value,
+      "condCompareLastMetricToValueOp": this.ruleForm.get('condCompareLastMetricToValueOp').value,
+      "condCompareLastMetricValue": this.ruleForm.get('condCompareLastMetricValue').value,
+      "actionSendNotification": this.ruleForm.get('actionSendNotification').value,
+      "actionNotification": this.ruleForm.get('actionNotification').value,
+      "actionSendCommand": this.ruleForm.get('actionSendCommand').value,
+      "actionDevice": this.ruleForm.get('actionDevice').value,
+      "actionResource": this.ruleForm.get('actionResource').value,
+      "actionValue": this.ruleForm.get('actionValue').value,
+      "logLevel": this.ruleForm.get('logLevel').value
+    };
+
+    console.log("Rule context saved: ", ruleObj);
+    
+    return ruleObj;
   }
 
   /**
@@ -719,6 +848,7 @@ export class IotPipelineComponent implements OnInit {
         this.protocolForm.patchValue({
           protocol: protocol,
           protocolId: protocolId,
+          logLevel: context.logLevel,
           mqtt: {
             hostname: context.hostname,
             port: context.port,
@@ -739,6 +869,7 @@ export class IotPipelineComponent implements OnInit {
         this.protocolForm.patchValue({
           protocol: protocol,
           protocolId: protocolId,
+          logLevel: context.logLevel,
           kafka: {
             hostname: context.hostname,
             port: context.port,
@@ -766,6 +897,7 @@ export class IotPipelineComponent implements OnInit {
         this.protocolForm.patchValue({
           protocol: protocol,
           protocolId: protocolId,
+          logLevel: context.logLevel,
           amqp: {
             hostname: context.hostname,
             port: context.port,
@@ -803,6 +935,7 @@ export class IotPipelineComponent implements OnInit {
         this.dataStoreForm.patchValue({
           dataStoreId: dataStoreId,
           dataStore: dataStore,
+          logLevel: context.logLevel,
           postgres: {
             host: context.host,
             port: context.port,
@@ -818,6 +951,7 @@ export class IotPipelineComponent implements OnInit {
         this.dataStoreForm.patchValue({
           dataStoreId: dataStoreId,
           dataStore: dataStore,
+          logLevel: context.logLevel,
           snowflake: {
             accountName: context.accountName,
             warehouse: context.warehouse,
@@ -840,6 +974,7 @@ export class IotPipelineComponent implements OnInit {
         this.dataStoreForm.patchValue({
           dataStoreId: dataStoreId,
           dataStore: dataStore,
+          logLevel: context.logLevel,
           tgdb: {
             url: context.url,
             username: context.username,
@@ -852,6 +987,7 @@ export class IotPipelineComponent implements OnInit {
         this.dataStoreForm.patchValue({
           dataStoreId: dataStoreId,
           dataStore: dataStore,
+          logLevel: context.logLevel,
           dgraph: {
             url: context.url,
             username: context.username,
@@ -891,7 +1027,8 @@ export class IotPipelineComponent implements OnInit {
         name: context.modelName,
         description: context.modelDescription,
         url: context.modelUrl,
-        platform: context.modelPlatform
+        platform: context.modelPlatform,
+        LogLevel: context.logLevel
       })
 
     }
@@ -911,7 +1048,42 @@ export class IotPipelineComponent implements OnInit {
         instrumentName: context.instrumentName,
         function: context.function,
         windowType: context.windowType,
-        windowSize: context.windowSize
+        windowSize: context.windowSize,
+        logLevel: context.logLevel,
+      })
+
+    }
+  }
+
+  /**
+   *
+   * @param context
+   */
+  updateRulesComponent(context) {
+
+    if (context != null || context != undefined) {
+      console.log("Updating rules component with context: ", context);
+
+      this.ruleForm.patchValue({
+        name: context.name,
+        description: context.description,
+        condDevice: context.condDevice,
+        condResource: context.condResource,
+        condCompareNewMetricToValue: context.condCompareNewMetricToValue,
+        condCompareNewMetricToValueOp: context.condCompareNewMetricToValueOp,
+        condCompareNewMetricValue: context.condCompareNewMetricValue,
+        condCompareNewMetricToLastMetric: context.condCompareNewMetricToLastMetric,
+        condCompareNewMetricToLastMetricOp: context.condCompareNewMetricToLastMetricOp,
+        condCompareLastMetricToValue: context.condCompareLastMetricToValue,
+        condCompareLastMetricToValueOp: context.condCompareLastMetricToValueOp,
+        condCompareLastMetricValue: context.condCompareLastMetricValue,
+        actionSendNotification: context.actionSendNotification,
+        actionNotification: context.actionNotification,
+        actionSendCommand: context.actionSendCommand,
+        actionDevice: context.actionDevice,
+        actionResource: context.actionResource,
+        actionValue: context.actionValue,
+        logLevel: context.logLevel,
       })
 
     }
@@ -1070,19 +1242,19 @@ export class IotPipelineComponent implements OnInit {
         uid: row.uid,
         name: row.name,
         pipelineType: row.pipelineType,
-        prototypeType: row.protocolType,
-        dataStoreType: row.dataStoreType,
         status: row.status,
+        flowConfiguration: row.flowConfiguration,
+        logLevel: row.logLevel
       }, { emitEvent: false });
 
       // Reset the editor
-      let decodedData = decodeURIComponent(row.protocolType);
+      let decodedData = decodeURIComponent(row.flowConfiguration);
       let jsonData = JSON.parse(decodedData)
       this.editor.fromJSON(jsonData);
 
       // Reset command buttons
       console.log("Resetting buttons for status: ", row.status);
-      
+
       if (row.status == "Saved") {
         this.deployDisabled = false;
         this.undeployDisabled = true;
@@ -1097,13 +1269,6 @@ export class IotPipelineComponent implements OnInit {
         this.undeployDisabled = true;
       }
 
-      // this.updateProtocolViewForm(row.protocolType, row.protocol);
-
-      // this.updateDataStoreViewForm(row.dataStoreType, row.dataStore);
-
-      // this.updateFilterViewForm(row.filter);
-
-      // this.updateStreamingViewForm(row.streaming)
     }
     else {
       console.log("skipping as same row is selected");
@@ -1140,10 +1305,9 @@ export class IotPipelineComponent implements OnInit {
     pipeline.modified = tsms;
     pipeline.name = this.pipelineForm.get('name').value;
     pipeline.pipelineType = this.pipelineForm.get('pipelineType').value;
-    pipeline.protocolType = "flow";
-    pipeline.protocolType = encodeURIComponent(JSON.stringify(editorData));
-    // pipeline.dataStoreType = this.pipelineForm.get('dataStoreType').value;
     pipeline.status = "Saved";
+    pipeline.flowConfiguration = encodeURIComponent(JSON.stringify(editorData));
+    pipeline.logLevel = this.pipelineForm.get('logLevel').value;
 
     // Add pipeline to graph
     this.graphService.addPipeline(this.gateway.uid, pipeline, "", "", null, null)
@@ -1167,6 +1331,7 @@ export class IotPipelineComponent implements OnInit {
 
   updatePipelineToGraph() {
 
+    let editorData = this.editor.toJSON();
 
     // Update pipeline
     let pipeline = new Pipeline();
@@ -1175,6 +1340,8 @@ export class IotPipelineComponent implements OnInit {
     pipeline.name = this.pipelineForm.get('name').value;
     pipeline.uid = this.pipelineForm.get('uid').value;
     pipeline.status = this.pipelineForm.get('status').value;
+    pipeline.flowConfiguration = encodeURIComponent(JSON.stringify(editorData));
+    pipeline.logLevel = this.pipelineForm.get('logLevel').value;
 
     // Add pipeline to graph
     this.graphService.updatePipeline(pipeline)
@@ -1239,12 +1406,14 @@ export class IotPipelineComponent implements OnInit {
     this.dataStoreConfig = false;
     this.dataPipeConfig = false;
     this.inferencingConfig = false;
+    this.rulesConfig = false;
     this.streamingConfig = false;
 
     this.pipelineForm.patchValue({
       name: "",
       pipelineType: "",
-      description: ""
+      description: "",
+      logLevel: "INFO"
     });
 
   }
@@ -1268,10 +1437,10 @@ export class IotPipelineComponent implements OnInit {
 
     if (deployType == "Edge") {
       systemEnv = {
-        "Platform": "linux/arm64",
+        "Platform": this.gateway.platform,
         "DetachedMode": "n",
-        "Username": "ubuntu",
-        "TargetServer": "76.208.102.187"
+        "Username": this.gateway.username,
+        "TargetServer": this.gateway.router
       };
 
       extra = [
@@ -1291,7 +1460,7 @@ export class IotPipelineComponent implements OnInit {
     };
 
     let flow = this.editor.toJSON();
-
+    let pos = 0;
     console.log("Building from: ", flow);
 
 
@@ -1316,6 +1485,16 @@ export class IotPipelineComponent implements OnInit {
           }
           case "Data Pipe": {
             pipelineFlow.AirDescriptor.logic.push(this.buildDataPipeDeployObj(flow.nodes[key].data.customdata));
+
+            // Check if Notification Pipe
+            if (flow.nodes[key].data.customdata.topic == "EdgexGatewayNotification") {
+              let pipeId = "Pipe_" + pos;
+              let listener =  {
+                "Name": "App.NotificationListeners", 
+                "Value": "[\"" + pipeId + "\"]"
+              };
+              extra.push(listener);
+            }
             break;
           }
           case "Filters": {
@@ -1330,11 +1509,12 @@ export class IotPipelineComponent implements OnInit {
             pipelineFlow.AirDescriptor.logic.push(this.buildStreamingDeployObj(flow.nodes[key].data.customdata));
             break;
           }
-          default: {
-
+          case "Rules": {
+            pipelineFlow.AirDescriptor.logic.push(this.buildRulesDeployObj(flow.nodes[key].data.customdata));
             break;
           }
         }
+        pos++;
 
       }
 
@@ -1352,61 +1532,6 @@ export class IotPipelineComponent implements OnInit {
     console.log("Pipeline flow to be build: ", pipelineFlow);
     console.log("Pipeline flow to be build string: ", JSON.stringify(pipelineFlow));
 
-
-    // let pipelineFlow1 = {
-    //   "ComponentType": "Service",
-    //   "ServiceType": "docker",
-    //   "AirDescriptor": {
-    //     "source": {
-    //       "name": "DataSource.MQTT",
-    //       "properties": [
-    //         { "Name": "Mqtt.IoTMQTT.Broker_URL", "Value": "tcp://a51c54c751c2a4a8eba0650958d6b261-1634817950.us-west-2.elb.amazonaws.com:443" },
-    //         { "Name": "MQTTTrigger.Topic", "Value": "EdgexGatewayData" },
-    //         { "Name": "MQTTTrigger.MaximumQOS", "Value": "2" },
-    //         { "Name": "Mqtt.IoTMQTT.Username", "Value": "mqtt_admin" },
-    //         { "Name": "Mqtt.IoTMQTT.Password", "Value": "SECRET:bXF0dF9hZG1pbg==" }
-    //       ]
-    //     },
-    //     "logic": [
-    //       {
-    //         "name": "Filter.Dummy",
-    //         "properties": [
-    //           { "Name": "Logging.LogLevel", "Value": "INFO" }
-    //         ]
-    //       },
-    //       {
-    //         "name": "Pipe.MQTT",
-    //         "properties": [
-    //           { "Name": "Mqtt.IoTMQTT.Broker_URL", "Value": "tcp://a51c54c751c2a4a8eba0650958d6b261-1634817950.us-west-2.elb.amazonaws.com:443" },
-    //           { "Name": "Mqtt.IoTMQTT.Username", "Value": "mqtt_admin" },
-    //           { "Name": "Mqtt.IoTMQTT.Password", "Value": "SECRET:bXF0dF9hZG1pbg==" },
-    //           { "Name": "Logging.LogLevel", "Value": "DEBUG" },
-    //           { "Name": "MQTTPub.Topic", "Value": "AIRModelScoredData01" }
-    //         ]
-    //       },
-    //       {
-    //         "name": "Pipe.MQTT",
-    //         "properties": [
-    //           { "Name": "Mqtt.IoTMQTT.Broker_URL", "Value": "tcp://a51c54c751c2a4a8eba0650958d6b261-1634817950.us-west-2.elb.amazonaws.com:443" },
-    //           { "Name": "Mqtt.IoTMQTT.Username", "Value": "mqtt_admin" },
-    //           { "Name": "Mqtt.IoTMQTT.Password", "Value": "SECRET:bXF0dF9hZG1pbg==" },
-    //           { "Name": "Logging.LogLevel", "Value": "DEBUG" },
-    //           { "Name": "MQTTPub.Topic", "Value": "AIRModelScoredData02" }
-    //         ]
-    //       }
-    //     ],
-    //     "extra": []
-    //   },
-    //   "ScriptSystemEnv": {
-    //     "Platformx": "linux/amd64",
-    //     "Platform": "linux/arm64",
-    //     "DetachedMode": "n",
-    //     "Username": "ubuntu",
-    //     "TargetServer": "76.208.102.187"
-    //   }
-    // };
-
-    // console.log("Pipeline flow to be build work: ", pipelineFlow1);
 
     this.flogoDeployService.deployF1(pipelineId, pipelineFlow)
       .subscribe(res => {
@@ -1445,8 +1570,8 @@ export class IotPipelineComponent implements OnInit {
 
     if (deployType == "Edge") {
       systemEnv = {
-        "Username": "ubuntu",
-        "TargetServer": "76.208.102.187"
+        "Username": this.gateway.username,
+        "TargetServer": this.gateway.router
       };
     }
 
@@ -1814,4 +1939,55 @@ export class IotPipelineComponent implements OnInit {
     return streamingObj;
   }
 
+  buildRulesDeployObj(contextObj): any {
+
+    console.log("Rules Context: ", contextObj);
+
+    let ruleType = "Rule.Default";
+    let ruleObj = {
+      name: ruleType,
+      properties: this.buildRulesDeployProperties(contextObj)
+    };
+
+    return ruleObj;
+
+  }
+
+  /**
+   * @param contextObj
+   */
+  buildRulesDeployProperties(contextObj): any {
+
+    let ruleDescriptor = {
+      "actionDevice": contextObj.actionDevice,
+      "actionNotification": contextObj.actionNotification,
+      "actionResource": contextObj.actionResource,
+      "actionSendCommand": contextObj.actionSendCommand,
+      "actionSendNotification": contextObj.actionSendNotification,
+      "actionValue": contextObj.actionValue,
+      "condCompareLastMetricToValue": contextObj.condCompareLastMetricToValue,
+      "condCompareLastMetricToValueOp": contextObj.condCompareLastMetricToValueOp,
+      "condCompareLastMetricValue": contextObj.condCompareLastMetricValue,
+      "condCompareNewMetricToLastMetric": contextObj.condCompareNewMetricToLastMetric,
+      "condCompareNewMetricToLastMetricOp": contextObj.condCompareNewMetricToLastMetricOp,
+      "condCompareNewMetricToValue": contextObj.condCompareNewMetricToValue,
+      "condCompareNewMetricToValueOp": contextObj.condCompareNewMetricToValueOp,
+      "condCompareNewMetricValue": contextObj.condCompareNewMetricValue,
+      "condDevice": contextObj.condDevice,
+      "condResource": contextObj.condResource,
+      "created": 1615472546736,
+      "description": contextObj.description,
+      "modified": 1615472546736,
+      "name": contextObj.name,
+      "uuid": "Test"
+    }
+
+    let ruleObj = [
+      { "Name": "Logging.LogLevel", "Value": contextObj.logLevel },
+      { "Name": "Rule.TupleDescriptor", "Value": JSON.stringify(this.ruleTuplesDescriptor) },
+      { "Name": "Rule.DefaultRuleDescriptor", "Value": JSON.stringify(ruleDescriptor) },
+    ];
+
+    return ruleObj;
+  }
 }

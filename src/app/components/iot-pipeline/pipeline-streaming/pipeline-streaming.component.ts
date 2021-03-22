@@ -18,6 +18,13 @@ export class PipelineStreamingComponent implements OnInit, OnDestroy {
   @Input() streamingForm: FormGroup;
   @Input() devices: Device[];
 
+  logLevels: SelectItem[] = [
+    { value: 'INFO', viewValue: 'INFO' },
+    { value: 'WARN', viewValue: 'WARN' },
+    { value: 'ERROR', viewValue: 'ERROR' },
+    { value: 'DEBUG', viewValue: 'DEBUG' }
+  ];
+  
   instruments: Resource[] = [];
   private subscr:Subscription;
 

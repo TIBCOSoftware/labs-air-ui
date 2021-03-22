@@ -195,13 +195,15 @@ export class Pipeline {
   modified: number;
   name: string;
   pipelineType: string;
-  protocolType: string;
-  protocol: any;
-  dataStoreType: string;
-  dataStore: any;
-  filter: any;
-  streaming: any;
+  protocolType: string; //deprecated
+  protocol: any; // deprecated
+  dataStoreType: string; // deprecated
+  dataStore: any; // deprecated
+  filter: any; // deprecated
+  streaming: any; // deprecated
   status: string;
+  flowConfiguration: string;
+  logLevel: string;
 }
 
 export class NVPair {
@@ -237,9 +239,12 @@ export class Gateway {
   updatedts: number;
   uuid: string;
   address: string;
+  router: string;
   latitude: number;
   longitude: number;
   accessToken: string;
+  platform: string;
+  username: string;
   subscriptions: Subscription[];
   publishers: Publisher[];
   pipelines: Pipeline[];
