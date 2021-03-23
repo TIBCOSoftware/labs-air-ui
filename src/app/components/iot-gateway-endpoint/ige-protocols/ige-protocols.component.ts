@@ -19,7 +19,6 @@ export interface SelectItem {
 })
 export class IgeProtocolsComponent implements OnInit, AfterViewInit {
 
-  gateway = null as Gateway;
   hidePassword = true;
   dateFormat = 'yyyy-MM-dd  HH:mm:ss'
 
@@ -36,13 +35,18 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
   graphDeleteOpDisabled = true;
 
   protocolsDataSource = new MatTableDataSource<Protocol>();
-  protocolDisplayedColumns: string[] = ['id', 'name', 'protocol', 'created', 'modified'];
+  protocolDisplayedColumns: string[] = ['id', 'name', 'protocol', 'scope', 'created', 'modified'];
   protocolSelection = new SelectionModel<Protocol>(false, []);
 
   protocols: SelectItem[] = [
     { value: 'MQTT', viewValue: 'MQTT' },
     { value: 'Kafka', viewValue: 'Kafka' },
     { value: 'AMQP', viewValue: 'AMQP' }
+  ];
+
+  scopes: SelectItem[] = [
+    { value: 'GLOBAL', viewValue: 'GLOBAL' },
+    { value: 'GATEWAY', viewValue: 'GATEWAY' }
   ];
 
   kafkaAuthModes: SelectItem[] = [
@@ -92,7 +96,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
 
     console.log("Getting protocols");
 
-    this.getGatewayAndProtocols(this.gatewayId);
+    this.getProtocols(this.gatewayId);
 
   }
 
@@ -118,6 +122,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
     this.protocolForm = this.formBuilder.group({
       uid: ['changeme', Validators.required],
       protocolType: ['', Validators.required],
+      scope: ['GLOBAL', Validators.required],
       mqtt: this.formBuilder.group({
         uuid: ['changeme', Validators.required],
         hostname: ['changeme', Validators.required],
@@ -170,30 +175,13 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
    * Gets a gateway and all the protocols associated with it
    * @param gatewayId - the gateway identifier
    */
-  public getGatewayAndProtocols(gatewayId: string) {
-    console.log("Getting gateway and protocols for: ", gatewayId);
+  public getProtocols(gatewayId: string) {
+    console.log("Getting protocols for: ", gatewayId);
 
-    this.graphService.getGatewayAndProtocols(gatewayId)
+    this.graphService.getProtocols(gatewayId)
       .subscribe(res => {
-        console.log("Received response for graphService.getGatewayAndProtocols: ", res);
-        this.gateway = res[0] as Gateway;
-
-        if (res[0].protocols != undefined) {
-
-          console.log("Setting protocolsDataSource.data fo incoming protocols");
-
-
-          this.protocolsDataSource.data = res[0].protocols as Protocol[];
-
-          console.log("Got Protocols on protocolsDataSource.data: " + this.protocolsDataSource.data.toString());
-
-        }
-        else {
-          this.protocolsDataSource = new MatTableDataSource<Protocol>();
-
-          console.log("Setting protocolsDataSource.data to null");
-        }
-
+        console.log("Received response for graphService.getProtocols: ", res);
+        this.protocolsDataSource.data = res as Protocol[];
 
         this.graphAddOpDisabled = true;
         this.graphUpdateOpDisabled = true;
@@ -225,6 +213,11 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
 
     let protocol = row;
 
+    let scope = protocol.scope;
+    if (scope != "GLOBAL") {
+      scope = "GATEWAY";
+    }
+
     // Update form
     if (protocol.protocolType == "MQTT") {
       let delimInd = protocol.brokerURL.lastIndexOf(":");
@@ -234,6 +227,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
       this.protocolForm.patchValue({
         uid: protocol.uid,
         protocolType: protocol.protocolType,
+        scope: scope,
         mqtt: {
           uuid: protocol.uuid,
           hostname: hostname,
@@ -261,6 +255,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
       this.protocolForm.patchValue({
         uid: protocol.uid,
         protocolType: protocol.protocolType,
+        scope: scope,
         kafka: {
           uuid: protocol.uuid,
           hostname: hostname,
@@ -295,6 +290,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
       this.protocolForm.patchValue({
         uid: protocol.uid,
         protocolType: protocol.protocolType,
+        scope: scope,
         amqp: {
           uuid: protocol.uuid,
           hostname: hostname,
@@ -342,6 +338,12 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
   addProtocol() {
     let ts = Date.now();
     let protocol = new Protocol();
+
+    let scope = this.protocolForm.get('scope').value;
+    if (scope != "GLOBAL") {
+      scope = this.gatewayId;
+    }
+    protocol.scope = scope;
 
     let protocolType = this.protocolForm.get('protocolType').value;
 
@@ -416,13 +418,13 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
       });
     }
     else {
-      this.graphService.addProtocol(this.gateway.uid, protocol)
-      .subscribe(res => {
-        console.log("Result from add protocol", res);
+      this.graphService.addProtocol(0, protocol)
+        .subscribe(res => {
+          console.log("Result from add protocol", res);
 
-        this.getGatewayAndProtocols(this.gatewayId);
-        this.resetProtocolForm();
-      });
+          this.getProtocols(this.gatewayId);
+          this.resetProtocolForm();
+        });
     }
 
   }
@@ -454,6 +456,12 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
         }
         else {
           let protocolType = this.protocolForm.get('protocolType').value;
+
+          let scope = this.protocolForm.get('scope').value;
+          if (scope != "GLOBAL") {
+            scope = this.gatewayId;
+          }
+          protocol.scope = scope;
 
           if (protocolType == "MQTT") {
             protocol.authMode = "";
@@ -522,7 +530,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
             .subscribe(res => {
               console.log("Result from update protocol", res);
 
-              this.getGatewayAndProtocols(this.gatewayId);
+              this.getProtocols(this.gatewayId);
               this.resetProtocolForm();
             });
         }
@@ -552,11 +560,11 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
           this.resetProtocolForm();
         }
         else {
-          this.graphService.deleteProtocol(this.gateway.uid, this.protocolForm.get('uid').value)
+          this.graphService.deleteProtocol(0, this.protocolForm.get('uid').value)
             .subscribe(res => {
               console.log("Result from delete protocol ", res);
 
-              this.getGatewayAndProtocols(this.gatewayId);
+              this.getProtocols(this.gatewayId);
               this.resetProtocolForm();
 
             });

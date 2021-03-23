@@ -19,7 +19,6 @@ export interface SelectItem {
 })
 export class IgeModelsComponent implements OnInit, AfterViewInit {
 
-  gateway = null as Gateway;
   hidePassword = true;
   dateFormat = 'yyyy-MM-dd  HH:mm:ss'
 
@@ -35,8 +34,13 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
   graphDeleteOpDisabled = true;
 
   modelsDataSource = new MatTableDataSource<Model>();
-  modelDisplayedColumns: string[] = ['id', 'name', 'inputType', 'created', 'modified'];
+  modelDisplayedColumns: string[] = ['id', 'name', 'inputType', 'scope', 'created', 'modified'];
   modelSelection = new SelectionModel<Model>(false, []);
+
+  scopes: SelectItem[] = [
+    { value: 'GLOBAL', viewValue: 'GLOBAL' },
+    { value: 'GATEWAY', viewValue: 'GATEWAY' }
+  ];
 
   inputTypes: SelectItem[] = [
     { value: 'int', viewValue: 'int' },
@@ -94,7 +98,7 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
 
     console.log("Getting models");
 
-    this.getGatewayAndModels(this.gatewayId);
+    this.getModels(this.gatewayId);
 
   }
 
@@ -125,6 +129,7 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
       inputType: ['', Validators.required],
       url: ['', Validators.required],
       platform: ['', Validators.required],
+      scope: ['', Validators.required]
     });
   }
 
@@ -132,30 +137,13 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
    * Gets a gateway and all the models associated with it
    * @param gatewayId - the gateway identifier
    */
-  public getGatewayAndModels(gatewayId: string) {
+  public getModels(gatewayId: string) {
     console.log("Getting gateway and models for: ", gatewayId);
 
-    this.graphService.getGatewayAndModels(gatewayId)
+    this.graphService.getModels(gatewayId)
       .subscribe(res => {
-        console.log("Received response for graphService.getGatewayAndModels: ", res);
-        this.gateway = res[0] as Gateway;
-
-        if (res[0].models != undefined) {
-
-          console.log("Setting modelsDataSource.data fo incoming models");
-
-
-          this.modelsDataSource.data = res[0].models as Model[];
-
-          console.log("Got Models on modelsDataSource.data: " + this.modelsDataSource.data.toString());
-
-        }
-        else {
-          this.modelsDataSource = new MatTableDataSource<Model>();
-
-          console.log("Setting modelsDataSource.data to null");
-        }
-
+        console.log("Received response for graphService.getModels: ", res);
+        this.modelsDataSource.data = res as Model[];
 
         this.graphAddOpDisabled = true;
         this.graphUpdateOpDisabled = true;
@@ -182,6 +170,10 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
     this.modelSelection.select(row);
 
     let model = row;
+    let scope = model.scope;
+    if (scope != "GLOBAL") {
+      scope = "GATEWAY";
+    }
 
     this.modelForm.patchValue({
       uid: model.uid,
@@ -191,6 +183,7 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
       inputType: model.inputType,
       url: model.url,
       platform: model.platform,
+      scope: scope,
     });
 
     this.graphDeleteOpDisabled = false;
@@ -219,6 +212,11 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
     let ts = Date.now();
     let model = new Model();
 
+    let scope = this.modelForm.get('scope').value;
+    if (scope != "GLOBAL") {
+      scope = this.gatewayId;
+    }
+    model.scope = scope;
 
     model.created = ts;
     model.modified = ts;
@@ -240,11 +238,11 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
       });
     }
     else {
-      this.graphService.addModel(this.gateway.uid, model)
+      this.graphService.addModel(0, model)
         .subscribe(res => {
           console.log("Result from add model", res);
 
-          this.getGatewayAndModels(this.gatewayId);
+          this.getModels(this.gatewayId);
           this.resetmodelForm();
         });
     }
@@ -260,6 +258,13 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
 
     let ts = Date.now();
     let model = new Model();
+
+    let scope = this.modelForm.get('scope').value;
+    if (scope != "GLOBAL") {
+      scope = this.gatewayId;
+    }
+    model.scope = scope;
+
     model.modified = ts;
     model.uid = this.modelForm.get('uid').value;
     model.uuid = this.modelForm.get('name').value;
@@ -271,12 +276,11 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
 
     console.log("Update model to url: ", model.url);
     
-
     this.graphService.updateModel(model)
       .subscribe(res => {
         console.log("Result from update model", res);
 
-        this.getGatewayAndModels(this.gatewayId);
+        this.getModels(this.gatewayId);
         this.resetmodelForm();
       });
   }
@@ -290,11 +294,11 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
     console.log("deleting model: ", modelUid);
 
 
-    this.graphService.deleteModel(this.gateway.uid, this.modelForm.get('uid').value)
+    this.graphService.deleteModel(0, this.modelForm.get('uid').value)
       .subscribe(res => {
         console.log("Result from delete model ", res);
 
-        this.getGatewayAndModels(this.gatewayId);
+        this.getModels(this.gatewayId);
         this.resetmodelForm();
 
       });

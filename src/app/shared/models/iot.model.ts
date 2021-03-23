@@ -161,6 +161,7 @@ export class Protocol{
   clientKey: string;
   authMode: string;
   serverCertificate: string;
+  scope: string;
 }
 
 export class DataStore {
@@ -187,6 +188,7 @@ export class DataStore {
   redirectURI: string;
   loginTimeout: string;
   url: string;
+  scope: string;
 }
 
 export class Pipeline {
@@ -303,6 +305,7 @@ export class Model {
   inputType: string;
   url: string;
   platform: string;
+  scope: string;
 }
 
 export class ModelConfig {

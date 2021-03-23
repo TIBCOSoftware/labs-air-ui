@@ -29,6 +29,7 @@ import { ImageResizeComponent } from "../rete/components/image-resize-component"
 import { InferencingComponent } from "../rete/components/inferencing-component";
 import { RulesComponent } from "../rete/components/rules-component";
 import { StreamingComponent } from "../rete/components/streaming-component";
+import { NotificationPipeComponent } from "../rete/components/notification-pipe-component";
 import { pipe } from 'rxjs';
 import { DataFilteringComponent } from '../iot-data-pipeline/data-filtering/data-filtering.component';
 import { LogLevel } from '@tibco-tcstk/tc-core-lib';
@@ -84,6 +85,10 @@ export class IotPipelineComponent implements OnInit {
           "name": "id",
           "type": "string",
           "pk-index": 0
+        },
+        {
+          "name": "gateway",
+          "type": "String"
         },
         {
           "name": "device",
@@ -182,6 +187,7 @@ export class IotPipelineComponent implements OnInit {
       new ImageResizeComponent(),
       new DataStoreComponent(),
       new DataPipeComponent(),
+      new NotificationPipeComponent(),
       new ErrorHandlerComponent()
     ];
 
@@ -332,6 +338,11 @@ export class IotPipelineComponent implements OnInit {
         contextObj = this.buildNodeProtocolProperties(this.protocolForm);
         break;
       }
+      case "Notification Pipe": {
+
+        contextObj = this.buildNodeProtocolProperties(this.protocolForm);
+        break;
+      }
       case "Filters": {
         contextObj = this.buildNodeDataFilteringProperties();
         break;
@@ -387,6 +398,11 @@ export class IotPipelineComponent implements OnInit {
           break;
         }
         case "Data Pipe": {
+          this.updateProtocolForm(contextObj);
+          this.dataPipeConfig = true;
+          break;
+        }
+        case "Notification Pipe": {
           this.updateProtocolForm(contextObj);
           this.dataPipeConfig = true;
           break;
@@ -824,7 +840,7 @@ export class IotPipelineComponent implements OnInit {
     };
 
     console.log("Rule context saved: ", ruleObj);
-    
+
     return ruleObj;
   }
 
@@ -1461,9 +1477,8 @@ export class IotPipelineComponent implements OnInit {
 
     let flow = this.editor.toJSON();
     let pos = 0;
+    let rulePos = 0;
     console.log("Building from: ", flow);
-
-
 
     Object.keys(flow.nodes).forEach(key => {
       const outputJson = flow.nodes[key];
@@ -1485,16 +1500,19 @@ export class IotPipelineComponent implements OnInit {
           }
           case "Data Pipe": {
             pipelineFlow.AirDescriptor.logic.push(this.buildDataPipeDeployObj(flow.nodes[key].data.customdata));
+            break;
+          }
+          case "Notification Pipe": {
+            pipelineFlow.AirDescriptor.logic.push(this.buildDataPipeDeployObj(flow.nodes[key].data.customdata));
 
-            // Check if Notification Pipe
-            if (flow.nodes[key].data.customdata.topic == "EdgexGatewayNotification") {
-              let pipeId = "Pipe_" + pos;
-              let listener =  {
-                "Name": "App.NotificationListeners", 
-                "Value": "[\"" + pipeId + "\"]"
-              };
-              extra.push(listener);
-            }
+            let pipeId = "Pipe_" + pos;
+            let ruleId = "Rule_" + rulePos;
+            let listener = {
+              "Name": "App.NotificationListeners",
+              "Value": "{\"" + ruleId + "\":" + "[\"" + pipeId + "\"]}",
+            };
+            extra.push(listener);
+
             break;
           }
           case "Filters": {
@@ -1511,6 +1529,7 @@ export class IotPipelineComponent implements OnInit {
           }
           case "Rules": {
             pipelineFlow.AirDescriptor.logic.push(this.buildRulesDeployObj(flow.nodes[key].data.customdata));
+            rulePos = pos;
             break;
           }
         }

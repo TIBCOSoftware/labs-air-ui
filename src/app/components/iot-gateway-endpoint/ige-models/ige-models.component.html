@@ -36,6 +36,12 @@
                                 <td mat-cell *matCellDef="let model"> {{model.inputType}} </td>
                             </ng-container>
 
+                            <!-- Scope Column -->
+                            <ng-container matColumnDef="scope">
+                                <th mat-header-cell *matHeaderCellDef> Scope </th>
+                                <td mat-cell *matCellDef="let model"> {{model.scope}} </td>
+                            </ng-container>
+
                             <!-- Created -->
                             <ng-container matColumnDef="created">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Created </th>
@@ -69,6 +75,19 @@
 
                         <div fxLayout="column" style="height: 100%; width: 100%">
 
+                            <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px" style="width: 100%;">
+
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Scope</mat-label>
+                                    <mat-select formControlName="scope">
+                                        <mat-option *ngFor="let item of scopes" [value]="item.value">
+                                            {{item.viewValue}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+                            </div>
+                            
                             <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px">
                                 <mat-form-field fxFlex="1 1 15%" appearance="outline">
                                     <mat-label>Name</mat-label>

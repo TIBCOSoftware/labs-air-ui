@@ -3,7 +3,7 @@
 
     <div fxLayout="row" fxLayoutAlign="center center">
         <mat-form-field fxFlex="40%">
-            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter Inbound Protocols">
+            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter Protocols">
         </mat-form-field>
     </div>
 
@@ -12,7 +12,7 @@
             <mat-card fxFlex>
                 <mat-card-header>
                     <div mat-card-avatar class="device-header-image"></div>
-                    <mat-card-title>Inbound Protocols</mat-card-title>
+                    <mat-card-title>Protocols</mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
                     <div class="table-container mat-elevation-z8">
@@ -34,6 +34,12 @@
                             <ng-container matColumnDef="protocol">
                                 <th mat-header-cell *matHeaderCellDef> Protocol </th>
                                 <td mat-cell *matCellDef="let protocol"> {{protocol.protocolType}} </td>
+                            </ng-container>
+
+                            <!-- Scope Column -->
+                            <ng-container matColumnDef="scope">
+                                <th mat-header-cell *matHeaderCellDef> Scope </th>
+                                <td mat-cell *matCellDef="let protocol"> {{protocol.scope}} </td>
                             </ng-container>
 
                             <!-- Created -->
@@ -71,7 +77,8 @@
                         <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px">
                             <mat-form-field fxFlex="1 1 15%" appearance="outline">
                                 <mat-label>Protocol</mat-label>
-                                <mat-select formControlName="protocolType" (selectionChange)="onProtocolTypeSelected($event)">
+                                <mat-select formControlName="protocolType"
+                                    (selectionChange)="onProtocolTypeSelected($event)">
                                     <mat-option *ngFor="let item of protocols" [value]="item.value">
                                         {{item.viewValue}}
                                     </mat-option>
@@ -79,10 +86,23 @@
                             </mat-form-field>
                         </div>
 
-                        <div fxLayout="column" fxFlex="100%" *ngIf="mqttProtocol" formGroupName="mqtt"
-                            style="height: 100%;">
+                        <div fxLayout="column" fxFlex="100%" *ngIf="mqttProtocol" style="height: 100%;">
 
                             <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px" style="width: 100%;">
+
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Scope</mat-label>
+                                    <mat-select formControlName="scope">
+                                        <mat-option *ngFor="let item of scopes" [value]="item.value">
+                                            {{item.viewValue}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+                            </div>
+
+                            <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px" style="width: 100%;"
+                                formGroupName="mqtt">
                                 <mat-form-field fxFlex="1 1 15%" appearance="outline">
                                     <mat-label>Name</mat-label>
                                     <input matInput [readonly]=false formControlName="uuid" required>
@@ -110,7 +130,8 @@
 
                             </div>
 
-                            <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px" style="width: 100%;">
+                            <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px" style="width: 100%;"
+                                formGroupName="mqtt">
 
                                 <mat-form-field fxFlex="1 1 15%" appearance="outline">
                                     <mat-label>Encryption Mode</mat-label>
@@ -156,10 +177,18 @@
 
                         </div>
 
-                        <div fxLayout="column" fxFlex="100%" *ngIf="kafkaProtocol" formGroupName="kafka"
-                            style="height: 100%;">
+                        <div fxLayout="column" fxFlex="100%" *ngIf="kafkaProtocol" style="height: 100%;">
 
-                            <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px" style="width: 100%;">
+                            <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                <mat-label>Scope</mat-label>
+                                <mat-select formControlName="scope">
+                                    <mat-option *ngFor="let item of scopes" [value]="item.value">
+                                        {{item.viewValue}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                            <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px" style="width: 100%;" formGroupName="kafka">
                                 <mat-form-field fxFlex="1 1 15%" appearance="outline">
                                     <mat-label>Name</mat-label>
                                     <input matInput [readonly]=false formControlName="uuid" required>
@@ -185,12 +214,12 @@
                                     <input matInput [readonly]=false formControlName="consumerGroupId" required>
                                 </mat-form-field>
 
-                                
+
 
                             </div>
 
-                            <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px" style="width: 100%;">
-                            
+                            <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px" style="width: 100%;" formGroupName="kafka">
+
                                 <mat-form-field fxFlex="1 1 15%" appearance="outline">
                                     <mat-label>Connection Timeout</mat-label>
                                     <input matInput [readonly]=false formControlName="connectionTimeout">
@@ -217,7 +246,7 @@
 
                             </div>
 
-                            <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px" style="width: 100%;">
+                            <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px" style="width: 100%;" formGroupName="kafka">
 
                                 <mat-form-field fxFlex="1 1 15%" appearance="outline">
                                     <mat-label>Fetch Min Bytes</mat-label>
@@ -241,7 +270,7 @@
 
                             </div>
 
-                            <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px" style="width: 100%;">
+                            <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px" style="width: 100%;" formGroupName="kafka">
 
                                 <mat-form-field fxFlex="1 1 15%" appearance="outline">
                                     <mat-label>Authentication Mode</mat-label>
@@ -288,74 +317,82 @@
 
                         </div>
 
-                        <div fxLayout="column" fxFlex="100%" *ngIf="amqpProtocol" formGroupName="amqp"
-                        style="height: 100%;">
-
-                        <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px" style="width: 100%;">
-                            <mat-form-field fxFlex="1 1 15%" appearance="outline">
-                                <mat-label>Name</mat-label>
-                                <input matInput [readonly]=false formControlName="uuid" required>
-                            </mat-form-field>
+                        <div fxLayout="column" fxFlex="100%" *ngIf="amqpProtocol" style="height: 100%;">
 
                             <mat-form-field fxFlex="1 1 15%" appearance="outline">
-                                <mat-label>Hostname</mat-label>
-                                <input matInput [readonly]=false formControlName="hostname" required>
+                                <mat-label>Scope</mat-label>
+                                <mat-select formControlName="scope">
+                                    <mat-option *ngFor="let item of scopes" [value]="item.value">
+                                        {{item.viewValue}}
+                                    </mat-option>
+                                </mat-select>
                             </mat-form-field>
+                            
+                            <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px" style="width: 100%;" formGroupName="amqp">
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Name</mat-label>
+                                    <input matInput [readonly]=false formControlName="uuid" required>
+                                </mat-form-field>
 
-                            <mat-form-field fxFlex="1 1 15%" appearance="outline">
-                                <mat-label>Port</mat-label>
-                                <input matInput [readonly]=false formControlName="port" required>
-                            </mat-form-field>
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Hostname</mat-label>
+                                    <input matInput [readonly]=false formControlName="hostname" required>
+                                </mat-form-field>
+
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Port</mat-label>
+                                    <input matInput [readonly]=false formControlName="port" required>
+                                </mat-form-field>
+
+                            </div>
+
+                            <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px" style="width: 100%;" formGroupName="amqp">
+
+
+
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Username</mat-label>
+                                    <input matInput [readonly]=false formControlName="username" required>
+                                </mat-form-field>
+
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Password</mat-label>
+                                    <input matInput placeholder="Enter your password" [readonly]=false
+                                        [type]="hidePassword ? 'password' : 'text'" formControlName="password" required>
+                                    <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
+                                        [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+                                        <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                    </button>
+                                </mat-form-field>
+
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Reliable</mat-label>
+                                    <input matInput [readonly]=true formControlName="reliable" required>
+                                </mat-form-field>
+
+                            </div>
+
+                            <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px" style="width: 100%;" formGroupName="amqp">
+
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Routing Key</mat-label>
+                                    <input matInput [readonly]=true formControlName="routingKey">
+                                </mat-form-field>
+
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Exchange Type</mat-label>
+                                    <input matInput [readonly]=true formControlName="exchangeType" required>
+                                </mat-form-field>
+
+
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Exchange Name</mat-label>
+                                    <input matInput [readonly]=false formControlName="exchangeName">
+                                </mat-form-field>
+
+                            </div>
 
                         </div>
-                        
-                        <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px" style="width: 100%;">
-                           
-
-
-                            <mat-form-field fxFlex="1 1 15%" appearance="outline">
-                                <mat-label>Username</mat-label>
-                                <input matInput [readonly]=false formControlName="username" required>
-                            </mat-form-field>
-
-                            <mat-form-field fxFlex="1 1 15%" appearance="outline">
-                                <mat-label>Password</mat-label>
-                                <input matInput placeholder="Enter your password" [readonly]=false
-                                    [type]="hidePassword ? 'password' : 'text'" formControlName="password" required>
-                                <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
-                                    [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
-                                    <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-                                </button>
-                            </mat-form-field>
-
-                            <mat-form-field fxFlex="1 1 15%" appearance="outline">
-                                <mat-label>Reliable</mat-label>
-                                <input matInput [readonly]=true formControlName="reliable" required>
-                            </mat-form-field>
-
-                        </div>
-
-                        <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px" style="width: 100%;">
-
-                            <mat-form-field fxFlex="1 1 15%" appearance="outline">
-                                <mat-label>Routing Key</mat-label>
-                                <input matInput [readonly]=true formControlName="routingKey">
-                            </mat-form-field>
-
-                            <mat-form-field fxFlex="1 1 15%" appearance="outline">
-                                <mat-label>Exchange Type</mat-label>
-                                <input matInput [readonly]=true formControlName="exchangeType" required>
-                            </mat-form-field>
-
-
-                            <mat-form-field fxFlex="1 1 15%" appearance="outline">
-                                <mat-label>Exchange Name</mat-label>
-                                <input matInput [readonly]=false formControlName="exchangeName">
-                            </mat-form-field>
-
-                        </div>
-
-                    </div>
 
                     </form>
                 </mat-card-content>
