@@ -20,7 +20,6 @@ export interface SelectItem {
 })
 export class IgeDataStoresComponent implements OnInit {
 
-  gateway = null as Gateway;
   hidePassword = true;
   dateFormat = 'yyyy-MM-dd  HH:mm:ss'
 
@@ -39,7 +38,7 @@ export class IgeDataStoresComponent implements OnInit {
   graphDeleteOpDisabled = true;
 
   dataStoresDataSource = new MatTableDataSource<DataStore>();
-  dataStoreDisplayedColumns: string[] = ['id', 'name', 'dataStore', 'created', 'modified'];
+  dataStoreDisplayedColumns: string[] = ['id', 'name', 'dataStore', 'scope', 'created', 'modified'];
   dataStoreSelection = new SelectionModel<DataStore>(false, []);
 
   dataStores: SelectItem[] = [
@@ -49,6 +48,11 @@ export class IgeDataStoresComponent implements OnInit {
     { value: 'MySQL', viewValue: 'MySQL' },
     { value: 'TGDB', viewValue: 'TGDB' },
     { value: 'Dgraph', viewValue: 'Dgraph' }
+  ];
+
+  scopes: SelectItem[] = [
+    { value: 'GLOBAL', viewValue: 'GLOBAL' },
+    { value: 'GATEWAY', viewValue: 'GATEWAY' }
   ];
 
   @ViewChild(MatSort, { static: false }) sort: MatSort;
@@ -75,7 +79,7 @@ export class IgeDataStoresComponent implements OnInit {
 
     console.log("Getting dataStores");
 
-    this.getGatewayAndDataStores(this.gatewayId);
+    this.getDataStores(this.gatewayId);
   }
 
 
@@ -102,6 +106,7 @@ export class IgeDataStoresComponent implements OnInit {
     this.dataStoreForm = this.formBuilder.group({
       uid: ['changeme', Validators.required],
       dataStoreType: ['', Validators.required],
+      scope: ['GLOBAL', Validators.required],
       postgres: this.formBuilder.group({
         uuid: ['changeme', Validators.required],
         host: ['changeme', Validators.required],
@@ -146,30 +151,13 @@ export class IgeDataStoresComponent implements OnInit {
    * Gets a gateway and all the data stores associated with it
    * @param gatewayId - the gateway identifier
    */
-  public getGatewayAndDataStores(gatewayId: string) {
-    console.log("Getting gateway and data stores for: ", gatewayId);
+  public getDataStores(gatewayId: string) {
+    console.log("Getting data stores for: ", gatewayId);
 
-    this.graphService.getGatewayAndDataStores(gatewayId)
+    this.graphService.getDataStores(gatewayId)
       .subscribe(res => {
-        console.log("Received response for graphService.getGatewayAndDataStores: ", res);
-        this.gateway = res[0] as Gateway;
-
-        if (res[0].dataStores != undefined) {
-
-          console.log("Setting dataStoresDataSource.data fo incoming dataStores");
-
-
-          this.dataStoresDataSource.data = res[0].dataStores as DataStore[];
-
-          console.log("Got DataStores on dataStoresDataSource.data: " + this.dataStoresDataSource.data.toString());
-
-        }
-        else {
-          this.dataStoresDataSource = new MatTableDataSource<DataStore>();
-
-          console.log("Setting dataStoresDataSource.data to null");
-        }
-
+        console.log("Received response for graphService.getDataStores: ", res);
+        this.dataStoresDataSource.data = res as DataStore[];
 
         this.graphAddOpDisabled = true;
         this.graphUpdateOpDisabled = true;
@@ -205,12 +193,18 @@ export class IgeDataStoresComponent implements OnInit {
 
     let dataStore = row;
 
+    let scope = dataStore.scope;
+    if (scope != "GLOBAL") {
+      scope = "GATEWAY";
+    }
+
     // Update form
     if (dataStore.dataStoreType == "PostgreSQL") {
 
       this.dataStoreForm.patchValue({
         uid: dataStore.uid,
         dataStoreType: dataStore.dataStoreType,
+        scope: scope,
         postgres: {
           uuid: dataStore.uuid,
           host: dataStore.host,
@@ -229,6 +223,7 @@ export class IgeDataStoresComponent implements OnInit {
       this.dataStoreForm.patchValue({
         uid: dataStore.uid,
         dataStoreType: dataStore.dataStoreType,
+        scope: scope,
         snowflake: {
           uuid: dataStore.uuid,
           accountName: dataStore.accountName,
@@ -254,6 +249,7 @@ export class IgeDataStoresComponent implements OnInit {
       this.dataStoreForm.patchValue({
         uid: dataStore.uid,
         dataStoreType: dataStore.dataStoreType,
+        scope: scope,
         dgraph: {
           uuid: dataStore.uuid,
           url: dataStore.url,
@@ -269,6 +265,7 @@ export class IgeDataStoresComponent implements OnInit {
       this.dataStoreForm.patchValue({
         uid: dataStore.uid,
         dataStoreType: dataStore.dataStoreType,
+        scope: scope,
         dgraph: {
           uuid: dataStore.uuid,
           url: dataStore.url,
@@ -313,6 +310,12 @@ export class IgeDataStoresComponent implements OnInit {
 
     let ts = Date.now();
     let dataStore = new DataStore();
+
+    let scope = this.dataStoreForm.get('scope').value;
+    if (scope != "GLOBAL") {
+      scope = this.gatewayId;
+    }
+    dataStore.scope = scope;
 
     let dataStoreType = this.dataStoreForm.get('dataStoreType').value;
 
@@ -423,11 +426,11 @@ export class IgeDataStoresComponent implements OnInit {
       });
     }
     else {
-      this.graphService.addDataStore(this.gateway.uid, dataStore)
+      this.graphService.addDataStore(0, dataStore)
       .subscribe(res => {
         console.log("Result from add dataStore", res);
 
-        this.getGatewayAndDataStores(this.gatewayId);
+        this.getDataStores(this.gatewayId);
         this.resetDataStoreForm();
       });
     }
@@ -460,6 +463,13 @@ export class IgeDataStoresComponent implements OnInit {
         else {
 
           let dataStoreType = this.dataStoreForm.get('dataStoreType').value;
+
+          let scope = this.dataStoreForm.get('scope').value;
+          if (scope != "GLOBAL") {
+            scope = this.gatewayId;
+          }
+          dataStore.scope = scope;
+
           let uuidDirty = false;
 
           if (dataStoreType == "PostgreSQL") {
@@ -564,7 +574,7 @@ export class IgeDataStoresComponent implements OnInit {
             .subscribe(res => {
               console.log("Result from update dataStore", res);
 
-              this.getGatewayAndDataStores(this.gatewayId);
+              this.getDataStores(this.gatewayId);
               this.resetDataStoreForm();
             });
 
@@ -595,11 +605,11 @@ export class IgeDataStoresComponent implements OnInit {
         }
         else {
 
-          this.graphService.deleteDataStore(this.gateway.uid, this.dataStoreForm.get('uid').value)
+          this.graphService.deleteDataStore(0, this.dataStoreForm.get('uid').value)
             .subscribe(res => {
               console.log("Result from delete dataStore ", res);
 
-              this.getGatewayAndDataStores(this.gatewayId);
+              this.getDataStores(this.gatewayId);
               this.resetDataStoreForm();
 
             });

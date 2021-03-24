@@ -627,11 +627,7 @@ export class DgraphService implements GraphService {
   getDataStores(gatewayName): Observable<DataStore[]> {
     const url = `${this.dgraphUrl}/query`;
     let query = `{
-      var(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
-        dataStores as gateway_datastore {
-        }
-      }
-      resp(func: uid(dataStores)) {
+      resp(func: has(dataStore)) @filter(eq(scope, "${gatewayName}") OR eq(scope, "GLOBAL")) {
         uid
         uuid
         created
@@ -654,6 +650,7 @@ export class DgraphService implements GraphService {
         redirectURI 
         loginTimeout
         url
+        scope
       }
     }`;
 
@@ -699,7 +696,7 @@ export class DgraphService implements GraphService {
         _:DataStore <redirectURI> "${dataStore.redirectURI}" .
         _:DataStore <loginTimeout> "${dataStore.loginTimeout}" .
         _:DataStore <url> "${dataStore.url}" .
-        <${gatewayUid}> <gateway_datastore> _:DataStore .
+        _:DataStore <scope> "${dataStore.scope}" .
       }
     }`;
     console.log('Mutate statement: ', query);
@@ -739,7 +736,7 @@ export class DgraphService implements GraphService {
         <${dataStore.uid}> <redirectURI> "${dataStore.redirectURI}" .
         <${dataStore.uid}> <loginTimeout> "${dataStore.loginTimeout}" .
         <${dataStore.uid}> <url> "${dataStore.url}" .
-
+        <${dataStore.uid}> <scope> "${dataStore.scope}" .
       }
     }`;
     console.log('Mutate statement: ', query);
@@ -762,7 +759,6 @@ export class DgraphService implements GraphService {
     let query = `{
       delete {
         <${dataStoreUid}> * * .
-        <${gatewayUid}> <gateway_datastore> <${dataStoreUid}> .
       }
     }`;
     console.log('Delete DataStore Mutate statement: ', query);
@@ -825,17 +821,14 @@ export class DgraphService implements GraphService {
   }
 
   /**
-   * 
+   * Get all global protocols and the protocols scoped for the gateway
    * @param gatewayName 
+   * @filter(gt(created, ${fromts}) AND lt(created, ${tots})) (first:-500) 
    */
   getProtocols(gatewayName): Observable<Protocol[]> {
     const url = `${this.dgraphUrl}/query`;
     let query = `{
-      var(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
-        protocols as gateway_protocol {
-        }
-      }
-      resp(func: uid(protocols)) {
+      resp(func: has(protocol)) @filter(eq(scope, "${gatewayName}") OR eq(scope, "GLOBAL")) {
         uid
         uuid
         created
@@ -861,6 +854,7 @@ export class DgraphService implements GraphService {
         clientKey
         authMode
         serverCerticate
+        scope
       }
     }`;
 
@@ -909,7 +903,7 @@ export class DgraphService implements GraphService {
         _:Protocol <clientKey> "${protocol.clientKey}" .
         _:Protocol <authMode> "${protocol.authMode}" .
         _:Protocol <serverCerticate> "${protocol.serverCertificate}" .
-        <${gatewayUid}> <gateway_protocol> _:Protocol .
+        _:Protocol <scope> "${protocol.scope}" .
       }
     }`;
     console.log('Mutate statement: ', query);
@@ -919,8 +913,8 @@ export class DgraphService implements GraphService {
         tap(_ => this.logger.info('add protocols')),
         catchError(this.handleError<string>('addProtocols'))
       );
-
   }
+
   /**
    * 
    * @param protocol 
@@ -952,6 +946,7 @@ export class DgraphService implements GraphService {
         <${protocol.uid}> <clientKey> "${protocol.clientKey}" .
         <${protocol.uid}> <authMode> "${protocol.authMode}" .
         <${protocol.uid}> <serverCerticate> "${protocol.serverCertificate}" .
+        <${protocol.uid}> <scope> "${protocol.scope}" .
       }
     }`;
     console.log('Mutate statement: ', query);
@@ -974,7 +969,6 @@ export class DgraphService implements GraphService {
     let query = `{
       delete {
         <${protocolUid}> * * .
-        <${gatewayUid}> <gateway_protocol> <${protocolUid}> .
       }
     }`;
     console.log('Delete Protocol Mutate statement: ', query);
@@ -1027,11 +1021,7 @@ export class DgraphService implements GraphService {
   getModels(gatewayName): Observable<Model[]> {
     const url = `${this.dgraphUrl}/query`;
     let query = `{
-      var(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
-        models as gateway_model {
-        }
-      }
-      resp(func: uid(models)) {
+      resp(func: has(model)) @filter(eq(scope, "${gatewayName}") OR eq(scope, "GLOBAL")) {
         uid
         uuid
         created
@@ -1041,6 +1031,7 @@ export class DgraphService implements GraphService {
         inputType
         url
         platform
+        scope
       }
     }`;
 
@@ -1073,7 +1064,7 @@ export class DgraphService implements GraphService {
         _:Model <inputType> "${model.inputType}" .
         _:Model <url> "${model.url}" .
         _:Model <platform> "${model.platform}" .
-        <${gatewayUid}> <gateway_model> _:Model .
+        _:Model <scope> "${model.scope}" .
       }
     }`;
     console.log('Mutate statement: ', query);
@@ -1100,6 +1091,7 @@ export class DgraphService implements GraphService {
         <${model.uid}> <inputType> "${model.inputType}" .
         <${model.uid}> <url> "${model.url}" .
         <${model.uid}> <platform> "${model.platform}" .
+        <${model.uid}> <scope> "${model.scope}" .
       }
     }`;
     console.log('Mutate statement: ', query);
@@ -1122,7 +1114,6 @@ export class DgraphService implements GraphService {
     let query = `{
       delete {
         <${modelUid}> * * .
-        <${gatewayUid}> <gateway_model> <${modelUid}> .
       }
     }`;
     console.log('Delete Model Mutate statement: ', query);
