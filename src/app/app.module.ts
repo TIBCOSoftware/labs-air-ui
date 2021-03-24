@@ -75,7 +75,7 @@ import { IotEdgeDataPipelineComponent } from './components/iot-edge-data-pipelin
 import { RulesComponent } from './components/iot-edge-data-pipeline/rules/rules.component';
 import { InferencingComponent } from './components/iot-edge-data-pipeline/inferencing/inferencing.component';
 import { FilteringComponent } from './components/iot-edge-data-pipeline/filtering/filtering.component';
-import { IotGatewayDetailsComponent } from './components/iot-gateway-details/iot-gateway-details.component';
+import { IotGatewayDetailsComponent, SensorDirective } from './components/iot-gateway-details/iot-gateway-details.component';
 import { IotPipelineComponent } from './components/iot-pipeline/iot-pipeline.component';
 import { PipelineFilteringComponent } from './components/iot-pipeline/pipeline-filtering/pipeline-filtering.component';
 import { PipelineStreamingComponent } from './components/iot-pipeline/pipeline-streaming/pipeline-streaming.component';
@@ -86,6 +86,16 @@ import { PipelineDataSourceComponent } from './components/iot-pipeline/pipeline-
 import { PipelineDataStoreComponent } from './components/iot-pipeline/pipeline-data-store/pipeline-data-store.component';
 import { PipelineInferencingComponent } from './components/iot-pipeline/pipeline-inferencing/pipeline-inferencing.component';
 import { PipelineRulesComponent } from './components/iot-pipeline/pipeline-rules/pipeline-rules.component';
+import { IotGatewayOverviewComponent } from './components/iot-gateway-details-charts/iot-gateway-overview/iot-gateway-overview.component';
+import { IotGatewayHumidityComponent } from './components/iot-gateway-details-charts/iot-gateway-humidity/iot-gateway-humidity.component';
+import { IotGatewayTemperatureComponent } from './components/iot-gateway-details-charts/iot-gateway-temperature/iot-gateway-temperature.component';
+import { IotGatewayPressureComponent } from './components/iot-gateway-details-charts/iot-gateway-pressure/iot-gateway-pressure.component';
+import { IotGatewayMagnetometerComponent } from './components/iot-gateway-details-charts/iot-gateway-magnetometer/iot-gateway-magnetometer.component';
+import { IotGatewayGyroscopeComponent } from './components/iot-gateway-details-charts/iot-gateway-gyroscope/iot-gateway-gyroscope.component';
+import { IotGatewayAccelerometerComponent } from './components/iot-gateway-details-charts/iot-gateway-accelerometer/iot-gateway-accelerometer.component';
+import { IotGatewayProximityComponent } from './components/iot-gateway-details-charts/iot-gateway-proximity/iot-gateway-proximity.component';
+import { IotGatewayGpsComponent } from './components/iot-gateway-details-charts/iot-gateway-gps/iot-gateway-gps.component';
+import { IotGatewaySpeedometerComponent } from './components/iot-gateway-details-charts/iot-gateway-speedometer/iot-gateway-speedometer.component';
 
 /** This is the tc core configuration object
  * To use oauth you must also add the OAuthInterceptor to providers
@@ -169,7 +179,18 @@ const tcCoreConfig: TcCoreConfig = {
     PipelineDataStoreComponent,
     PipelineDataPipeComponent,
     PipelineConfigComponent,
-    IgeModelsComponent
+    IgeModelsComponent,
+    IotGatewayOverviewComponent,
+    SensorDirective,
+    IotGatewayHumidityComponent,
+    IotGatewayTemperatureComponent,
+    IotGatewayPressureComponent,
+    IotGatewayMagnetometerComponent,
+    IotGatewayGyroscopeComponent,
+    IotGatewayAccelerometerComponent,
+    IotGatewayProximityComponent,
+    IotGatewayGpsComponent,
+    IotGatewaySpeedometerComponent
   ],
   imports: [
     AppRoutingModule,

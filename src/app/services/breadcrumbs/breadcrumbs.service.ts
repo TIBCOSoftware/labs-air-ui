@@ -27,14 +27,16 @@ export class BreadcrumbsService {
   private setCrumbs(route: ActivatedRouteSnapshot) {
     if (route) {
       if (route.data.breadcrumb) {
-        let parsedCrumbs = this.checkForGatewayID(route.data.breadcrumb);
-        this.path.next(parsedCrumbs);
+        // let parsedCrumbs = this.checkForGatewayID(route.data.breadcrumb);
+        // this.path.next(parsedCrumbs);
+        this.path.next(route.data.breadcrumb);
       }
       // go to the next element if not found
       this.setCrumbs(route.firstChild);
     }
   }
 
+  // should find the gateway ID and display it on the breadcrumb
   private checkForGatewayID(path: String[]) {
     const deviceIndex = path.findIndex(x => x == 'Devices');
     if (deviceIndex >= 0) {

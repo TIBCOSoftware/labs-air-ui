@@ -17,7 +17,7 @@
     <div class='cards'>
         <div class='card-actions'>
             <span class='device'>
-                <b>Devices</b> +
+                <b>Devices</b>
             </span>
             <span class='filter-search'>
                 <mat-icon>filter_alt</mat-icon>
@@ -25,7 +25,7 @@
             </span>
         </div>
         <div class='card-list' *ngFor='let device of devicesDataSource.filteredData'>
-            <div class='card'>
+            <div class='card' (click)='selectDevice(device)'>
                 <div class='card-header'>
                     <div class='card-header-icon'>
                         <mat-icon>search</mat-icon>
@@ -50,8 +50,20 @@
             </div>
         </div>
     </div>
-
     <div class='card-details'>
-       
+        <div class='card-details-metrics-header'>
+            <div class='card-details-metrics-tabs'>
+                <span (click)='selectChartType(menuItem)' *ngFor='let menuItem of menuItems; let i = index'
+                    [class.active]='selectedDeviceTab === menuItem'>
+                    {{ menuItem }}
+                    <div class='card-details-metrics-tabs icon' [class.active]='selectedDeviceTab === menuItem'>
+                        <mat-icon>arrow_drop_up</mat-icon>
+                    </div>
+                </span>
+            </div>
+        </div>
+        <div class='card-details-metrics-body'>
+            <ng-template sensorData></ng-template>
+        </div>
     </div>
 </div>

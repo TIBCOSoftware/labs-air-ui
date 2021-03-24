@@ -67,6 +67,7 @@
     background-color: #FFFFFF;
     border-top-width: 4px;
     border-top-color: #94AFF0;
+    cursor: pointer; 
 }
 
 .card-header {
@@ -93,6 +94,7 @@
 .card-details {
     flex-grow: 2;
     margin-left: 31px;
+    margin-right: 73px;
 }
 
 .card-body {
@@ -120,4 +122,42 @@
     float: right;
     font-size: 24px;
     font-weight: 600;
+}
+
+.card-details-metrics-header {
+    border-bottom: 2px solid #0E4F9E;
+    height: 34px;
+    font-size: 16px;
+    color: #1774E5;
+    margin-bottom: 28px;
+}
+
+.card-details-metrics-header .card-details-metrics-tabs {
+    display: flex;
+}
+
+.card-details-metrics-tabs .icon {
+    color: #0E4F9E;
+    width: 24px;
+    height: 24px;
+    position: relative;
+    margin: auto auto;
+    bottom: 6px;
+    display: none;
+}
+
+.card-details-metrics-tabs .icon.active {
+    display: flex;
+}
+
+.card-details-metrics-header .card-details-metrics-tabs span {
+    padding-right: 36px;
+    cursor: pointer;
+    line-height: 24px;
+    letter-spacing: 0;
+}
+
+.card-details-metrics-header .card-details-metrics-tabs span.active {
+    font-weight: 600;
+    color: #0E4F9E;
 }
