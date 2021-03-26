@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { IotGatewayGpsComponent } from './iot-gateway-gps.component';
+import { IotGatewayImageComponent } from './iot-gateway-image.component';
 
-describe('IotGatewayGpsComponent', () => {
-  let component: IotGatewayGpsComponent;
-  let fixture: ComponentFixture<IotGatewayGpsComponent>;
+describe('IotGatewayImageComponent', () => {
+  let component: IotGatewayImageComponent;
+  let fixture: ComponentFixture<IotGatewayImageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ IotGatewayGpsComponent ]
+      declarations: [ IotGatewayImageComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(IotGatewayGpsComponent);
+    fixture = TestBed.createComponent(IotGatewayImageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

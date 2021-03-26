@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Device, Resource } from 'src/app/shared/models/iot.model';
 
 @Component({
   selector: 'app-iot-gateway-overview',
@@ -6,8 +7,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./iot-gateway-overview.component.css']
 })
 export class IotGatewayOverviewComponent implements OnInit {
-  public data: any;
-  
+  device: Device;
+  instrument: Resource;
+
   constructor() { }
 
   ngOnInit(): void {

@@ -87,15 +87,12 @@ import { PipelineDataStoreComponent } from './components/iot-pipeline/pipeline-d
 import { PipelineInferencingComponent } from './components/iot-pipeline/pipeline-inferencing/pipeline-inferencing.component';
 import { PipelineRulesComponent } from './components/iot-pipeline/pipeline-rules/pipeline-rules.component';
 import { IotGatewayOverviewComponent } from './components/iot-gateway-details-charts/iot-gateway-overview/iot-gateway-overview.component';
-import { IotGatewayHumidityComponent } from './components/iot-gateway-details-charts/iot-gateway-humidity/iot-gateway-humidity.component';
-import { IotGatewayTemperatureComponent } from './components/iot-gateway-details-charts/iot-gateway-temperature/iot-gateway-temperature.component';
-import { IotGatewayPressureComponent } from './components/iot-gateway-details-charts/iot-gateway-pressure/iot-gateway-pressure.component';
-import { IotGatewayMagnetometerComponent } from './components/iot-gateway-details-charts/iot-gateway-magnetometer/iot-gateway-magnetometer.component';
-import { IotGatewayGyroscopeComponent } from './components/iot-gateway-details-charts/iot-gateway-gyroscope/iot-gateway-gyroscope.component';
-import { IotGatewayAccelerometerComponent } from './components/iot-gateway-details-charts/iot-gateway-accelerometer/iot-gateway-accelerometer.component';
-import { IotGatewayProximityComponent } from './components/iot-gateway-details-charts/iot-gateway-proximity/iot-gateway-proximity.component';
-import { IotGatewayGpsComponent } from './components/iot-gateway-details-charts/iot-gateway-gps/iot-gateway-gps.component';
-import { IotGatewaySpeedometerComponent } from './components/iot-gateway-details-charts/iot-gateway-speedometer/iot-gateway-speedometer.component';
+import { IotGatewayTimeSeriesComponent } from './components/iot-gateway-details-charts/iot-gateway-time-series/iot-gateway-time-series.component';
+import { IotGatewayLocationComponent } from './components/iot-gateway-details-charts/iot-gateway-location/iot-gateway-location.component';
+import { IotGatewayXyzValueComponent } from './components/iot-gateway-details-charts/iot-gateway-xyz-value/iot-gateway-xyz-value.component';
+import { IotGatewayImageComponent } from './components/iot-gateway-details-charts/iot-gateway-image/iot-gateway-image.component';
+import { IotGatewayMapComponent } from './components/iot-gateway-details-charts/iot-gateway-map/iot-gateway-map.component';
+import { IotGatewayDiscreteValueComponent } from './components/iot-gateway-details-charts/iot-gateway-discrete-value/iot-gateway-discrete-value.component';
 
 /** This is the tc core configuration object
  * To use oauth you must also add the OAuthInterceptor to providers
@@ -182,15 +179,12 @@ const tcCoreConfig: TcCoreConfig = {
     IgeModelsComponent,
     IotGatewayOverviewComponent,
     SensorDirective,
-    IotGatewayHumidityComponent,
-    IotGatewayTemperatureComponent,
-    IotGatewayPressureComponent,
-    IotGatewayMagnetometerComponent,
-    IotGatewayGyroscopeComponent,
-    IotGatewayAccelerometerComponent,
-    IotGatewayProximityComponent,
-    IotGatewayGpsComponent,
-    IotGatewaySpeedometerComponent
+    IotGatewayTimeSeriesComponent,
+    IotGatewayLocationComponent,
+    IotGatewayXyzValueComponent,
+    IotGatewayImageComponent,
+    IotGatewayMapComponent,
+    IotGatewayDiscreteValueComponent
   ],
   imports: [
     AppRoutingModule,

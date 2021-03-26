@@ -2,19 +2,15 @@ import { Component, OnInit, Directive, ViewContainerRef, ViewChild, ComponentFac
 import { ActivatedRoute } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { GraphService } from '../../services/graph/graph.service';
-import { Device, Gateway, Command } from '../../shared/models/iot.model';
+import { Device, Gateway, Resource } from '../../shared/models/iot.model';
 import { EdgeService } from '../../services/edge/edge.service';
 import { BreadcrumbsService } from '../../services/breadcrumbs/breadcrumbs.service';
 import { IotGatewayOverviewComponent } from '../iot-gateway-details-charts/iot-gateway-overview/iot-gateway-overview.component'
-import { IotGatewayTemperatureComponent } from '../iot-gateway-details-charts/iot-gateway-temperature/iot-gateway-temperature.component';
-import { IotGatewayPressureComponent } from '../iot-gateway-details-charts/iot-gateway-pressure/iot-gateway-pressure.component';
-import { IotGatewayMagnetometerComponent } from '../iot-gateway-details-charts/iot-gateway-magnetometer/iot-gateway-magnetometer.component';
-import { IotGatewayGyroscopeComponent } from '../iot-gateway-details-charts/iot-gateway-gyroscope/iot-gateway-gyroscope.component';
-import { IotGatewayAccelerometerComponent } from '../iot-gateway-details-charts/iot-gateway-accelerometer/iot-gateway-accelerometer.component';
-import { IotGatewayProximityComponent } from '../iot-gateway-details-charts/iot-gateway-proximity/iot-gateway-proximity.component';
-import { IotGatewayGpsComponent } from '../iot-gateway-details-charts/iot-gateway-gps/iot-gateway-gps.component';
-import { IotGatewaySpeedometerComponent } from '../iot-gateway-details-charts/iot-gateway-speedometer/iot-gateway-speedometer.component';
-import { IotGatewayHumidityComponent } from '../iot-gateway-details-charts/iot-gateway-humidity/iot-gateway-humidity.component';
+import { IotGatewayMapComponent } from '../iot-gateway-details-charts/iot-gateway-map/iot-gateway-map.component';
+import { IotGatewayDiscreteValueComponent } from '../iot-gateway-details-charts/iot-gateway-discrete-value/iot-gateway-discrete-value.component';
+import { IotGatewayImageComponent } from '../iot-gateway-details-charts/iot-gateway-image/iot-gateway-image.component';
+import { IotGatewayTimeSeriesComponent } from '../iot-gateway-details-charts/iot-gateway-time-series/iot-gateway-time-series.component';
+import { IotGatewayXyzValueComponent } from '../iot-gateway-details-charts/iot-gateway-xyz-value/iot-gateway-xyz-value.component';
 
 @Directive({
   selector: '[sensorData]',
@@ -37,6 +33,7 @@ export class IotGatewayDetailsComponent implements OnInit {
   gateway: Gateway;
   selectedDevice: Device;
   selectedDeviceTab = 'Overview'
+  selectedSensor: Resource;
 
   @ViewChild(SensorDirective, { static: true }) sensorData: SensorDirective
 
@@ -72,20 +69,20 @@ export class IotGatewayDetailsComponent implements OnInit {
       .subscribe(res => {
         this.devicesDataSource.data = res as Device[];
         this.selectedDevice = this.devicesDataSource.data[0];
-        this.buildSensorList(this.selectedDevice.profile.deviceCommands);
+        this.buildSensorList(this.selectedDevice.profile.deviceResources);
         this.selectChartType('Overview');
       })
   }
 
-  buildSensorList(commandList: Command[]) {
+  buildSensorList(deviceResources: Resource[]) {
     this.menuItems = ['Overview'];
-    commandList.forEach(command => { this.menuItems.push(command.name) });
+    deviceResources.forEach(resource => { this.menuItems.push(resource.name) });
   }
 
   selectDevice(newDevice: Device) {
     this.selectedDevice = newDevice;
     // build the a device sensors list
-    this.buildSensorList(this.selectedDevice.profile.deviceCommands);
+    this.buildSensorList(this.selectedDevice.profile.deviceResources);
     this.selectChartType('Overview');
   }
 
@@ -95,40 +92,33 @@ export class IotGatewayDetailsComponent implements OnInit {
     const viewContainerRef = this.sensorData.viewContainerRef;
     viewContainerRef.clear();
     const componentRef = viewContainerRef.createComponent(componentFactory);
-    // componentRef.instance.data = 'Data Passed In'
+    componentRef.instance.device = this.selectedDevice;
+    componentRef.instance.instrument = this.selectedSensor;
   }
 
-  getChartComponent(chartName: string) {
-    switch (chartName) {
-      case 'Overview': {
-        return this.componentFactoryResolver.resolveComponentFactory(IotGatewayOverviewComponent);
+  getChartComponent(nameOfChart: string) {
+    if (nameOfChart == 'Overview') {
+      return this.componentFactoryResolver.resolveComponentFactory(IotGatewayOverviewComponent);
+    } else {
+      const sensor = this.selectedDevice.profile.deviceResources.find(({ name }) => name === nameOfChart)
+      this.selectedSensor = sensor;
+      if (sensor.name == "GPS") {
+        return this.componentFactoryResolver.resolveComponentFactory(IotGatewayMapComponent);
       }
-      case 'Temperature': {
-        return this.componentFactoryResolver.resolveComponentFactory(IotGatewayTemperatureComponent);
+      else if (sensor.name == "Location") {
+        return this.componentFactoryResolver.resolveComponentFactory(IotGatewayMapComponent);
       }
-      case 'Pressure': {
-        return this.componentFactoryResolver.resolveComponentFactory(IotGatewayPressureComponent);
+      else if (sensor.attributes != undefined && sensor.attributes.Visualization != undefined && sensor.attributes.Visualization == "XYZScatter") {
+        return this.componentFactoryResolver.resolveComponentFactory(IotGatewayXyzValueComponent);
       }
-      case 'Magnetometer': {
-        return this.componentFactoryResolver.resolveComponentFactory(IotGatewayMagnetometerComponent);
+      else if (sensor.properties.value.type == "String") {
+        return this.componentFactoryResolver.resolveComponentFactory(IotGatewayDiscreteValueComponent);
       }
-      case 'Gyroscope': {
-        return this.componentFactoryResolver.resolveComponentFactory(IotGatewayGyroscopeComponent);
+      else if (sensor.properties.value.type == "Binary") {
+        return this.componentFactoryResolver.resolveComponentFactory(IotGatewayImageComponent);
       }
-      case 'Accelerometer': {
-        return this.componentFactoryResolver.resolveComponentFactory(IotGatewayAccelerometerComponent);
-      }
-      case 'Proximity': {
-        return this.componentFactoryResolver.resolveComponentFactory(IotGatewayProximityComponent);
-      }
-      case 'GPS': {
-        return this.componentFactoryResolver.resolveComponentFactory(IotGatewayGpsComponent);
-      }
-      case 'Speedometer': {
-        return this.componentFactoryResolver.resolveComponentFactory(IotGatewaySpeedometerComponent);
-      }
-      case 'Humidity': {
-        return this.componentFactoryResolver.resolveComponentFactory(IotGatewayHumidityComponent);
+      else {
+        return this.componentFactoryResolver.resolveComponentFactory(IotGatewayTimeSeriesComponent);
       }
     }
   }

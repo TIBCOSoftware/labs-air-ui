@@ -1,0 +1,16 @@
+<div fxLayout="row" fxLayoutGap="15px" style="min-height: 300px">
+    <mat-card fxFlex>
+        <mat-card-header>
+            <div mat-card-avatar class="instrument-history-image"></div>
+            <mat-card-title>Patterns Streaming</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div>
+                <h1>{{inferredXYZData}}</h1>
+            </div>
+            <ngx-heatmap [width]="heatmapWidth" [height]="heatmapHeight" [maxDataPoints]="heatmapMaxDataPoints"
+                [minDataPoints]="heatmapMinDataPoints" [heatPoints]="heatmapData">
+            </ngx-heatmap>
+        </mat-card-content>
+    </mat-card>
+</div>

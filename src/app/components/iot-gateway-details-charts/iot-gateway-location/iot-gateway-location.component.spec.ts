@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { IotGatewayPressureComponent } from './iot-gateway-pressure.component';
+import { IotGatewayLocationComponent } from './iot-gateway-location.component';
 
-describe('IotGatewayPressureComponent', () => {
-  let component: IotGatewayPressureComponent;
-  let fixture: ComponentFixture<IotGatewayPressureComponent>;
+describe('IotGatewayLocationComponent', () => {
+  let component: IotGatewayLocationComponent;
+  let fixture: ComponentFixture<IotGatewayLocationComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ IotGatewayPressureComponent ]
+      declarations: [ IotGatewayLocationComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(IotGatewayPressureComponent);
+    fixture = TestBed.createComponent(IotGatewayLocationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
