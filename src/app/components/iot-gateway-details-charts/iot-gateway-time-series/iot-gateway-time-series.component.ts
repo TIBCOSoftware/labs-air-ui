@@ -200,6 +200,7 @@ export class IotGatewayTimeSeriesComponent implements OnInit, OnDestroy {
       this.queryByDateDisabled = false;
     }
 
+    this.getReadings();
   }
 
   ngOnDestroy(): void {

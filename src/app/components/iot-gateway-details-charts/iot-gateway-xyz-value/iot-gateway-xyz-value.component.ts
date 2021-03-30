@@ -34,6 +34,7 @@ export class IotGatewayXyzValueComponent implements OnInit, OnDestroy {
   constructor(private graphService: GraphService) { }
 
   ngOnInit(): void {
+    this.getReadings();
   }
 
   ngOnDestroy(): void {
