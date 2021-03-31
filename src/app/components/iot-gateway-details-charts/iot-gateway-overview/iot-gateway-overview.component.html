@@ -1,16 +1,30 @@
-<div>
-    <b>Descrption:</b>
-    <span>{{ device.description }}</span>
-    <div>
-        <b>Created:</b>
-        <span> {{ device.created }} </span>
+<div class='instrument-read-out'>
+    <div class='instrument-table-description'>
+        <span>Description</span>
+         <b>
+            {{ device.description }}
+         </b>
     </div>
-    <div>
-        <b>Admin State:</b>
-        <span> {{ device.adminState }} </span>
-    </div>
-    <div>
-        <b>Operating State:</b>
-        <span> {{ device.operatingState }} </span>
+    <div class='instrument-table'>
+         <div class='instrument-table-properties'>
+             <table>
+                 <tr>
+                     <td>Created</td>
+                     <td>{{device.created}}</td>
+                 </tr>
+                 <tr>
+                    <td>Admin State</td>
+                    <td>{{device.adminState}}<td>
+                 </tr>
+             </table>
+         </div>
+         <div class='instrument-table-attributes'>
+            <table>
+                <tr>
+                    <td>Operating State</td>
+                    <td>{{device.operatingState}}</td>
+                </tr>
+            </table>
+         </div>
     </div>
 </div>

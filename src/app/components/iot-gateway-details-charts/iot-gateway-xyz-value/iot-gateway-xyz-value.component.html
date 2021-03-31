@@ -1,64 +1,76 @@
-<div fxLayout="row" fxLayoutGap="15px">
-    <mat-card fxFlex>
-        <mat-card-header>
-            <div mat-card-avatar class="device-header-image"></div>
-            <mat-card-title>Instrument Details</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-            <form class="instrument-form" fxLayout="row wrap" fxLayoutGap="15px">
-                <mat-form-field fxFlex="15%" appearance="outline">
-                    <mat-label>Value Type</mat-label>
-                    <input matInput [readonly]=true [value]="instrument.properties.value.type">
-                </mat-form-field>
-                <mat-form-field fxFlex="15%" appearance="outline">
-                    <mat-label>Permission</mat-label>
-                    <input matInput [readonly]=true [value]="instrument.properties.value.readWrite">
-                </mat-form-field>
-                <mat-form-field fxFlex="15%" appearance="outline">
-                    <mat-label>Minimun Value</mat-label>
-                    <input matInput [readonly]=true [value]="instrument.properties.value.minimum">
-                </mat-form-field>
-                <mat-form-field fxFlex="15%" appearance="outline">
-                    <mat-label>Maximun Value</mat-label>
-                    <input matInput [readonly]=true [value]="instrument.properties.value.maximum">
-                </mat-form-field>
-                <mat-form-field fxFlex="15%" appearance="outline">
-                    <mat-label>Default Value</mat-label>
-                    <input matInput [readonly]=true [value]="instrument.properties.value.defaultValue">
-                </mat-form-field>
-                <mat-form-field fxFlex="15%" appearance="outline">
-                    <mat-label>Unit</mat-label>
-                    <input matInput [readonly]=true [value]="instrument.properties.units.defaultValue">
-                </mat-form-field>
-                <mat-form-field fxFlex="15%" appearance="outline">
-                    <mat-label>Interface</mat-label>
-                    <input matInput [readonly]=true [value]="instrument.attributes?.Interface">
-                </mat-form-field>
-                <mat-form-field fxFlex="15%" appearance="outline">
-                    <mat-label>Pin Number</mat-label>
-                    <input matInput [readonly]=true [value]="instrument.attributes?.Pin_Num">
-                </mat-form-field>
-                <mat-form-field fxFlex="15%" appearance="outline">
-                    <mat-label>Type</mat-label>
-                    <input matInput [readonly]=true [value]="instrument.attributes?.Type">
-                </mat-form-field>
-            </form>
-        </mat-card-content>
-    </mat-card>
+<div class='instrument-read-out'>
+    <div class='instrument-table-description'>
+        <span>Description</span>
+        <b>
+            {{ instrument.description }}
+        </b>
+    </div>
+    <div class='instrument-table'>
+        <div class='instrument-table-properties'>
+            <table>
+                <tr>
+                    <td>Value Type</td>
+                    <td>{{instrument.properties.value.type}}</td>
+                </tr>
+                <tr>
+                    <td>Permission</td>
+                    <td>{{instrument.properties.value.readWrite}}
+                    <td>
+                </tr>
+                <tr>
+                    <td>Min value</td>
+                    <td>{{instrument.properties.value.minimum}}
+                    <td>
+                </tr>
+                <tr>
+                    <td>Max value</td>
+                    <td>{{instrument.properties.value.maximum}}
+                    <td>
+                </tr>
+                <tr>
+                    <td>Default value</td>
+                    <td>{{instrument.properties.value.defaultValue}}
+                    <td>
+                </tr>
+            </table>
+        </div>
+        <div class='instrument-table-attributes'>
+            <table>
+                <tr>
+                    <td>Unit</td>
+                    <td>{{instrument.properties.units.defaultValue}}</td>
+                </tr>
+                <tr>
+                    <td>Interface</td>
+                    <td>{{instrument.attributes?.Interface}}
+                    <td>
+                </tr>
+                <tr>
+                    <td>Pin Number</td>
+                    <td>{{instrument.attributes?.Pin_Num}}
+                    <td>
+                </tr>
+                <tr>
+                    <td>Max value</td>
+                    <td>{{instrument.properties.value.maximum}}
+                    <td>
+                </tr>
+                <tr>
+                    <td>Type</td>
+                    <td>{{instrument.attributes?.Type}}
+                    <td>
+                </tr>
+            </table>
+        </div>
+    </div>
 </div>
-<div fxLayout="row" fxLayoutGap="15px" style="min-height: 300px">
-    <mat-card fxFlex>
-        <mat-card-header>
-            <div mat-card-avatar class="instrument-history-image"></div>
-            <mat-card-title>Patterns Streaming</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-            <div>
-                <h1>{{inferredXYZData}}</h1>
-            </div>
-            <ngx-heatmap [width]="heatmapWidth" [height]="heatmapHeight" [maxDataPoints]="heatmapMaxDataPoints"
-                [minDataPoints]="heatmapMinDataPoints" [heatPoints]="heatmapData">
-            </ngx-heatmap>
-        </mat-card-content>
-    </mat-card>
+
+<div>
+    <span>Patterns Streaming</span>
+    <div>
+        <h1>{{inferredXYZData}}</h1>
+    </div>
+    <ngx-heatmap [width]="heatmapWidth" [height]="heatmapHeight" [maxDataPoints]="heatmapMaxDataPoints"
+        [minDataPoints]="heatmapMinDataPoints" [heatPoints]="heatmapData">
+    </ngx-heatmap>
 </div>
