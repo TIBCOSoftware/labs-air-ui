@@ -105,6 +105,19 @@ table {
     line-height: 21px;
 }
 
+.card-body-hightlights-text {
+    font-size: 12px;
+}
+
+.card-body-hightlights-text span {
+    color: #727272;
+    margin-right: 12px;
+}
+
+.card-body-hightlights-text span+span {
+    color: #212121;
+}
+
 .search-icon {
     color: #727272; 
     font-size: 20px;
@@ -122,7 +135,7 @@ table {
 }
 
 .card-footer-container {
-    padding: 16px 24px;
+    margin: 16px 24px;
     line-height: 18px;
     font-size: 12px;
 
