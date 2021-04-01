@@ -25,7 +25,8 @@
             </span>
         </div>
         <div class='card-list' *ngFor='let device of devicesDataSource.filteredData'>
-            <div class='card' (click)='selectDevice(device)'>
+            <div class='card' (click)='selectDevice(device)' [class.active]='device.name === selectedDevice.name'>
+                <div class='card-header-filler'></div>
                 <div class='card-header'>
                     <div class='card-header-icon'>
                         <mat-icon>search</mat-icon>

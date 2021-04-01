@@ -56,18 +56,29 @@
     display: block;
 }
 
+.card-header-filler {
+    height: 4px;
+    width: 100%;
+    border-radius: 3px 3px 0 0;
+    background-color: #94AFF0;
+}
+
 .card {
     margin-top: 18px;
     margin-left: 69px;
     box-sizing: border-box;
     height: 184px;
     width: 255px;
-    border: 2px solid #1774E5;
     border-radius: 3px;
     background-color: #FFFFFF;
-    border-top-width: 4px;
-    border-top-color: #94AFF0;
-    cursor: pointer; 
+    cursor: pointer;
+    box-shadow: 0 2px 6px 0 rgba(114,114,114,0.33);
+}
+
+.card.active {
+    border-left: 2px solid #1774E5;
+    border-right: 2px solid #1774E5;
+    border-bottom: 2px solid #1774E5;
 }
 
 .card-header {
