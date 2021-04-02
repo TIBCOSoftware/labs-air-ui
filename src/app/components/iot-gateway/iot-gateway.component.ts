@@ -338,4 +338,12 @@ export class IotGatewayComponent implements OnInit, AfterViewInit {
       this.gatewayOpDisabled = true;
     }
   }
+
+  generateColor(gatewayName: string) {
+    let hash = 0;
+    for (var i = 0; i < gatewayName.length; i++) {
+      hash = gatewayName.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return 'hsl(' + hash % 360 + ', 100%, 40%)';
+  }
 }

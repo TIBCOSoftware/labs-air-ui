@@ -20,7 +20,7 @@ export class IotGatewayLocationComponent implements OnInit, OnDestroy {
 
   instrumentForm: FormGroup;
 
-  queryLastValuesDisabled = true
+  queryLastValuesDisabled = false
   queryByDateDisabled = true;
   startDateSelected = false;
   endDateSelected = false;
@@ -75,11 +75,6 @@ export class IotGatewayLocationComponent implements OnInit, OnDestroy {
       interfacePinNumber: attrPinNum,
       interfaceType: attrType
     });
-
-    // may not be needed
-    if (this.startDateSelected && this.endDateSelected) {
-      this.queryByDateDisabled = false;
-    }
     this.getReadings();
   }
 
