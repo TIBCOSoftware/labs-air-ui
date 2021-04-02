@@ -23,7 +23,7 @@ export class IotGatewayTimeSeriesComponent implements OnInit, OnDestroy {
   timeSeriesData = [];
   timeSeriesInferredData = [];
 
-  queryLastValuesDisabled = true
+  queryLastValuesDisabled = false;
   queryByDateDisabled = true;
   startDateSelected = false;
   endDateSelected = false;
@@ -35,6 +35,8 @@ export class IotGatewayTimeSeriesComponent implements OnInit, OnDestroy {
   chartStreamingLegend = true;
   streamLastQuery = Date.now();
   resourceSelection = new SelectionModel<Resource>(false, []);
+
+  streaming = false;
 
   lineChartColors = [
     { // grey
@@ -195,11 +197,6 @@ export class IotGatewayTimeSeriesComponent implements OnInit, OnDestroy {
       interfaceType: attrType
     });
 
-    // may not be needed
-    if (this.startDateSelected && this.endDateSelected) {
-      this.queryByDateDisabled = false;
-    }
-
     this.getReadings();
   }
 
@@ -316,5 +313,9 @@ export class IotGatewayTimeSeriesComponent implements OnInit, OnDestroy {
 
   onQueryLastValuesClicked() {
     this.getReadings();
+  }
+
+  toggleChart() {
+    this.streaming = !this.streaming;
   }
 }

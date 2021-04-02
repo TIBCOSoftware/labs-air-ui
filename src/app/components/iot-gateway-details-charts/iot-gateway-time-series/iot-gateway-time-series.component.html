@@ -1,18 +1,18 @@
 <app-iot-gateway-descriptions [device]="device" [instrument]="instrument"></app-iot-gateway-descriptions>
-
 <div>
-    Instrument Reading History
-    <div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-around center center">
-        <form [formGroup]="instrumentForm" class="instrument-form" fxLayout="row wrap" fxLayoutGap="15px">
-
-            <mat-form-field fxFlex="20%" appearance="fill">
+    Instrument {{!streaming ? 'Reading' : 'Streaming'}} History
+    <div>
+        <a (click)="toggleChart()">Switch to {{!streaming ? 'Streaming' : 'Reading'}} History</a>
+    </div>
+    <div fxLayout="row" fxLayoutGap="24px" fxLayoutAlign="space-around center center">
+        <form *ngIf='!streaming' [formGroup]="instrumentForm" class="instrument-form" fxLayout="row wrap" fxLayoutGap="15px">
+            <mat-form-field>
                 <input matInput [disabled]="queryLastValuesDisabled" [matDatepicker]="pickerStartDate"
                     placeholder="Choose start date" (dateChange)="startDateEvent($event)">
                 <mat-datepicker-toggle matSuffix [for]="pickerStartDate"></mat-datepicker-toggle>
                 <mat-datepicker #pickerStartDate></mat-datepicker>
             </mat-form-field>
-
-            <mat-form-field fxFlex="20%" appearance="fill">
+            <mat-form-field fxFlex="20%">
                 <input matInput [disabled]="queryLastValuesDisabled" [matDatepicker]="pickerEndDate"
                     placeholder="Choose end date" (dateChange)="endDateEvent($event)">
                 <mat-datepicker-toggle matSuffix [for]="pickerEndDate"></mat-datepicker-toggle>
@@ -30,13 +30,10 @@
             </div>
         </form>
     </div>
-    <canvas baseChart [datasets]="chartDatasets" [options]="chartOptions" [colors]="lineChartColors"
+    <canvas *ngIf='!streaming' baseChart [datasets]="chartDatasets" [options]="chartOptions" [colors]="lineChartColors"
         [legend]="chartLegend" [chartType]="chartType">
     </canvas>
-</div>
-
-<div>
-    <canvas baseChart [datasets]="chartStreamingDatasets" [options]="chartStreamingOptions" [colors]="lineChartColors"
+    <canvas *ngIf="streaming" baseChart [datasets]="chartStreamingDatasets" [options]="chartStreamingOptions" [colors]="lineChartColors"
         [legend]="chartStreamingLegend" [chartType]="chartType">
     </canvas>
 </div>

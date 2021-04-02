@@ -13,7 +13,7 @@
 
 .instrument-table {
     display: flex;
-    
+    margin-bottom: 10px;
 }
 
 .instrument-table tr td:nth-child(1) {
