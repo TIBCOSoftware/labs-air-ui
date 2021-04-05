@@ -1,18 +1,20 @@
 <app-iot-gateway-descriptions [device]="device" [instrument]="instrument"></app-iot-gateway-descriptions>
 <div>
-    Instrument {{!streaming ? 'Reading' : 'Streaming'}} History
+    Instrument {{streaming ? 'Streaming' : 'Reading'}} History
     <div>
-        <a (click)="toggleChart()">Switch to {{!streaming ? 'Streaming' : 'Reading'}} History</a>
+        <mat-slide-toggle class='yeet' color="primary" [checked]="streaming" (change)="toggleChart()">
+            Switch to {{streaming ? 'Reading' : 'Streaming'}} History
+        </mat-slide-toggle>
     </div>
     <div fxLayout="row" fxLayoutGap="24px" fxLayoutAlign="space-around center center">
-        <form *ngIf='!streaming' [formGroup]="instrumentForm" class="instrument-form" fxLayout="row wrap" fxLayoutGap="15px">
-            <mat-form-field>
+        <form [formGroup]="instrumentForm" class="instrument-form" fxLayout="row wrap" fxLayoutGap="15px">
+            <mat-form-field *ngIf='!streaming'>
                 <input matInput [disabled]="queryLastValuesDisabled" [matDatepicker]="pickerStartDate"
                     placeholder="Choose start date" (dateChange)="startDateEvent($event)">
                 <mat-datepicker-toggle matSuffix [for]="pickerStartDate"></mat-datepicker-toggle>
                 <mat-datepicker #pickerStartDate></mat-datepicker>
             </mat-form-field>
-            <mat-form-field fxFlex="20%">
+            <mat-form-field fxFlex="20%" *ngIf='!streaming'>
                 <input matInput [disabled]="queryLastValuesDisabled" [matDatepicker]="pickerEndDate"
                     placeholder="Choose end date" (dateChange)="endDateEvent($event)">
                 <mat-datepicker-toggle matSuffix [for]="pickerEndDate"></mat-datepicker-toggle>
@@ -20,7 +22,7 @@
             </mat-form-field>
 
             <div class="query-row">
-                <button mat-raised-button [disabled]="queryByDateDisabled" (click)="onQueryByDateClicked()"
+                <button *ngIf='!streaming' mat-raised-button [disabled]="queryByDateDisabled" (click)="onQueryByDateClicked()"
                     color="primary">Query By Date</button>
                 <button mat-raised-button [disabled]="queryLastValuesDisabled" (click)="onQueryLastValuesClicked()"
                     color="primary">Query Last 300 Values</button>
@@ -33,7 +35,7 @@
     <canvas *ngIf='!streaming' baseChart [datasets]="chartDatasets" [options]="chartOptions" [colors]="lineChartColors"
         [legend]="chartLegend" [chartType]="chartType">
     </canvas>
-    <canvas *ngIf="streaming" baseChart [datasets]="chartStreamingDatasets" [options]="chartStreamingOptions" [colors]="lineChartColors"
-        [legend]="chartStreamingLegend" [chartType]="chartType">
+    <canvas *ngIf="streaming" baseChart [datasets]="chartStreamingDatasets" [options]="chartStreamingOptions"
+        [colors]="lineChartColors" [legend]="chartStreamingLegend" [chartType]="chartType">
     </canvas>
 </div>
