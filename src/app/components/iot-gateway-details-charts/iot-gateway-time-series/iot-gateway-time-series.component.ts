@@ -196,6 +196,7 @@ export class IotGatewayTimeSeriesComponent implements OnInit, OnDestroy {
       interfaceType: attrType
     });
     this.chartDatasets[0].label = this.instrument.name;
+    this.chartStreamingDatasets[0].label = this.instrument.name;
     this.getReadings();
   }
 

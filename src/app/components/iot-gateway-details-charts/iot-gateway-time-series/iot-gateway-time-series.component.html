@@ -2,19 +2,17 @@
 <div>
     Instrument {{streaming ? 'Streaming' : 'Reading'}} History
     <div>
-        <mat-slide-toggle class='yeet' color="primary" [checked]="streaming" (change)="toggleChart()">
-            Switch to {{streaming ? 'Reading' : 'Streaming'}} History
-        </mat-slide-toggle>
+        <mat-slide-toggle class='yeet' color="primary" [checked]="streaming" (change)="toggleChart()"></mat-slide-toggle>
     </div>
-    <div fxLayout="row" fxLayoutGap="24px" fxLayoutAlign="space-around center center">
+    <div *ngIf='!streaming' fxLayout="row" fxLayoutGap="24px" fxLayoutAlign="space-around center center">
         <form [formGroup]="instrumentForm" class="instrument-form" fxLayout="row wrap" fxLayoutGap="15px">
-            <mat-form-field *ngIf='!streaming'>
+            <mat-form-field>
                 <input matInput [disabled]="queryLastValuesDisabled" [matDatepicker]="pickerStartDate"
                     placeholder="Choose start date" (dateChange)="startDateEvent($event)">
                 <mat-datepicker-toggle matSuffix [for]="pickerStartDate"></mat-datepicker-toggle>
                 <mat-datepicker #pickerStartDate></mat-datepicker>
             </mat-form-field>
-            <mat-form-field fxFlex="20%" *ngIf='!streaming'>
+            <mat-form-field fxFlex="20%">
                 <input matInput [disabled]="queryLastValuesDisabled" [matDatepicker]="pickerEndDate"
                     placeholder="Choose end date" (dateChange)="endDateEvent($event)">
                 <mat-datepicker-toggle matSuffix [for]="pickerEndDate"></mat-datepicker-toggle>
@@ -22,7 +20,7 @@
             </mat-form-field>
 
             <div class="query-row">
-                <button *ngIf='!streaming' mat-raised-button [disabled]="queryByDateDisabled" (click)="onQueryByDateClicked()"
+                <button mat-raised-button [disabled]="queryByDateDisabled" (click)="onQueryByDateClicked()"
                     color="primary">Query By Date</button>
                 <button mat-raised-button [disabled]="queryLastValuesDisabled" (click)="onQueryLastValuesClicked()"
                     color="primary">Query Last 300 Values</button>
