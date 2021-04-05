@@ -116,6 +116,7 @@
 }
 
 .card-body-text {
+    font-size: 10px;
     letter-spacing: 0;
     line-height: 13px;
     color: #727272;
