@@ -1,8 +1,9 @@
 <app-iot-gateway-descriptions [device]="device" [instrument]="instrument"></app-iot-gateway-descriptions>
 <div>
-    Instrument {{streaming ? 'Streaming' : 'Reading'}} History
     <div>
-        <mat-slide-toggle class='yeet' color="primary" [checked]="streaming" (change)="toggleChart()"></mat-slide-toggle>
+        <mat-slide-toggle class='yeet' color="primary" [checked]="streaming" (change)="toggleChart()">
+            Switch to {{streaming ? 'Reading' : 'Streaming'}} History
+        </mat-slide-toggle>
     </div>
     <div *ngIf='!streaming' fxLayout="row" fxLayoutGap="24px" fxLayoutAlign="space-around center center">
         <form [formGroup]="instrumentForm" class="instrument-form" fxLayout="row wrap" fxLayoutGap="15px">
