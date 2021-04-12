@@ -126,7 +126,9 @@ export class DgraphService implements GraphService {
     const url = `${this.dgraphUrl}/query`;
     let query = `{
       resp(func: has(gateway)) {
-        uid uuid description address router latitude longitude accessToken username platform createdts updatedts
+        uid uuid description address router routerPort latitude longitude accessToken username platform createdts updatedts
+        numDevices: count(gateway_device)
+
       }
     }`;
 
@@ -1139,7 +1141,7 @@ export class DgraphService implements GraphService {
 
     let query = `{
       resp(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
-        uid uuid accessToken username platform address router
+        uid uuid accessToken username platform address router routerPort
         pipelines: gateway_pipeline {
           uid
           name
@@ -1151,6 +1153,7 @@ export class DgraphService implements GraphService {
           dataStoreId
           created
           modified
+          description
           status
           flowConfiguration
           logLevel
@@ -1200,6 +1203,7 @@ export class DgraphService implements GraphService {
         dataStoreId
         created
         modified
+        description
         status
         flowConfiguration
         logLevel
@@ -1342,6 +1346,7 @@ export class DgraphService implements GraphService {
         _:Pipeline <pipelineType> "${pipeline.pipelineType}" .
         _:Pipeline <created> "${pipeline.created}" .
         _:Pipeline <modified> "${pipeline.modified}" .
+        _:Pipeline <description> "${pipeline.description}" .
         _:Pipeline <status> "${pipeline.status}" .
         _:Pipeline <flowConfiguration> "${pipeline.flowConfiguration}" .
         _:Pipeline <logLevel> "${pipeline.logLevel}" .
@@ -1366,6 +1371,7 @@ export class DgraphService implements GraphService {
     const url = `${this.dgraphUrl}/mutate?commitNow=true`;
     let query = `{
       set {
+        <${pipeline.uid}> <description> "${pipeline.description}" .
         <${pipeline.uid}> <status> "${pipeline.status}" .
         <${pipeline.uid}> <modified> "${pipeline.modified}" .
         <${pipeline.uid}> <flowConfiguration> "${pipeline.flowConfiguration}" .
