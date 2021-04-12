@@ -1,11 +1,12 @@
 <app-iot-gateway-descriptions [device]="device" [instrument]="instrument"></app-iot-gateway-descriptions>
 <div>
-    Instrument {{!streaming ? 'Reading' : 'Streaming'}} History
     <div>
-        <a (click)="toggleChart()">Switch to {{!streaming ? 'Streaming' : 'Reading'}} History</a>
+        <mat-slide-toggle class='yeet' color="primary" [checked]="streaming" (change)="toggleChart()">
+            Switch to {{streaming ? 'Reading' : 'Streaming'}} History
+        </mat-slide-toggle>
     </div>
-    <div fxLayout="row" fxLayoutGap="24px" fxLayoutAlign="space-around center center">
-        <form *ngIf='!streaming' [formGroup]="instrumentForm" class="instrument-form" fxLayout="row wrap" fxLayoutGap="15px">
+    <div *ngIf='!streaming' fxLayout="row" fxLayoutGap="24px" fxLayoutAlign="space-around center center">
+        <form [formGroup]="instrumentForm" class="instrument-form" fxLayout="row wrap" fxLayoutGap="15px">
             <mat-form-field>
                 <input matInput [disabled]="queryLastValuesDisabled" [matDatepicker]="pickerStartDate"
                     placeholder="Choose start date" (dateChange)="startDateEvent($event)">
@@ -33,7 +34,7 @@
     <canvas *ngIf='!streaming' baseChart [datasets]="chartDatasets" [options]="chartOptions" [colors]="lineChartColors"
         [legend]="chartLegend" [chartType]="chartType">
     </canvas>
-    <canvas *ngIf="streaming" baseChart [datasets]="chartStreamingDatasets" [options]="chartStreamingOptions" [colors]="lineChartColors"
-        [legend]="chartStreamingLegend" [chartType]="chartType">
+    <canvas *ngIf="streaming" baseChart [datasets]="chartStreamingDatasets" [options]="chartStreamingOptions"
+        [colors]="lineChartColors" [legend]="chartStreamingLegend" [chartType]="chartType">
     </canvas>
 </div>

@@ -34,7 +34,6 @@ export class IotGatewayTimeSeriesComponent implements OnInit, OnDestroy {
   chartLegend = true;
   chartStreamingLegend = true;
   streamLastQuery = Date.now();
-  resourceSelection = new SelectionModel<Resource>(false, []);
 
   streaming = false;
 
@@ -162,7 +161,7 @@ export class IotGatewayTimeSeriesComponent implements OnInit, OnDestroy {
     }
   };
 
-  constructor(private graphService: GraphService, private formBuilder: FormBuilder) { 
+  constructor(private graphService: GraphService, private formBuilder: FormBuilder) {
     this.instrumentForm = this.formBuilder.group({
       valueType: [''],
       valueReadWrite: [''],
@@ -196,7 +195,8 @@ export class IotGatewayTimeSeriesComponent implements OnInit, OnDestroy {
       interfacePinNumber: attrPinNum,
       interfaceType: attrType
     });
-
+    this.chartDatasets[0].label = this.instrument.name;
+    this.chartStreamingDatasets[0].label = this.instrument.name;
     this.getReadings();
   }
 
@@ -265,30 +265,23 @@ export class IotGatewayTimeSeriesComponent implements OnInit, OnDestroy {
 
   getStreamData(chart: any) {
     //MAG
-    if (this.resourceSelection.hasValue()) {
-      // console.log("in getting streaming data");
-      this.subscriptions.push(this.graphService.getReadingsStartingAt(this.device.name,
-        this.instrument.name, this.streamLastQuery)
-        .subscribe(res => {
-          this.resourceReadings = res as TSReading[];
-
-          console.log("reading data in getStreamingData: ", this.resourceReadings);
-
-
-          this.resourceReadings.forEach(
-            reading => {
-
-              if (isNaN(reading.value)) {
-                chart.data.datasets[0].data.push({ x: new Date(reading.created).toISOString(), y: reading.value == 'true' ? 1 : 0 });
-              }
-              else {
-                chart.data.datasets[0].data.push({ x: new Date(reading.created).toISOString(), y: reading.value });
-              }
-              this.streamLastQuery = reading.created;
+    this.graphService.getReadingsStartingAt(this.device.name,
+      this.instrument.name, this.streamLastQuery)
+      .subscribe(res => {
+        this.resourceReadings = res as TSReading[];
+        console.log("reading data in getStreamingData: ", this.resourceReadings);
+        this.resourceReadings.forEach(
+          reading => {
+            if (isNaN(reading.value)) {
+              chart.data.datasets[0].data.push({ x: new Date(reading.created).toISOString(), y: reading.value == 'true' ? 1 : 0 });
             }
-          );
-        }))
-    }
+            else {
+              chart.data.datasets[0].data.push({ x: new Date(reading.created).toISOString(), y: reading.value });
+            }
+            this.streamLastQuery = reading.created;
+          }
+        );
+      })
   }
 
   startDateEvent(event: MatDatepickerInputEvent<Date>) {

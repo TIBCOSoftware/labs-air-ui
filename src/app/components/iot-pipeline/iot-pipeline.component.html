@@ -1,18 +1,18 @@
-<div class="tcs-home-content" fxLayout="column" fxFlex="grow" fxLayoutAlign="start stretch"
-    style="padding-left: 20px; padding-right: 20px; margin-top: 10px;">
+<div class="tcs-home-content">
 
-    <div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="flex-end"
-        style="width: 100%; margin-top: 10px; margin-bottom: 10px;">
-
-        <button mat-raised-button [disabled]="!pipelineSelected" (click)="newPipeline()" color="primary">New Pipeline</button>
-        <button mat-raised-button (click)="savePipelineToGraph()" color="primary">Save Pipeline</button>
-        <button mat-raised-button (click)="validatePipeline()" color="primary">Validate Pipeline</button>
-        <button mat-raised-button [disabled]="!pipelineSelected" (click)="clearPipeline()" color="primary">Clear Pipeline</button>
-        <button mat-raised-button [disabled]="!pipelineSelected || deployDisabled" (click)="deletePipelineFromGraph()" color="primary">Delete Pipeline</button>
-        <button mat-raised-button [disabled]="!pipelineSelected" (click)="printPipeline()" color="primary">Print Pipeline</button>
-        <button mat-raised-button [disabled]="!pipelineSelected || deployDisabled" (click)="deployPipeline()" color="primary">Deploy Pipeline</button>
-        <button mat-raised-button [disabled]="!pipelineSelected || undeployDisabled" (click)="undeployPipeline()" color="primary">Undeploy Pipeline</button>
-
+    <div class="pipeline-header">
+        <div class="pipeline-header-text"> 
+            
+        </div>
+        <div class="pipeline-header-buttons">
+            <button mat-raised-button [disabled]="!pipelineSelected" (click)="newPipeline()" color="primary">New Pipeline</button>
+            <button mat-raised-button (click)="savePipelineToGraph()" color="primary">Save Pipeline</button>
+            <button mat-raised-button [disabled]="!pipelineSelected" (click)="clearPipeline()" color="primary">Clear Pipeline</button>
+            <button mat-raised-button [disabled]="!pipelineSelected || deployDisabled" (click)="deletePipelineFromGraph()" color="primary">Delete Pipeline</button>
+            <button mat-raised-button [disabled]="!pipelineSelected" (click)="printPipeline()" color="primary">Print Pipeline</button>
+            <button mat-raised-button [disabled]="!pipelineSelected || deployDisabled" (click)="deployPipeline()" color="primary">Deploy Pipeline</button>
+            <button mat-raised-button [disabled]="!pipelineSelected || undeployDisabled" (click)="undeployPipeline()" color="primary">Undeploy Pipeline</button>
+        </div>
     </div>
 
     <div fxLayout="row" fxLayoutGap="10px" style="width: 100%; height: 600px;">
