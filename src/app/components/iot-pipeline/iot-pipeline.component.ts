@@ -24,6 +24,7 @@ import { DataStoreComponent } from "../rete/components/data-store-component";
 import { DataSourceComponent } from "../rete/components/data-source-component";
 import { FiltersComponent } from "../rete/components/filters-component";
 import { DataPipeComponent } from "../rete/components/data-pipe-component";
+import { CustomPipeComponent } from "../rete/components/custom-pipe-component";
 import { ErrorHandlerComponent } from "../rete/components/error-handler-component";
 import { ImageResizeComponent } from "../rete/components/image-resize-component";
 import { InferencingComponent } from "../rete/components/inferencing-component";
@@ -187,6 +188,7 @@ export class IotPipelineComponent implements OnInit {
       new ImageResizeComponent(),
       new DataStoreComponent(),
       new DataPipeComponent(),
+      new CustomPipeComponent(),
       new NotificationPipeComponent(),
       new ErrorHandlerComponent()
     ];
@@ -277,9 +279,16 @@ export class IotPipelineComponent implements OnInit {
     }) as any
     );
 
+    // Disable zooming on double click and wheel
+    // this.editor.on('zoom', ({ source }) => { return source !== 'wheel' && source !== 'dblclick'; });
+    this.editor.on('zoom', ({ source }) => { return source !== 'dblclick'; });
+
     this.editor.view.resize();
+    // this.editor.view.scale(0.5);
+    // this.editor.view.update();
+
     this.editor.trigger("process");
-    // zoomAt(editor);
+    // zoomAt(this.editor);
 
   }
 
@@ -334,6 +343,11 @@ export class IotPipelineComponent implements OnInit {
         break;
       }
       case "Data Pipe": {
+
+        contextObj = this.buildNodeProtocolProperties(this.protocolForm);
+        break;
+      }
+      case "Custom Pipe": {
 
         contextObj = this.buildNodeProtocolProperties(this.protocolForm);
         break;
@@ -398,6 +412,11 @@ export class IotPipelineComponent implements OnInit {
           break;
         }
         case "Data Pipe": {
+          this.updateProtocolForm(contextObj);
+          this.dataPipeConfig = true;
+          break;
+        }
+        case "Custom Pipe": {
           this.updateProtocolForm(contextObj);
           this.dataPipeConfig = true;
           break;
@@ -1258,6 +1277,7 @@ export class IotPipelineComponent implements OnInit {
         uid: row.uid,
         name: row.name,
         pipelineType: row.pipelineType,
+        description: row.description,
         status: row.status,
         flowConfiguration: row.flowConfiguration,
         logLevel: row.logLevel
@@ -1312,40 +1332,54 @@ export class IotPipelineComponent implements OnInit {
   savePipelineToGraph() {
     let editorData = this.editor.toJSON();
 
-    console.log("Saved editor data: ", editorData);
-
-    // Save pipeline
-    let pipeline = new Pipeline();
-    let tsms = Date.now();
-    pipeline.created = tsms;
-    pipeline.modified = tsms;
-    pipeline.name = this.pipelineForm.get('name').value;
-    pipeline.pipelineType = this.pipelineForm.get('pipelineType').value;
-    pipeline.status = "Saved";
-    pipeline.flowConfiguration = encodeURIComponent(JSON.stringify(editorData));
-    pipeline.logLevel = this.pipelineForm.get('logLevel').value;
-
-    // Add pipeline to graph
-    this.graphService.addPipeline(this.gateway.uid, pipeline, "", "", null, null)
-      .subscribe(res => {
-        console.log("Added pipeline: ", res);
-
-        this.getGatewayAndPipelines(this.gatewayId, pipeline);
-
-        let message = 'Success';
-        if (res == undefined) {
-          message = 'Failure';
-        }
-
-        this._snackBar.open(message, "Save Pipeline", {
-          duration: 3000,
-        });
-
+    let pipelineName = this.pipelineForm.get('name').value;
+    let pipelineId = this.pipelineForm.get('uid').value;
+    let pipelineType = this.pipelineForm.get('pipelineType').value;
+    if (pipelineName == "" || pipelineType == "") {
+      this._snackBar.open("Failure", "Pipeline needs a name and type", {
+        duration: 3000,
       });
+    }
+    else if (pipelineId != "") {
+      this.updatePipelineToGraph(true);
+    }
+    else {
+      console.log("Saved editor data: ", editorData);
+
+      // Save pipeline
+      let pipeline = new Pipeline();
+      let tsms = Date.now();
+      pipeline.created = tsms;
+      pipeline.modified = tsms;
+      pipeline.name = this.pipelineForm.get('name').value;
+      pipeline.pipelineType = this.pipelineForm.get('pipelineType').value;
+      pipeline.description = this.pipelineForm.get('description').value;
+      pipeline.status = "Saved";
+      pipeline.flowConfiguration = encodeURIComponent(JSON.stringify(editorData));
+      pipeline.logLevel = this.pipelineForm.get('logLevel').value;
+
+      // Add pipeline to graph
+      this.graphService.addPipeline(this.gateway.uid, pipeline, "", "", null, null)
+        .subscribe(res => {
+          console.log("Added pipeline: ", res);
+
+          this.getGatewayAndPipelines(this.gatewayId, pipeline);
+
+          let message = 'Success';
+          if (res == undefined) {
+            message = 'Failure';
+          }
+
+          this._snackBar.open(message, "Save Pipeline", {
+            duration: 3000,
+          });
+
+        });
+    }
 
   }
 
-  updatePipelineToGraph() {
+  updatePipelineToGraph(showSnackbar: boolean) {
 
     let editorData = this.editor.toJSON();
 
@@ -1355,6 +1389,7 @@ export class IotPipelineComponent implements OnInit {
     pipeline.modified = tsms;
     pipeline.name = this.pipelineForm.get('name').value;
     pipeline.uid = this.pipelineForm.get('uid').value;
+    pipeline.description = this.pipelineForm.get('description').value;
     pipeline.status = this.pipelineForm.get('status').value;
     pipeline.flowConfiguration = encodeURIComponent(JSON.stringify(editorData));
     pipeline.logLevel = this.pipelineForm.get('logLevel').value;
@@ -1365,6 +1400,17 @@ export class IotPipelineComponent implements OnInit {
         console.log("Updated pipeline: ", res);
 
         this.getGatewayAndPipelines(this.gatewayId, pipeline)
+
+        if (showSnackbar) {
+          let message = 'Success';
+          if (res == undefined) {
+            message = 'Failure';
+          }
+
+          this._snackBar.open(message, "Update Pipeline", {
+            duration: 3000,
+          });
+        }
 
       });
 
@@ -1444,22 +1490,27 @@ export class IotPipelineComponent implements OnInit {
 
   }
 
-  deployPipeline() {
+  buildPipelineRequest(): any {
 
-    let pipelineId = this.pipelineForm.get('uid').value;
     let deployType = this.pipelineForm.get('pipelineType').value;
+    let appLogLevel = this.pipelineForm.get('logLevel').value;
     let systemEnv = {};
     let extra = [];
+
+    console.log("Building pipeline request for gateway: ", this.gateway);
+
 
     if (deployType == "Edge") {
       systemEnv = {
         "Platform": this.gateway.platform,
         "DetachedMode": "n",
         "Username": this.gateway.username,
-        "TargetServer": this.gateway.router
+        "TargetServer": this.gateway.router,
+        "Port": this.gateway.routerPort
       };
 
       extra = [
+        { "Name": "App.LogLevel", "Value": appLogLevel },
         { "Name": "networks.default.external.name", "Value": "hanoi_edgex-network" }
       ];
     }
@@ -1475,109 +1526,171 @@ export class IotPipelineComponent implements OnInit {
       "ScriptSystemEnv": systemEnv
     };
 
-    let flow = this.editor.toJSON();
-    let pos = 0;
-    let rulePos = 0;
-    console.log("Building from: ", flow);
+    try {
 
-    Object.keys(flow.nodes).forEach(key => {
-      const outputJson = flow.nodes[key];
+      let flow = this.editor.toJSON();
+      let pos = 0;
+      let rulePos = 0;
+      console.log("Building from: ", flow);
 
-      console.log("Building from : ", key);
+      Object.keys(flow.nodes).forEach(key => {
+        const outputJson = flow.nodes[key];
+
+        console.log("Building from : ", key);
 
 
-      console.log("Building: ", flow.nodes[key].name);
+        console.log("Building: ", flow.nodes[key].name);
 
-      if (flow.nodes[key].name == "Data Source") {
-        pipelineFlow.AirDescriptor.source = this.buildDataSourceDeployObj(flow.nodes[key].data.customdata);
-      }
-      else {
-        // Add logic nodes
-        switch (flow.nodes[key].name) {
-          case "Data Store": {
-            pipelineFlow.AirDescriptor.logic.push(this.buildDataStoreDeployObj(flow.nodes[key].data.customdata));
-            break;
-          }
-          case "Data Pipe": {
-            pipelineFlow.AirDescriptor.logic.push(this.buildDataPipeDeployObj(flow.nodes[key].data.customdata));
-            break;
-          }
-          case "Notification Pipe": {
-            pipelineFlow.AirDescriptor.logic.push(this.buildDataPipeDeployObj(flow.nodes[key].data.customdata));
-
-            let pipeId = "Pipe_" + pos;
-            let ruleId = "Rule_" + rulePos;
-            let listener = {
-              "Name": "App.NotificationListeners",
-              "Value": "{\"" + ruleId + "\":" + "[\"" + pipeId + "\"]}",
-            };
-            extra.push(listener);
-
-            break;
-          }
-          case "Filters": {
-            pipelineFlow.AirDescriptor.logic.push(this.buildFiltersDeployObj(flow.nodes[key].data.customdata));
-            break;
-          }
-          case "Inferencing": {
-            pipelineFlow.AirDescriptor.logic.push(this.buildInferencingDeployObj(flow.nodes[key].data.customdata));
-            break;
-          }
-          case "Streaming": {
-            pipelineFlow.AirDescriptor.logic.push(this.buildStreamingDeployObj(flow.nodes[key].data.customdata));
-            break;
-          }
-          case "Rules": {
-            pipelineFlow.AirDescriptor.logic.push(this.buildRulesDeployObj(flow.nodes[key].data.customdata));
-            rulePos = pos;
-            break;
-          }
+        if (flow.nodes[key].name == "Data Source") {
+          pipelineFlow.AirDescriptor.source = this.buildDataSourceDeployObj(flow.nodes[key].data.customdata);
         }
-        pos++;
+        else {
+          // Add logic nodes
+          switch (flow.nodes[key].name) {
+            case "Data Store": {
+              pipelineFlow.AirDescriptor.logic.push(this.buildDataStoreDeployObj(flow.nodes[key].data.customdata));
+              break;
+            }
+            case "Data Pipe": {
+              pipelineFlow.AirDescriptor.logic.push(this.buildDataPipeDeployObj(flow.nodes[key].data.customdata));
+              break;
+            }
+            case "Custom Pipe": {
+              pipelineFlow.AirDescriptor.logic.push(this.buildCustomPipeDeployObj(flow.nodes[key].data.customdata));
 
-      }
+              break;
+            }
+            case "Notification Pipe": {
+              pipelineFlow.AirDescriptor.logic.push(this.buildDataPipeDeployObj(flow.nodes[key].data.customdata));
 
-    });
+              let pipeId = "Pipe_" + pos;
+              let ruleId = "Rule_" + rulePos;
+              let listener = {
+                "Name": "App.NotificationListeners",
+                "Value": "{\"" + ruleId + "\":" + "[\"" + pipeId + "\"]}",
+              };
+              extra.push(listener);
 
-    pipelineFlow.AirDescriptor.logic.push(
-      {
-        "name": "Filter.Dummy",
-        "properties": [
-          { "Name": "Logging.LogLevel", "Value": "DEBUG" }
-        ]
-      }
-    );
+              break;
+            }
+            case "Filters": {
+              pipelineFlow.AirDescriptor.logic.push(this.buildFiltersDeployObj(flow.nodes[key].data.customdata));
+              break;
+            }
+            case "Inferencing": {
+              pipelineFlow.AirDescriptor.logic.push(this.buildInferencingDeployObj(flow.nodes[key].data.customdata));
+              break;
+            }
+            case "Streaming": {
+              pipelineFlow.AirDescriptor.logic.push(this.buildStreamingDeployObj(flow.nodes[key].data.customdata));
+              break;
+            }
+            case "Rules": {
+              pipelineFlow.AirDescriptor.logic.push(this.buildRulesDeployObj(flow.nodes[key].data.customdata));
+              rulePos = pos;
+              break;
+            }
+          }
+          pos++;
 
-    console.log("Pipeline flow to be build: ", pipelineFlow);
-    console.log("Pipeline flow to be build string: ", JSON.stringify(pipelineFlow));
-
-
-    this.flogoDeployService.deployF1(pipelineId, pipelineFlow)
-      .subscribe(res => {
-        console.log("Received Deployment response: ", res);
-
-        this.pipelineForm.patchValue({
-          status: "Deployed",
-        });
-
-        this.updatePipelineToGraph();
-
-        this.deployDisabled = true;
-        this.undeployDisabled = false;
-
-        let message = 'Success';
-        if (res == undefined) {
-          message = 'Failure';
         }
-
-        this._snackBar.open(message, "Deploy Pipeline", {
-          duration: 3000,
-        });
 
       });
 
+      pipelineFlow.AirDescriptor.logic.push(
+        {
+          "name": "Filter.Dummy",
+          "properties": [
+            { "Name": "Logging.LogLevel", "Value": "DEBUG" }
+          ]
+        }
+      );
+
+      console.log("Pipeline flow to be build: ", pipelineFlow);
+      console.log("Pipeline flow to be build string: ", JSON.stringify(pipelineFlow));
+
+    }
+    catch (e) {
+      console.log("Error: ", e)
+
+      pipelineFlow = null;
+    }
+
+    return pipelineFlow;
 
   }
+
+  validatePipeline() {
+
+    let pipelineId = this.pipelineForm.get('uid').value;
+    let pipelineFlow = this.buildPipelineRequest();
+
+    if (pipelineFlow != null) {
+      this.flogoDeployService.validateF1(pipelineId, pipelineFlow)
+        .subscribe(res => {
+          console.log("Received Validation response: ", res);
+
+          console.log("Received Validation response code: ", res.Success);
+
+          let message = 'Success';
+          if (res == undefined || res.Success == false) {
+            message = 'Failure';
+          }
+
+          this._snackBar.open(message, "Pipeline Validated", {
+            duration: 3000,
+          });
+
+        });
+    }
+    else {
+      this._snackBar.open("Error", "Pipeline Validated", {
+        duration: 3000,
+      });
+    }
+
+
+
+  }
+
+  deployPipeline() {
+
+    let pipelineId = this.pipelineForm.get('uid').value;
+    let pipelineFlow = this.buildPipelineRequest();
+
+    if (pipelineFlow != null) {
+      this.flogoDeployService.deployF1(pipelineId, pipelineFlow)
+        .subscribe(res => {
+          console.log("Received Deployment response: ", res);
+
+          this.pipelineForm.patchValue({
+            status: "Deployed",
+          });
+
+          this.updatePipelineToGraph(false);
+
+          this.deployDisabled = true;
+          this.undeployDisabled = false;
+
+          let message = 'Success';
+          if (res == undefined || res.Success == false) {
+            message = 'Failure';
+          }
+
+          this._snackBar.open(message, "Deploy Pipeline", {
+            duration: 3000,
+          });
+
+        });
+    }
+    else {
+      this._snackBar.open("Error", "Pipeline Validated", {
+        duration: 3000,
+      });
+    }
+
+  }
+
 
   undeployPipeline() {
 
@@ -1590,7 +1703,8 @@ export class IotPipelineComponent implements OnInit {
     if (deployType == "Edge") {
       systemEnv = {
         "Username": this.gateway.username,
-        "TargetServer": this.gateway.router
+        "TargetServer": this.gateway.router,
+        "Port": this.gateway.routerPort
       };
     }
 
@@ -1609,13 +1723,13 @@ export class IotPipelineComponent implements OnInit {
           status: "Saved",
         });
 
-        this.updatePipelineToGraph();
+        this.updatePipelineToGraph(false);
 
         this.deployDisabled = false;
         this.undeployDisabled = true;
 
         let message = 'Success';
-        if (res == undefined) {
+        if (res == undefined || res.Success == false) {
           message = 'Failure';
         }
 
@@ -1652,6 +1766,19 @@ export class IotPipelineComponent implements OnInit {
       name: pipeType,
       properties: this.buildPublisherDeployProperties(contextObj)
     };
+
+    return pipeObj;
+  }
+
+
+  buildCustomPipeDeployObj(contextObj): any {
+    let pipeType = "Pipe." + contextObj.protocol + "_FS";
+    let pipeObj = {
+      name: pipeType,
+      properties: this.buildPublisherDeployProperties(contextObj)
+    };
+
+    pipeObj.properties.push({ "Name": "MQTTPub.PublishData", "Value": "@Inference.REST..Inferred@" });
 
     return pipeObj;
   }
@@ -1901,7 +2028,8 @@ export class IotPipelineComponent implements OnInit {
     if (platformDetails[0] == "nvidia") {
       inferenceData = {
         "image": "@f1..value@",
-        "network": platformDetails[2]
+        "network": platformDetails[2],
+        "id": "@f1..id@"
       }
 
       let mapping = {
@@ -1915,7 +2043,7 @@ export class IotPipelineComponent implements OnInit {
 
     let filterObj = [
       { "Name": "Logging.LogLevel", "Value": "DEBUG" },
-
+      { "Name": "REST.Timeout", "Value": "10000" },
       { "Name": "REST.InferenceData", "Value": JSON.stringify(inferenceData) },
       { "Name": "REST.Conditions", "Value": JSON.stringify(contextObj.filters) },
       { "Name": "REST.URLMapping", "Value": JSON.stringify(urlMapping) }
