@@ -16,15 +16,15 @@
                 <div class="input-control" *ngIf="input.showControl()" [rete-control]="input.control"></div>
             </div>
         </div>
-        <div class='card-body-text'>
+        <div class='card-body-text' *ngIf='node.data.customdata'>
             <div>
-                Protocol: <b>{{ node.data?.customdata.protocol }}</b>
+                Protocol: <b>{{ node.data.customdata.protocol }}</b>
             </div>
             <div>
-                ProtocolID: <b>{{ node.data?.customdata.protocolId }}</b>
+                ProtocolID: <b>{{ node.data.customdata.protocolId }}</b>
             </div>
             <div>
-                topic: <b>{{ node.data?.customdata.topic }}</b>
+                topic: <b>{{ node.data.customdata.topic }}</b>
             </div>
         </div>
         <div>
