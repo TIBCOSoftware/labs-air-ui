@@ -49,3 +49,13 @@ table {
 .pipeline-header-buttons button {
     margin-left: 10px;
 }
+
+.table-container tr th{
+    font-size: 14px;
+    font-weight: 600;
+    color: #212121;
+}
+
+.node-editor .node {
+    background: #ffffff;
+}
