@@ -32,6 +32,7 @@ import { RulesComponent } from "../rete/components/rules-component";
 import { StreamingComponent } from "../rete/components/streaming-component";
 import { NotificationPipeComponent } from "../rete/components/notification-pipe-component";
 import { FlogoFlowComponent } from "../rete/components/flogo-flow-component";
+import { NodePrimaryComponent } from "../rete/nodes/node-primary/node-primary.component";
 import { pipe } from 'rxjs';
 import { DataFilteringComponent } from '../iot-data-pipeline/data-filtering/data-filtering.component';
 import { LogLevel } from '@tibco-tcstk/tc-core-lib';
@@ -198,7 +199,7 @@ export class IotPipelineComponent implements OnInit {
 
     this.editor.use(ConnectionPlugin);
     console.log("AngularRenderPlugin", AngularRenderPlugin);
-    this.editor.use(AngularRenderPlugin); //, { component: MyNodeComponent });
+    this.editor.use(AngularRenderPlugin, { component: NodePrimaryComponent });
     this.editor.use(ContextMenuPlugin);
 
     const engine = new Engine("demo@0.2.0");
