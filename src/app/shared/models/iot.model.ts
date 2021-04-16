@@ -244,6 +244,7 @@ export class Gateway {
   address: string;
   router: string;
   routerPort: string;
+  deployNetwork: string;
   latitude: number;
   longitude: number;
   accessToken: string;
