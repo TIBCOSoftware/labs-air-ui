@@ -31,6 +31,7 @@ import { InferencingComponent } from "../rete/components/inferencing-component";
 import { RulesComponent } from "../rete/components/rules-component";
 import { StreamingComponent } from "../rete/components/streaming-component";
 import { NotificationPipeComponent } from "../rete/components/notification-pipe-component";
+import { FlogoFlowComponent } from "../rete/components/flogo-flow-component";
 import { pipe } from 'rxjs';
 import { DataFilteringComponent } from '../iot-data-pipeline/data-filtering/data-filtering.component';
 import { LogLevel } from '@tibco-tcstk/tc-core-lib';
@@ -65,6 +66,7 @@ export class IotPipelineComponent implements OnInit {
   inferencingConfig = false;
   rulesConfig = false;
   streamingConfig = false;
+  flogoFlowConfig = false;
 
   lastNodeSelected = null;
 
@@ -76,6 +78,7 @@ export class IotPipelineComponent implements OnInit {
   streamingForm: FormGroup;
   modelForm: FormGroup;
   ruleForm: FormGroup;
+  flogoFlowForm: FormGroup;
 
   ruleTuplesDescriptor = [
     {
@@ -170,9 +173,6 @@ export class IotPipelineComponent implements OnInit {
 
   async ngAfterViewInit() {
 
-    console.log("================>>>>>>>>>>>************* ngAfterViewInit called");
-
-
     console.log("PipelineEditor - ngAfterViewInit - devices: ", this.devices);
 
     const container = this.el.nativeElement;
@@ -190,6 +190,7 @@ export class IotPipelineComponent implements OnInit {
       new DataPipeComponent(),
       new CustomPipeComponent(),
       new NotificationPipeComponent(),
+      new FlogoFlowComponent(),
       new ErrorHandlerComponent()
     ];
 
@@ -373,6 +374,10 @@ export class IotPipelineComponent implements OnInit {
         contextObj = this.buildNodeRuleProperties();
         break;
       }
+      case "Flogo Flow": {
+        contextObj = this.buildNodeFlogoFlowProperties();
+        break;
+      }
       default: {
 
         break;
@@ -393,6 +398,7 @@ export class IotPipelineComponent implements OnInit {
     this.inferencingConfig = false;
     this.rulesConfig = false;
     this.streamingConfig = false;
+    this.flogoFlowConfig = false;
 
     if (node != null || node != undefined) {
       console.log("Resetting context for node: ", node);
@@ -444,6 +450,11 @@ export class IotPipelineComponent implements OnInit {
         case "Rules": {
           this.updateRulesComponent(contextObj);
           this.rulesConfig = true;
+          break;
+        }
+        case "Flogo Flow": {
+          this.updateFlogoFlowComponent(contextObj);
+          this.flogoFlowConfig = true;
           break;
         }
         default: {
@@ -626,6 +637,13 @@ export class IotPipelineComponent implements OnInit {
       actionResource: ['', Validators.required],
       actionValue: ['', Validators.required],
       logLevel: ['INFO', Validators.required]
+    });
+
+    this.flogoFlowForm = this.formBuilder.group({
+      name: ['', Validators.required],
+      description: [''],
+      flowDefinition: ['', Validators.required],
+      flowProperties: ['', Validators.required]
     });
 
   }
@@ -862,6 +880,25 @@ export class IotPipelineComponent implements OnInit {
 
     return ruleObj;
   }
+
+  /**
+   *
+   * @param form
+   */
+  buildNodeFlogoFlowProperties(): any {
+
+    let flogoFlowObj = {
+      "name": this.flogoFlowForm.get('name').value,
+      "description": this.flogoFlowForm.get('description').value,
+      "flowDefinition": this.flogoFlowForm.get('flowDefinition').value,
+      "flowProperties": this.flogoFlowForm.get('flowProperties').value
+    };
+
+    console.log("FlogoFlow context saved: ", flogoFlowObj);
+
+    return flogoFlowObj;
+  }
+
 
   /**
    *
@@ -1119,6 +1156,25 @@ export class IotPipelineComponent implements OnInit {
         actionResource: context.actionResource,
         actionValue: context.actionValue,
         logLevel: context.logLevel,
+      })
+
+    }
+  }
+
+  /**
+ *
+ * @param context
+ */
+  updateFlogoFlowComponent(context) {
+
+    if (context != null || context != undefined) {
+      console.log("Updating flogo flow component with context: ", context);
+
+      this.flogoFlowForm.patchValue({
+        name: context.name,
+        description: context.description,
+        flowDefinition: context.flowDefinition,
+        flowProperties: context.flowProperties,
       })
 
     }
@@ -1470,11 +1526,14 @@ export class IotPipelineComponent implements OnInit {
     this.inferencingConfig = false;
     this.rulesConfig = false;
     this.streamingConfig = false;
+    this.flogoFlowConfig = false;
 
     this.pipelineForm.patchValue({
+      uid: "",
       name: "",
       pipelineType: "",
       description: "",
+      status: "",
       logLevel: "INFO"
     });
 
@@ -1511,7 +1570,7 @@ export class IotPipelineComponent implements OnInit {
 
       extra = [
         { "Name": "App.LogLevel", "Value": appLogLevel },
-        { "Name": "networks.default.external.name", "Value": "hanoi_edgex-network" }
+        { "Name": "networks.default.external.name", "Value": this.gateway.deployNetwork }
       ];
     }
 
@@ -1588,6 +1647,10 @@ export class IotPipelineComponent implements OnInit {
             case "Rules": {
               pipelineFlow.AirDescriptor.logic.push(this.buildRulesDeployObj(flow.nodes[key].data.customdata));
               rulePos = pos;
+              break;
+            }
+            case "Flogo Flow": {
+              pipelineFlow.AirDescriptor.logic.push(this.buildFlogoFlowDeployObj(flow.nodes[key].data.customdata));
               break;
             }
           }
@@ -1745,7 +1808,7 @@ export class IotPipelineComponent implements OnInit {
   buildDataSourceDeployObj(contextObj): any {
 
     let sourceType = "";
-    if (contextObj.topic == "airevents") {
+    if (contextObj.topic == "edgexevents") {
       sourceType = "DataSource.EDGEX_" + contextObj.protocol;
     }
     else {
@@ -2137,4 +2200,33 @@ export class IotPipelineComponent implements OnInit {
 
     return ruleObj;
   }
+
+  buildFlogoFlowDeployObj(contextObj): any {
+
+    console.log("Flogo Flow Context: ", contextObj);
+
+    let flogoFlowType = "Flogo.Default";
+    let flogoFlowObj = {
+      name: flogoFlowType,
+      flogoApp: contextObj.flowDefinition,
+      properties: this.buildFlogoFlowDeployProperties(contextObj),
+      ports: ["9090:9999"]
+    };
+
+    return flogoFlowObj;
+
+  }
+
+  /**
+   * @param contextObj
+   */
+  buildFlogoFlowDeployProperties(contextObj): any {
+
+    let flogoFlowPropertiesObj = contextObj.flowProperties;
+
+    return flogoFlowPropertiesObj;
+  }
+
+
 }
+
