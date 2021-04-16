@@ -31,7 +31,8 @@ import { InferencingComponent } from "../rete/components/inferencing-component";
 import { RulesComponent } from "../rete/components/rules-component";
 import { StreamingComponent } from "../rete/components/streaming-component";
 import { NotificationPipeComponent } from "../rete/components/notification-pipe-component";
-import { NodePrimaryComponent } from "../rete/nodes/node-primary/node-primary.component"
+import { FlogoFlowComponent } from "../rete/components/flogo-flow-component";
+import { NodePrimaryComponent } from "../rete/nodes/node-primary/node-primary.component";
 import { pipe } from 'rxjs';
 import { DataFilteringComponent } from '../iot-data-pipeline/data-filtering/data-filtering.component';
 import { LogLevel } from '@tibco-tcstk/tc-core-lib';
