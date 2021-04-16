@@ -106,7 +106,7 @@ export class DgraphService implements GraphService {
     const url = `${this.dgraphUrl}/query`;
     let query = `{
       resp(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
-        uid uuid description address router latitude longitude accessToken username platform createdts updatedts
+        uid uuid description address router routerPort deployNetwork latitude longitude accessToken username platform createdts updatedts
       }
     }`;
 
@@ -126,7 +126,7 @@ export class DgraphService implements GraphService {
     const url = `${this.dgraphUrl}/query`;
     let query = `{
       resp(func: has(gateway)) {
-        uid uuid description address router routerPort latitude longitude accessToken username platform createdts updatedts
+        uid uuid description address router routerPort deployNetwork latitude longitude accessToken username platform createdts updatedts
         numDevices: count(gateway_device)
 
       }
@@ -150,6 +150,8 @@ export class DgraphService implements GraphService {
       set {
         <${gateway.uid}> <address> "${gateway.address}" .
         <${gateway.uid}> <router> "${gateway.router}" .
+        <${gateway.uid}> <routerPort> "${gateway.routerPort}" .
+        <${gateway.uid}> <deployNetwork> "${gateway.deployNetwork}" .
         <${gateway.uid}> <description> "${gateway.description}" .
         <${gateway.uid}> <latitude> "${gateway.latitude}" .
         <${gateway.uid}> <longitude> "${gateway.longitude}" .
@@ -183,6 +185,8 @@ export class DgraphService implements GraphService {
         _:Gateway <description> "${gateway.description}" .
         _:Gateway <address> "${gateway.address}" .
         _:Gateway <router> "${gateway.router}" .
+        _:Gateway <routerPort> "${gateway.routerPort}" .
+        _:Gateway <deployNetwork> "${gateway.deployNetwork}" .
         _:Gateway <latitude> "${gateway.latitude}" .
         _:Gateway <longitude> "${gateway.longitude}" .
         _:Gateway <accessToken> "${gateway.accessToken}" .
@@ -229,7 +233,7 @@ export class DgraphService implements GraphService {
     const url = `${this.dgraphUrl}/query`;
     let query = `{
       resp(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
-        uid uuid description address router latitude longitude accessToken username platform createdts updatedts
+        uid uuid description address router routerPort deployNetwork latitude longitude accessToken username platform createdts updatedts
         subscriptions: gateway_subscription {
           uid
           name
@@ -1141,7 +1145,7 @@ export class DgraphService implements GraphService {
 
     let query = `{
       resp(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
-        uid uuid accessToken username platform address router routerPort
+        uid uuid accessToken username platform address router routerPort deployNetwork
         pipelines: gateway_pipeline {
           uid
           name
@@ -1874,6 +1878,7 @@ export class DgraphService implements GraphService {
     return this.http.post<any>(url, query, httpOptions)
       .pipe(
         map(response => response.data.resp as TSReading[]),
+        // tap(response => console.log("Response from getReadings: ", response)),
         tap(_ => this.logger.info('fetched readings')),
         catchError(this.handleError<TSReading[]>('getReadings', []))
       );
@@ -2079,9 +2084,9 @@ export class DgraphService implements GraphService {
    * @param result - optional value to return as the observable result
    */
   private handleError<T>(operation = 'operation', result?: T) {
-    console.log("Got an error.  Handling Error for:", operation);
 
     return (error: any): Observable<T> => {
+      console.log("Got an error.  Handling Error for:", operation);
 
       console.log("Before error report");
       // TODO: send the error to remote logging infrastructure
