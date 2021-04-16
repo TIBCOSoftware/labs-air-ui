@@ -18,6 +18,7 @@ import {IotDashboardComponent} from '../../components/iot-dashboard/iot-dashboar
 import {IotRulesComponent} from '../../components/iot-rules/iot-rules.component';
 import {IotMlModelsComponent} from '../../components/iot-ml-models/iot-ml-models.component';
 import {TceRulesComponent} from '../../components/tce-rules/tce-rules.component'
+import {IotGatewayDetailsComponent} from '../../components/iot-gateway-details/iot-gateway-details.component'
 import {IotNotificationsComponent} from '../../components/iot-notifications/iot-notifications.component';
 import {LiveAppsComponent} from '../../components/live-apps/live-apps.component';
 import {
@@ -97,7 +98,8 @@ export const STARTER_APP_ROUTES =
           roles: RolesResolver,
           access: AccessResolver,
           customFormDefs: FormResolver
-        }
+        },
+        data: { breadcrumb: ['Gateways'] }
       },
       {
         path: 'gatewaydashboard',
@@ -332,6 +334,20 @@ export const STARTER_APP_ROUTES =
           access: AccessResolver,
           customFormDefs: FormResolver
         }
+      },
+      {
+        path: 'device-details/:gatewayId',
+        component: IotGatewayDetailsComponent,
+        canActivate: [AuthGuard],
+        resolve: {
+          claims: ClaimsResolver,
+          laConfigHolder: LaConfigResolver,
+          groups: GroupsResolver,
+          roles: RolesResolver,
+          access: AccessResolver,
+          customFormDefs: FormResolver
+        },
+        data: { breadcrumb: ['Gateways','Devices']}
       },
       {
         path: '', redirectTo: '/starterApp/home/casemanagement', pathMatch: 'full'

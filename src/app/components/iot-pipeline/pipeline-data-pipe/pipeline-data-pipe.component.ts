@@ -282,14 +282,31 @@ export class PipelineDataPipeComponent implements OnInit {
 
   onFormChanges(): void {
     this.dataPipeForm.valueChanges.subscribe(val => {
-      console.log("dataPipeForm has changed for: ", val);
 
-      if (this.dataPipeForm.get('protocol').value == "") {
+      console.log("OnFormChanges: ", val);
 
-        this.mqttProtocol = false;
-        this.kafkaProtocol = false;
-        this.amqpProtocol = false;
-        this.httpProtocol = false;
+      let protocol = this.dataPipeForm.get('protocol').value;
+
+      this.mqttProtocol = false;
+      this.kafkaProtocol = false;
+      this.amqpProtocol = false;
+      this.httpProtocol = false;
+
+      if (protocol != "") {
+
+        if (protocol == "MQTT") {
+          this.mqttProtocol = true;
+        }
+        else if (protocol == "Kafka") { 
+          this.kafkaProtocol = true;
+        }
+        else if (protocol == "AMQP") {
+          this.amqpProtocol = true;
+        }
+        else if (protocol == "HTTP") {
+          this.httpProtocol = true;
+        }
+        
       }
 
     });

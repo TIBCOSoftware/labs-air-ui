@@ -52,6 +52,7 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
   platforms: SelectItem[] = [
     { value: 'ms|anomaly_detection|AnomalyDetection', viewValue: 'Anomaly Detection' },
     { value: 'tibco|pattern_recognition|PatternRecognition', viewValue: 'Wafer Pattern Recognition' },
+    { value: 'nvidia|text_recognition|tesseract', viewValue: 'Text Recognition - Tesseract' },
     { value: 'nvidia|image_recognition|alexnet', viewValue: 'Object Detection - AlexNet' },
     { value: 'nvidia|image_recognition|googlenet', viewValue: 'Object Detection - GoogleNet' },
     { value: 'nvidia|image_recognition|googlenet-12', viewValue: 'Object Detection - GoogleNet-12' },

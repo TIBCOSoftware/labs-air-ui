@@ -105,31 +105,51 @@ table {
     line-height: 21px;
 }
 
-.card-body-highlights-text {
+.card-body-hightlights-text {
+    font-size: 12px;
+}
 
+.card-body-hightlights-text span {
+    color: #727272;
+    margin-right: 12px;
+}
+
+.card-body-hightlights-text span+span {
+    color: #212121;
+}
+
+.search-icon {
+    color: #727272; 
+    font-size: 20px;
+}
+
+.card-body-highlights-text {
+    font-size: 12px;
+    font-weight: 400;
 }
 
 .card-footer {
-    margin: 34px 24px 16px 24px;
-    height: 24px;
+    height: 56px;
+    background-color: #FAFAFA;
+    margin-top: 16px;
 }
 
-.card-footer-details {
-    font-size: 10px;
-    line-height: 13px;
-    color: #1774E5;
+.card-footer-container {
+    margin: 16px 24px;
+    line-height: 18px;
+    font-size: 12px;
+
 }
 
 .card-footer-details span mat-icon {
     font-size: 20px;
     cursor: pointer;
-    margin-right: 10px;
+    margin-right: 48px;
+    fill: #727272;
 }
 
 .card-footer-details-button {
     float: right;
-    font-size: 12px;
-    line-height: 18px;
     color: #1774E5;
     cursor: pointer;
 }

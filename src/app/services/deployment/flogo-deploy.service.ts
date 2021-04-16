@@ -40,16 +40,17 @@ export class FlogoDeployService {
       );
   }
 
-  deployF1(pipelineId, request): Observable<string> {
+  validateF1(pipelineId, request): Observable<any> {
 
     // const url = `http://54.81.13.248:5408/f1/air/build/Air-F1_Flogo_Pipeline`;
     // const url = `http://54.81.13.248:5408/f1/air/components/`;
     // const url = `/f1Endpoint/f1/air/deploy/Air-F1_Flogo_Pipeline`;
-    
-    // const url = `/edgex/remotegateway/http://52.22.89.56:5408/f1/air/buildAndDeploy/Air-account_00001/${pipelineId}`;
-    const url = `/edgex/remotegateway/http://3.228.65.62:5408/f1/air/buildAndDeploy/Air-account_00001/${pipelineId}`;
 
-    console.log("Calling buildF1 with url:", url);
+    // const url = `/edgex/remotegateway/http://52.7.96.87:5408/f1/air/validate/Air-account_00001/${pipelineId}`;
+    const url = `/edgex/remotegateway/http://52.22.89.56:5408/f1/air/validate/Air-account_00001/${pipelineId}`;
+    // const url = `/edgex/remotegateway/http://3.228.65.62:5408/f1/air/buildAndDeploy/Air-account_00001/${pipelineId}`;
+
+    console.log("Calling validateF1 with url:", url);
 
     return this.http.post<string>(url, request, this.httpOptions)
       .pipe(
@@ -58,12 +59,32 @@ export class FlogoDeployService {
       );
   }
 
-  undeployF1(pipelineId, request): Observable<string> {
+  deployF1(pipelineId, request): Observable<any> {
+
+    // const url = `http://54.81.13.248:5408/f1/air/build/Air-F1_Flogo_Pipeline`;
+    // const url = `http://54.81.13.248:5408/f1/air/components/`;
+    // const url = `/f1Endpoint/f1/air/deploy/Air-F1_Flogo_Pipeline`;
+    
+    // const url = `/edgex/remotegateway/http://52.7.96.87:5408/f1/air/buildAndDeploy/Air-account_00001/${pipelineId}`;
+    const url = `/edgex/remotegateway/http://52.22.89.56:5408/f1/air/buildAndDeploy/Air-account_00001/${pipelineId}`;
+    // const url = `/edgex/remotegateway/http://3.228.65.62:5408/f1/air/buildAndDeploy/Air-account_00001/${pipelineId}`;
+
+    console.log("Calling buildF1 with url:", url);
+
+    return this.http.post<string>(url, request, this.httpOptions)
+      .pipe(
+        tap(_ => this.logger.info('Deploy Pipeline')),
+        catchError(this.handleError<string>('deploy'))
+      );
+  }
+
+  undeployF1(pipelineId, request): Observable<any> {
 
     // const url = `/airEndpointf1/f1/air/build/Air-F1_Flogo_Pipeline`;
 
-    // const url = `/edgex/remotegateway/http://52.22.89.56:5408/f1/air/undeploy/Air-account_00001/${pipelineId}/001`;
-    const url = `/edgex/remotegateway/http://3.228.65.62:5408/f1/air/undeploy/Air-account_00001/${pipelineId}/001`;
+    // const url = `/edgex/remotegateway/http://52.7.96.87:5408/f1/air/undeploy/Air-account_00001/${pipelineId}/001`;
+    const url = `/edgex/remotegateway/http://52.22.89.56:5408/f1/air/undeploy/Air-account_00001/${pipelineId}/001`;
+    // const url = `/edgex/remotegateway/http://3.228.65.62:5408/f1/air/undeploy/Air-account_00001/${pipelineId}/001`;
 
     return this.http.post<string>(url, request, this.httpOptions)
       .pipe(

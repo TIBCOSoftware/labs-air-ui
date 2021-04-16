@@ -1,0 +1,52 @@
+<mat-card fxFlex style="height: 100%;" [formGroup]="flogoFlowForm">
+
+    <mat-card-header>
+        <mat-card-title>Flogo Flow Configuration</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+
+        <div fxLayout="column" fxLayoutAlign="center start" style="height: 100%;">
+
+            <div fxLayout="row" style="width: 100%;" fxLayoutGap="15px">
+                <mat-form-field fxFlex="1 1 35%" appearance="outline">
+                    <mat-label>Flow Name</mat-label>
+                    <input matInput [readonly]=false formControlName="name">
+                </mat-form-field>
+                <mat-form-field fxFlex="1 1 35%" appearance="outline">
+                    <mat-label>Flow Description</mat-label>
+                    <input matInput [readonly]=false formControlName="description">
+                </mat-form-field>
+            </div>
+
+            <div fxLayout="row" style="width: 100%;" fxLayoutGap="15px">
+                <mat-tab-group style="width: 100%">
+                    <mat-tab label="Application">
+
+                        <div fxLayout="row" style="width: 100%; height: 90%; padding-top: 10px" fxLayoutGap="15px">
+                            <mat-form-field fxFlex="1 1 90%" appearance="outline">
+                                <mat-label>Flow Definition</mat-label>
+                                <textarea matInput formControlName="flowDefinition"></textarea>
+                            </mat-form-field>
+                        </div>
+
+                    </mat-tab>
+                    
+                    <mat-tab label="Properties">
+
+                        <mat-form-field fxFlex="1 1 90%" appearance="outline">
+                            <mat-label>Flow Properties</mat-label>
+                            <textarea matInput formControlName="flowProperties"></textarea>
+                        </mat-form-field>
+
+                    </mat-tab>
+
+                </mat-tab-group>
+
+            </div>
+
+
+        </div>
+
+    </mat-card-content>
+</mat-card>

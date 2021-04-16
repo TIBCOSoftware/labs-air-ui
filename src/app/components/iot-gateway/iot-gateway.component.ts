@@ -18,6 +18,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
+import { BreadcrumbsService } from '../../services/breadcrumbs/breadcrumbs.service'
+
 @Component({
   selector: 'app-iot-gateway',
   templateUrl: './iot-gateway.component.html',
@@ -50,7 +52,9 @@ export class IotGatewayComponent implements OnInit, AfterViewInit {
     private formBuilder: FormBuilder,
     private logger: LogService,
     private _snackBar: MatSnackBar,
-    private _datePipe: DatePipe) {
+    private _datePipe: DatePipe,
+    private breadcrumbs: BreadcrumbsService,
+    private route: ActivatedRoute) {
 
     logger.level = LogLevel.Debug;
 
@@ -333,5 +337,13 @@ export class IotGatewayComponent implements OnInit, AfterViewInit {
       this.selectedGateway = null;
       this.gatewayOpDisabled = true;
     }
+  }
+
+  generateColor(gatewayName: string) {
+    let hash = 0;
+    for (var i = 0; i < gatewayName.length; i++) {
+      hash = gatewayName.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return 'hsl(' + hash % 360 + ', 100%, 40%)';
   }
 }

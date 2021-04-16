@@ -203,6 +203,7 @@ export class Pipeline {
   dataStore: any; // deprecated
   filter: any; // deprecated
   streaming: any; // deprecated
+  description: string;
   status: string;
   flowConfiguration: string;
   logLevel: string;
@@ -242,6 +243,8 @@ export class Gateway {
   uuid: string;
   address: string;
   router: string;
+  routerPort: string;
+  deployNetwork: string;
   latitude: number;
   longitude: number;
   accessToken: string;
