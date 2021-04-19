@@ -23,21 +23,47 @@
                 <mat-tab-group style="width: 100%">
                     <mat-tab label="Application">
 
-                        <div fxLayout="row" style="width: 100%; height: 90%; padding-top: 10px" fxLayoutGap="15px">
+                        <div fxLayout="column" fxLayoutAlign="center start"
+                            style="width: 100%; height: 90%; padding-top: 20px" fxLayoutGap="15px">
+
+
+                            <input type="file" class="file-input" accept="*.json" (change)="onFileSelected($event)"
+                                style="display:none;" #fileUpload />
+                            <mat-form-field fxFlex="1 1 90%" appearance="outline">
+
+                                <mat-toolbar>
+                                    <!-- <mat-label style='font-size:100%;font-weight:normal'>Flogo Defition File</mat-label> -->
+                                    <input matInput disabled readonly placeholder="Select Flogo Definition File"
+                                        style='font-size:70%;font-weight:normal' formControlName="flowFilename">
+
+                                    <button mat-icon-button color="primary" (click)="fileUpload.click()">
+                                        <mat-icon>upload_file</mat-icon>
+                                    </button>
+                                </mat-toolbar>
+
+                            </mat-form-field>
+
                             <mat-form-field fxFlex="1 1 90%" appearance="outline">
                                 <mat-label>Flow Definition</mat-label>
-                                <textarea matInput formControlName="flowDefinition"></textarea>
+                                <textarea matInput disabled readonly formControlName="flowDefinition"></textarea>
                             </mat-form-field>
+
                         </div>
 
                     </mat-tab>
-                    
+
                     <mat-tab label="Properties">
 
-                        <mat-form-field fxFlex="1 1 90%" appearance="outline">
-                            <mat-label>Flow Properties</mat-label>
-                            <textarea matInput formControlName="flowProperties"></textarea>
-                        </mat-form-field>
+                        <div fxLayout="column" fxLayoutAlign="center start"
+                            style="width: 100%; height: 90%; padding-top: 20px" fxLayoutGap="15px">
+
+                            <mat-form-field fxFlex="1 1 90%" appearance="outline">
+                                <mat-label>Flow Properties</mat-label>
+                                <textarea matInput rows="20" formControlName="flowProperties"></textarea>
+                            </mat-form-field>
+                        </div>
+                        
+
 
                     </mat-tab>
 

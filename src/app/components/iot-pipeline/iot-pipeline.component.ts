@@ -643,6 +643,7 @@ export class IotPipelineComponent implements OnInit {
     this.flogoFlowForm = this.formBuilder.group({
       name: ['', Validators.required],
       description: [''],
+      flowFilename: ['', Validators.required],
       flowDefinition: ['', Validators.required],
       flowProperties: ['', Validators.required]
     });
@@ -891,6 +892,7 @@ export class IotPipelineComponent implements OnInit {
     let flogoFlowObj = {
       "name": this.flogoFlowForm.get('name').value,
       "description": this.flogoFlowForm.get('description').value,
+      "flowFilename": this.flogoFlowForm.get('flowFilename').value,
       "flowDefinition": this.flogoFlowForm.get('flowDefinition').value,
       "flowProperties": this.flogoFlowForm.get('flowProperties').value
     };
@@ -1174,6 +1176,7 @@ export class IotPipelineComponent implements OnInit {
       this.flogoFlowForm.patchValue({
         name: context.name,
         description: context.description,
+        flowFilename: context.flowFilename,
         flowDefinition: context.flowDefinition,
         flowProperties: context.flowProperties,
       })
@@ -1559,6 +1562,19 @@ export class IotPipelineComponent implements OnInit {
 
     console.log("Building pipeline request for gateway: ", this.gateway);
 
+    let deployNetwork = {};
+    if (this.gateway.deployNetwork == "snap") {
+      deployNetwork = {
+        "Name":"services.$Name$.network_mode",
+        "Value":"host"
+      }
+    }
+    else {
+      deployNetwork = {
+        "Name": "networks.default.external.name",
+        "Value": this.gateway.deployNetwork
+      }
+    }
 
     if (deployType == "Edge") {
       systemEnv = {
@@ -1571,7 +1587,7 @@ export class IotPipelineComponent implements OnInit {
 
       extra = [
         { "Name": "App.LogLevel", "Value": appLogLevel },
-        { "Name": "networks.default.external.name", "Value": this.gateway.deployNetwork }
+        deployNetwork
       ];
     }
 
