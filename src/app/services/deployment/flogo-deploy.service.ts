@@ -74,7 +74,7 @@ export class FlogoDeployService {
     return this.http.post<string>(url, request, this.httpOptions)
       .pipe(
         tap(_ => this.logger.info('Deploy Pipeline')),
-        catchError(this.handleError<string>('deploy'))
+        catchError(this.handleError<string>('deployF1'))
       );
   }
 
@@ -89,7 +89,27 @@ export class FlogoDeployService {
     return this.http.post<string>(url, request, this.httpOptions)
       .pipe(
         tap(_ => this.logger.info('Undeploy Pipeline')),
-        catchError(this.handleError<string>('deploy'))
+        catchError(this.handleError<string>('undeployF1'))
+      );
+  }
+
+  getFlogoPropertiesF1(request): Observable<any> {
+
+    // const url = `http://54.81.13.248:5408/f1/air/build/Air-F1_Flogo_Pipeline`;
+    // const url = `http://54.81.13.248:5408/f1/air/components/`;
+    // const url = `/f1Endpoint/f1/air/deploy/Air-F1_Flogo_Pipeline`;
+
+    // const url = `/edgex/remotegateway/http://52.7.96.87:5408/f1/air/flogo/properties`;
+    const url = `/edgex/remotegateway/http://52.22.89.56:5408/f1/air/flogo/properties`;
+    // const url = `/edgex/remotegateway/http://3.228.65.62:5408/f1/air/flogo/properties`;
+
+    console.log("Calling getFlogoPropertiesF1 with url:", url);
+    console.log("Calling getFlogoPropertiesF1 with request:", request);
+
+    return this.http.post<string>(url, request, this.httpOptions)
+      .pipe(
+        tap(_ => this.logger.info('Got Flogo Properties')),
+        catchError(this.handleError<string>('getFlogoPropertiesF1'))
       );
   }
 
@@ -122,9 +142,12 @@ export class FlogoDeployService {
     * @param result - optional value to return as the observable result
     */
   private handleError<T>(operation = 'operation', result?: T) {
-    console.log("Got an error.  Handling Error for:", operation);
+    
     
     return (error: any): Observable<T> => {
+
+      console.log("Got an error.  Handling Error for:", operation);
+      
       console.error('Inside the handleError function');
       // TODO: send the error to remote logging infrastructure
       console.error(error); // log to console instead
