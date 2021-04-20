@@ -56,6 +56,13 @@ table {
     color: #212121;
 }
 
-.node-editor .node {
+.pipeline-editor {
+    background-color: #f4f4f4;
+}
+
+.configuration-panel {
     background: #ffffff;
+    height: 600px;
+    width: 413.5px;
+    display: initial;
 }
