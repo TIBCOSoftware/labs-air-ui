@@ -1607,6 +1607,7 @@ export class IotPipelineComponent implements OnInit {
       let flow = this.editor.toJSON();
       let pos = 0;
       let rulePos = 0;
+      let requireFilterDummy = true;
       console.log("Building from: ", flow);
 
       Object.keys(flow.nodes).forEach(key => {
@@ -1668,6 +1669,7 @@ export class IotPipelineComponent implements OnInit {
             }
             case "Flogo Flow": {
               pipelineFlow.AirDescriptor.logic.push(this.buildFlogoFlowDeployObj(flow.nodes[key].data.customdata));
+              requireFilterDummy = false;
               break;
             }
           }
@@ -1677,14 +1679,17 @@ export class IotPipelineComponent implements OnInit {
 
       });
 
-      pipelineFlow.AirDescriptor.logic.push(
-        {
-          "name": "Filter.Dummy",
-          "properties": [
-            { "Name": "Logging.LogLevel", "Value": "DEBUG" }
-          ]
-        }
-      );
+      if (requireFilterDummy) {
+        pipelineFlow.AirDescriptor.logic.push(
+          {
+            "name": "Filter.Dummy",
+            "properties": [
+              { "Name": "Logging.LogLevel", "Value": "DEBUG" }
+            ]
+          }
+        );
+      }
+      
 
       console.log("Pipeline flow to be build: ", pipelineFlow);
       console.log("Pipeline flow to be build string: ", JSON.stringify(pipelineFlow));
@@ -2239,7 +2244,7 @@ export class IotPipelineComponent implements OnInit {
    */
   buildFlogoFlowDeployProperties(contextObj): any {
 
-    let flogoFlowPropertiesObj = contextObj.flowProperties;
+    let flogoFlowPropertiesObj = JSON.parse(contextObj.flowProperties);
 
     return flogoFlowPropertiesObj;
   }
