@@ -95,6 +95,7 @@ import { IotGatewayMapComponent } from './components/iot-gateway-details-charts/
 import { IotGatewayDiscreteValueComponent } from './components/iot-gateway-details-charts/iot-gateway-discrete-value/iot-gateway-discrete-value.component';
 import { IotGatewayDescriptionsComponent } from './components/iot-gateway-details-charts/iot-gateway-descriptions/iot-gateway-descriptions.component';
 import { PipelineFlogoFlowComponent } from './components/iot-pipeline/pipeline-flogo-flow/pipeline-flogo-flow.component';
+import { IotGatewayTextComponent } from './components/iot-gateway-details-charts/iot-gateway-text/iot-gateway-text.component';
 
 /** This is the tc core configuration object
  * To use oauth you must also add the OAuthInterceptor to providers
@@ -188,7 +189,8 @@ const tcCoreConfig: TcCoreConfig = {
     IotGatewayMapComponent,
     IotGatewayDiscreteValueComponent,
     IotGatewayDescriptionsComponent,
-    PipelineFlogoFlowComponent
+    PipelineFlogoFlowComponent,
+    IotGatewayTextComponent
   ],
   imports: [
     AppRoutingModule,

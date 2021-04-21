@@ -22,6 +22,10 @@ export class IotGatewayDiscreteValueComponent implements OnInit {
     this.getReadings();
   }
 
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
+
   public timelineChartData: GoogleChartInterface = {
     chartType: 'Timeline',
     dataTable: [
@@ -35,11 +39,11 @@ export class IotGatewayDiscreteValueComponent implements OnInit {
     }
   }
   public getReadings() {
-    this.graphService.getReadings(this.device.name, this.instrument.name, this.numReadings)
+    this.subscriptions.push(this.graphService.getReadings(this.device.name, this.instrument.name, this.numReadings)
       .subscribe(res => {
         this.resourceReadings = res as TSReading[];
         this.setTimelineDataSet(this.device.name);
-      })
+      }));
   }
 
   setTimelineDataSet(deviceName) {

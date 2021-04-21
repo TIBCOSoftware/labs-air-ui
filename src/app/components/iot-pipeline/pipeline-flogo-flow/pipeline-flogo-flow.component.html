@@ -19,12 +19,12 @@
                 </mat-form-field>
             </div>
 
-            <div fxLayout="row" style="width: 100%;" fxLayoutGap="15px">
+            <div fxLayout="row" style="width: 100%;">
                 <mat-tab-group style="width: 100%">
                     <mat-tab label="Application">
 
                         <div fxLayout="column" fxLayoutAlign="center start"
-                            style="width: 100%; height: 90%; padding-top: 20px" fxLayoutGap="15px">
+                            style="width: 100%; padding-top: 20px">
 
 
                             <input type="file" class="file-input" accept="*.json" (change)="onFileSelected($event)"
@@ -53,20 +53,28 @@
                     </mat-tab>
 
                     <mat-tab label="Properties">
-
-                        <div fxLayout="column" fxLayoutAlign="center start"
-                            style="width: 100%; height: 90%; padding-top: 20px" fxLayoutGap="15px">
-
-                            <mat-form-field fxFlex="1 1 90%" appearance="outline">
-                                <mat-label>Flow Properties</mat-label>
-                                <textarea matInput rows="20" formControlName="flowProperties"></textarea>
-                            </mat-form-field>
+                        <div class="table-wrapper">
+                            <!--<textarea matInput rows="20" formControlName="flowProperties"></textarea>-->
+                            <table mat-table [dataSource]="dataSource">
+                                <ng-container matColumnDef="name">
+                                    <th mat-header-cell *matHeaderCellDef> Name </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.Name}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="type">
+                                    <th mat-header-cell *matHeaderCellDef> Type </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.Type}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="value">
+                                    <th mat-header-cell *matHeaderCellDef> Value </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <input matInput type="text" [value]="element.Value" (change)="dataSourceChanged()" appearance="outline">
+                                    </td>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="columnHeader"></tr>
+                                <tr mat-row *matRowDef="let row; columns: columnHeader;"></tr>
+                            </table>
                         </div>
-                        
-
-
                     </mat-tab>
-
                 </mat-tab-group>
 
             </div>

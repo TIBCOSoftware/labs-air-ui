@@ -57,12 +57,13 @@ table {
 }
 
 .pipeline-editor {
+    flex: 2;
     background-color: #f4f4f4;
 }
 
 .configuration-panel {
     background: #ffffff;
     height: 600px;
-    width: 413.5px;
+    flex: 1;
     display: initial;
 }
