@@ -28,7 +28,7 @@ export class IotGatewayTextComponent implements OnInit {
     this.subscriptions.push(this.graphService.getReadings(this.device.name, this.instrument.name, 1)
       .subscribe(res => {
         this.resourceReadings = res as TSReading[];
-        this.text = this.resourceReadings[0];
+        this.text = this.resourceReadings[0].value;
       }));
   }
 
