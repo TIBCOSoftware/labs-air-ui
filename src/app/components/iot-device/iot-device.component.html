@@ -204,14 +204,15 @@
                   color="primary">Query By Date</button>
                 <button mat-raised-button [disabled]="queryLastValuesDisabled" (click)="onQueryLastValuesClicked()"
                   color="primary">Query Last 300 Values</button>
-                <button mat-raised-button [disabled]="queryLastValuesDisabled" [routerLink]="['/starterApp/home/iotanomalydetectiondashboard']"
-                  color="primary">Anomaly Analysis</button>
+                <button mat-raised-button [disabled]="queryLastValuesDisabled"
+                  [routerLink]="['/starterApp/home/iotanomalydetectiondashboard']" color="primary">Anomaly
+                  Analysis</button>
               </div>
             </form>
           </div>
 
-          <canvas baseChart [datasets]="chartDatasets" [options]="chartOptions" [colors]="lineChartColors" [legend]="chartLegend"
-            [chartType]="chartType">
+          <canvas baseChart [datasets]="chartDatasets" [options]="chartOptions" [colors]="lineChartColors"
+            [legend]="chartLegend" [chartType]="chartType">
           </canvas>
         </mat-card-content>
       </mat-card>
@@ -251,7 +252,8 @@
             </form>
           </div>
 
-          <canvas baseChart [datasets]="scatterChartDatasets" [options]="scatterChartOptions" [legend]="chartLegend" [chartType]="scatterChartType">
+          <canvas baseChart [datasets]="scatterChartDatasets" [options]="scatterChartOptions" [legend]="chartLegend"
+            [chartType]="scatterChartType">
           </canvas>
         </mat-card-content>
       </mat-card>
@@ -267,11 +269,8 @@
           <div>
             <h1>{{inferredXYZData}}</h1>
           </div>
-          <ngx-heatmap [width]="heatmapWidth"
-                      [height]="heatmapHeight"
-                      [maxDataPoints]= "heatmapMaxDataPoints"
-                      [minDataPoints]="heatmapMinDataPoints"
-                      [heatPoints]="heatmapData">
+          <ngx-heatmap [width]="heatmapWidth" [height]="heatmapHeight" [maxDataPoints]="heatmapMaxDataPoints"
+            [minDataPoints]="heatmapMinDataPoints" [heatPoints]="heatmapData">
           </ngx-heatmap>
         </mat-card-content>
       </mat-card>
@@ -288,7 +287,7 @@
             <h1>{{inferredImageData}}</h1>
           </div>
           <div>
-            <img src="data:image/JPEG;base64,{{imageData}}"/>
+            <img src="data:image/JPEG;base64,{{imageData}}" />
             <!-- <img [src]="imageData" /> -->
           </div>
         </mat-card-content>
@@ -302,8 +301,8 @@
           <mat-card-title>Intrument Readings Streaming</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <canvas baseChart [datasets]="chartStreamingDatasets" [options]="chartStreamingOptions" [colors]="lineChartColors"
-            [legend]="chartStreamingLegend" [chartType]="chartType">
+          <canvas baseChart [datasets]="chartStreamingDatasets" [options]="chartStreamingOptions"
+            [colors]="lineChartColors" [legend]="chartStreamingLegend" [chartType]="chartType">
           </canvas>
         </mat-card-content>
       </mat-card>
@@ -332,6 +331,15 @@
           <google-chart [data]="timelineChartData" style="width: 100%;"></google-chart>
         </mat-card-content>
       </mat-card>
+    </div>
+
+    <div *ngIf="textValueResource" fxLayout="row" fxLayoutGap="15px" style="min-height: 300px">
+      <button mat-raised-button color="primary" style="white-space:pre-wrap;height: 150px;">{{textData}}</button>
+
+      <mat-form-field fxFlex="1 1 90%" appearance="outline">
+        
+        <textarea matInput [(ngModel)]="textData"></textarea>
+      </mat-form-field>
     </div>
 
   </div>
