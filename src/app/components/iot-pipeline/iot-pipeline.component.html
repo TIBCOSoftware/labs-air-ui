@@ -6,6 +6,7 @@
         <div class="pipeline-header-buttons">
             <button mat-raised-button [disabled]="!pipelineSelected" (click)="newPipeline()" color="primary">New
                 Pipeline</button>
+            <button mat-raised-button (click)="validatePipeline()" color="primary">Validate Pipeline</button>
             <button mat-raised-button (click)="savePipelineToGraph()" color="primary">Save Pipeline</button>
             <button mat-raised-button [disabled]="!pipelineSelected" (click)="clearPipeline()" color="primary">Clear
                 Pipeline</button>

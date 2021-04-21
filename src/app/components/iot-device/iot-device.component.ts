@@ -52,6 +52,7 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
   xyzValueResource = false;
   timeSeriesResource = false;
   discreteValueResource = false;
+  textValueResource = false;
   summaryView = false;
   gatewayList: Gateway[] = [];
   gatewayIdSelected: string = '';
@@ -265,6 +266,7 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
   public timeSeriesInferredData = []
   public locationData = [];
   public imageData = ""
+  public textData = ""
   public inferredImageData = ""
   public inferredXYZData = ""
 
@@ -364,6 +366,9 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
         else if (this.discreteValueResource) {
           console.log("calling setMapDataset");
           this.setTimelineDataSet(deviceName);
+        }
+        else if (this.textValueResource) {
+          this.textData = this.resourceReadings[0].value;
         }
         else if (this.imageResource) {
 
@@ -777,6 +782,7 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
     this.xyzValueResource = false;
     this.timeSeriesResource = false;
     this.discreteValueResource = false;
+    this.textValueResource = false;
 
     // MAG
     // this.summaryView = true;
@@ -809,6 +815,7 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
     this.imageResource = false;
     this.timeSeriesResource = false;
     this.discreteValueResource = false;
+    this.textValueResource = false;
 
     let numReadingsRequired = 300;
 
@@ -822,9 +829,13 @@ export class IotDeviceComponent implements OnInit, OnDestroy, AfterViewInit {
       this.xyzValueResource = true;
       numReadingsRequired = 1;
     }
-    else if (row.properties.value.type == "String") {
+    else if (row.properties.value.type == "String" && row.attributes != undefined && row.attributes.Visualization != undefined && row.attributes.Visualization == "Custom") {
       this.discreteValueResource = true;
       numReadingsRequired = 40;
+    }
+    else if (row.properties.value.type == "String") {
+      this.textValueResource = true;
+      numReadingsRequired = 1;
     }
     else if (row.properties.value.type == "Binary") {
       this.imageResource = true;
