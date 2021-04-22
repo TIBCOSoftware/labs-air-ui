@@ -1,0 +1,13 @@
+div div {
+    display: flex;
+    margin-bottom: 24px;
+}
+
+div div button {
+    flex: 1;
+}
+
+div div textarea {
+    flex: 3;
+    height: 250px;
+}
