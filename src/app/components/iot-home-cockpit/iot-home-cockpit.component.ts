@@ -65,7 +65,13 @@ export class IotHomeCockpitComponent extends LiveAppsHomeCockpitComponent {
             route: '/starterApp/home/mlmodels',
             title: 'Edge ML Models',
             custom: true
-        }, 
+        },
+        {
+            icon: 'rules',
+            route: '/starterApp/home/simulator',
+            title: 'Simulator',
+            custom: true
+        },        
         // {
         //     icon: 'rules',
         //     route: '/starterApp/home/tcerules',
