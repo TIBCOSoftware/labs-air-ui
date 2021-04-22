@@ -1,44 +1,9 @@
 <div>
-    <div>
-        <button mat-button color="primary" (click)="sendRequest(scanURL, scan.value)">
-            <mat-icon>scanner</mat-icon>
-            Scan
-        </button>
-        <textarea #scan></textarea>
-    </div>
-    <div>
-        <button mat-button color="primary" (click)="sendRequest(cameraURL, camera.value)">
-            <mat-icon>videocam</mat-icon>
-            Camera
-        </button>
-        <textarea #camera></textarea>
-    </div>
-    <div>
-        <button mat-button color="primary" (click)="sendRequest(scaleURL, scale.value)">
-            <mat-icon>fit_screen</mat-icon>
-            Scale
-        </button>
-        <textarea #scale></textarea>
-    </div>
-    <div>
-        <button mat-button color="primary" (click)="sendRequest(openURL, openCart.value)">
-            <mat-icon>shopping_cart</mat-icon>
-            Open Cart
-        </button>
-        <textarea #openCart></textarea>
-    </div>
-    <div>
-        <button mat-button color="primary" (click)="sendRequest(closeCartURL, closeCart.value)">
-            <mat-icon>remove_shopping_cart</mat-icon>
-            Close Cart
-        </button>
-        <textarea #closeCart></textarea>
-    </div>
-    <div>
-        <button mat-button color="primary" (click)="sendRequest(paymentURL, payment.value)">
-            <mat-icon>paid</mat-icon>
-            Payment
-        </button>
-        <textarea #payment></textarea>
-    </div>
+    <img src="/assets/img/simulation.png">
+    <button class="scan" (click)="sendRequest(scanURL, 'value')">Scan</button>
+    <button class="camera">Camera</button>
+    <button class="scale">Scale</button>
+    <button class="openBasket">Open Basket</button>
+    <button class="closeBasket">Close Basket</button>
+    <button class="payment">Payment</button>
 </div>
