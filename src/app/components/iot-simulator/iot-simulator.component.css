@@ -1,6 +1,9 @@
+.simulation {
+    display: flex;
+}
 button {
     position: absolute;
-    opacity: 100;
+    opacity: 0;
 }
 
 .scan {
@@ -43,4 +46,24 @@ button {
     left: 436px;
     width: 100px;
     height: 80px;
+}
+
+.selection-window {
+    background-color: #ffffff;
+    top: 30%;
+    left: 18%;
+    position: absolute;
+    width: 400px;
+    height: 250px;
+    margin: auto auto;
+    border: 1px solid #000000;
+    text-align: center;
+}
+
+.selection-window button {
+    position: relative;
+}
+
+.selection-window div {
+    margin-bottom: 24px;
 }

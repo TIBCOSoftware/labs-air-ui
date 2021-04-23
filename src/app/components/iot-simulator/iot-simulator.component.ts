@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { request } from 'http';
 
 @Component({
   selector: 'app-iot-simulator',
@@ -16,6 +15,11 @@ export class IotSimulatorComponent implements OnInit {
   closeCartURL = ""
   paymentURL = ""
 
+  basketValue = ""
+
+  showBasket = false;
+  showImage = false;
+
   constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
@@ -27,4 +31,7 @@ export class IotSimulatorComponent implements OnInit {
     })
   }
 
+  toggleBasket() {
+    this.showBasket = !this.showBasket;
+  }
 }
