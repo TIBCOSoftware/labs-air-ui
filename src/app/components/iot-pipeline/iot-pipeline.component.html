@@ -21,43 +21,44 @@
         </div>
     </div>
 
-    <div fxLayout="row" fxLayoutGap="10px" style="width: 100%; height: 600px;">
+    <div fxLayout="row">
 
         <!-- <app-pipeline-editor [gatewayId]="gatewayId" [gateway]="gateway" [devices]="devices" style="width: 100%; height: 600px;"></app-pipeline-editor> -->
-
-
-        <div class="wrapper" style="width: 70%; background-color: #F4F4F4;">
+        <div class="pipeline-editor">
             <div #nodeEditor class="node-editor"></div>
         </div>
 
-        <!-- Configuration Panel Components -->
-        <app-pipeline-config *ngIf="pipelineConfig" [pipelineForm]="pipelineForm" fxFlex style="height: 600px;">
-        </app-pipeline-config>
+        <div class="configuration-panel">
+            <!-- Configuration Panel Components -->
+            <app-pipeline-config *ngIf="pipelineConfig" [pipelineForm]="pipelineForm" fxFlex></app-pipeline-config>
+        
+            <app-pipeline-data-source *ngIf="dataSourceConfig" [dataSourceForm]="protocolForm" fxFlex>
+            </app-pipeline-data-source>
+        
+            <app-pipeline-filtering *ngIf="filteringConfig" #filterComponent [devices]="devices" [filters]="filters" fxFlex>
+            </app-pipeline-filtering>
+        
+            <app-pipeline-inferencing *ngIf="inferencingConfig" #inferenceComponent [devices]="devices" [models]="models"
+                [modelForm]="modelForm" [filters]="filters" fxFlex></app-pipeline-inferencing>
+        
+            <app-pipeline-data-store *ngIf="dataStoreConfig" [dataStoreForm]="dataStoreForm" fxFlex>
+            </app-pipeline-data-store>
+        
+            <app-pipeline-data-pipe *ngIf="dataPipeConfig" [dataPipeForm]="protocolForm" fxFlex>
+            </app-pipeline-data-pipe>
+        
+            <app-pipeline-streaming *ngIf="streamingConfig" [streamingForm]="streamingForm" [devices]="devices" fxFlex>
+            </app-pipeline-streaming>
+        
+            <app-pipeline-rules *ngIf="rulesConfig" [ruleForm]="ruleForm" [devices]="devices" fxFlex>
+            </app-pipeline-rules>
+        
+            <app-pipeline-flogo-flow *ngIf="flogoFlowConfig" [flogoFlowForm]="flogoFlowForm" fxFlex>
+            </app-pipeline-flogo-flow>
 
-        <app-pipeline-data-source *ngIf="dataSourceConfig" [dataSourceForm]="protocolForm" fxFlex
-            style="height: 600px;"></app-pipeline-data-source>
-
-        <app-pipeline-filtering *ngIf="filteringConfig" #filterComponent [devices]="devices" [filters]="filters" fxFlex
-            style="height: 600px;"></app-pipeline-filtering>
-
-        <app-pipeline-inferencing *ngIf="inferencingConfig" #inferenceComponent [devices]="devices" [models]="models"
-            [modelForm]="modelForm" [filters]="filters" fxFlex style="height: 600px;"></app-pipeline-inferencing>
-
-        <app-pipeline-data-store *ngIf="dataStoreConfig" [dataStoreForm]="dataStoreForm" fxFlex style="height: 600px;">
-        </app-pipeline-data-store>
-
-        <app-pipeline-data-pipe *ngIf="dataPipeConfig" [dataPipeForm]="protocolForm" fxFlex style="height: 600px;">
-        </app-pipeline-data-pipe>
-
-        <app-pipeline-streaming *ngIf="streamingConfig" [streamingForm]="streamingForm" [devices]="devices" fxFlex
-            style="height: 600px;">
-        </app-pipeline-streaming>
-
-        <app-pipeline-rules *ngIf="rulesConfig" [ruleForm]="ruleForm" [devices]="devices" fxFlex style="height: 600px;">
-        </app-pipeline-rules>
-
-        <app-pipeline-flogo-flow *ngIf="flogoFlowConfig" [flogoFlowForm]="flogoFlowForm" fxFlex style="height: 600px;">
-        </app-pipeline-flogo-flow>
+            <app-pipeline-rest-service *ngIf="restServiceConfig" #restComponent [devices]="devices" [restForm]="restServiceForm" [filters]="filters" fxFlex>
+            </app-pipeline-rest-service>
+        </div>
 
     </div>
 

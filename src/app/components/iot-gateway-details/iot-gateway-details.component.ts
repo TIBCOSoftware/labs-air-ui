@@ -11,6 +11,7 @@ import { IotGatewayDiscreteValueComponent } from '../iot-gateway-details-charts/
 import { IotGatewayImageComponent } from '../iot-gateway-details-charts/iot-gateway-image/iot-gateway-image.component';
 import { IotGatewayTimeSeriesComponent } from '../iot-gateway-details-charts/iot-gateway-time-series/iot-gateway-time-series.component';
 import { IotGatewayXyzValueComponent } from '../iot-gateway-details-charts/iot-gateway-xyz-value/iot-gateway-xyz-value.component';
+import { IotGatewayTextComponent } from '../iot-gateway-details-charts/iot-gateway-text/iot-gateway-text.component'
 
 @Directive({
   selector: '[sensorData]',
@@ -111,8 +112,11 @@ export class IotGatewayDetailsComponent implements OnInit {
       else if (sensor.attributes != undefined && sensor.attributes.Visualization != undefined && sensor.attributes.Visualization == "XYZScatter") {
         return this.componentFactoryResolver.resolveComponentFactory(IotGatewayXyzValueComponent);
       }
-      else if (sensor.properties.value.type == "String") {
+      else if (sensor.properties.value.type == "String" && sensor.attributes != undefined && sensor.attributes.Visualization != undefined && sensor.attributes.Visualization == "Custom") {
         return this.componentFactoryResolver.resolveComponentFactory(IotGatewayDiscreteValueComponent);
+      }
+      else if (sensor.properties.value.type == "String") {
+        return this.componentFactoryResolver.resolveComponentFactory(IotGatewayTextComponent);        
       }
       else if (sensor.properties.value.type == "Binary") {
         return this.componentFactoryResolver.resolveComponentFactory(IotGatewayImageComponent);

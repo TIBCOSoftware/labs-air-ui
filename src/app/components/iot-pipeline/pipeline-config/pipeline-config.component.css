@@ -1,0 +1,27 @@
+.pipeline-config-title {
+    font-size: 16px;
+    line-height: 24px;
+    margin: 41px 0 87px 47px;
+    font-weight: 600;
+}
+
+.pipeline-config {
+    flex-wrap: wrap;
+    margin-left: 47px;
+}
+
+.pipeline-config div {
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.pipeline-config div span {
+    width: 150px;
+}
+
+.pipeline-config div span + * {
+    border: 0;
+    padding-right: 87px;
+    background-color: #ffffff;
+}

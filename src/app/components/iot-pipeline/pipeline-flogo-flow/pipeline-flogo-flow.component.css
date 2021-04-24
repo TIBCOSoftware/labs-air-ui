@@ -22,18 +22,6 @@
 }
 
 
-
-
-
-.table-container {
-    overflow: auto;
-    height: 300px;
-}
-  
-table {
-    width: 100%;
-}
-  
 .mat-form-field {
     font-size: 14px;
     width: 100%;
@@ -57,4 +45,22 @@ table {
   margin-right: 8px;
   margin-top: 8px;
   margin-left: 10px;
+}
+
+.table-wrapper {
+    max-height: 400px;
+    overflow: auto;
+    width: 100%;
+}
+
+.table-wrapper table {
+    width: 100%;
+}
+
+.mat-header-cell {
+    font-size: 14px;
+}
+
+.mat-cell {
+    font-size: 12px;
 }

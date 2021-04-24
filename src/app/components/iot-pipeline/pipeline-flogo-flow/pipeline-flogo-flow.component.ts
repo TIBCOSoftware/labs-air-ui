@@ -1,8 +1,9 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { Component, OnInit, Input, ɵCompiler_compileModuleSync__POST_R3__ } from '@angular/core';
+import { FormGroup, FormBuilder, Form } from '@angular/forms';
+import { Subscription, Subject } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FlogoDeployService } from '../../../services/deployment/flogo-deploy.service';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 
 @Component({
@@ -15,12 +16,32 @@ export class PipelineFlogoFlowComponent implements OnInit {
 
   @Input() flogoFlowForm: FormGroup;
 
+  dataSource = [];
+  columnHeader = ['name', 'type', 'value']
+  dataSourceChange = new Subject();
+
   constructor(private flogoDeployService: FlogoDeployService,
-    private _snackBar: MatSnackBar) {
+    private _snackBar: MatSnackBar,
+    private formBuilder: FormBuilder) {
 
   }
 
   ngOnInit(): void {
+    // Initialize data source if properties available in flow form
+    let properties = this.flogoFlowForm.get('flowProperties').value;
+
+    if (properties != "") {
+      this.dataSource = JSON.parse(properties);
+    }
+
+    // when a value changes on the array, update the form value.
+    this.dataSourceChange
+      .pipe(debounceTime(800),distinctUntilChanged())
+      .subscribe(() => {
+        this.flogoFlowForm.patchValue({
+          flowProperties: JSON.stringify(this.dataSource)
+        });
+      });
   }
 
   onFileSelected(event) {
@@ -52,8 +73,6 @@ export class PipelineFlogoFlowComponent implements OnInit {
   }
 
   getFlogoAppProperties(flowDefinition) {
-
-
     if (flowDefinition != "") {
       let request = {
         flogoApp: flowDefinition
@@ -67,6 +86,8 @@ export class PipelineFlogoFlowComponent implements OnInit {
             flowProperties: JSON.stringify(res.properties),
           });
 
+          this.dataSource = res.properties;
+          console.log('DATA SOURCE', this.dataSource);
 
           // let message = 'Success';
           // if (res == undefined || res.Success == false) {
@@ -79,8 +100,10 @@ export class PipelineFlogoFlowComponent implements OnInit {
 
         });
     }
+  }
 
-
+  dataSourceChanged () {
+    this.dataSourceChange.next()
   }
 
 }

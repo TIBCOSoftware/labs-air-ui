@@ -38,3 +38,36 @@
 
     </mat-card-content>
 </mat-card>
+<!--
+<div>
+    <div class="pipeline-config-title">
+        <span>General Configuration</span>
+    </div>
+    <div class="pipeline-config" [formGroup]="pipelineForm">
+        <div>
+            <span>Name</span>
+            <input formControlName="name" required>
+        </div>
+        <div>
+            <span>Type</span>
+            <select formControlName="pipelineType">
+                <option *ngFor="let item of pipelineTypes;" [value]="item.value">
+                    {{item.viewValue}}
+                <option>
+            </select>
+        </div>
+        <div>
+            <span>Description</span>
+            <textarea formControlName="description"></textarea>
+        </div>
+        <div>
+            <span>Log Level</span>
+            <select formControlName="logLevel">
+                <option *ngFor="let item of logLevels;" [value]="item.value">
+                    {{item.viewValue}}
+                </option>
+            </select>
+        </div>
+    </div>
+</div>
+-->

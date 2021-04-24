@@ -56,6 +56,14 @@ table {
     color: #212121;
 }
 
-.node-editor .node {
+.pipeline-editor {
+    flex: 2;
+    background-color: #f4f4f4;
+}
+
+.configuration-panel {
     background: #ffffff;
+    height: 600px;
+    flex: 1;
+    display: initial;
 }
