@@ -27,6 +27,13 @@ export class PipelineFlogoFlowComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Initialize data source if properties available in flow form
+    let properties = this.flogoFlowForm.get('flowProperties').value;
+
+    if (properties != "") {
+      this.dataSource = JSON.parse(properties);
+    }
+
     // when a value changes on the array, update the form value.
     this.dataSourceChange
       .pipe(debounceTime(800),distinctUntilChanged())

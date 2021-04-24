@@ -55,6 +55,9 @@
         
             <app-pipeline-flogo-flow *ngIf="flogoFlowConfig" [flogoFlowForm]="flogoFlowForm" fxFlex>
             </app-pipeline-flogo-flow>
+
+            <app-pipeline-rest-service *ngIf="restServiceConfig" #restComponent [devices]="devices" [restForm]="restServiceForm" [filters]="filters" fxFlex>
+            </app-pipeline-rest-service>
         </div>
 
     </div>

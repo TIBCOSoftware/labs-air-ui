@@ -32,6 +32,7 @@ import { RulesComponent } from "../rete/components/rules-component";
 import { StreamingComponent } from "../rete/components/streaming-component";
 import { NotificationPipeComponent } from "../rete/components/notification-pipe-component";
 import { FlogoFlowComponent } from "../rete/components/flogo-flow-component";
+import { RestServiceComponent } from "../rete/components/rest-service-component";
 import { NodePrimaryComponent } from "../rete/nodes/node-primary/node-primary.component";
 import { pipe } from 'rxjs';
 import { DataFilteringComponent } from '../iot-data-pipeline/data-filtering/data-filtering.component';
@@ -68,6 +69,7 @@ export class IotPipelineComponent implements OnInit {
   rulesConfig = false;
   streamingConfig = false;
   flogoFlowConfig = false;
+  restServiceConfig = false;
 
   lastNodeSelected = null;
 
@@ -80,6 +82,7 @@ export class IotPipelineComponent implements OnInit {
   modelForm: FormGroup;
   ruleForm: FormGroup;
   flogoFlowForm: FormGroup;
+  restServiceForm: FormGroup;
 
   ruleTuplesDescriptor = [
     {
@@ -150,6 +153,13 @@ export class IotPipelineComponent implements OnInit {
     }
   }
 
+  private restComponent: RestServiceComponent;
+  @ViewChild('restComponent') set rcontent(content: RestServiceComponent) {
+    if (content) { // initially setter gets called with undefined
+      this.restComponent = content;
+    }
+  }
+
   @ViewChild("nodeEditor") el: ElementRef;
   editor = null;
 
@@ -192,6 +202,7 @@ export class IotPipelineComponent implements OnInit {
       new CustomPipeComponent(),
       new NotificationPipeComponent(),
       new FlogoFlowComponent(),
+      new RestServiceComponent(),
       new ErrorHandlerComponent()
     ];
 
@@ -213,7 +224,6 @@ export class IotPipelineComponent implements OnInit {
       [
         "process",
         "nodecreated",
-        "noderemoved",
         "connectioncreated",
         "connectionremoved"
       ],
@@ -235,6 +245,26 @@ export class IotPipelineComponent implements OnInit {
     //   }) as any
     // );
 
+
+    // Handle node removed event
+    this.editor.on("noderemove", node => {
+      console.log("Editor node to remove", node);
+      console.log("Editor node to remove", node.name);
+
+      if (this.lastNodeSelected != null && this.lastNodeSelected == node) {
+        console.log("Removing selected node.  Need to clean panel");
+
+        // Clean shared variables
+        this.clearFormsAndFilters();
+
+        this.lastNodeSelected = null;
+
+        this.resetNodeContext(null);
+
+      }
+    });
+
+    // Handle node selected events
     this.editor.on("nodeselected", node => {
 
       console.log("Editor node selected", node);
@@ -379,6 +409,10 @@ export class IotPipelineComponent implements OnInit {
         contextObj = this.buildNodeFlogoFlowProperties();
         break;
       }
+      case "REST Service": {
+        contextObj = this.buildRESTServiceProperties();
+        break;
+      }
       default: {
 
         break;
@@ -400,6 +434,7 @@ export class IotPipelineComponent implements OnInit {
     this.rulesConfig = false;
     this.streamingConfig = false;
     this.flogoFlowConfig = false;
+    this.restServiceConfig = false;
 
     if (node != null || node != undefined) {
       console.log("Resetting context for node: ", node);
@@ -458,6 +493,11 @@ export class IotPipelineComponent implements OnInit {
           this.flogoFlowConfig = true;
           break;
         }
+        case "REST Service": {
+          this.updateRESTServiceComponent(contextObj);
+          this.restServiceConfig = true;
+          break;
+        }
         default: {
           this.pipelineConfig = true;
           break;
@@ -484,11 +524,24 @@ export class IotPipelineComponent implements OnInit {
       logLevel: 'INFO',
     }, { emitEvent: false });
 
+    this.restServiceForm.reset({
+      description: '',
+      url: '',
+      logLevel: 'INFO',
+    }, { emitEvent: false });
+
     this.protocolForm.patchValue({
       protocolId: '',
       protocol: '',
       logLevel: 'INFO',
     }, { emitEvent: true });
+
+    // clear flogo app form
+    this.flogoFlowForm.patchValue({
+      flowFilename: '',
+      flowDefinition: '',
+      flowProperties: '',
+    }, { emitEvent: false });
 
   }
 
@@ -618,6 +671,12 @@ export class IotPipelineComponent implements OnInit {
       logLevel: ['INFO', Validators.required]
     });
 
+    this.restServiceForm = this.formBuilder.group({
+      description: ['', Validators.required],
+      url: ['', Validators.required],
+      logLevel: ['INFO', Validators.required]
+    });
+
     this.ruleForm = this.formBuilder.group({
       name: ['', Validators.required],
       description: [''],
@@ -641,8 +700,6 @@ export class IotPipelineComponent implements OnInit {
     });
 
     this.flogoFlowForm = this.formBuilder.group({
-      name: ['', Validators.required],
-      description: [''],
       flowFilename: ['', Validators.required],
       flowDefinition: ['', Validators.required],
       flowProperties: ['', Validators.required]
@@ -890,8 +947,6 @@ export class IotPipelineComponent implements OnInit {
   buildNodeFlogoFlowProperties(): any {
 
     let flogoFlowObj = {
-      "name": this.flogoFlowForm.get('name').value,
-      "description": this.flogoFlowForm.get('description').value,
       "flowFilename": this.flogoFlowForm.get('flowFilename').value,
       "flowDefinition": this.flogoFlowForm.get('flowDefinition').value,
       "flowProperties": this.flogoFlowForm.get('flowProperties').value
@@ -902,6 +957,22 @@ export class IotPipelineComponent implements OnInit {
     return flogoFlowObj;
   }
 
+  /**
+   *
+   * @param form
+   */
+  buildRESTServiceProperties(): any {
+
+    let restServiceObj = {
+      "description": this.restServiceForm.get('description').value,
+      "url": this.restServiceForm.get('url').value,
+      "logLevel": this.restServiceForm.get('logLevel').value
+    };
+
+    console.log("REST Service context saved: ", restServiceObj);
+
+    return restServiceObj;
+  }
 
   /**
    *
@@ -1165,7 +1236,6 @@ export class IotPipelineComponent implements OnInit {
   }
 
   /**
- *
  * @param context
  */
   updateFlogoFlowComponent(context) {
@@ -1174,8 +1244,6 @@ export class IotPipelineComponent implements OnInit {
       console.log("Updating flogo flow component with context: ", context);
 
       this.flogoFlowForm.patchValue({
-        name: context.name,
-        description: context.description,
         flowFilename: context.flowFilename,
         flowDefinition: context.flowDefinition,
         flowProperties: context.flowProperties,
@@ -1183,6 +1251,25 @@ export class IotPipelineComponent implements OnInit {
 
     }
   }
+
+  /**
+*
+* @param context
+*/
+  updateRESTServiceComponent(context) {
+
+    if (context != null || context != undefined) {
+      console.log("Updating rest service component with context: ", context);
+
+      this.restServiceForm.patchValue({
+        description: context.description,
+        url: context.url,
+        logLevel: context.logLevel,
+      })
+
+    }
+  }
+
 
   /**
    * Get Gateway, Pipelines and Devices information
@@ -1236,7 +1323,6 @@ export class IotPipelineComponent implements OnInit {
         if (res[0].pipelines != undefined) {
 
           console.log("Setting pipelineDataSource.data fo incoming pipeline");
-
 
           this.pipelinesDataSource.data = res[0].pipelines as Pipeline[];
 
@@ -1531,6 +1617,7 @@ export class IotPipelineComponent implements OnInit {
     this.rulesConfig = false;
     this.streamingConfig = false;
     this.flogoFlowConfig = false;
+    this.restServiceConfig = false;
 
     this.pipelineForm.patchValue({
       uid: "",
@@ -1565,8 +1652,8 @@ export class IotPipelineComponent implements OnInit {
     let deployNetwork = {};
     if (this.gateway.deployNetwork == "snap") {
       deployNetwork = {
-        "Name":"services.$Name$.network_mode",
-        "Value":"host"
+        "Name": "services.$Name$.network_mode",
+        "Value": "host"
       }
     }
     else {
@@ -1607,7 +1694,7 @@ export class IotPipelineComponent implements OnInit {
       let flow = this.editor.toJSON();
       let pos = 0;
       let rulePos = 0;
-      let requireFilterDummy = true;
+      let isFlogoApp = false;
       console.log("Building from: ", flow);
 
       Object.keys(flow.nodes).forEach(key => {
@@ -1669,7 +1756,16 @@ export class IotPipelineComponent implements OnInit {
             }
             case "Flogo Flow": {
               pipelineFlow.AirDescriptor.logic.push(this.buildFlogoFlowDeployObj(flow.nodes[key].data.customdata));
-              requireFilterDummy = false;
+
+              // Adde extra section required for Flogo App
+              let volume = {
+                "Name": "services.$Name$.volumes[0]",
+                "Value": "${Demo}:/home/demo"
+              };
+              extra.push(volume);
+
+              // Set flag to exclude Filter Dummy component which is required for regular pipelines
+              isFlogoApp = true;
               break;
             }
           }
@@ -1679,7 +1775,22 @@ export class IotPipelineComponent implements OnInit {
 
       });
 
-      if (requireFilterDummy) {
+      if (isFlogoApp) {
+        if (deployType == "Edge") {
+          systemEnv = {
+            "Platform": this.gateway.platform,
+            "DetachedMode": "n",
+            "Username": this.gateway.username,
+            "TargetServer": this.gateway.router,
+            "Port": this.gateway.routerPort,
+            "Demo": "/home/ubuntu/loss-detection-demo"
+          };
+
+          pipelineFlow.ScriptSystemEnv = systemEnv;
+        }
+
+      }
+      else {
         pipelineFlow.AirDescriptor.logic.push(
           {
             "name": "Filter.Dummy",
@@ -1689,7 +1800,7 @@ export class IotPipelineComponent implements OnInit {
           }
         );
       }
-      
+
 
       console.log("Pipeline flow to be build: ", pipelineFlow);
       console.log("Pipeline flow to be build string: ", JSON.stringify(pipelineFlow));
@@ -1714,8 +1825,6 @@ export class IotPipelineComponent implements OnInit {
       this.flogoDeployService.validateF1(pipelineId, pipelineFlow)
         .subscribe(res => {
           console.log("Received Validation response: ", res);
-
-          console.log("Received Validation response code: ", res.Success);
 
           let message = 'Success';
           if (res == undefined || res.Success == false) {
