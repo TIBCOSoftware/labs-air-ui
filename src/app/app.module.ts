@@ -97,6 +97,7 @@ import { IotGatewayDescriptionsComponent } from './components/iot-gateway-detail
 import { PipelineFlogoFlowComponent } from './components/iot-pipeline/pipeline-flogo-flow/pipeline-flogo-flow.component';
 import { IotGatewayTextComponent } from './components/iot-gateway-details-charts/iot-gateway-text/iot-gateway-text.component';
 import { PipelineRestServiceComponent } from './components/iot-pipeline/pipeline-rest-service/pipeline-rest-service.component';
+import { IotSimulatorComponent } from './components/iot-simulator/iot-simulator.component';
 
 /** This is the tc core configuration object
  * To use oauth you must also add the OAuthInterceptor to providers
@@ -192,7 +193,8 @@ const tcCoreConfig: TcCoreConfig = {
     IotGatewayDescriptionsComponent,
     PipelineFlogoFlowComponent,
     IotGatewayTextComponent,
-    PipelineRestServiceComponent
+    PipelineRestServiceComponent,
+    IotSimulatorComponent
   ],
   imports: [
     AppRoutingModule,
