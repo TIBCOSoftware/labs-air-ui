@@ -20,6 +20,7 @@ import {IotMlModelsComponent} from '../../components/iot-ml-models/iot-ml-models
 import {TceRulesComponent} from '../../components/tce-rules/tce-rules.component'
 import {IotGatewayDetailsComponent} from '../../components/iot-gateway-details/iot-gateway-details.component'
 import {IotNotificationsComponent} from '../../components/iot-notifications/iot-notifications.component';
+import { IotSimulatorComponent } from 'src/app/components/iot-simulator/iot-simulator.component';
 import {LiveAppsComponent} from '../../components/live-apps/live-apps.component';
 import {
   ConfigurationMenuConfigResolver,
@@ -348,6 +349,19 @@ export const STARTER_APP_ROUTES =
           customFormDefs: FormResolver
         },
         data: { breadcrumb: ['Gateways','Devices']}
+      },
+      {
+        path: 'simulator',
+        component: IotSimulatorComponent,
+        canActivate: [AuthGuard],
+        resolve: {
+          laConfigHolder: LaConfigResolver,
+          claims: ClaimsResolver,
+          groups: GroupsResolver,
+          roles: RolesResolver,
+          access: AccessResolver,
+          customFormDefs: FormResolver
+        }
       },
       {
         path: '', redirectTo: '/starterApp/home/casemanagement', pathMatch: 'full'
