@@ -3,49 +3,43 @@
 }
 button {
     position: absolute;
-    opacity: 0;
+    opacity: 1;
+}
+
+
+.selectItem {
+    top: 335px;
+    left: 325px;
 }
 
 .scan {
-    top: 242px;
-    left: 565px;
-    width: 40px;
-    height: 40px;
+    top: 243px;
+    left: 567px;
 }
 
 .camera {
-    top: 351px;
-    left: 685px;
-    width: 60px;
-    height: 45px;
+    top: 440px;
+    left: 578px;
 }
 
 .scale {
-    top: 477px;
-    left: 300px;
-    width: 105px;
-    height: 80px;
+    top: 440px;
+    left: 418px;
 }
 
 .openBasket {
-    top: 366px;
-    left: 287px;
-    width: 105px;
-    height: 80px;
+    top: 340px;
+    left: 430px;
 }
 
 .closeBasket {
-    top: 450px;
-    left: 654px;
-    width: 105px;
-    height: 80px;
+    top: 340px;
+    left: 500px;
 }
 
 .payment {
-    top: 321px;
-    left: 436px;
-    width: 100px;
-    height: 80px;
+    top: 340px;
+    left: 567px;
 }
 
 .selection-window {
@@ -66,4 +60,20 @@ button {
 
 .selection-window div {
     margin-bottom: 24px;
+}
+
+.camera-window {
+    top: 450px;
+    left: 645px;
+    position: absolute;
+    width: 300px;
+    height: 300px;
+}
+
+.scan-window {
+    top: 240px;
+    left: 500px;
+    position: absolute;
+    width: 50px;
+    height: 50px;
 }
