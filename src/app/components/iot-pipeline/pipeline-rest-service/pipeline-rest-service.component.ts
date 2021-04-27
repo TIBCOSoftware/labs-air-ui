@@ -237,7 +237,7 @@ export class PipelineRestServiceComponent implements OnInit, OnChanges {
 
 
   getFilters(): any {
-    console.log("RESTService-Getting filters");
+    console.log("PipelineInferencing-Getting filters");
 
     let filters = [];
 
@@ -258,8 +258,8 @@ export class PipelineRestServiceComponent implements OnInit, OnChanges {
   }
 
   setupFilters() {
-    console.log("RESTService-setupFilters:", this.filters);
-
+    console.log("PipelineInferencing-setupFilters:", this.filters);
+    
 
     this.filters.forEach(element => {
       this.selectNode(element.device, element.name);
