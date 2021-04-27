@@ -11,8 +11,9 @@ import { EdgeService } from '../../services/edge/edge.service';
 import { FlogoDeployService } from '../../services/deployment/flogo-deploy.service';
 import { Pipeline, Gateway, Device, Model } from '../../shared/models/iot.model';
 
-import { PipelineFilteringComponent } from "./pipeline-filtering/pipeline-filtering.component"
+import { PipelineFilteringComponent } from "./pipeline-filtering/pipeline-filtering.component";
 import { PipelineInferencingComponent } from './pipeline-inferencing/pipeline-inferencing.component';
+import { PipelineRestServiceComponent } from './pipeline-rest-service/pipeline-rest-service.component';
 // Rete editor specific
 import { NodeEditor, Engine } from "rete";
 import ConnectionPlugin from "rete-connection-plugin";
@@ -38,6 +39,7 @@ import { pipe } from 'rxjs';
 import { DataFilteringComponent } from '../iot-data-pipeline/data-filtering/data-filtering.component';
 import { LogLevel } from '@tibco-tcstk/tc-core-lib';
 import { stringify } from '@angular/compiler/src/util';
+import { RippleRef } from '@angular/material/core';
 
 
 
@@ -153,8 +155,8 @@ export class IotPipelineComponent implements OnInit {
     }
   }
 
-  private restComponent: RestServiceComponent;
-  @ViewChild('restComponent') set rcontent(content: RestServiceComponent) {
+  private restComponent: PipelineRestServiceComponent;
+  @ViewChild('restComponent') set rcontent(content: PipelineRestServiceComponent) {
     if (content) { // initially setter gets called with undefined
       this.restComponent = content;
     }
@@ -410,7 +412,7 @@ export class IotPipelineComponent implements OnInit {
         break;
       }
       case "REST Service": {
-        contextObj = this.buildRESTServiceProperties();
+        contextObj = this.buildNodeDataRESTServiceProperties();
         break;
       }
       default: {
@@ -961,11 +963,12 @@ export class IotPipelineComponent implements OnInit {
    *
    * @param form
    */
-  buildRESTServiceProperties(): any {
+  buildNodeDataRESTServiceProperties(): any {
 
     let restServiceObj = {
       "description": this.restServiceForm.get('description').value,
       "url": this.restServiceForm.get('url').value,
+      "filters": this.restComponent.getFilters(),
       "logLevel": this.restServiceForm.get('logLevel').value
     };
 
@@ -1260,6 +1263,8 @@ export class IotPipelineComponent implements OnInit {
 
     if (context != null || context != undefined) {
       console.log("Updating rest service component with context: ", context);
+
+      this.filters = context.filters;
 
       this.restServiceForm.patchValue({
         description: context.description,
@@ -1693,7 +1698,8 @@ export class IotPipelineComponent implements OnInit {
 
       let flow = this.editor.toJSON();
       let pos = 0;
-      let rulePos = 0;
+      let notificationSourcePos = 0;
+      let notificationSource = "";
       let isFlogoApp = false;
       console.log("Building from: ", flow);
 
@@ -1725,15 +1731,32 @@ export class IotPipelineComponent implements OnInit {
               break;
             }
             case "Notification Pipe": {
-              pipelineFlow.AirDescriptor.logic.push(this.buildDataPipeDeployObj(flow.nodes[key].data.customdata));
+              if (notificationSource == "Rules") {
+                pipelineFlow.AirDescriptor.logic.push(this.buildDataPipeDeployObj(flow.nodes[key].data.customdata));
+                let pipeId = "Pipe_" + pos;
+                let ruleId = "Rule_" + notificationSourcePos;
+                let listener = {
+                  "Name": "App.NotificationListeners",
+                  "Value": "{\"" + ruleId + "\":" + "[\"" + pipeId + "\"]}",
+                };
+                extra.push(listener);
+              }
+              else if (notificationSource == "REST Service") {
+                notificationSourcePos = pos;
+                pipelineFlow.AirDescriptor.logic.push(this.buildNotificationRuleDeployObj());
+                pos++;
+                pipelineFlow.AirDescriptor.logic.push(this.buildDataPipeDeployObj(flow.nodes[key].data.customdata));
 
-              let pipeId = "Pipe_" + pos;
-              let ruleId = "Rule_" + rulePos;
-              let listener = {
-                "Name": "App.NotificationListeners",
-                "Value": "{\"" + ruleId + "\":" + "[\"" + pipeId + "\"]}",
-              };
-              extra.push(listener);
+                let pipeId = "Pipe_" + pos;
+                let ruleId = "Rule_" + notificationSourcePos;
+                let listener = {
+                  "Name": "App.NotificationListeners",
+                  "Value": "{\"" + ruleId + "\":" + "[\"" + pipeId + "\"]}",
+                };
+                extra.push(listener);
+              }
+
+
 
               break;
             }
@@ -1751,7 +1774,8 @@ export class IotPipelineComponent implements OnInit {
             }
             case "Rules": {
               pipelineFlow.AirDescriptor.logic.push(this.buildRulesDeployObj(flow.nodes[key].data.customdata));
-              rulePos = pos;
+              notificationSourcePos = pos;
+              notificationSource = "Rules";
               break;
             }
             case "Flogo Flow": {
@@ -1766,6 +1790,12 @@ export class IotPipelineComponent implements OnInit {
 
               // Set flag to exclude Filter Dummy component which is required for regular pipelines
               isFlogoApp = true;
+              break;
+            }
+            case "REST Service": {
+              pipelineFlow.AirDescriptor.logic.push(this.buildRESTServiceDeployObj(flow.nodes[key].data.customdata));
+              notificationSourcePos = pos;
+              notificationSource = "REST Service";
               break;
             }
           }
@@ -1795,7 +1825,7 @@ export class IotPipelineComponent implements OnInit {
           {
             "name": "Filter.Dummy",
             "properties": [
-              { "Name": "Logging.LogLevel", "Value": "DEBUG" }
+              { "Name": "Logging.LogLevel", "Value": "INFO" }
             ]
           }
         );
@@ -2000,7 +2030,7 @@ export class IotPipelineComponent implements OnInit {
         { "Name": "Mqtt.caCertificate", "Value": "changeme" },
         { "Name": "Mqtt.clientCertificate", "Value": "changeme" },
         { "Name": "Mqtt.clientKey", "Value": "changeme" },
-        { "Name": "Logging.LogLevel", "Value": "DEBUG" }
+        { "Name": "Logging.LogLevel", "Value": "INFO" }
       ];
     }
     else if (contextObj.protocol == "Kafka") {
@@ -2056,7 +2086,7 @@ export class IotPipelineComponent implements OnInit {
         { "Name": "Mqtt.caCertificate", "Value": "changeme" },
         { "Name": "Mqtt.clientCertificate", "Value": "changeme" },
         { "Name": "Mqtt.clientKey", "Value": "changeme" },
-        { "Name": "Logging.LogLevel", "Value": "DEBUG" }
+        { "Name": "Logging.LogLevel", "Value": "INFO" }
       ];
     }
     else if (contextObj.protocol == "Kafka") {
@@ -2128,7 +2158,7 @@ export class IotPipelineComponent implements OnInit {
         { "Name": "PostgreSQL.IoTPostgres.Database_Name", "Value": contextObj.databaseName },
         { "Name": "PostgreSQL.IoTPostgres.User", "Value": contextObj.user },
         { "Name": "PostgreSQL.IoTPostgres.Password", "Value": contextObj.password },
-        { "Name": "Logging.LogLevel", "Value": "DEBUG" }
+        { "Name": "Logging.LogLevel", "Value": "INFO" }
       ];
     }
     else if (contextObj.dataStore == "Snowflake") {
@@ -2187,7 +2217,7 @@ export class IotPipelineComponent implements OnInit {
   buildFiltersDeployProperties(contextObj): any {
 
     let filterObj = [
-      { "Name": "Logging.LogLevel", "Value": "DEBUG" },
+      { "Name": "Logging.LogLevel", "Value": "INFO" },
       { "Name": "Filter.Conditions", "Value": JSON.stringify(contextObj.filters) }
     ];
 
@@ -2236,7 +2266,7 @@ export class IotPipelineComponent implements OnInit {
 
 
     let filterObj = [
-      { "Name": "Logging.LogLevel", "Value": "DEBUG" },
+      { "Name": "Logging.LogLevel", "Value": "INFO" },
       { "Name": "REST.Timeout", "Value": "10000" },
       { "Name": "REST.InferenceData", "Value": JSON.stringify(inferenceData) },
       { "Name": "REST.Conditions", "Value": JSON.stringify(contextObj.filters) },
@@ -2266,7 +2296,7 @@ export class IotPipelineComponent implements OnInit {
   buildStreamingDeployProperties(contextObj): any {
 
     let streamingObj = [
-      { "Name": "Logging.LogLevel", "Value": "DEBUG" },
+      { "Name": "Logging.LogLevel", "Value": "INFO" },
       { "Name": "Streaming.ProceedOnEmit", "Value": "true" },
       { "Name": "Streaming.Resolution", "Value": "1" },
       // { "Name": "Streaming.InputField", "Value": "f1..value" },
@@ -2358,6 +2388,84 @@ export class IotPipelineComponent implements OnInit {
     return flogoFlowPropertiesObj;
   }
 
+  buildRESTServiceDeployObj(contextObj): any {
 
+    console.log("RESTService Context: ", contextObj);
+
+    let restServiceType = "Inference.REST";
+    let restServiceObj = {
+      name: restServiceType,
+      properties: this.buildRESTServiceDeployProperties(contextObj)
+    };
+
+    return restServiceObj;
+
+  }
+
+  /**
+   * @param contextObj
+   */
+  buildRESTServiceDeployProperties(contextObj): any {
+
+    let inferenceData = {
+      "ID": "@f1..id@",
+      "Name": "@f1..name@",
+      "Value": "@f1..value@"
+    }
+
+    let alias = 0;
+    let urlMapping = [];
+    contextObj.filters.forEach(element => {
+      let mapping = {
+        "Alias": alias.toString(),
+        "URL": contextObj.url
+      };
+      urlMapping.push(mapping);
+      alias++
+    });
+
+
+
+    let propertiesObj = [
+      { "Name": "Logging.LogLevel", "Value": "INFO" },
+      { "Name": "REST.Timeout", "Value": "10000" },
+      { "Name": "REST.InferenceData", "Value": JSON.stringify(inferenceData) },
+      { "Name": "REST.Conditions", "Value": JSON.stringify(contextObj.filters) },
+      { "Name": "REST.URLMapping", "Value": JSON.stringify(urlMapping) }
+    ];
+
+    return propertiesObj;
+  }
+
+  buildNotificationRuleDeployObj(): any {
+
+    let notificationRuleType = "Rule.TextMatching";
+    let notificationRuleObj = {
+      name: notificationRuleType,
+      properties: this.buildNotificationRuleDeployProperties()
+    };
+
+    return notificationRuleObj;
+
+  }
+
+  /**
+   * @param contextObj
+   */
+  buildNotificationRuleDeployProperties(): any {
+
+    let ruleMatching = [
+      { "type": "contains", "value": "ERROR" },
+      { "type": "contains", "value": "WARN" }
+    ];
+
+    let propertiesObj = [
+      { "Name": "Logging.LogLevel", "Value": "INFO" },
+      { "Name": "Rule.TargetField", "Value": "@Inference.REST..Inferred@" },
+      { "Name": "Rule.Matching", "Value": JSON.stringify(ruleMatching) }
+    ];
+
+    return propertiesObj;
+  }
 }
 
