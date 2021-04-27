@@ -31,9 +31,10 @@
 
 .cards {
     box-sizing: border-box;
-    width: 1px;
     border-right: 1px solid #979797;
     width: 365px;
+    height: auto;
+    overflow: auto;
 }
 
 .card-actions .device {
