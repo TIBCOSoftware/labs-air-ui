@@ -1,6 +1,11 @@
 .device-tree-invisible {
     display: none;
 }
+
+.device-tree {
+    max-height: 250px;
+    overflow: auto;
+}
   
 .device-tree ul,
 .device-tree li {

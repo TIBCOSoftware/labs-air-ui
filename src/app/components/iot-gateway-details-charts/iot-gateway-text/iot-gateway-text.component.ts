@@ -14,7 +14,8 @@ export class IotGatewayTextComponent implements OnInit {
   subscriptions: Subscription[] = []
   public resourceReadings = [];
   constructor(private graphService: GraphService) { }
-  text: string;
+  displayedColumns = ['created', 'value']
+  dateFormat = 'yyyy-MM-dd HH:mm:ss'
 
   ngOnInit(): void {
     this.getReadings();
@@ -25,10 +26,9 @@ export class IotGatewayTextComponent implements OnInit {
   }
 
   public getReadings() {
-    this.subscriptions.push(this.graphService.getReadings(this.device.name, this.instrument.name, 1)
+    this.subscriptions.push(this.graphService.getReadings(this.device.name, this.instrument.name, 300)
       .subscribe(res => {
         this.resourceReadings = res as TSReading[];
-        this.text = this.resourceReadings[0].value;
       }));
   }
 

@@ -1,2 +1,16 @@
 <app-iot-gateway-descriptions [device]="device" [instrument]="instrument"></app-iot-gateway-descriptions>
-<textarea>{{ text }}</textarea>
+<table mat-table [dataSource]="resourceReadings">
+
+    <ng-container matColumnDef="created">
+        <th mat-header-cell *matHeaderCellDef> created </th>
+        <td mat-cell *matCellDef="let element"> {{element.created | date: dateFormat}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="value">
+        <th mat-header-cell *matHeaderCellDef> value </th>
+        <td mat-cell *matCellDef="let element"> {{element.value}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
