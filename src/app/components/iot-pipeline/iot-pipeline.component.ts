@@ -19,7 +19,7 @@ import { NodeEditor, Engine } from "rete";
 import ConnectionPlugin from "rete-connection-plugin";
 import { AngularRenderPlugin } from "rete-angular-render-plugin";
 import ContextMenuPlugin from "rete-context-menu-plugin";
-import { zoomAt } from "rete-area-plugin";
+// import { zoomAt } from "rete-area-plugin";
 
 import { DataStoreComponent } from "../rete/components/data-store-component";
 import { DataSourceComponent } from "../rete/components/data-source-component";
@@ -323,7 +323,21 @@ export class IotPipelineComponent implements OnInit {
 
     this.editor.trigger("process");
     // zoomAt(this.editor);
+    this.zoomAt(0.7);
 
+  }
+
+  zoomAt(k) {
+    // const { area, container } = this.editor.view; // read from Vue component data;
+    // const rect = area.el.getBoundingClientRect();
+    // const ox = (rect.left - container.clientWidth / 2) * k;
+    // const oy = (rect.top - container.clientHeight / 2) * k;
+
+    // area.zoom(area.transform.k + k, ox, oy);
+
+    const { area } = this.editor.view;
+
+    area.zoom(k, 0, 0);
   }
 
   findDataSourceFlowNode(flow): any {
@@ -543,6 +557,8 @@ export class IotPipelineComponent implements OnInit {
       flowFilename: '',
       flowDefinition: '',
       flowProperties: '',
+      volumeName: '',
+      volumePath: ''
     }, { emitEvent: false });
 
   }
@@ -704,7 +720,9 @@ export class IotPipelineComponent implements OnInit {
     this.flogoFlowForm = this.formBuilder.group({
       flowFilename: ['', Validators.required],
       flowDefinition: ['', Validators.required],
-      flowProperties: ['', Validators.required]
+      flowProperties: ['', Validators.required],
+      volumeName: [''],
+      volumePath: ['']
     });
 
   }
@@ -951,7 +969,9 @@ export class IotPipelineComponent implements OnInit {
     let flogoFlowObj = {
       "flowFilename": this.flogoFlowForm.get('flowFilename').value,
       "flowDefinition": this.flogoFlowForm.get('flowDefinition').value,
-      "flowProperties": this.flogoFlowForm.get('flowProperties').value
+      "flowProperties": this.flogoFlowForm.get('flowProperties').value,
+      "volumeName": this.flogoFlowForm.get('volumeName').value,
+      "volumePath": this.flogoFlowForm.get('volumePath').value
     };
 
     console.log("FlogoFlow context saved: ", flogoFlowObj);
@@ -1250,6 +1270,8 @@ export class IotPipelineComponent implements OnInit {
         flowFilename: context.flowFilename,
         flowDefinition: context.flowDefinition,
         flowProperties: context.flowProperties,
+        volumeName: context.volumeName,
+        volumePath: context.volumePath
       })
 
     }
@@ -1701,6 +1723,7 @@ export class IotPipelineComponent implements OnInit {
       let notificationSourcePos = 0;
       let notificationSource = "";
       let isFlogoApp = false;
+      let flogoAppVolPath = "";
       console.log("Building from: ", flow);
 
       Object.keys(flow.nodes).forEach(key => {
@@ -1756,8 +1779,6 @@ export class IotPipelineComponent implements OnInit {
                 extra.push(listener);
               }
 
-
-
               break;
             }
             case "Filters": {
@@ -1781,15 +1802,18 @@ export class IotPipelineComponent implements OnInit {
             case "Flogo Flow": {
               pipelineFlow.AirDescriptor.logic.push(this.buildFlogoFlowDeployObj(flow.nodes[key].data.customdata));
 
+              let volumeName = flow.nodes[key].data.customdata.volumeName;
+
               // Adde extra section required for Flogo App
               let volume = {
                 "Name": "services.$Name$.volumes[0]",
-                "Value": "${Demo}:/home/demo"
+                "Value": "${Vol}:" + volumeName
               };
               extra.push(volume);
 
               // Set flag to exclude Filter Dummy component which is required for regular pipelines
               isFlogoApp = true;
+              flogoAppVolPath = flow.nodes[key].data.customdata.volumePath;
               break;
             }
             case "REST Service": {
@@ -1813,7 +1837,7 @@ export class IotPipelineComponent implements OnInit {
             "Username": this.gateway.username,
             "TargetServer": this.gateway.router,
             "Port": this.gateway.routerPort,
-            "Demo": "/home/ubuntu/loss-detection-demo"
+            "Vol": flogoAppVolPath
           };
 
           pipelineFlow.ScriptSystemEnv = systemEnv;
@@ -2371,7 +2395,7 @@ export class IotPipelineComponent implements OnInit {
       name: flogoFlowType,
       flogoApp: contextObj.flowDefinition,
       properties: this.buildFlogoFlowDeployProperties(contextObj),
-      ports: ["9090:9999"]
+      ports: ["8080:9999"]
     };
 
     return flogoFlowObj;
