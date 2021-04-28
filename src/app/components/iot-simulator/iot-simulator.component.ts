@@ -14,13 +14,12 @@ export class IotSimulatorComponent implements OnInit {
   itemSelected = false;
   showCameraImage = false;
   showScanImage = false;
-  showScale = false;
-  showItemSelector = false;
-  showCamera = false;
+  showScaleSelector = false;
+  showScanSelector = false;
+  showCameraSelector = false;
 
-  selectedItem: string = "";
   scannedItem: string = "";
-  itemWeight: string = "0";
+  itemWeight = 0;
   cameraItem: string = "";
 
   productList: any[] = [];
@@ -43,11 +42,11 @@ export class IotSimulatorComponent implements OnInit {
       })
   }
 
-  selectItemEvent() {
-    console.log("Select Item Event");
+  scanEvent() {
+    console.log("Scan Event");
     if (this.basketOpened) {
-      this.selectedItem = "";
-      this.showItemSelector = true;
+      this.scannedItem = "";
+      this.showScanSelector = true;
     }
     else {
       this._snackBar.open("Failure", "Please open basket to start", {
@@ -56,67 +55,48 @@ export class IotSimulatorComponent implements OnInit {
     }
   }
 
-
-  selectItemCanceled() {
-    this.selectedItem = "";
-    this.showItemSelector = false;
+  scanCanceled() {
+    this.scannedItem = "";
+    this.showScanSelector = false;
   }
 
-  selectItemSelected() {
-    this.showItemSelector = false;
-    this.itemSelected = true;
-    console.log("Item has been selected: ", this.selectedItem);
+  scanSelected() {
 
-    this._snackBar.open("Success", "Item placed in basket", {
-      duration: 3000,
-    });
+    this.showScanSelector = false;
+    this.showScanImage = true;
+
+    let event = {
+      "EventTime": Date.now(),
+      "Details": {
+        "Action": "process-item",
+        "BasketID": "abc-012345-def",
+        "CustomerID": "joe5",
+        "EmployeeID": "mary1",
+        "ProductID": this.scannedItem
+      }
+    };
+
+
+    this.simulatorService.posEvent(event)
+      .subscribe(res => {
+        console.log("Scan submitted: ", res);
+
+        this._snackBar.open("Success", "Item scanned", {
+          duration: 3000,
+        });
+      })
   }
 
-
-  scanEvent() {
-
-    console.log("Scan Event");
-    if (this.itemSelected) {
-      this.scannedItem = this.selectedItem;
-      this.showScanImage = true;
-
-      let event = {
-        "EventTime": Date.now(),
-        "Details": {
-          "Action": "process-item",
-          "BasketID": "abc-012345-def",
-          "CustomerID": "joe5",
-          "EmployeeID": "mary1",
-          "ProductID": this.scannedItem
-        }
-      };
-
-      this.simulatorService.posEvent(event)
-        .subscribe(res => {
-          console.log("Scan submitted: ", res);
-
-          this._snackBar.open("Success", "Item scanned", {
-            duration: 3000,
-          });
-        })
-    }
-    else {
-      this._snackBar.open("Failure", "Please select item", {
-        duration: 3000,
-      });
-    }
-
-  }
 
   scaleEvent() {
 
     console.log("Scale Event");
-    if (this.itemSelected) {
-      this.itemWeight = "0";
-      this.showScale = true;
+    if (this.basketOpened) {
+      this.itemWeight = 0;
+      this.showScaleSelector = true;
     }
     else {
-      this._snackBar.open("Failure", "Please place item on scale", {
+      this._snackBar.open("Failure", "Please open basket to start", {
         duration: 3000,
       });
     }
@@ -124,12 +104,12 @@ export class IotSimulatorComponent implements OnInit {
   }
 
   scaleCanceled() {
-    this.itemWeight = "0"
-    this.showScale = false;
+    this.itemWeight = 0;
+    this.showScaleSelector = false;
   }
 
   scaleSelected() {
-    this.showScale = false;
+    this.showScaleSelector = false;
     console.log("Item has been weighted: ", this.itemWeight);
 
     let event = {
@@ -137,7 +117,7 @@ export class IotSimulatorComponent implements OnInit {
       "Details": {
         "Action": "process-item",
         "LaneID": "1",
-        "Weight": Number(this.itemWeight)
+        "Weight": this.itemWeight
       }
     };
 
@@ -156,10 +136,10 @@ export class IotSimulatorComponent implements OnInit {
   cameraEvent() {
 
     console.log("Camera Event");
-    if (this.itemSelected) {
+    if (this.basketOpened) {
       this.cameraItem = "";
       this.showCameraImage = false;
-      this.showCamera = true;
+      this.showCameraSelector = true;
     }
     else {
       this._snackBar.open("Failure", "Please select item", {
@@ -173,13 +153,13 @@ export class IotSimulatorComponent implements OnInit {
   cameraCanceled() {
 
     this.cameraItem = "";
-    this.showCamera = false;
+    this.showCameraSelector = false;
 
   }
 
   cameraSelected() {
 
-    this.showCamera = false;
+    this.showCameraSelector = false;
     this.showCameraImage = true;
     console.log("Photo taken for: ", this.cameraItem);
 
@@ -250,6 +230,7 @@ export class IotSimulatorComponent implements OnInit {
       this.basketOpened = false;
       this.showCameraImage = false;
       this.showScanImage = false;
+      this.itemWeight = 0;
 
       let event = {
         "EventTime": Date.now(),
@@ -271,6 +252,11 @@ export class IotSimulatorComponent implements OnInit {
           });
         });
     }
+    else {
+      this._snackBar.open("Success", "Basket is already closed", {
+        duration: 3000,
+      });
+    }
 
   }
 
@@ -278,10 +264,9 @@ export class IotSimulatorComponent implements OnInit {
     console.log("Open Basket Event");
 
     this.basketOpened = true;
-    this.itemSelected = false;
     this.showCameraImage = false;
     this.showScanImage = false;
-    this.selectedItem = "";
+    this.itemWeight = 0,
     this.scannedItem = "";
     this.cameraItem = "";
 

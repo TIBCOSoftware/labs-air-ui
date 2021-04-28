@@ -4,9 +4,6 @@
         (click)="openBasketEvent()">
         <mat-icon>account_circle</mat-icon>
     </button>
-    <button mat-icon-button class="selectItem" color="accent" matTooltip="Click to select item" (click)="selectItemEvent()">
-        <mat-icon>add_shopping_cart</mat-icon>
-    </button>
     <button mat-icon-button class="scan" color="accent" matTooltip="Click to scan item" (click)="scanEvent()">
         <mat-icon>check_box_outline_blank</mat-icon>
     </button>
@@ -16,6 +13,11 @@
     <button mat-icon-button class="scale" color="accent" matTooltip="Click to weight item" (click)="scaleEvent()">
         <mat-icon>point_of_sale</mat-icon>
     </button>
+    <mat-form-field class="scaleWeight" appearance="outline">
+        <mat-label>Weight</mat-label>
+        <input matInput  [(ngModel)]="itemWeight">
+        <span matSuffix>lbs</span>
+    </mat-form-field>
     <button mat-icon-button class="closeBasket" color="accent" matTooltip="Click to close basket"
         (click)="closeBasketEvent()">
         <mat-icon>check_circle</mat-icon>
@@ -33,25 +35,43 @@
 </div>
 
 
-<div class="selection-window" *ngIf="showItemSelector">
+<div class="selection-window" *ngIf="showScanSelector">
     <div>
         <h3>Select Item to scan</h3>
     </div>
     <div>
         <mat-form-field appearance="outline">
-            <mat-label>To place in cart</mat-label>
-            <mat-select [(ngModel)]="selectedItem" name="item">
+            <mat-label>Item to scan</mat-label>
+            <mat-select [(ngModel)]="scannedItem" name="item">
                 <mat-option *ngFor="let item of productList" [value]="item.Barcode">
                     {{item.Name}}
                 </mat-option>
             </mat-select>
         </mat-form-field>
     </div>
-    <button (click)="selectItemCanceled()">Cancel</button>
-    <button (click)="selectItemSelected()">Add Item</button>
+    <button (click)="scanCanceled()">Cancel</button>
+    <button (click)="scanSelected()">Scan Item</button>
 </div>
 
-<div class="selection-window" *ngIf="showScale">
+<div class="selection-window" *ngIf="showScaleSelector">
+    <div>
+        <h3>Select Item to weight</h3>
+    </div>
+    <div>
+        <mat-form-field appearance="outline">
+            <mat-label>To place in scale</mat-label>
+            <mat-select [(ngModel)]="itemWeight" name="item">
+                <mat-option *ngFor="let item of productList" [value]="item.Weight">
+                    {{item.Name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <button (click)="scaleCanceled()">Cancel</button>
+    <button (click)="scaleSelected()">Weight Item</button>
+</div>
+<!-- 
+<div class="selection-window" *ngIf="showScaleOld">
     <div>
         <h3>Enter weight for item on scale</h3>
     </div>
@@ -64,9 +84,9 @@
     </div>
     <button (click)="scaleCanceled()">Cancel</button>
     <button (click)="scaleSelected()">Scale</button>
-</div>
+</div> -->
 
-<div class="selection-window" *ngIf="showCamera">
+<div class="selection-window" *ngIf="showCameraSelector">
     <div>
         <h3>Select Camera snapshot</h3>
     </div>
