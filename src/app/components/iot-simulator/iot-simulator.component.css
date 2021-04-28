@@ -6,7 +6,6 @@ button {
     opacity: 1;
 }
 
-
 .selectItem {
     top: 335px;
     left: 325px;
@@ -18,13 +17,21 @@ button {
 }
 
 .camera {
-    top: 440px;
+    top: 470px;
     left: 578px;
 }
 
 .scale {
-    top: 440px;
+    top: 470px;
     left: 418px;
+}
+
+.scaleWeight {
+    top: 515px;
+    left: 423px;
+    width: 80px;
+    position: absolute;
+    font-size: 10px;
 }
 
 .openBasket {
