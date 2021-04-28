@@ -89,3 +89,8 @@ button {
     height: 650px;
     overflow: scroll;
 }
+
+.refresh-button {
+    margin-top: 10px;
+    margin-left: 24px;
+}

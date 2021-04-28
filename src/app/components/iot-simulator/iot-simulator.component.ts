@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { GraphService } from '../../services/graph/graph.service'
 import { Notification } from '../../shared/models/iot.model';
+import {MatSort} from '@angular/material/sort';
 
 import { RtsfSimulatorService } from '../../services/simulator/rtsf-simulator.service';
 
@@ -11,7 +12,9 @@ import { RtsfSimulatorService } from '../../services/simulator/rtsf-simulator.se
   templateUrl: './iot-simulator.component.html',
   styleUrls: ['./iot-simulator.component.css']
 })
-export class IotSimulatorComponent implements OnInit {
+export class IotSimulatorComponent implements OnInit, AfterViewInit {
+
+  @ViewChild(MatSort) sort: MatSort;
 
   basketOpened = false;
   itemSelected = false;
@@ -40,6 +43,11 @@ export class IotSimulatorComponent implements OnInit {
 
     this.getProducts();
     this.getNotifications();
+  }
+
+
+  ngAfterViewInit(): void {
+    this.notificationsDataSource.sort = this.sort;
   }
 
   getProducts() {
