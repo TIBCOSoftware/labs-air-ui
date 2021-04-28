@@ -94,3 +94,15 @@ button {
     margin-top: 10px;
     margin-left: 24px;
 }
+
+.error {
+    background-color: red;
+}
+
+.warn { 
+    background-color: yellow;
+}
+
+.info {
+    background-color: green;
+}
