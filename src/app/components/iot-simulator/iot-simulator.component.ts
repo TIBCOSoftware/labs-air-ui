@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
+import { GraphService } from '../../services/graph/graph.service'
+import { Notification } from '../../shared/models/iot.model';
 
 import { RtsfSimulatorService } from '../../services/simulator/rtsf-simulator.service';
 
@@ -22,14 +25,21 @@ export class IotSimulatorComponent implements OnInit {
   itemWeight = 0;
   cameraItem: string = "";
 
+  dateFormat = 'yyyy-MM-dd  HH:mm:ss'
+
+  notificationsDataSource = new MatTableDataSource<Notification>();
+  notificationDisplayedColumns: string[] = ['level', 'description', 'created'];
+
   productList: any[] = [];
 
   constructor(private simulatorService: RtsfSimulatorService,
-    private _snackBar: MatSnackBar) { }
+    private _snackBar: MatSnackBar,
+    private graphService: GraphService) { }
 
   ngOnInit(): void {
 
     this.getProducts();
+    this.getNotifications();
   }
 
   getProducts() {
@@ -291,6 +301,13 @@ export class IotSimulatorComponent implements OnInit {
         });
 
       });
+  }
+
+  getNotifications() {
+    this.graphService.getNotifications()
+      .subscribe(res => {
+        this.notificationsDataSource.data = res as Notification[];
+      })
   }
 
 }
