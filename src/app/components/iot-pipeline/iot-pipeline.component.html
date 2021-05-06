@@ -52,6 +52,9 @@
         
             <app-pipeline-rules *ngIf="rulesConfig" [ruleForm]="ruleForm" [devices]="devices" fxFlex>
             </app-pipeline-rules>
+
+            <app-pipeline-rule-expression *ngIf="ruleExpressionConfig" [ruleExpressionForm]="ruleExpressionForm" [devices]="devices" fxFlex>
+            </app-pipeline-rule-expression>
         
             <app-pipeline-flogo-flow *ngIf="flogoFlowConfig" [flogoFlowForm]="flogoFlowForm" fxFlex>
             </app-pipeline-flogo-flow>
