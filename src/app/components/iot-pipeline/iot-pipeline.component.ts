@@ -30,6 +30,7 @@ import { ErrorHandlerComponent } from "../rete/components/error-handler-componen
 import { ImageResizeComponent } from "../rete/components/image-resize-component";
 import { InferencingComponent } from "../rete/components/inferencing-component";
 import { RulesComponent } from "../rete/components/rules-component";
+import { RuleExpressionComponent } from "../rete/components/rule-expression-component";
 import { StreamingComponent } from "../rete/components/streaming-component";
 import { NotificationPipeComponent } from "../rete/components/notification-pipe-component";
 import { FlogoFlowComponent } from "../rete/components/flogo-flow-component";
@@ -69,6 +70,7 @@ export class IotPipelineComponent implements OnInit {
   dataPipeConfig = false;
   inferencingConfig = false;
   rulesConfig = false;
+  ruleExpressionConfig = false;
   streamingConfig = false;
   flogoFlowConfig = false;
   restServiceConfig = false;
@@ -83,6 +85,7 @@ export class IotPipelineComponent implements OnInit {
   streamingForm: FormGroup;
   modelForm: FormGroup;
   ruleForm: FormGroup;
+  ruleExpressionForm: FormGroup;
   flogoFlowForm: FormGroup;
   restServiceForm: FormGroup;
 
@@ -197,6 +200,7 @@ export class IotPipelineComponent implements OnInit {
       new FiltersComponent(),
       new InferencingComponent(),
       new RulesComponent(),
+      new RuleExpressionComponent(),
       new StreamingComponent(),
       new ImageResizeComponent(),
       new DataStoreComponent(),
@@ -421,6 +425,10 @@ export class IotPipelineComponent implements OnInit {
         contextObj = this.buildNodeRuleProperties();
         break;
       }
+      case "Rule Expression": {
+        contextObj = this.buildNodeRuleExpressionProperties();
+        break;
+      }
       case "Flogo Flow": {
         contextObj = this.buildNodeFlogoFlowProperties();
         break;
@@ -448,6 +456,7 @@ export class IotPipelineComponent implements OnInit {
     this.dataPipeConfig = false;
     this.inferencingConfig = false;
     this.rulesConfig = false;
+    this.ruleExpressionConfig = false;
     this.streamingConfig = false;
     this.flogoFlowConfig = false;
     this.restServiceConfig = false;
@@ -502,6 +511,11 @@ export class IotPipelineComponent implements OnInit {
         case "Rules": {
           this.updateRulesComponent(contextObj);
           this.rulesConfig = true;
+          break;
+        }
+        case "Rule Expression": {
+          this.updateRuleExpressionComponent(contextObj);
+          this.ruleExpressionConfig = true;
           break;
         }
         case "Flogo Flow": {
@@ -714,6 +728,18 @@ export class IotPipelineComponent implements OnInit {
       actionDevice: ['', Validators.required],
       actionResource: ['', Validators.required],
       actionValue: ['', Validators.required],
+      logLevel: ['INFO', Validators.required]
+    });
+
+    this.ruleExpressionForm = this.formBuilder.group({
+      name: ['', Validators.required],
+      description: [''],
+      device: ['', Validators.required],
+      resource: ['', Validators.required],
+      compareOp: ['', Validators.required],
+      compareToValue: ['', Validators.required],
+      notification: ['', Validators.required],
+      notificationLevel: ['INFO', Validators.required],
       logLevel: ['INFO', Validators.required]
     });
 
@@ -956,6 +982,29 @@ export class IotPipelineComponent implements OnInit {
     };
 
     console.log("Rule context saved: ", ruleObj);
+
+    return ruleObj;
+  }
+
+  /**
+   *
+   * @param form
+   */
+   buildNodeRuleExpressionProperties(): any {
+
+    let ruleObj = {
+      "name": this.ruleExpressionForm.get('name').value,
+      "description": this.ruleExpressionForm.get('description').value,
+      "device": this.ruleExpressionForm.get('device').value,
+      "resource": this.ruleExpressionForm.get('resource').value,
+      "compareOp": this.ruleExpressionForm.get('compareOp').value,
+      "compareToValue": this.ruleExpressionForm.get('compareToValue').value,
+      "notification": this.ruleExpressionForm.get('notification').value,
+      "notificationLevel": this.ruleExpressionForm.get('notificationLevel').value,
+      "logLevel": this.ruleExpressionForm.get('logLevel').value
+    };
+
+    console.log("Rule Expression context saved: ", ruleObj);
 
     return ruleObj;
   }
@@ -1258,6 +1307,29 @@ export class IotPipelineComponent implements OnInit {
     }
   }
 
+  /**
+   *
+   * @param context
+   */
+   updateRuleExpressionComponent(context) {
+
+    if (context != null || context != undefined) {
+      console.log("Updating rules component with context: ", context);
+
+      this.ruleExpressionForm.patchValue({
+        name: context.name,
+        description: context.description,
+        device: context.device,
+        resource: context.resource,
+        compareOp: context.compareOp,
+        compareToValue: context.compareToValue,
+        notification: context.notification,
+        notificationLevel: context.notificationLevel,
+        logLevel: context.logLevel,
+      })
+
+    }
+  }
   /**
  * @param context
  */
@@ -1642,6 +1714,7 @@ export class IotPipelineComponent implements OnInit {
     this.dataPipeConfig = false;
     this.inferencingConfig = false;
     this.rulesConfig = false;
+    this.ruleExpressionConfig = false;
     this.streamingConfig = false;
     this.flogoFlowConfig = false;
     this.restServiceConfig = false;
@@ -1795,6 +1868,12 @@ export class IotPipelineComponent implements OnInit {
             }
             case "Rules": {
               pipelineFlow.AirDescriptor.logic.push(this.buildRulesDeployObj(flow.nodes[key].data.customdata));
+              notificationSourcePos = pos;
+              notificationSource = "Rules";
+              break;
+            }
+            case "Rule Expression": {
+              pipelineFlow.AirDescriptor.logic.push(this.buildRuleExpressionDeployObj(flow.nodes[key].data.customdata));
               notificationSourcePos = pos;
               notificationSource = "Rules";
               break;
@@ -2381,6 +2460,57 @@ export class IotPipelineComponent implements OnInit {
       { "Name": "Logging.LogLevel", "Value": contextObj.logLevel },
       { "Name": "Rule.TupleDescriptor", "Value": JSON.stringify(this.ruleTuplesDescriptor) },
       { "Name": "Rule.DefaultRuleDescriptor", "Value": JSON.stringify(ruleDescriptor) },
+    ];
+
+    return ruleObj;
+  }
+
+  buildRuleExpressionDeployObj(contextObj): any {
+
+    console.log("Rule Expression Context: ", contextObj);
+
+    let ruleType = "Rule.Expression";
+    let ruleObj = {
+      name: ruleType,
+      properties: this.buildRuleExpressionDeployProperties(contextObj)
+    };
+
+    return ruleObj;
+
+  }
+
+  /**
+   * @param contextObj
+   */
+  buildRuleExpressionDeployProperties(contextObj): any {
+
+    let ruleExpressionFilter = [
+      {
+        name: contextObj.resource,
+        device: contextObj.device
+      }
+    ];
+
+    let strArr = contextObj.compareToValue.split(',');
+    let valuesArr = [];
+
+    for (var val of strArr) {
+      valuesArr.push(Number(val))
+    }
+
+    let ruleExpressionThreshold = [
+      {
+        name: contextObj.resource,
+        value: valuesArr,
+        notificationLevel: contextObj.notificationLevel,
+        notification: contextObj.notification
+      }
+    ];
+
+    let ruleObj = [
+      { "Name": "Logging.LogLevel", "Value": contextObj.logLevel },
+      { "Name": "Rule.Filter", "Value": JSON.stringify(ruleExpressionFilter) },
+      { "Name": "Rule.Threshold", "Value": JSON.stringify(ruleExpressionThreshold) },
     ];
 
     return ruleObj;
