@@ -209,6 +209,7 @@ export class IotSimulatorComponent implements OnInit, AfterViewInit {
 
       this.showCameraImage = false;
       this.showScanImage = false;
+      this.itemWeight = 0;
 
       let event = {
         "EventTime": Date.now(),
