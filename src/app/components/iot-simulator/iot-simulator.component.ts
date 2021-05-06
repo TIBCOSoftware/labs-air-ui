@@ -1,5 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
+import { GraphService } from '../../services/graph/graph.service'
+import { Notification } from '../../shared/models/iot.model';
+import {MatSort} from '@angular/material/sort';
 
 import { RtsfSimulatorService } from '../../services/simulator/rtsf-simulator.service';
 
@@ -8,7 +12,9 @@ import { RtsfSimulatorService } from '../../services/simulator/rtsf-simulator.se
   templateUrl: './iot-simulator.component.html',
   styleUrls: ['./iot-simulator.component.css']
 })
-export class IotSimulatorComponent implements OnInit {
+export class IotSimulatorComponent implements OnInit, AfterViewInit {
+
+  @ViewChild(MatSort) sort: MatSort;
 
   basketOpened = false;
   itemSelected = false;
@@ -22,14 +28,26 @@ export class IotSimulatorComponent implements OnInit {
   itemWeight = 0;
   cameraItem: string = "";
 
+  dateFormat = 'yyyy-MM-dd  HH:mm:ss'
+
+  notificationsDataSource = new MatTableDataSource<Notification>();
+  notificationDisplayedColumns: string[] = ['level', 'description', 'created'];
+
   productList: any[] = [];
 
   constructor(private simulatorService: RtsfSimulatorService,
-    private _snackBar: MatSnackBar) { }
+    private _snackBar: MatSnackBar,
+    private graphService: GraphService) { }
 
   ngOnInit(): void {
 
     this.getProducts();
+    this.getNotifications();
+  }
+
+
+  ngAfterViewInit(): void {
+    this.notificationsDataSource.sort = this.sort;
   }
 
   getProducts() {
@@ -191,6 +209,7 @@ export class IotSimulatorComponent implements OnInit {
 
       this.showCameraImage = false;
       this.showScanImage = false;
+      this.itemWeight = 0;
 
       let event = {
         "EventTime": Date.now(),
@@ -291,6 +310,13 @@ export class IotSimulatorComponent implements OnInit {
         });
 
       });
+  }
+
+  getNotifications() {
+    this.graphService.getNotifications()
+      .subscribe(res => {
+        this.notificationsDataSource.data = res as Notification[];
+      })
   }
 
 }

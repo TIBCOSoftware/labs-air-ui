@@ -28,7 +28,16 @@ export class IotGatewayTextComponent implements OnInit {
   public getReadings() {
     this.subscriptions.push(this.graphService.getReadings(this.device.name, this.instrument.name, 300)
       .subscribe(res => {
+
+        // Check if values need to be decoded.  _Inferred values are encoded
+        if (this.instrument.name.includes("_Inferred")) {
+          for (var reading of res as TSReading[]) {
+            reading.value = atob(reading.value);
+          }
+        }
+      
         this.resourceReadings = res as TSReading[];
+        
       }));
   }
 

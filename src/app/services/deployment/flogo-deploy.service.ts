@@ -47,8 +47,10 @@ export class FlogoDeployService {
     // const url = `/f1Endpoint/f1/air/deploy/Air-F1_Flogo_Pipeline`;
 
     // const url = `/edgex/remotegateway/http://52.7.96.87:5408/f1/air/validate/Air-account_00001/${pipelineId}`;
-    const url = `/edgex/remotegateway/http://52.22.89.56:5408/f1/air/validate/Air-account_00001/${pipelineId}`;
+    // const url = `/edgex/remotegateway/http://52.22.89.56:5408/f1/air/validate/Air-account_00001/${pipelineId}`;
     // const url = `/edgex/remotegateway/http://3.228.65.62:5408/f1/air/buildAndDeploy/Air-account_00001/${pipelineId}`;
+
+    const url = `/f1Endpoint/f1/air/validate/Air-account_00001/${pipelineId}`;
 
     console.log("Calling validateF1 with url:", url);
 
@@ -66,8 +68,10 @@ export class FlogoDeployService {
     // const url = `/f1Endpoint/f1/air/deploy/Air-F1_Flogo_Pipeline`;
     
     // const url = `/edgex/remotegateway/http://52.7.96.87:5408/f1/air/buildAndDeploy/Air-account_00001/${pipelineId}`;
-    const url = `/edgex/remotegateway/http://52.22.89.56:5408/f1/air/buildAndDeploy/Air-account_00001/${pipelineId}`;
+    // const url = `/edgex/remotegateway/http://52.22.89.56:5408/f1/air/buildAndDeploy/Air-account_00001/${pipelineId}`;
     // const url = `/edgex/remotegateway/http://3.228.65.62:5408/f1/air/buildAndDeploy/Air-account_00001/${pipelineId}`;
+
+    const url = `/f1Endpoint/f1/air/buildAndDeploy/Air-account_00001/${pipelineId}`;
 
     console.log("Calling buildF1 with url:", url);
 
@@ -83,8 +87,10 @@ export class FlogoDeployService {
     // const url = `/airEndpointf1/f1/air/build/Air-F1_Flogo_Pipeline`;
 
     // const url = `/edgex/remotegateway/http://52.7.96.87:5408/f1/air/undeploy/Air-account_00001/${pipelineId}/001`;
-    const url = `/edgex/remotegateway/http://52.22.89.56:5408/f1/air/undeploy/Air-account_00001/${pipelineId}/001`;
+    // const url = `/edgex/remotegateway/http://52.22.89.56:5408/f1/air/undeploy/Air-account_00001/${pipelineId}/001`;
     // const url = `/edgex/remotegateway/http://3.228.65.62:5408/f1/air/undeploy/Air-account_00001/${pipelineId}/001`;
+
+    const url = `/f1Endpoint/f1/air/undeploy/Air-account_00001/${pipelineId}/001`;
 
     return this.http.post<string>(url, request, this.httpOptions)
       .pipe(
@@ -100,8 +106,10 @@ export class FlogoDeployService {
     // const url = `/f1Endpoint/f1/air/deploy/Air-F1_Flogo_Pipeline`;
 
     // const url = `/edgex/remotegateway/http://52.7.96.87:5408/f1/air/flogo/properties`;
-    const url = `/edgex/remotegateway/http://52.22.89.56:5408/f1/air/flogo/properties`;
+    // const url = `/edgex/remotegateway/http://52.22.89.56:5408/f1/air/flogo/properties`;
     // const url = `/edgex/remotegateway/http://3.228.65.62:5408/f1/air/flogo/properties`;
+
+    const url = `/f1Endpoint/f1/air/flogo/properties`;
 
     console.log("Calling getFlogoPropertiesF1 with url:", url);
     console.log("Calling getFlogoPropertiesF1 with request:", request);

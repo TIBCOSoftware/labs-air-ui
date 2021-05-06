@@ -84,3 +84,25 @@ button {
     width: 50px;
     height: 50px;
 }
+
+.table-container {
+    height: 650px;
+    overflow: scroll;
+}
+
+.refresh-button {
+    margin-top: 10px;
+    margin-left: 24px;
+}
+
+.error {
+    background-color: rgb(248, 158, 158);
+}
+
+.warn { 
+    background-color: rgb(252, 252, 183);
+}
+
+.info {
+    background-color: rgb(185, 250, 185);
+}
