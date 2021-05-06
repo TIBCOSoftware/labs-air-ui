@@ -96,13 +96,13 @@ button {
 }
 
 .error {
-    background-color: red;
+    background-color: rgb(248, 158, 158);
 }
 
 .warn { 
-    background-color: yellow;
+    background-color: rgb(252, 252, 183);
 }
 
 .info {
-    background-color: green;
+    background-color: rgb(185, 250, 185);
 }
