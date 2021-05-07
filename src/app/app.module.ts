@@ -81,8 +81,6 @@ import { PipelineFilteringComponent } from './components/iot-pipeline/pipeline-f
 import { PipelineStreamingComponent } from './components/iot-pipeline/pipeline-streaming/pipeline-streaming.component';
 import { IgeModelsComponent } from './components/iot-gateway-endpoint/ige-models/ige-models.component';
 import { PipelineConfigComponent } from './components/iot-pipeline/pipeline-config/pipeline-config.component';
-import { PipelineDataPipeComponent } from './components/iot-pipeline/pipeline-data-pipe/pipeline-data-pipe.component';
-import { PipelineDataSourceComponent } from './components/iot-pipeline/pipeline-data-source/pipeline-data-source.component';
 import { PipelineDataStoreComponent } from './components/iot-pipeline/pipeline-data-store/pipeline-data-store.component';
 import { PipelineInferencingComponent } from './components/iot-pipeline/pipeline-inferencing/pipeline-inferencing.component';
 import { PipelineRulesComponent } from './components/iot-pipeline/pipeline-rules/pipeline-rules.component';
@@ -99,6 +97,8 @@ import { IotGatewayTextComponent } from './components/iot-gateway-details-charts
 import { PipelineRestServiceComponent } from './components/iot-pipeline/pipeline-rest-service/pipeline-rest-service.component';
 import { IotSimulatorComponent } from './components/iot-simulator/iot-simulator.component';
 import { PipelineRuleExpressionComponent } from './components/iot-pipeline/pipeline-rule-expression/pipeline-rule-expression.component';
+import { PipelineDataSubscriberComponent } from './components/iot-pipeline/pipeline-data-subscriber/pipeline-data-subscriber.component';
+import { PipelineDataPublisherComponent } from './components/iot-pipeline/pipeline-data-publisher/pipeline-data-publisher.component';
 
 /** This is the tc core configuration object
  * To use oauth you must also add the OAuthInterceptor to providers
@@ -178,9 +178,7 @@ const tcCoreConfig: TcCoreConfig = {
     PipelineStreamingComponent,
     PipelineInferencingComponent,
     PipelineRulesComponent,
-    PipelineDataSourceComponent,
     PipelineDataStoreComponent,
-    PipelineDataPipeComponent,
     PipelineConfigComponent,
     IgeModelsComponent,
     IotGatewayOverviewComponent,
@@ -196,7 +194,9 @@ const tcCoreConfig: TcCoreConfig = {
     IotGatewayTextComponent,
     PipelineRestServiceComponent,
     IotSimulatorComponent,
-    PipelineRuleExpressionComponent
+    PipelineRuleExpressionComponent,
+    PipelineDataSubscriberComponent,
+    PipelineDataPublisherComponent
   ],
   imports: [
     AppRoutingModule,
