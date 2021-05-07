@@ -1,5 +1,6 @@
 <app-iot-gateway-descriptions [device]="device" [instrument]="instrument"></app-iot-gateway-descriptions>
 <div class='table-container'>
+    <button class="refresh-button" mat-raised-button color="primary" (click)="getReadings()">Refresh</button>
     <table mat-table [dataSource]="dataSource" matSort matSortActive="created" matSortStart="desc" matSortDirection="desc">
 
         <ng-container matColumnDef="created">

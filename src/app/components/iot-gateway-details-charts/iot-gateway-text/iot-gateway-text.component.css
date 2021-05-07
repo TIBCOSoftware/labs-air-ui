@@ -6,3 +6,7 @@
 .table-container table{
     width: 100%;
 }
+
+.refresh-button {
+    margin-bottom: 12px;
+}
