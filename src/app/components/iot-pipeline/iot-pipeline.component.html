@@ -32,8 +32,8 @@
             <!-- Configuration Panel Components -->
             <app-pipeline-config *ngIf="pipelineConfig" [pipelineForm]="pipelineForm" fxFlex></app-pipeline-config>
         
-            <app-pipeline-data-source *ngIf="dataSourceConfig" [dataSourceForm]="protocolForm" fxFlex>
-            </app-pipeline-data-source>
+            <app-pipeline-data-subscriber *ngIf="dataSubscriberConfig" [dataSubscriberForm]="protocolForm" fxFlex>
+            </app-pipeline-data-subscriber>
         
             <app-pipeline-filtering *ngIf="filteringConfig" #filterComponent [devices]="devices" [filters]="filters" fxFlex>
             </app-pipeline-filtering>
@@ -44,8 +44,8 @@
             <app-pipeline-data-store *ngIf="dataStoreConfig" [dataStoreForm]="dataStoreForm" fxFlex>
             </app-pipeline-data-store>
         
-            <app-pipeline-data-pipe *ngIf="dataPipeConfig" [dataPipeForm]="protocolForm" fxFlex>
-            </app-pipeline-data-pipe>
+            <app-pipeline-data-publisher *ngIf="dataPublisherConfig" [dataPublisherForm]="protocolForm" fxFlex>
+            </app-pipeline-data-publisher>
         
             <app-pipeline-streaming *ngIf="streamingConfig" [streamingForm]="streamingForm" [devices]="devices" fxFlex>
             </app-pipeline-streaming>

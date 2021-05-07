@@ -9,13 +9,13 @@ export interface SelectItem {
 }
 
 @Component({
-  selector: 'app-pipeline-data-pipe',
-  templateUrl: './pipeline-data-pipe.component.html',
-  styleUrls: ['./pipeline-data-pipe.component.css']
+  selector: 'app-pipeline-data-publisher',
+  templateUrl: './pipeline-data-publisher.component.html',
+  styleUrls: ['./pipeline-data-publisher.component.css']
 })
-export class PipelineDataPipeComponent implements OnInit {
+export class PipelineDataPublisherComponent implements OnInit {
 
-  @Input() dataPipeForm: FormGroup;
+  @Input() dataPublisherForm: FormGroup;
 
   logLevels: SelectItem[] = [
     { value: 'INFO', viewValue: 'INFO' },
@@ -38,7 +38,7 @@ export class PipelineDataPipeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getProtocols(this.dataPipeForm.get('gateway').value);
+    this.getProtocols(this.dataPublisherForm.get('gateway').value);
 
     this.onFormChanges();
   }
@@ -49,7 +49,7 @@ export class PipelineDataPipeComponent implements OnInit {
       .subscribe(res => {
         this.protocols = res as Protocol[];
 
-        let currentProtocol = this.dataPipeForm.get('protocolId').value;
+        let currentProtocol = this.dataPublisherForm.get('protocolId').value;
 
         if (currentProtocol == '') {
           this.mqttProtocol = false;
@@ -106,7 +106,7 @@ export class PipelineDataPipeComponent implements OnInit {
       let port = protocol.brokerURL.substring(delimInd + 1);
 
       // Update transport Form
-      this.dataPipeForm.patchValue(
+      this.dataPublisherForm.patchValue(
         {
           uid: protocol.uid,
           protocol: protocol.protocolType,
@@ -164,7 +164,7 @@ export class PipelineDataPipeComponent implements OnInit {
       let port = protocol.brokerURL.substring(delimInd + 1);
 
       // Update transport Form
-      this.dataPipeForm.patchValue(
+      this.dataPublisherForm.patchValue(
         {
           uid: protocol.uid,
           protocol: protocol.protocolType,
@@ -222,7 +222,7 @@ export class PipelineDataPipeComponent implements OnInit {
       let port = protocol.brokerURL.substring(delimInd + 1);
 
       // Update transport Form
-      this.dataPipeForm.patchValue(
+      this.dataPublisherForm.patchValue(
         {
           uid: protocol.uid,
           protocol: protocol.protocolType,
@@ -281,11 +281,11 @@ export class PipelineDataPipeComponent implements OnInit {
   }
 
   onFormChanges(): void {
-    this.dataPipeForm.valueChanges.subscribe(val => {
+    this.dataPublisherForm.valueChanges.subscribe(val => {
 
       console.log("OnFormChanges: ", val);
 
-      let protocol = this.dataPipeForm.get('protocol').value;
+      let protocol = this.dataPublisherForm.get('protocol').value;
 
       this.mqttProtocol = false;
       this.kafkaProtocol = false;
@@ -311,7 +311,4 @@ export class PipelineDataPipeComponent implements OnInit {
 
     });
   }
-
-
-
 }

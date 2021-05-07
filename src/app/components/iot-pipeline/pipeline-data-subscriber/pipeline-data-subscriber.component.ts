@@ -9,13 +9,13 @@ export interface SelectItem {
 }
 
 @Component({
-  selector: 'app-pipeline-data-source',
-  templateUrl: './pipeline-data-source.component.html',
-  styleUrls: ['./pipeline-data-source.component.css']
+  selector: 'app-pipeline-data-subscriber',
+  templateUrl: './pipeline-data-subscriber.component.html',
+  styleUrls: ['./pipeline-data-subscriber.component.css']
 })
-export class PipelineDataSourceComponent implements OnInit {
+export class PipelineDataSubscriberComponent implements OnInit {
 
-  @Input() dataSourceForm: FormGroup;
+  @Input() dataSubscriberForm: FormGroup;
 
   logLevels: SelectItem[] = [
     { value: 'INFO', viewValue: 'INFO' },
@@ -37,7 +37,7 @@ export class PipelineDataSourceComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getProtocols(this.dataSourceForm.get('gateway').value);
+    this.getProtocols(this.dataSubscriberForm.get('gateway').value);
 
     this.onFormChanges();
   }
@@ -48,7 +48,7 @@ export class PipelineDataSourceComponent implements OnInit {
       .subscribe(res => {
         this.protocols = res as Protocol[];
 
-        let currentProtocol = this.dataSourceForm.get('protocolId').value;
+        let currentProtocol = this.dataSubscriberForm.get('protocolId').value;
         if (currentProtocol == '') {
           this.mqttProtocol = false;
           this.kafkaProtocol = false;
@@ -98,7 +98,7 @@ export class PipelineDataSourceComponent implements OnInit {
       let port = protocol.brokerURL.substring(delimInd + 1);
 
       // Update transport Form
-      this.dataSourceForm.patchValue(
+      this.dataSubscriberForm.patchValue(
         {
           uid: protocol.uid,
           protocol: protocol.protocolType,
@@ -146,7 +146,7 @@ export class PipelineDataSourceComponent implements OnInit {
       let port = protocol.brokerURL.substring(delimInd + 1);
 
       // Update transport Form
-      this.dataSourceForm.patchValue(
+      this.dataSubscriberForm.patchValue(
         {
           uid: protocol.uid,
           protocol: protocol.protocolType,
@@ -195,13 +195,13 @@ export class PipelineDataSourceComponent implements OnInit {
   }
 
   onFormChanges(): void {
-    this.dataSourceForm.valueChanges.subscribe(val => {
-      console.log("dataSourceForm has changed for: ", val);
+    this.dataSubscriberForm.valueChanges.subscribe(val => {
+      console.log("dataSubscriberForm has changed for: ", val);
 
-      if (this.dataSourceForm.get('protocol').value == "MQTT") {
+      if (this.dataSubscriberForm.get('protocol').value == "MQTT") {
         this.mqttProtocol = true;
       }
-      else if (this.dataSourceForm.get('protocol').value == "Kafka") {
+      else if (this.dataSubscriberForm.get('protocol').value == "Kafka") {
         this.kafkaProtocol = true;
       }
       else {
@@ -216,3 +216,4 @@ export class PipelineDataSourceComponent implements OnInit {
 
 
 }
+
