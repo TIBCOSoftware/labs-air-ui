@@ -1,9 +1,9 @@
 <app-iot-gateway-descriptions [device]="device" [instrument]="instrument"></app-iot-gateway-descriptions>
 <div class='table-container'>
-    <table mat-table [dataSource]="resourceReadings">
+    <table mat-table [dataSource]="dataSource" matSort matSortActive="created" matSortStart="desc" matSortDirection="desc">
 
         <ng-container matColumnDef="created">
-            <th mat-header-cell *matHeaderCellDef> created </th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> created </th>
             <td mat-cell *matCellDef="let element"> {{element.created | date: dateFormat}} </td>
         </ng-container>
     
