@@ -22,10 +22,10 @@ import ContextMenuPlugin from "rete-context-menu-plugin";
 // import { zoomAt } from "rete-area-plugin";
 
 import { DataStoreComponent } from "../rete/components/data-store-component";
-import { DataSourceComponent } from "../rete/components/data-source-component";
+import { DataSubscriberComponent } from "../rete/components/data-subscriber-component";
 import { FiltersComponent } from "../rete/components/filters-component";
-import { DataPipeComponent } from "../rete/components/data-pipe-component";
-import { CustomPipeComponent } from "../rete/components/custom-pipe-component";
+import { DataPublisherComponent } from "../rete/components/data-publisher-component";
+import { CustomPublisherComponent } from "../rete/components/custom-publisher-component";
 import { ErrorHandlerComponent } from "../rete/components/error-handler-component";
 import { ImageResizeComponent } from "../rete/components/image-resize-component";
 import { InferencingComponent } from "../rete/components/inferencing-component";
@@ -64,10 +64,10 @@ export class IotPipelineComponent implements OnInit {
   pipelineSelection = new SelectionModel<Pipeline>(false, []);
 
   pipelineConfig = true;
-  dataSourceConfig = false;
+  dataSubscriberConfig = false;
   filteringConfig = false;
   dataStoreConfig = false;
-  dataPipeConfig = false;
+  dataPublisherConfig = false;
   inferencingConfig = false;
   rulesConfig = false;
   ruleExpressionConfig = false;
@@ -196,7 +196,7 @@ export class IotPipelineComponent implements OnInit {
     // new ImageResizeComponent();
 
     const components = [
-      new DataSourceComponent(),
+      new DataSubscriberComponent(),
       new FiltersComponent(),
       new InferencingComponent(),
       new RulesComponent(),
@@ -204,8 +204,8 @@ export class IotPipelineComponent implements OnInit {
       new StreamingComponent(),
       new ImageResizeComponent(),
       new DataStoreComponent(),
-      new DataPipeComponent(),
-      new CustomPipeComponent(),
+      new DataPublisherComponent(),
+      new CustomPublisherComponent(),
       new NotificationPipeComponent(),
       new FlogoFlowComponent(),
       new RestServiceComponent(),
@@ -344,7 +344,7 @@ export class IotPipelineComponent implements OnInit {
     area.zoom(k, 0, 0);
   }
 
-  findDataSourceFlowNode(flow): any {
+  findDataSubscriberFlowNode(flow): any {
 
     let node = null;
 
@@ -354,7 +354,7 @@ export class IotPipelineComponent implements OnInit {
 
     for (let i = 0; i < keys.length; i++) {
       console.log("This is key :", keys[i]);
-      if (flow.nodes[keys[i]].name == "Data Source") {
+      if (flow.nodes[keys[i]].name == "Data Subscriber") {
         node = flow.nodes[keys[i]];
         break;
       }
@@ -364,7 +364,7 @@ export class IotPipelineComponent implements OnInit {
     Object.keys(flow.nodes).forEach(key => {
       const outputJson = flow.nodes[key];
 
-      if (flow.nodes[key].name == "Data Source") {
+      if (flow.nodes[key].name == "Data Subscriber") {
 
       }
       console.log("Node by key: ", outputJson);
@@ -373,7 +373,7 @@ export class IotPipelineComponent implements OnInit {
 
 
 
-    console.log("First DataSource node: ", node);
+    console.log("First DataSubscriber node: ", node);
 
     return node;
   }
@@ -384,7 +384,7 @@ export class IotPipelineComponent implements OnInit {
     let contextObj = null;
 
     switch (name) {
-      case "Data Source": {
+      case "Data Subscriber": {
 
         contextObj = this.buildNodeProtocolProperties(this.protocolForm);
         break;
@@ -394,12 +394,12 @@ export class IotPipelineComponent implements OnInit {
         contextObj = this.buildNodeDataStoreProperties(this.dataStoreForm);
         break;
       }
-      case "Data Pipe": {
+      case "Data Publisher": {
 
         contextObj = this.buildNodeProtocolProperties(this.protocolForm);
         break;
       }
-      case "Custom Pipe": {
+      case "Custom Publisher": {
 
         contextObj = this.buildNodeProtocolProperties(this.protocolForm);
         break;
@@ -450,10 +450,10 @@ export class IotPipelineComponent implements OnInit {
   resetNodeContext(node) {
 
     this.pipelineConfig = false;
-    this.dataSourceConfig = false;
+    this.dataSubscriberConfig = false;
     this.filteringConfig = false;
     this.dataStoreConfig = false;
-    this.dataPipeConfig = false;
+    this.dataPublisherConfig = false;
     this.inferencingConfig = false;
     this.rulesConfig = false;
     this.ruleExpressionConfig = false;
@@ -468,9 +468,9 @@ export class IotPipelineComponent implements OnInit {
       let contextObj = node.data['customdata'];
 
       switch (node.name) {
-        case "Data Source": {
+        case "Data Subscriber": {
           this.updateProtocolForm(contextObj);
-          this.dataSourceConfig = true;
+          this.dataSubscriberConfig = true;
           break;
         }
         case "Data Store": {
@@ -478,19 +478,19 @@ export class IotPipelineComponent implements OnInit {
           this.dataStoreConfig = true;
           break;
         }
-        case "Data Pipe": {
+        case "Data Publisher": {
           this.updateProtocolForm(contextObj);
-          this.dataPipeConfig = true;
+          this.dataPublisherConfig = true;
           break;
         }
-        case "Custom Pipe": {
+        case "Custom Publisher": {
           this.updateProtocolForm(contextObj);
-          this.dataPipeConfig = true;
+          this.dataPublisherConfig = true;
           break;
         }
         case "Notification Pipe": {
           this.updateProtocolForm(contextObj);
-          this.dataPipeConfig = true;
+          this.dataPublisherConfig = true;
           break;
         }
         case "Filters": {
@@ -1708,10 +1708,10 @@ export class IotPipelineComponent implements OnInit {
     this.editor.clear();
 
     this.pipelineConfig = true;
-    this.dataSourceConfig = false;
+    this.dataSubscriberConfig = false;
     this.filteringConfig = false;
     this.dataStoreConfig = false;
-    this.dataPipeConfig = false;
+    this.dataPublisherConfig = false;
     this.inferencingConfig = false;
     this.rulesConfig = false;
     this.ruleExpressionConfig = false;
@@ -1735,7 +1735,7 @@ export class IotPipelineComponent implements OnInit {
 
     console.log("Editor Flow Data: ", flowData);
 
-    console.log("First node: ", this.findDataSourceFlowNode(flowData));
+    console.log("First node: ", this.findDataSubscriberFlowNode(flowData));
 
 
   }
@@ -1807,8 +1807,8 @@ export class IotPipelineComponent implements OnInit {
 
         console.log("Building: ", flow.nodes[key].name);
 
-        if (flow.nodes[key].name == "Data Source") {
-          pipelineFlow.AirDescriptor.source = this.buildDataSourceDeployObj(flow.nodes[key].data.customdata);
+        if (flow.nodes[key].name == "Data Subscriber") {
+          pipelineFlow.AirDescriptor.source = this.buildDataSubscriberDeployObj(flow.nodes[key].data.customdata);
         }
         else {
           // Add logic nodes
@@ -1817,18 +1817,18 @@ export class IotPipelineComponent implements OnInit {
               pipelineFlow.AirDescriptor.logic.push(this.buildDataStoreDeployObj(flow.nodes[key].data.customdata));
               break;
             }
-            case "Data Pipe": {
-              pipelineFlow.AirDescriptor.logic.push(this.buildDataPipeDeployObj(flow.nodes[key].data.customdata));
+            case "Data Publisher": {
+              pipelineFlow.AirDescriptor.logic.push(this.buildDataPublisherDeployObj(flow.nodes[key].data.customdata));
               break;
             }
-            case "Custom Pipe": {
-              pipelineFlow.AirDescriptor.logic.push(this.buildCustomPipeDeployObj(flow.nodes[key].data.customdata));
+            case "Custom Publisher": {
+              pipelineFlow.AirDescriptor.logic.push(this.buildCustomPublisherDeployObj(flow.nodes[key].data.customdata));
 
               break;
             }
             case "Notification Pipe": {
               if (notificationSource == "Rules") {
-                pipelineFlow.AirDescriptor.logic.push(this.buildDataPipeDeployObj(flow.nodes[key].data.customdata));
+                pipelineFlow.AirDescriptor.logic.push(this.buildDataPublisherDeployObj(flow.nodes[key].data.customdata));
                 let pipeId = "Pipe_" + pos;
                 let ruleId = "Rule_" + notificationSourcePos;
                 let listener = {
@@ -1841,7 +1841,7 @@ export class IotPipelineComponent implements OnInit {
                 notificationSourcePos = pos;
                 pipelineFlow.AirDescriptor.logic.push(this.buildNotificationRuleDeployObj());
                 pos++;
-                pipelineFlow.AirDescriptor.logic.push(this.buildDataPipeDeployObj(flow.nodes[key].data.customdata));
+                pipelineFlow.AirDescriptor.logic.push(this.buildDataPublisherDeployObj(flow.nodes[key].data.customdata));
 
                 let pipeId = "Pipe_" + pos;
                 let ruleId = "Rule_" + notificationSourcePos;
@@ -2069,7 +2069,7 @@ export class IotPipelineComponent implements OnInit {
   }
 
 
-  buildDataSourceDeployObj(contextObj): any {
+  buildDataSubscriberDeployObj(contextObj): any {
 
     let sourceType = "";
     if (contextObj.topic == "edgexevents") {
@@ -2086,7 +2086,7 @@ export class IotPipelineComponent implements OnInit {
     return sourceObj;
   }
 
-  buildDataPipeDeployObj(contextObj): any {
+  buildDataPublisherDeployObj(contextObj): any {
     // let pipeType = "Pipe." + contextObj.protocol + "2";
     let pipeType = "Pipe." + contextObj.protocol + "_OLD";
     let pipeObj = {
@@ -2098,7 +2098,7 @@ export class IotPipelineComponent implements OnInit {
   }
 
 
-  buildCustomPipeDeployObj(contextObj): any {
+  buildCustomPublisherDeployObj(contextObj): any {
     let pipeType = "Pipe." + contextObj.protocol + "_FS";
     let pipeObj = {
       name: pipeType,
