@@ -41,7 +41,7 @@
     "@tibco-tcstk/tc-liveapps-lib": "^2.1.0",
     "@tibco/spotfire-wrapper": "0.13.0",
     "brace": "^0.11.1",
-    "chart.js": "^2.9.3",
+    "chart.js": "^2.9.4",
     "chartjs-plugin-datalabels": "^0.7.0",
     "chartjs-plugin-doughnutlabel": "^2.0.3",
     "chartjs-plugin-labels": "^1.1.0",
