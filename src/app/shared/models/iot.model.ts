@@ -250,6 +250,7 @@ export class Gateway {
   accessToken: string;
   platform: string;
   username: string;
+  devicesMetadata: string;
   subscriptions: Subscription[];
   publishers: Publisher[];
   pipelines: Pipeline[];
