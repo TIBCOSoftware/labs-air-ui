@@ -1,14 +1,15 @@
 <app-iot-gateway-descriptions [device]="device" [instrument]="instrument"></app-iot-gateway-descriptions>
 <div class='table-container'>
-    <table mat-table [dataSource]="resourceReadings">
+    <button class="refresh-button" mat-raised-button color="primary" (click)="getReadings()">Refresh</button>
+    <table mat-table [dataSource]="dataSource" matSort matSortActive="created" matSortStart="desc" matSortDirection="desc">
 
         <ng-container matColumnDef="created">
-            <th mat-header-cell *matHeaderCellDef> created </th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Created </th>
             <td mat-cell *matCellDef="let element"> {{element.created | date: dateFormat}} </td>
         </ng-container>
     
         <ng-container matColumnDef="value">
-            <th mat-header-cell *matHeaderCellDef> value </th>
+            <th mat-header-cell *matHeaderCellDef> Value </th>
             <td mat-cell *matCellDef="let element"> {{element.value}} </td>
         </ng-container>
     

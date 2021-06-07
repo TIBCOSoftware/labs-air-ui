@@ -106,14 +106,14 @@ export class DgraphService implements GraphService {
     const url = `${this.dgraphUrl}/query`;
     let query = `{
       resp(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
-        uid uuid description address router routerPort deployNetwork latitude longitude accessToken username platform createdts updatedts
+        uid uuid description address router routerPort deployNetwork latitude longitude accessToken username platform devicesMetadata createdts updatedts
       }
     }`;
 
     return this.http.post<any>(url, query, httpOptions)
       .pipe(
         map(response => response.data.resp as Gateway[]),
-        tap(_ => this.logger.info('fetched gateways')),
+        // tap(response => console.log("Response from getGateway: ", response)),
         catchError(this.handleError<Gateway[]>('getGateway', []))
       );
   }
@@ -126,7 +126,7 @@ export class DgraphService implements GraphService {
     const url = `${this.dgraphUrl}/query`;
     let query = `{
       resp(func: has(gateway)) {
-        uid uuid description address router routerPort deployNetwork latitude longitude accessToken username platform createdts updatedts
+        uid uuid description address router routerPort deployNetwork latitude longitude accessToken username platform devicesMetadata createdts updatedts
         numDevices: count(gateway_device)
 
       }
@@ -1145,7 +1145,7 @@ export class DgraphService implements GraphService {
 
     let query = `{
       resp(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
-        uid uuid accessToken username platform address router routerPort deployNetwork
+        uid uuid accessToken username platform address router routerPort deployNetwork devicesMetadata
         pipelines: gateway_pipeline {
           uid
           name
@@ -1878,7 +1878,7 @@ export class DgraphService implements GraphService {
     return this.http.post<any>(url, query, httpOptions)
       .pipe(
         map(response => response.data.resp as TSReading[]),
-        // tap(response => console.log("Response from getReadings: ", response)),
+        tap(response => console.log("Response from getReadings: ", response)),
         tap(_ => this.logger.info('fetched readings')),
         catchError(this.handleError<TSReading[]>('getReadings', []))
       );

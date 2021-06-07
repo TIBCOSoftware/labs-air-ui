@@ -1,21 +1,26 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Device, Resource, TSReading } from 'src/app/shared/models/iot.model';
 import { GraphService } from '../../../services/graph/graph.service';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-iot-gateway-text',
   templateUrl: './iot-gateway-text.component.html',
   styleUrls: ['./iot-gateway-text.component.css']
 })
-export class IotGatewayTextComponent implements OnInit {
+export class IotGatewayTextComponent implements OnInit, OnDestroy, AfterViewInit {
   device: Device;
   instrument: Resource;
   subscriptions: Subscription[] = []
-  public resourceReadings = [];
-  constructor(private graphService: GraphService) { }
   displayedColumns = ['created', 'value']
   dateFormat = 'yyyy-MM-dd HH:mm:ss'
+  dataSource = new MatTableDataSource<TSReading>();
+  @ViewChild(MatSort) sort: MatSort;
+
+  constructor(private graphService: GraphService) { }
+
 
   ngOnInit(): void {
     this.getReadings();
@@ -25,7 +30,11 @@ export class IotGatewayTextComponent implements OnInit {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
-  public getReadings() {
+  ngAfterViewInit(): void {
+    this.dataSource.sort = this.sort;
+  }
+
+  public getReadings(): void {
     this.subscriptions.push(this.graphService.getReadings(this.device.name, this.instrument.name, 300)
       .subscribe(res => {
 
@@ -36,7 +45,7 @@ export class IotGatewayTextComponent implements OnInit {
           }
         }
       
-        this.resourceReadings = res as TSReading[];
+        this.dataSource.data = res as TSReading[];
         
       }));
   }

@@ -66,6 +66,20 @@ export class IotGatewayDetailsComponent implements OnInit {
   }
 
   public getDevices(gateway: Gateway) {
+
+    let decodedData = atob(gateway.devicesMetadata);
+    let jsonData = JSON.parse(decodedData);
+
+    console.log("Devices: ", jsonData);
+    
+    this.devicesDataSource.data = jsonData as Device[];
+    this.selectedDevice = this.devicesDataSource.data[0];
+    this.buildSensorList(this.selectedDevice.profile.deviceResources);
+    this.selectChartType('Overview');
+
+  }
+
+  public getDevicesExternal(gateway: Gateway) {
     this.edgeService.getDevices(gateway)
       .subscribe(res => {
         this.devicesDataSource.data = res as Device[];

@@ -24,6 +24,7 @@ export class IotDashboardComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+
     // this.spotfireServer = 'https://spotfire-next.cloud.tibco.com';
     // this.analysisPath = '/Samples/Introduction to Spotfire';
     // this.activePage = '0';
@@ -40,7 +41,6 @@ export class IotDashboardComponent implements OnInit {
     //   showHelp: false,
     //   showLogout: false,
     //   showPageNavigation: true,
-    //   showReloadAnalysis: false,
     //   showStatusBar: false,
     //   showToolBar: false,
     //   showUndoRedo: false
@@ -52,14 +52,19 @@ export class IotDashboardComponent implements OnInit {
     // this.spotfireServer = 'https://spotfire-next.cloud.tibco.com';
     // this.analysisPath = '/Users/b5zl5zgs2jshn2xyyess4gzqufcuue6q/Public/Product Registration 06';
 
-    this.spotfireServer = 'https://ec2-3-223-106-221.compute-1.amazonaws.com';
-    this.analysisPath = '/Anonymous/MSAnomalyDetection';
-    this.version = '10.7'
+    // Works for Anomaly Detection
+    // this.spotfireServer = 'https://ec2-3-223-106-221.compute-1.amazonaws.com';
+    // this.analysisPath = '/Anonymous/MSAnomalyDetection';
+    // this.version = '10.7'
 
     // https://demo.spotfire.cloud.tibco.com/spotfire/wp/analysis?file=/Public/Working%20Demos/Wafermap%20Pattern%20Recognition%20-%20Air%20Demo&waid=QHnEu1TdLku_b9yhuVaq3-120416f172FBqm&wavid=0
 
     // this.spotfireServer = 'https://demo.spotfire.cloud.tibco.com';
     // this.analysisPath = '/Public/Working Demos/Wafermap Pattern Recognition-Air Demo';
+
+    this.spotfireServer = 'https://spotfire-next.cloud.tibco.com';
+    this.analysisPath = '/Users/vioijfozulumlardrxcikq7xtczlfcrk/Public/AirDashboard';
+    // this.version = '11.0'
 
     this.activePage = '0';
     this.parameters = "Test";
