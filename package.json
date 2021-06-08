@@ -50,7 +50,7 @@
     "fuzzy": "^0.1.3",
     "hammerjs": "^2.0.8",
     "heatmap.js": "git+https://github.com/sanuradhag/heatmap.js.git",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.21",
     "lodash-es": "^4.17.15",
     "minimist": ">=1.2.3",
     "mixin-deep": ">=1.3.2",
