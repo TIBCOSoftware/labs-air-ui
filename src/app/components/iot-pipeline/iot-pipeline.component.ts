@@ -1447,7 +1447,21 @@ export class IotPipelineComponent implements OnInit {
    * Get Devices for a geteway
    * @param gateway
    */
-  getDevices(gateway) {
+  getDevices(gateway: Gateway) {
+    console.log("Get devices for: ", gateway);
+
+    let decodedData = atob(gateway.devicesMetadata);
+    let jsonData = JSON.parse(decodedData);
+    this.devices = jsonData as Device[];
+    
+    console.log("Devices: ", this.devices);
+  }
+
+  /**
+   * Get Devices for a geteway - Not used anymore as now devices metadata is included in gateway
+   * @param gateway
+   */
+   getDevicesExternal(gateway: Gateway) {
     console.log("Calling EdgeService to get devices for: ", gateway);
 
     this.edgeService.getDevices(gateway)
@@ -2072,9 +2086,11 @@ export class IotPipelineComponent implements OnInit {
   buildDataSubscriberDeployObj(contextObj): any {
 
     let sourceType = "";
+    // Events coming from Edgex MQTT (includes envelope for payload)
     if (contextObj.topic == "edgexevents") {
       sourceType = "DataSource.EDGEX_" + contextObj.protocol;
     }
+    // Events coming  from ZMQToMQTT
     else {
       sourceType = "DataSource." + contextObj.protocol;
     }
