@@ -1,0 +1,168 @@
+.table-container {
+    overflow: auto;
+    height: 300px;
+}
+  
+table {
+    width: 100%;
+}
+  
+.mat-form-field {
+    font-size: 14px;
+    width: 100%;
+}
+  
+.mat-row.selected {
+    background: #dddddd;
+}
+
+.mat-header-cell {
+    font-size: 18px;
+}
+
+.gateway-header-image {
+    background-image: url('/assets/icons/gateway.svg');
+    background-size: 80%;
+    background-repeat: no-repeat;
+}
+
+
+
+
+.gateway-location-image {
+    background-image: url('/assets/icons/gateway_location.svg');
+    background-size: 80%;
+    background-repeat: no-repeat;
+}
+
+.device-header-image {
+    background-image: url('/assets/icons/device.svg');
+    background-size: 80%;
+    background-repeat: no-repeat;
+}
+
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 500px);
+}
+
+.card {
+    max-width: 404px;
+    max-height: 310px;
+    border-radius: 3px;
+    background-color: #FFFFFF;
+    box-shadow: 0 2px 6px 0 rgba(114,114,114,0.33);
+    margin: 28px 24px 24px 0px;
+    font-family: "Source Sans Pro";
+    display: flex;
+    flex-direction:column; 
+}
+
+.card-header {
+    color: #212121;
+    padding: 24px 24px 16px 24px;
+    height: auto;
+    background-color: #7DC95E;
+}
+
+.card-title-label {
+    font-size: 18px;
+    line-height: 27px;
+    color: #FFFFFF;
+    font-weight: 600;
+}
+
+.card-title-details {
+    font-size: 14px;
+    float: right;
+    font-weight: 400;
+}
+
+.card-title-action {
+    float: right;
+}
+
+.card-body {
+    margin: 0px 24px;
+    display: inline-block;
+}
+
+.card-body-summary {
+    margin-top:  12px;
+    font-size: 12px;
+    line-height: 18px;
+    font-weight: 600;
+}
+
+.card-body-summary-text {
+    font-weight: 400;
+}
+
+.card-body-highlights {
+    margin-top: 9px;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 21px;
+}
+
+.card-body-hightlights-text {
+    font-size: 12px;
+}
+
+.card-body-hightlights-text span {
+    color: #727272;
+    margin-right: 12px;
+}
+
+.card-body-hightlights-text span+span {
+    color: #212121;
+}
+
+.search-icon {
+    color: #727272; 
+    font-size: 20px;
+}
+
+.card-body-highlights-text {
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.card-footer {
+    height: 56px;
+    background-color: #FAFAFA;
+    margin-top: 16px;
+}
+
+.card-footer-container {
+    margin: 16px 24px;
+    line-height: 18px;
+    font-size: 12px;
+
+}
+
+.card-footer-details span mat-icon {
+    font-size: 20px;
+    cursor: pointer;
+    margin-right: 48px;
+    fill: #727272;
+}
+
+.card-footer-details-button {
+    float: right;
+    color: #1774E5;
+    cursor: pointer;
+}
+
+.icon-document {
+    width: 14px;
+    height: 14px;
+    color: #A160FB;
+    vertical-align: text-top;
+}
+
+.icon-chevron-right {
+    height: 20px;
+    width: 20px;
+    vertical-align: middle;
+}

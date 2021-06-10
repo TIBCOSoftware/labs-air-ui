@@ -1,0 +1,69 @@
+<!--<div class="tcs-home-content" fxLayout="column" fxFlex="grow" fxLayoutAlign="start stretch"
+  style="padding-left: 20px; padding-right: 20px; margin-top: 10px;">
+
+  <div fxLayout="row" fxLayoutAlign="center center">
+    <mat-form-field fxFlex="20%">
+      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+      <mat-icon matSuffix class='search-icon'>search</mat-icon>
+    </mat-form-field>
+  </div>
+  <div>
+    <div class='card-container'>
+      <div class='card' *ngFor='let gateway of dataSource.filteredData'>
+        <div class='card-header' [ngStyle]="{'background-color': generateColor(gateway.uuid)}">
+          <div class='card-title-label'>
+            <span>
+              {{gateway.uuid}}
+            </span>
+            <span class='card-title-details'>
+              {{gateway.createdts | date: 'dd MMM yyyy'}}
+            </span>
+          </div>
+        </div>
+        <div class='card-body'>
+          <div class='card-body-summary'>
+            <mat-icon class='icon-document' svgIcon="document"></mat-icon>
+            Gateway description
+            <div class='card-body-summary-text'>
+              {{ gateway.description }}
+            </div>
+          </div>
+          <div class='card-body-highlights'>
+            Gateway Highlights
+            <div class='card-body-hightlights-text'>
+              <div>
+                <span>Platform:</span>
+                <span>{{ gateway.platform }}</span>
+              </div>
+              <div>
+                <span>Devices:</span>
+                <span>{{ gateway.numDevices }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class='card-footer'>
+          <div class='card-footer-container'>
+            <span class='card-footer-details'>
+              <span (click)='pingGateway(gateway)' matTooltip="Ping">            
+                <mat-icon svgIcon='ping'></mat-icon>
+              </span>
+              <span [routerLink]="['/starterApp/home/gatewayendpoint', gateway.uuid]" matTooltip="Endpoints">
+                <mat-icon svgIcon='endpoint'></mat-icon>
+              </span>
+              <span [routerLink]="['/starterApp/home/pipeline', gateway.uuid]" matTooltip="Pipeline">
+                <mat-icon svgIcon='pipeline'></mat-icon>
+              </span>
+            </span>
+            <span class='card-footer-details-button' [routerLink]="['/starterApp/home/device-details', gateway.uuid]">
+              View details
+              <mat-icon class='icon-chevron-right' svgIcon="chevron-right"></mat-icon>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>-->
+
+In Iot Gateway
