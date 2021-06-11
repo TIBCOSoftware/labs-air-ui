@@ -12,7 +12,6 @@ export class SplashComponent implements OnInit {
     }
     public handleGetStarted = (): void => {
         // get started - navigate to home
-        console.log("Inside handle get started")
         this.router.navigate(['/starterApp/home/gateway']);
     }
     ngOnInit() {

@@ -271,8 +271,11 @@ export class IotGatewayComponent implements OnInit, AfterViewInit {
     return false;
   }
 
-  applyFilter(filterValue: string) {
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+  applyFilter(target: EventTarget | null) {
+    if (target){
+      let htmlTextArea = target as HTMLTextAreaElement;
+      this.dataSource.filter = htmlTextArea.value.trim().toLowerCase();
+    }
   }
 
   onRowClicked(row: any) {
