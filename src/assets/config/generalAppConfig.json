@@ -1,0 +1,15 @@
+{
+  "browserTitle": "ProjectAir",
+  "applicationTitle": "ProjectAir (TIBCO LABS™)",
+  "welcomeMessage": "Welcome to the ProjectAir",
+  "roles": [
+        {
+      "id": "User",
+      "group": "System: ALL_USERS",
+      "display": "User",
+      "priority": 5
+        }
+    ],
+  "displayName": true,
+  "documentationUrl": "assets/help.html"
+}

@@ -112,5 +112,10 @@ export class IotHomeCockpitComponent {
      */
     @Input() userId = "";
 
+    /**
+     * The title
+     */
+    @Input() title = "";
+
 
 }
