@@ -3,9 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
-import { LogLevel, LogService } from '@tibco-tcstk/tc-core-lib';
 import {AuthService} from '../auth/auth.service';
-
 @Injectable({
   providedIn: 'root'
 })
@@ -17,30 +15,25 @@ export class FlogoDeployService {
     })
   };
 
-  constructor(private logger: LogService,
-    private http: HttpClient, private authService: AuthService) {
-
-    logger.level = LogLevel.Debug;
+  constructor(private http: HttpClient, private authService: AuthService) {
     let basicAuthHeaders = authService.getBasicAuthHeaders();
-    for (let key in basicAuthHeaders) {
-      let value = basicAuthHeaders[key];
+    basicAuthHeaders.forEach((value, key) => { 
       this.httpOptions.headers = this.httpOptions.headers.append(key, value);
-    }
-
+    } );
   }
 
-  deploy(request): Observable<string> {
+  deploy(request: any): Observable<string> {
 
     const url = `/airEndpoint/app-manager/releases`;
 
     return this.http.post<string>(url, request, this.httpOptions)
       .pipe(
-        tap(_ => this.logger.info('Deployed New Pipeline')),
+        tap(_ => console.info('Deployed New Pipeline')),
         catchError(this.handleError<string>('deploy'))
       );
   }
 
-  validateF1(pipelineId, request): Observable<any> {
+  validateF1(pipelineId: string, request: any): Observable<any> {
 
     // const url = `http://54.81.13.248:5408/f1/air/build/Air-F1_Flogo_Pipeline`;
     // const url = `http://54.81.13.248:5408/f1/air/components/`;
@@ -56,12 +49,12 @@ export class FlogoDeployService {
 
     return this.http.post<string>(url, request, this.httpOptions)
       .pipe(
-        tap(_ => this.logger.info('Build New Pipeline')),
+        tap(_ => console.info('Build New Pipeline')),
         catchError(this.handleError<string>('deploy'))
       );
   }
 
-  deployF1(pipelineId, request): Observable<any> {
+  deployF1(pipelineId: string, request: any): Observable<any> {
 
     // const url = `http://54.81.13.248:5408/f1/air/build/Air-F1_Flogo_Pipeline`;
     // const url = `http://54.81.13.248:5408/f1/air/components/`;
@@ -77,12 +70,12 @@ export class FlogoDeployService {
 
     return this.http.post<string>(url, request, this.httpOptions)
       .pipe(
-        tap(_ => this.logger.info('Deploy Pipeline')),
+        tap(_ => console.info('Deploy Pipeline')),
         catchError(this.handleError<string>('deployF1'))
       );
   }
 
-  undeployF1(pipelineId, request): Observable<any> {
+  undeployF1(pipelineId: string, request: any): Observable<any> {
 
     // const url = `/airEndpointf1/f1/air/build/Air-F1_Flogo_Pipeline`;
 
@@ -94,12 +87,12 @@ export class FlogoDeployService {
 
     return this.http.post<string>(url, request, this.httpOptions)
       .pipe(
-        tap(_ => this.logger.info('Undeploy Pipeline')),
+        tap(_ => console.info('Undeploy Pipeline')),
         catchError(this.handleError<string>('undeployF1'))
       );
   }
 
-  getFlogoPropertiesF1(request): Observable<any> {
+  getFlogoPropertiesF1(request: any): Observable<any> {
 
     // const url = `http://54.81.13.248:5408/f1/air/build/Air-F1_Flogo_Pipeline`;
     // const url = `http://54.81.13.248:5408/f1/air/components/`;
@@ -116,12 +109,12 @@ export class FlogoDeployService {
 
     return this.http.post<string>(url, request, this.httpOptions)
       .pipe(
-        tap(_ => this.logger.info('Got Flogo Properties')),
+        tap(_ => console.info('Got Flogo Properties')),
         catchError(this.handleError<string>('getFlogoPropertiesF1'))
       );
   }
 
-  undeploy(request): Observable<string> {
+  undeploy(request: { [x: string]: string; params: any; }): Observable<string> {
 
     let url = "/airEndpoint/app-manager/releases/".concat(request["id"]);
     let searchParams = new URLSearchParams();
@@ -138,7 +131,7 @@ export class FlogoDeployService {
 
     return this.http.delete<string>(url, this.httpOptions)
       .pipe(
-        tap(_ => this.logger.info('Undeployed Pipeline')),
+        tap(_ => console.info('Undeployed Pipeline')),
         catchError(this.handleError<string>('undeploy'))
       );
   }
@@ -161,7 +154,7 @@ export class FlogoDeployService {
       console.error(error); // log to console instead
 
       // TODO: better job of transforming error for user consumption
-      this.logger.info(`${operation} failed: ${error.message}`);
+      console.info(`${operation} failed: ${error.message}`);
 
       // Let the app keep running by returning an empty result.
       return of(result as T);

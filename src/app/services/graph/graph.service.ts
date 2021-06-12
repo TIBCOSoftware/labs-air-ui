@@ -15,9 +15,9 @@ export abstract class GraphService {
 
   abstract deleteGateway(gatewayUid: number): Observable<string>;
 
-  abstract getGatewayAndPublishers(gatewayName): Observable<Gateway[]>;
+  abstract getGatewayAndPublishers(gatewayName: any): Observable<Gateway[]>;
 
-  abstract getPublishers(gatewayName): Observable<Publisher[]>;
+  abstract getPublishers(gatewayName: any): Observable<Publisher[]>;
 
   abstract addPublisher(gatewayUid: number, publisher: Publisher): Observable<string>;
 
@@ -25,9 +25,9 @@ export abstract class GraphService {
 
   abstract deletePublisher(gatewayUid: number, publisherUid: number): Observable<string>;
 
-  abstract getGatewayAndProtocols(gatewayName): Observable<Gateway[]>;
+  abstract getGatewayAndProtocols(gatewayName: any): Observable<Gateway[]>;
 
-  abstract getProtocols(gatewayName): Observable<Protocol[]>;
+  abstract getProtocols(gatewayName: any): Observable<Protocol[]>;
 
   abstract addProtocol(gatewayUid: number, protocol: Protocol): Observable<string>;
 
@@ -35,9 +35,9 @@ export abstract class GraphService {
 
   abstract deleteProtocol(gatewayUid: number, protocolUid: number): Observable<string>;
 
-  abstract getGatewayAndDataStores(gatewayName): Observable<Gateway[]>;
+  abstract getGatewayAndDataStores(gatewayName: any): Observable<Gateway[]>;
 
-  abstract getDataStores(gatewayName): Observable<DataStore[]>;
+  abstract getDataStores(gatewayName: any): Observable<DataStore[]>;
 
   abstract addDataStore(gatewayUid: number, dataStore: DataStore): Observable<string>;
 
@@ -45,9 +45,9 @@ export abstract class GraphService {
 
   abstract deleteDataStore(gatewayUid: number, dataStoreUid: number): Observable<string>;
 
-  abstract getGatewayAndModels(gatewayName): Observable<Gateway[]>;
+  abstract getGatewayAndModels(gatewayName: any): Observable<Gateway[]>;
 
-  abstract getModels(gatewayName): Observable<Model[]>;
+  abstract getModels(gatewayName: any): Observable<Model[]>;
 
   abstract addModel(gatewayUid: number, model: Model): Observable<string>;
 
@@ -55,9 +55,9 @@ export abstract class GraphService {
 
   abstract deleteModel(gatewayUid: number, modelUid: number): Observable<string>;
 
-  abstract getGatewayAndPipelines(gatewayName): Observable<Gateway[]>;
+  abstract getGatewayAndPipelines(gatewayName: any): Observable<Gateway[]>;
 
-  abstract getPipelines(gatewayName): Observable<Pipeline[]>;
+  abstract getPipelines(gatewayName: any): Observable<Pipeline[]>;
 
   abstract addPipeline(gatewayUid: number, pipeline: Pipeline, transportObj: any,
     dataStoreObj: any, filterObj: any, streamingObj: any): Observable<string>;
@@ -66,11 +66,11 @@ export abstract class GraphService {
 
   abstract deletePipeline(gatewayUid: number, pipeline: Pipeline): Observable<string>;
 
-  abstract getPipelineIdsFromProtocolUid(protocolUid): Observable<Pipeline[]>;
+  abstract getPipelineIdsFromProtocolUid(protocolUid: any): Observable<Pipeline[]>;
 
-  abstract getPipelineIdsFromDataStoreUid(dataStoreUid): Observable<Pipeline[]>;
+  abstract getPipelineIdsFromDataStoreUid(dataStoreUid: any): Observable<Pipeline[]>;
 
-  abstract getRules(gatewayName): Observable<Rule[]>;
+  abstract getRules(gatewayName: any): Observable<Rule[]>;
 
   abstract addRule(gatewayUid: number, rule: Rule): Observable<string>;
 
@@ -78,7 +78,7 @@ export abstract class GraphService {
 
   abstract deleteRule(gatewayUid: number, ruleUid: number): Observable<string>;
 
-  abstract getModelConfigs(gatewayName): Observable<ModelConfig[]>;
+  abstract getModelConfigs(gatewayName: any): Observable<ModelConfig[]>;
 
   abstract addModelConfig(gatewayUid: number, modelConfig: ModelConfig): Observable<string>;
 
@@ -86,31 +86,31 @@ export abstract class GraphService {
 
   abstract deleteModelConfig(gatewayUid: number, modelConfigUid: number): Observable<string>;
 
-  abstract getFiltersConfig(gatewayName): Observable<GatewayFiltersConfig[]>;
+  abstract getFiltersConfig(gatewayName: any): Observable<GatewayFiltersConfig[]>;
 
   abstract addFiltersConfig(gatewayUid: number, filtersConfig: GatewayFiltersConfig): Observable<string>;
 
   abstract updateFiltersConfig(filtersConfig: GatewayFiltersConfig): Observable<string>;
   
-  abstract getReadings(deviceName, instrumentName, numReadings): Observable<TSReading[]>;
+  abstract getReadings(deviceName: any, instrumentName: any, numReadings: any): Observable<TSReading[]>;
 
-  abstract getReadingsAt(deviceName, instrumentName, ts): Observable<TSReading[]>;
+  abstract getReadingsAt(deviceName: any, instrumentName: any, ts: any): Observable<TSReading[]>;
 
-  abstract getReadingsStartingAt(deviceName, instrumentName, fromts): Observable<TSReading[]>;
+  abstract getReadingsStartingAt(deviceName: any, instrumentName: any, fromts: any): Observable<TSReading[]>;
 
-  abstract getReadingsBetween(deviceName, instrumentName, fromts, tots): Observable<TSReading[]>;
+  abstract getReadingsBetween(deviceName: any, instrumentName: any, fromts: any, tots: any): Observable<TSReading[]>;
 
-  abstract getLastReadingsForDevice(deviceName): Observable<TSReading[]>;
+  abstract getLastReadingsForDevice(deviceName: any): Observable<TSReading[]>;
 
   abstract getNotifications(): Observable<Notification[]>;
 
-  abstract getRoute(deviceName): any;
+  abstract getRoute(deviceName: any): any;
 
-  abstract getRouteCenter(deviceName): any;
+  abstract getRouteCenter(deviceName: any): any;
 
-  abstract getGatewayAndSubscriptions(gatewayName): Observable<Gateway[]>;
+  abstract getGatewayAndSubscriptions(gatewayName: any): Observable<Gateway[]>;
   
-  abstract getSubscriptions(gatewayName): Observable<Subscription[]>;
+  abstract getSubscriptions(gatewayName: any): Observable<Subscription[]>;
 
   abstract addSubscription(gatewayUid: number, subscription: Subscription): Observable<string>;
 

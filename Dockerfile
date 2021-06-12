@@ -1,12 +1,19 @@
-# base image
-FROM node:12.13.0
+# Stage 1
+FROM node:alpine3.13 as build-step
 
-# set working directory
+RUN mkdir -p /app
+
 WORKDIR /app
 
-ENV PATH /app/node_modules/.bin:$PATH
+COPY package.json /app
 
-# add app
+RUN npm install
+
 COPY . /app
 
-RUN npm install;
+RUN npm run build --prod
+
+# Stage 2
+FROM nginx:1.21.0-alpine
+
+COPY --from=build-step /app/dist/ProjectAir /usr/share/nginx/html

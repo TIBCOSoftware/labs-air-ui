@@ -32,7 +32,9 @@ export class BreadcrumbsService {
         this.path.next(route.data.breadcrumb);
       }
       // go to the next element if not found
-      this.setCrumbs(route.firstChild);
+      if (route.firstChild){
+        this.setCrumbs(route.firstChild);
+      }
     }
   }
 

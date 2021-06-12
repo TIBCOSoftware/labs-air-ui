@@ -3,16 +3,13 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
-import { LogLevel, LogService } from '@tibco-tcstk/tc-core-lib';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RtsfSimulatorService {
 
-  constructor(private http: HttpClient,
-    private logger: LogService) {
-    logger.level = LogLevel.Debug;
+  constructor(private http: HttpClient) {
   }
 
   private getURL(servicePath: string): string {
@@ -72,7 +69,7 @@ export class RtsfSimulatorService {
       console.error(error); // log to console instead
 
       // TODO: better job of transforming error for user consumption
-      this.logger.info(`${operation} failed: ${error.message}`);
+      console.info(`${operation} failed: ${error.message}`);
 
       // Let the app keep running by returning an empty result.
       return of(result as T);

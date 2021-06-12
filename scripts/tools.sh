@@ -48,5 +48,6 @@ function delete_local_image(){
     local delete_image_url=$3
     echo "Deleting image ..."
     docker images -a | grep "${delete_image_name}" | awk '{print $3}' | xargs docker rmi -f || exit 1
+    docker rmi -f $(docker images -f "dangling=true" -q)
     echo "Deleting image finished ..."
 }

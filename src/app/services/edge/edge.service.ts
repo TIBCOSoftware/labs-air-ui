@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { catchError, map, tap, timeout } from 'rxjs/operators';
-import { LogLevel, LogService } from '@tibco-tcstk/tc-core-lib';
 
 import { Device, Profile, Service, Subscription, GetCommandResponse, Gateway, Rule, ModelConfig, FiltersConfig } from '../../shared/models/iot.model';
 
@@ -53,9 +52,7 @@ export class EdgeService {
    * @param http 
    * @param logger 
    */
-  constructor(private http: HttpClient,
-    private logger: LogService) {
-    logger.level = LogLevel.Debug;
+  constructor(private http: HttpClient) {
   }
 
   /**
@@ -131,7 +128,7 @@ export class EdgeService {
     return this.http.get<string>(url, httpTextResponseOptions)
       .pipe(
         timeout(2000),
-        tap(_ => this.logger.info('received ping response')),
+        tap(_ => console.info('received ping response')),
         catchError(this.handleError<string>('pingGateway'))
       );
   }
@@ -161,7 +158,7 @@ export class EdgeService {
 
     return this.http.get<Device[]>(url, httpOptions)
       .pipe(
-        tap(_ => this.logger.info('fetched devices')),
+        tap(_ => console.info('fetched devices')),
         catchError(this.handleError<Device[]>('getDevices', []))
       );
   }
@@ -190,7 +187,7 @@ export class EdgeService {
 
     return this.http.get<Device>(url, httpOptions)
       .pipe(
-        tap(_ => this.logger.info(`fetched device id=${id}`)),
+        tap(_ => console.info(`fetched device id=${id}`)),
         catchError(this.handleError<Device>(`getDevice id=${id}`))
       );
   }
@@ -219,7 +216,7 @@ export class EdgeService {
 
     return this.http.post<string>(url, device, httpTextResponseOptions)
       .pipe(
-        tap(_ => this.logger.info('added new device')),
+        tap(_ => console.info('added new device')),
         catchError(this.handleError<string>('addDevice'))
       );
   }
@@ -248,7 +245,7 @@ export class EdgeService {
 
     return this.http.delete<string>(url, httpTextResponseOptions)
       .pipe(
-        tap(_ => this.logger.info('added new device')),
+        tap(_ => console.info('added new device')),
         catchError(this.handleError<string>('addDevice'))
       );
   }
@@ -277,7 +274,7 @@ export class EdgeService {
 
     return this.http.get<Profile[]>(url, httpOptions)
       .pipe(
-        tap(_ => this.logger.info('fetched profiles')),
+        tap(_ => console.info('fetched profiles')),
         catchError(this.handleError<Profile[]>('getProfiles', []))
       );
   }
@@ -306,7 +303,7 @@ export class EdgeService {
 
     return this.http.post<string>(url, profile, httpTextResponseOptions)
       .pipe(
-        tap(_ => this.logger.info('added new profile')),
+        tap(_ => console.info('added new profile')),
         catchError(this.handleError<string>('addProfile'))
       );
   }
@@ -334,7 +331,7 @@ export class EdgeService {
 
     return this.http.put<string>(url, profile, httpTextResponseOptions)
       .pipe(
-        tap(_ => this.logger.info('updated profile')),
+        tap(_ => console.info('updated profile')),
         catchError(this.handleError<string>('updateProfile'))
       );
   }
@@ -362,7 +359,7 @@ export class EdgeService {
 
     return this.http.get<Service[]>(url, httpOptions)
       .pipe(
-        tap(_ => this.logger.info('fetched services')),
+        tap(_ => console.info('fetched services')),
         catchError(this.handleError<Service[]>('getServices', []))
       );
   }
@@ -393,7 +390,7 @@ export class EdgeService {
 
     return this.http.get<GetCommandResponse>(url, httpOptions)
       .pipe(
-        tap(_ => this.logger.info(`fetched get response`)),
+        tap(_ => console.info(`fetched get response`)),
         catchError(this.handleError<GetCommandResponse>(`getCommand response`))
       );
 
@@ -412,13 +409,13 @@ export class EdgeService {
 
     // const url = `https://localhost:8443/export/api/v1/registration`;
 
-    let deviceFilter = [];
+    let deviceFilter: string[] = [];
     if (subscription.deviceIdentifierFilter.length > 0) {
       let dfilter = subscription.deviceIdentifierFilter.replace(/\s+/g, '');
       deviceFilter = dfilter.split(',');
     }
 
-    let valueDescriptorFilter = [];
+    let valueDescriptorFilter: string[] = [];
     if (subscription.valueDescriptorFilter.length > 0) {
       let vdfilter = subscription.valueDescriptorFilter.replace(/\s+/g, '');
       valueDescriptorFilter = vdfilter.split(',');
@@ -461,7 +458,7 @@ export class EdgeService {
 
     return this.http.post<string>(url, query, httpTextResponseOptions)
       .pipe(
-        tap(_ => this.logger.info('registered to receive events')),
+        tap(_ => console.info('registered to receive events')),
         catchError(this.handleError<string>('addRegistration'))
       );
   }
@@ -475,13 +472,13 @@ export class EdgeService {
     // const url = `/${gateway.uuid}${this.gatewayExportClientPath}/registration`;
     const url = this.getEdgexURL(gateway.address, this.edgexExportClientPath, 'registration');
 
-    let deviceFilter = [];
+    let deviceFilter: string[] = [];
     if (subscription.deviceIdentifierFilter.length > 0) {
       let dfilter = subscription.deviceIdentifierFilter.replace(/\s+/g, '');
       deviceFilter = dfilter.split(',');
     }
 
-    let valueDescriptorFilter = [];
+    let valueDescriptorFilter: string[] = [];
     if (subscription.valueDescriptorFilter.length > 0) {
       let vdfilter = subscription.valueDescriptorFilter.replace(/\s+/g, '');
       valueDescriptorFilter = vdfilter.split(',');
@@ -520,7 +517,7 @@ export class EdgeService {
 
     return this.http.put<string>(url, query, httpTextResponseOptions)
       .pipe(
-        tap(_ => this.logger.info('registered to receive events')),
+        tap(_ => console.info('registered to receive events')),
         catchError(this.handleError<string>('addRegistration'))
       );
   }
@@ -540,7 +537,7 @@ export class EdgeService {
 
     return this.http.delete<string>(url, httpTextResponseOptions)
       .pipe(
-        tap(_ => this.logger.info('registered to receive events')),
+        tap(_ => console.info('registered to receive events')),
         catchError(this.handleError<string>('addRegistration'))
       );
   }
@@ -563,7 +560,7 @@ export class EdgeService {
 
     return this.http.post<string>(url, rule, httpTextResponseOptions)
       .pipe(
-        tap(_ => this.logger.info('added rule')),
+        tap(_ => console.info('added rule')),
         catchError(this.handleError<string>('addRule'))
       );
   }
@@ -583,7 +580,7 @@ export class EdgeService {
 
     return this.http.post<string>(url, rule, httpTextResponseOptions)
       .pipe(
-        tap(_ => this.logger.info('added rule')),
+        tap(_ => console.info('added rule')),
         catchError(this.handleError<string>('deleteRule'))
       );
   }
@@ -602,7 +599,7 @@ export class EdgeService {
 
     return this.http.post<string>(url, modelConfig, httpTextResponseOptions)
       .pipe(
-        tap(_ => this.logger.info('added modelConfig')),
+        tap(_ => console.info('added modelConfig')),
         catchError(this.handleError<string>('addModelConfig'))
       );
   }
@@ -621,7 +618,7 @@ export class EdgeService {
 
     return this.http.post<string>(url, modelConfig, httpTextResponseOptions)
       .pipe(
-        tap(_ => this.logger.info('deleted modelConfig')),
+        tap(_ => console.info('deleted modelConfig')),
         catchError(this.handleError<string>('deleteModelConfig'))
       );
   }
@@ -640,7 +637,7 @@ export class EdgeService {
 
     return this.http.post<string>(url, filtersConfig, httpTextResponseOptions)
       .pipe(
-        tap(_ => this.logger.info('set filtersConfig')),
+        tap(_ => console.info('set filtersConfig')),
         catchError(this.handleError<string>('setFiltersConfig'))
       );
   }
@@ -658,7 +655,7 @@ export class EdgeService {
       console.error(error); // log to console instead
 
       // TODO: better job of transforming error for user consumption
-      this.logger.info(`${operation} failed: ${error.message}`);
+      console.info(`${operation} failed: ${error.message}`);
 
       // Let the app keep running by returning an empty result.
       return of(result as T);

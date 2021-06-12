@@ -13,7 +13,6 @@ import { debounceTime, distinctUntilChanged, startWith, tap, delay } from 'rxjs/
 //import { fromEvent } from 'rxjs/observable/fromEvent';
 // // import { DevicesDataSource } from "../services/edge/devices.datasource";
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { LogLevel, LogService } from '@tibco-tcstk/tc-core-lib';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -28,35 +27,32 @@ import { BreadcrumbsService } from '../../services/breadcrumbs/breadcrumbs.servi
 export class IotGatewayComponent implements OnInit, AfterViewInit {
 
   // Map configuration
-  mapConfig = null;
+  mapConfig = {};
 
   gatewayOpDisabled = true;
   publisherDisabled = true;
   cloudDataPipelineDisable = true;
   edgeDataPipelineDisable = true;
-  selectedGateway: Gateway;
+  selectedGateway: Gateway = new Gateway();
   hideAccessToken = true;
   dateFormat = 'yyyy-MM-dd  HH:mm:ss';
 
-  dataStoreMetadata: DataStoreMetadata = null;
+  dataStoreMetadata: DataStoreMetadata = new DataStoreMetadata();
 
   gatewayForm: FormGroup;
   dataSource = new MatTableDataSource<Gateway>();
   displayedColumns: string[] = ['uuid', 'created', 'updated'];
   selection = new SelectionModel<Gateway>(false, []);
-  @ViewChild(MatSort, { static: false }) sort: MatSort;
+  @ViewChild(MatSort, { static: false }) sort: MatSort = new MatSort();
 
   constructor(private graphService: GraphService,
     private edgeService: EdgeService,
     private datastoreService: DatastoreService,
     private formBuilder: FormBuilder,
-    private logger: LogService,
     private _snackBar: MatSnackBar,
     private _datePipe: DatePipe,
     private breadcrumbs: BreadcrumbsService,
     private route: ActivatedRoute) {
-
-    logger.level = LogLevel.Debug;
 
     this.gatewayForm = this.formBuilder.group({
       uid: [''],
@@ -92,7 +88,7 @@ export class IotGatewayComponent implements OnInit, AfterViewInit {
 
   public getGateways() {
     console.log("Getting Gateways called")
-    this.logger.debug("Getting Gateways");
+    console.debug("Getting Gateways");
 
 
     this.graphService.getGateways()
@@ -108,17 +104,17 @@ export class IotGatewayComponent implements OnInit, AfterViewInit {
 
   buildMaporamaData() {
 
-    let mapData=[];
+    let mapData:[] = [];
 
     this.dataSource.data.forEach(
       gateway => {
 
-        mapData.push({
+        /*mapData.push({
           lat: gateway.latitude,
           lon: gateway.longitude,
           label: gateway.uuid,
           uuid: gateway.uid
-        });
+        });*/
       }
     );
 
@@ -275,11 +271,14 @@ export class IotGatewayComponent implements OnInit, AfterViewInit {
     return false;
   }
 
-  applyFilter(filterValue: string) {
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+  applyFilter(target: EventTarget | null) {
+    if (target){
+      let htmlTextArea = target as HTMLTextAreaElement;
+      this.dataSource.filter = htmlTextArea.value.trim().toLowerCase();
+    }
   }
 
-  onRowClicked(row) {
+  onRowClicked(row: any) {
     //console.log('Row clicked: ', row);
 
     // Enable/Disable variables
@@ -334,7 +333,7 @@ export class IotGatewayComponent implements OnInit, AfterViewInit {
       this.selectedGateway = gateway;
       this.gatewayOpDisabled = false;
     } else {
-      this.selectedGateway = null;
+      this.selectedGateway = new Gateway();
       this.gatewayOpDisabled = true;
     }
   }

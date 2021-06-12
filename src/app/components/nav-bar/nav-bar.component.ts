@@ -14,7 +14,7 @@ export class NavBarComponent implements OnInit {
   /**
      * page title comes from config resolver
      */
-  @Input() title: string;
+  @Input() title: string = "";
   paths: String[] = [];
 
   constructor(private breadcrumb: BreadcrumbsService, private location: Location) {

@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { LogLevel, LogService } from '@tibco-tcstk/tc-core-lib';
 import { MatIconRegistry } from "@angular/material/icon";
 import { DomSanitizer } from "@angular/platform-browser";
 
@@ -9,16 +8,10 @@ import { DomSanitizer } from "@angular/platform-browser";
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'tcstk-case-manager-app';
-
-  constructor(private logger: LogService,
-    private matIconRegistry: MatIconRegistry,
+  title = 'Project Air';
+  constructor(private matIconRegistry: MatIconRegistry,
     private domSanitizer: DomSanitizer) {
-
-    logger.level = LogLevel.Debug;
-    logger.info('My Cloud Starter Online...');
-
-    // Register Icons
+      // Register Icons
     this.matIconRegistry.addSvgIcon(
       "command",
       this.domSanitizer.bypassSecurityTrustResourceUrl("../assets/icons/command.svg"));
@@ -67,5 +60,5 @@ export class AppComponent {
     this.matIconRegistry.addSvgIcon(
       "ping",
       this.domSanitizer.bypassSecurityTrustResourceUrl("../assets/icons/ping.svg"));
-  }
+    }
 }

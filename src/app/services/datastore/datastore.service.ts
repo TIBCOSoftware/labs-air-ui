@@ -4,7 +4,6 @@ import { Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { DataStoreMetadata } from '../../shared/models/iot.model';
-import { LogLevel, LogService } from '@tibco-tcstk/tc-core-lib';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +12,7 @@ export class DatastoreService {
 
   private datastorePath = '/datastore';
 
-  constructor(private http: HttpClient,
-    private logger: LogService) {
+  constructor(private http: HttpClient) {
 
   }
 
@@ -24,7 +22,7 @@ export class DatastoreService {
 
     return this.http.post<string>(url, dsmetadata)
       .pipe(
-        tap(_ => this.logger.info('updated datastore metatada')),
+        tap(_ => console.info('updated datastore metatada')),
         catchError(this.handleError<string>('updateDataStoreForGateway'))
       );
   }
@@ -41,8 +39,7 @@ export class DatastoreService {
       // TODO: send the error to remote logging infrastructure
       console.error(error); // log to console instead
 
-      // TODO: better job of transforming error for user consumption
-      this.logger.info(`${operation} failed: ${error.message}`);
+      console.info(`${operation} failed: ${error.message}`);
 
       // Let the app keep running by returning an empty result.
       return of(result as T);
