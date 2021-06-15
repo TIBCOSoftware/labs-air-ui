@@ -1,0 +1,11 @@
+<app-iot-gateway-descriptions [device]="device" [instrument]="instrument"></app-iot-gateway-descriptions>
+<div>
+  <span>Image Streaming</span>
+  <div>
+    <h1>{{inferredImageData}}</h1>
+  </div>
+  <div>
+    <img src="data:image/JPEG;base64,{{imageData}}" />
+    <!-- <img [src]="imageData" /> -->
+  </div>
+</div>

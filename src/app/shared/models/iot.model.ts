@@ -372,3 +372,24 @@ export class DataStoreMetadata {
   gateway: Gateway = new Gateway();
   devices: Device[] = [];
 }
+
+export class ScatterChartDataset {
+  label: string;
+  type: string;
+  pointRadius: number;
+  fill: boolean;
+  lineTension: number;
+  borderWidth: number;
+  data: {}[];
+
+  constructor(label: string, type: string, pointRadius: number, fill: boolean, lineTension: number, borderWidth: number, data: []) {
+    this.label = label;
+    this.type = type;
+    this.pointRadius = pointRadius;
+    this.fill = fill;
+    this.lineTension = lineTension;
+    this.borderWidth = borderWidth;
+    this.data = data;
+  }
+
+}

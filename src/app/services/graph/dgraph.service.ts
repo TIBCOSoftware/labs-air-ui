@@ -8,6 +8,7 @@ import { Gateway, Subscription, Publisher, Pipeline, Rule, ModelConfig, GatewayF
 import { TSReading } from '../../shared/models/iot.model';
 import { GraphService } from './graph.service';
 import {AuthService} from '../auth/auth.service';
+import { environment } from '../../../environments/environment';
 
 // const httpOptions = {
 //   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -77,7 +78,7 @@ const route3 = [
 export class DgraphService implements GraphService {
 
   // Defined as a proxy.  (i.e. http://137.117.38.255:8080)
-  private dgraphUrl = '/airEndpoint/dgraph-alpha-http';
+  private dgraphUrl = environment.dgraphUrl;
 
   /**
    * 
@@ -99,7 +100,7 @@ export class DgraphService implements GraphService {
   /**
    * 
    */
-  getGateway(gatewayName: string): Observable<Gateway[]> {
+  getGateway(gatewayName: string | null): Observable<Gateway[]> {
     console.log("GetGateway service called for: ", gatewayName)
     const url = `${this.dgraphUrl}/query`;
     let query = `{

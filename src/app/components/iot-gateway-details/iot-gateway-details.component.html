@@ -1,0 +1,72 @@
+<div class='status-bar'>
+    <div class='status-bar-color'></div>
+    <div class='status-bar-details'>
+        <span>
+            <b>State</b>: Active
+        </span>
+        <span>
+            <b>Last Refresh</b>: 23 Feb 2021 at 3:40 PST
+        </span>
+        <span>
+            <b>Connection Status</b>: It's fine.
+        </span>
+    </div>
+</div>
+
+<div class='details-body'>
+    <div class='cards'>
+        <div class='card-actions'>
+            <span class='device'>
+                <b>Devices</b>
+            </span>
+            <span class='filter-search'>
+                <mat-icon>filter_alt</mat-icon>
+                <mat-icon>search</mat-icon>
+            </span>
+        </div>
+        <div class='card-list' *ngFor='let device of devicesDataSource.filteredData'>
+            <div class='card' (click)='selectDevice(device)' [class.active]='device.name === selectedDevice.name'>
+                <div class='card-header-filler'></div>
+                <div class='card-header'>
+                    <div class='card-header-icon'>
+                        <mat-icon>search</mat-icon>
+                    </div>
+                    <div class='card-header-text'>
+                        {{ device.name }}
+                    </div>
+                </div>
+                <div class='card-body'>
+                    <div class='card-body-text'>
+                        <div>
+                            Number of Sensors: <b>{{ device.profile.deviceResources.length }}</b>
+                        </div>
+                    </div>
+                <!--
+                    <div class='card-body-load'>
+                        <span>99%</span>
+                        <div class='card-body-percentage'>
+                            <mat-progress-bar mode="determinate" value="40"></mat-progress-bar>
+                        </div>
+                    </div>
+                -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class='card-details'>
+        <div class='card-details-metrics-header'>
+            <div class='card-details-metrics-tabs'>
+                <span (click)='selectChartType(menuItem)' *ngFor='let menuItem of menuItems; let i = index'
+                    [class.active]='selectedDeviceTab === menuItem'>
+                    {{ menuItem }}
+                    <div class='card-details-metrics-tabs icon' [class.active]='selectedDeviceTab === menuItem'>
+                        <mat-icon>arrow_drop_up</mat-icon>
+                    </div>
+                </span>
+            </div>
+        </div>
+        <div class='card-details-metrics-body'>
+            <ng-template sensorData></ng-template>
+        </div>
+    </div>
+</div>
