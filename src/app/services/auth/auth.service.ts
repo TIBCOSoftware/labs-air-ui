@@ -7,7 +7,8 @@ export class AuthService {
 
   constructor() {  }
 
-  basicAuthHeaders: Map<string, string> = new Map([["Authorization","Basic YWRtaW46YWRtaW4="]]);
+  //basicAuthHeaders: Map<string, string> = new Map([["Authorization","Basic YWRtaW46YWRtaW4="]]);
+  basicAuthHeaders: Map<string, string> = new Map([]);
 
   getBasicAuthHeaders() {
     return this.basicAuthHeaders;

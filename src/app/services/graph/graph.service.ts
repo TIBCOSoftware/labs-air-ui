@@ -5,7 +5,7 @@ import { Gateway, Subscription, Publisher, Protocol, DataStore, Pipeline, Rule, 
 @Injectable()
 export abstract class GraphService {
 
-  abstract getGateway(gatewayName:string): Observable<Gateway[]>;
+  abstract getGateway(gatewayName:string|null): Observable<Gateway[]>;
   
   abstract getGateways(): Observable<Gateway[]>;
 

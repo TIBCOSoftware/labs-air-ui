@@ -1,0 +1,12 @@
+.table-container {
+    max-height: 450px;
+    overflow: auto;
+}
+
+.table-container table{
+    width: 100%;
+}
+
+.refresh-button {
+    margin-bottom: 12px;
+}
