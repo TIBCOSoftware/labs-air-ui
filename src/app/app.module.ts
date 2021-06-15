@@ -33,6 +33,7 @@ import { GraphService } from './services/graph/graph.service';
 import { DgraphService } from './services/graph/dgraph.service';
 import { Ng2GoogleChartsModule } from 'ng2-google-charts';
 import { IotGatewayTextComponent } from './components/iot-gateway-details-charts/iot-gateway-text/iot-gateway-text.component';
+import { MaporamaComponent } from './components/maporama/maporama.component';
 
 
 @NgModule({
@@ -54,7 +55,8 @@ import { IotGatewayTextComponent } from './components/iot-gateway-details-charts
     IotGatewayImageComponent,
     IotGatewayMapComponent,
     IotGatewayDiscreteValueComponent,
-    IotGatewayTextComponent
+    IotGatewayTextComponent,
+    MaporamaComponent
   ],
   imports: [
     BrowserModule,
