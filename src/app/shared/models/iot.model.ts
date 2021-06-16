@@ -249,6 +249,7 @@ export class Gateway {
   longitude: number = 0;
   accessToken: string = "";
   platform: string = "";
+  numDevices: number = 0;
   username: string = "";
   devicesMetadata: string = "";
   subscriptions: Subscription[] = [];
