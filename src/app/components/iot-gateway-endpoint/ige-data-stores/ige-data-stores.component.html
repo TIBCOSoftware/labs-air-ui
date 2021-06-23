@@ -1,0 +1,357 @@
+<div class="tcs-home-content" fxLayout="column" fxFlex="grow" fxLayoutAlign="start stretch"
+    style="padding-left: 20px; padding-right: 20px; margin-top: 10px;">
+
+    <div fxLayout="row" fxLayoutAlign="center center">
+        <mat-form-field fxFlex="40%">
+            <input matInput (keyup)="applyFilter($event.target)" placeholder="Filter DataStores">
+        </mat-form-field>
+    </div>
+
+    <div fxLayout="column" fxLayoutGap="20px" style="height: 100%;">
+        <div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between stretch" style="min-height: 300px;">
+            <mat-card fxFlex>
+                <mat-card-header>
+                    <div mat-card-avatar class="device-header-image"></div>
+                    <mat-card-title>Data Stores</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="table-container mat-elevation-z8">
+                        <table mat-table [dataSource]="dataStoresDataSource" matSort>
+
+                            <!-- Id Column -->
+                            <ng-container matColumnDef="id">
+                                <th mat-header-cell *matHeaderCellDef> Id </th>
+                                <td mat-cell *matCellDef="let dataStore"> {{dataStore.uid}} </td>
+                            </ng-container>
+
+                            <!-- Name Column -->
+                            <ng-container matColumnDef="name">
+                                <th mat-header-cell *matHeaderCellDef> Name </th>
+                                <td mat-cell *matCellDef="let dataStore"> {{dataStore.uuid}} </td>
+                            </ng-container>
+
+                            <!-- DataStore Column -->
+                            <ng-container matColumnDef="dataStore">
+                                <th mat-header-cell *matHeaderCellDef> DataStore </th>
+                                <td mat-cell *matCellDef="let dataStore"> {{dataStore.dataStoreType}} </td>
+                            </ng-container>
+
+                            <!-- Scope Column -->
+                            <ng-container matColumnDef="scope">
+                                <th mat-header-cell *matHeaderCellDef> Scope </th>
+                                <td mat-cell *matCellDef="let dataStore"> {{dataStore.scope}} </td>
+                            </ng-container>
+
+                            <!-- Created -->
+                            <ng-container matColumnDef="created">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Created </th>
+                                <td mat-cell *matCellDef="let dataStore"> {{dataStore.created | date: dateFormat}} </td>
+                            </ng-container>
+
+                            <!-- Updated -->
+                            <ng-container matColumnDef="modified">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Modified </th>
+                                <td mat-cell *matCellDef="let dataStore"> {{dataStore.modified | date: dateFormat}}
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="dataStoreDisplayedColumns; sticky: true"></tr>
+                            <tr mat-row *matRowDef="let row; columns: dataStoreDisplayedColumns;"
+                                (click)="onDataStoreClicked(row)"
+                                [ngClass]="{'selected': dataStoreSelection.isSelected(row) }">
+                            </tr>
+                        </table>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="15px" style="min-height: 300px">
+            <mat-card fxFlex>
+                <mat-card-header>
+                    <div mat-card-avatar class="device-header-image"></div>
+                    <mat-card-title>DataStore Details</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <form [formGroup]="dataStoreForm" class="dataStore-form" fxLayout="row wrap" fxLayoutGap="15px">
+
+                        <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px">
+                            <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                <mat-label>Data Store</mat-label>
+                                <mat-select formControlName="dataStoreType" (selectionChange)="onDataStoreSelected($event)">
+                                    <mat-option *ngFor="let item of dataStores" [value]="item.value">
+                                        {{item.viewValue}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                
+                        <div fxLayout="column" fxFlex="100%" *ngIf="postgresDataStore" style="height: 100%;">
+                
+                            <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px" style="width: 100%;">
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Scope</mat-label>
+                                    <mat-select formControlName="scope">
+                                        <mat-option *ngFor="let item of scopes" [value]="item.value">
+                                            {{item.viewValue}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            
+
+                            <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px" style="width: 100%;" formGroupName="postgres">
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Name</mat-label>
+                                    <input matInput [readonly]=false formControlName="uuid" required>
+                                </mat-form-field>
+
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Hostname</mat-label>
+                                    <input matInput [readonly]=false formControlName="host">
+                                </mat-form-field>
+                
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Port</mat-label>
+                                    <input matInput [readonly]=false formControlName="port">
+                                </mat-form-field>
+                
+                            </div>
+                
+                            <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px" style="width: 100%;" formGroupName="postgres">
+                
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Database Name</mat-label>
+                                    <input matInput [readonly]=false formControlName="databaseName">
+                                </mat-form-field>
+                
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>User</mat-label>
+                                    <input matInput [readonly]=false formControlName="user">
+                                </mat-form-field>
+                
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Password</mat-label>
+                                    <input matInput placeholder="Enter your password" [readonly]=false
+                                        [type]="hidePassword ? 'password' : 'text'" formControlName="password">
+                                    <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
+                                        [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+                                        <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                    </button>
+                                </mat-form-field>
+                
+                            </div>
+                
+                        </div>
+                
+                        <div fxLayout="column" fxFlex="100%" *ngIf="snowflakeDataStore" style="height: 100%;">
+                
+                            <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px" style="width: 100%;">
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Scope</mat-label>
+                                    <mat-select formControlName="scope">
+                                        <mat-option *ngFor="let item of scopes" [value]="item.value">
+                                            {{item.viewValue}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+
+                            <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px" style="width: 100%;" formGroupName="snowflake">
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Name</mat-label>
+                                    <input matInput [readonly]=false formControlName="uuid" required>
+                                </mat-form-field>
+
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Account Name</mat-label>
+                                    <input matInput [readonly]=false formControlName="accountName">
+                                </mat-form-field>
+                
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Warehouse</mat-label>
+                                    <input matInput [readonly]=false formControlName="warehouse">
+                                </mat-form-field>
+                
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Database</mat-label>
+                                    <input matInput [readonly]=false formControlName="database">
+                                </mat-form-field>
+                
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Schema</mat-label>
+                                    <input matInput [readonly]=false formControlName="schema">
+                                </mat-form-field>
+                
+                            </div>
+                
+                            <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px" style="width: 100%;" formGroupName="snowflake">
+                
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Login Timeout</mat-label>
+                                    <input matInput [readonly]=false formControlName="loginTimeout">
+                                </mat-form-field>
+                
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Authentication Type</mat-label>
+                                    <input matInput [readonly]=false formControlName="authType">
+                                </mat-form-field>
+                
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Username</mat-label>
+                                    <input matInput [readonly]=false formControlName="username">
+                                </mat-form-field>
+                
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Password</mat-label>
+                                    <input matInput placeholder="Enter your password" [readonly]=false
+                                        [type]="hidePassword ? 'password' : 'text'" formControlName="password">
+                                    <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
+                                        [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+                                        <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                    </button>
+                                </mat-form-field>
+                
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Role</mat-label>
+                                    <input matInput [readonly]=false formControlName="role">
+                                </mat-form-field>
+                
+                            </div>
+                
+                            <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px" style="width: 100%;" formGroupName="snowflake">
+                
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Client Id</mat-label>
+                                    <input matInput [readonly]=false formControlName="clientId">
+                                </mat-form-field>
+                
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Client Secret</mat-label>
+                                    <input matInput [readonly]=false formControlName="clientSecret">
+                                </mat-form-field>
+                
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Authorization Code</mat-label>
+                                    <input matInput [readonly]=false formControlName="authorizationCode">
+                                </mat-form-field>
+                
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Redirectt URI</mat-label>
+                                    <input matInput [readonly]=false formControlName="redirectURI">
+                                </mat-form-field>
+                
+                            </div>
+                
+                        </div>
+                
+                        <div fxLayout="column" fxFlex="100%" *ngIf="tgdbDataStore" style="height: 100%;">
+                
+                            <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px" style="width: 100%;">
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Scope</mat-label>
+                                    <mat-select formControlName="scope">
+                                        <mat-option *ngFor="let item of scopes" [value]="item.value">
+                                            {{item.viewValue}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+
+                            <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px" style="width: 100%;" formGroupName="tgdb">
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Name</mat-label>
+                                    <input matInput [readonly]=false formControlName="uuid" required>
+                                </mat-form-field>
+
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Server URL</mat-label>
+                                    <input matInput [readonly]=false formControlName="url">
+                                </mat-form-field>
+                
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Username</mat-label>
+                                    <input matInput [readonly]=false formControlName="username">
+                                </mat-form-field>
+                
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Password</mat-label>
+                                    <input matInput placeholder="Enter your password" [readonly]=false
+                                        [type]="hidePassword ? 'password' : 'text'" formControlName="password">
+                                    <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
+                                        [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+                                        <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                    </button>
+                                </mat-form-field>
+                
+                            </div>
+                
+                        </div>
+                
+                        <div fxLayout="column" fxFlex="100%" *ngIf="dgraphDataStore" style="height: 100%;">
+                
+                            <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px" style="width: 100%;">
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Scope</mat-label>
+                                    <mat-select formControlName="scope">
+                                        <mat-option *ngFor="let item of scopes" [value]="item.value">
+                                            {{item.viewValue}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+
+                            <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px" style="width: 100%;" formGroupName="dgraph">
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Name</mat-label>
+                                    <input matInput [readonly]=false formControlName="uuid" required>
+                                </mat-form-field>
+
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Server URL</mat-label>
+                                    <input matInput [readonly]=false formControlName="url">
+                                </mat-form-field>
+                
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Username</mat-label>
+                                    <input matInput [readonly]=false formControlName="username">
+                                </mat-form-field>
+                
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Password</mat-label>
+                                    <input matInput placeholder="Enter your password" [readonly]=false
+                                        [type]="hidePassword ? 'password' : 'text'" formControlName="password">
+                                    <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
+                                        [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+                                        <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                    </button>
+                                </mat-form-field>
+                
+                            </div>
+                
+                        </div>
+
+                    </form>
+                </mat-card-content>
+                <mat-card-actions>
+                    <button mat-raised-button [disabled]="graphAddOpDisabled" (click)="addDataStore()"
+                        color="primary">Add
+                        Data Store</button>
+                    <button mat-raised-button [disabled]="graphUpdateOpDisabled" (click)="updateDataStore()"
+                        color="primary">Update Data Store</button>
+                    <button mat-raised-button [disabled]="graphDeleteOpDisabled" (click)="deleteDataStore()"
+                        color="primary">Remove Data Store</button>
+                </mat-card-actions>
+            </mat-card>
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+
+

@@ -1,5 +1,6 @@
 import { SplashComponent } from '../../routes/splash/splash.component';
 import { HomeComponent } from '../../routes/home/home.component';
+import {IotGatewayEndpointComponent} from '../../components/iot-gateway-endpoint/iot-gateway-endpoint.component';
 import { IotGatewayComponent } from 'src/app/components/iot-gateway/iot-gateway.component';
 import { IotGatewayDetailsComponent } from 'src/app/components/iot-gateway-details/iot-gateway-details.component';
 
@@ -17,10 +18,15 @@ export const STARTER_APP_ROUTES =
         data: { breadcrumb: ['Gateways'] }
       },
       {
+        path: 'gatewayendpoint/:gatewayId',
+        component: IotGatewayEndpointComponent
+        },
+      {
         path: 'device-details/:gatewayId',
         component: IotGatewayDetailsComponent,
         data: { breadcrumb: ['Gateways','Devices']}
       }
+      
     ]
   },
   {

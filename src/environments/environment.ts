@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  dgraphUrl: 'http://192.168.99.100:31417'
+  dgraphUrl: 'http://192.168.99.102:30779'
 };
 
 /*

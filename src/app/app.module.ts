@@ -34,6 +34,10 @@ import { DgraphService } from './services/graph/dgraph.service';
 import { Ng2GoogleChartsModule } from 'ng2-google-charts';
 import { IotGatewayTextComponent } from './components/iot-gateway-details-charts/iot-gateway-text/iot-gateway-text.component';
 import { MaporamaComponent } from './components/maporama/maporama.component';
+import { IotGatewayEndpointComponent } from './components/iot-gateway-endpoint/iot-gateway-endpoint.component';
+import { IgeModelsComponent } from './components/iot-gateway-endpoint/ige-models/ige-models.component';
+import { IgeDataStoresComponent } from './components/iot-gateway-endpoint/ige-data-stores/ige-data-stores.component';
+import { IgeProtocolsComponent } from './components/iot-gateway-endpoint/ige-protocols/ige-protocols.component';
 
 
 @NgModule({
@@ -56,7 +60,12 @@ import { MaporamaComponent } from './components/maporama/maporama.component';
     IotGatewayMapComponent,
     IotGatewayDiscreteValueComponent,
     IotGatewayTextComponent,
-    MaporamaComponent
+    MaporamaComponent,
+    IotGatewayEndpointComponent,
+    IgeModelsComponent,
+    IgeDataStoresComponent,
+    IgeProtocolsComponent
+
   ],
   imports: [
     BrowserModule,
