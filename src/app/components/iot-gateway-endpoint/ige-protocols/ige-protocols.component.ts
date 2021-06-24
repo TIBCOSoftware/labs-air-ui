@@ -37,6 +37,8 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
   protocolsDataSource = new MatTableDataSource<Protocol>();
   protocolDisplayedColumns: string[] = ['id', 'name', 'protocol', 'scope', 'created', 'modified'];
   protocolSelection = new SelectionModel<Protocol>(false, []);
+  
+
 
   protocols: SelectItem[] = [
     { value: 'MQTT', viewValue: 'MQTT' },
@@ -65,6 +67,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
     { value: 'TLS-Cert', viewValue: 'TLS-Cert' },
     { value: 'TLS-ClientAuth', viewValue: 'TLS-ClientAuth' }
   ];
+  
 
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
@@ -76,6 +79,10 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
    * @param formBuilder
    * @param _snackBar
    */
+   onKafkaAuthModeSelected(event) {
+  }
+  onMQTTEncryptionModeSelected(event) {
+  }
   constructor(private graphService: GraphService,
     private formBuilder: FormBuilder,
     private _snackBar: MatSnackBar) {

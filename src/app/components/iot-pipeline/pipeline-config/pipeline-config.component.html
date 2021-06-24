@@ -1,0 +1,73 @@
+<mat-card fxFlex style="height: 100%;" [formGroup]="pipelineForm">
+
+    <mat-card-header>
+        <mat-card-title>General Configuration</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+
+        <div fxLayout="column" fxLayoutAlign="center start" style="height: 100%;">
+
+            <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                <mat-label>Name</mat-label>
+                <input matInput formControlName="name" required>
+            </mat-form-field>
+            <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                <mat-label>Type</mat-label>
+                <mat-select formControlName="pipelineType">
+                    <mat-option *ngFor="let item of pipelineTypes;" [value]="item.value">
+                        {{item.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                <mat-label>Description</mat-label>
+                <textarea matInput formControlName="description"></textarea>
+            </mat-form-field>
+            <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                <mat-label>Log Level</mat-label>
+                <mat-select formControlName="logLevel">
+                    <mat-option *ngFor="let item of logLevels;" [value]="item.value">
+                        {{item.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+
+        </div>
+
+    </mat-card-content>
+</mat-card>
+<!--
+<div>
+    <div class="pipeline-config-title">
+        <span>General Configuration</span>
+    </div>
+    <div class="pipeline-config" [formGroup]="pipelineForm">
+        <div>
+            <span>Name</span>
+            <input formControlName="name" required>
+        </div>
+        <div>
+            <span>Type</span>
+            <select formControlName="pipelineType">
+                <option *ngFor="let item of pipelineTypes;" [value]="item.value">
+                    {{item.viewValue}}
+                <option>
+            </select>
+        </div>
+        <div>
+            <span>Description</span>
+            <textarea formControlName="description"></textarea>
+        </div>
+        <div>
+            <span>Log Level</span>
+            <select formControlName="logLevel">
+                <option *ngFor="let item of logLevels;" [value]="item.value">
+                    {{item.viewValue}}
+                </option>
+            </select>
+        </div>
+    </div>
+</div>
+-->

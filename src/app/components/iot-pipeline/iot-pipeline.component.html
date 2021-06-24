@@ -1,0 +1,117 @@
+<div class="tcs-home-content">
+
+    <div class="pipeline-header">
+        <div class="pipeline-header-text">
+        </div>
+        <div class="pipeline-header-buttons">
+            <button mat-raised-button [disabled]="!pipelineSelected" (click)="newPipeline()" color="primary">New
+                Pipeline</button>
+            <button mat-raised-button (click)="validatePipeline()" color="primary">Validate Pipeline</button>
+            <button mat-raised-button (click)="savePipelineToGraph()" color="primary">Save Pipeline</button>
+            <button mat-raised-button [disabled]="!pipelineSelected" (click)="clearPipeline()" color="primary">Clear
+                Pipeline</button>
+            <button mat-raised-button [disabled]="!pipelineSelected || deployDisabled"
+                (click)="deletePipelineFromGraph()" color="primary">Delete Pipeline</button>
+            <button mat-raised-button [disabled]="!pipelineSelected" (click)="printPipeline()" color="primary">Print
+                Pipeline</button>
+            <button mat-raised-button [disabled]="!pipelineSelected || deployDisabled" (click)="deployPipeline()"
+                color="primary">Deploy Pipeline</button>
+            <button mat-raised-button [disabled]="!pipelineSelected || undeployDisabled" (click)="undeployPipeline()"
+                color="primary">Undeploy Pipeline</button>
+        </div>
+    </div>
+
+    <div fxLayout="row">
+
+        <!-- <app-pipeline-editor [gatewayId]="gatewayId" [gateway]="gateway" [devices]="devices" style="width: 100%; height: 600px;"></app-pipeline-editor> -->
+        <div class="pipeline-editor">
+            <div #nodeEditor class="node-editor"></div>
+        </div>
+
+        <div class="configuration-panel">
+            <!-- Configuration Panel Components -->
+            <app-pipeline-config *ngIf="pipelineConfig" [pipelineForm]="pipelineForm" fxFlex></app-pipeline-config>
+        
+            <app-pipeline-data-subscriber *ngIf="dataSubscriberConfig" [dataSubscriberForm]="protocolForm" fxFlex>
+            </app-pipeline-data-subscriber>
+        
+            <app-pipeline-filtering *ngIf="filteringConfig" #filterComponent [devices]="devices" [filters]="filters" fxFlex>
+            </app-pipeline-filtering>
+        
+            <app-pipeline-inferencing *ngIf="inferencingConfig" #inferenceComponent [devices]="devices" [models]="models"
+                [modelForm]="modelForm" [filters]="filters" fxFlex></app-pipeline-inferencing>
+        
+            <app-pipeline-data-store *ngIf="dataStoreConfig" [dataStoreForm]="dataStoreForm" fxFlex>
+            </app-pipeline-data-store>
+        
+            <app-pipeline-data-publisher *ngIf="dataPublisherConfig" [dataPublisherForm]="protocolForm" fxFlex>
+            </app-pipeline-data-publisher>
+        
+            <app-pipeline-streaming *ngIf="streamingConfig" [streamingForm]="streamingForm" [devices]="devices" fxFlex>
+            </app-pipeline-streaming>
+        
+            <app-pipeline-rules *ngIf="rulesConfig" [ruleForm]="ruleForm" [devices]="devices" fxFlex>
+            </app-pipeline-rules>
+
+            <app-pipeline-rule-expression *ngIf="ruleExpressionConfig" [ruleExpressionForm]="ruleExpressionForm" [devices]="devices" fxFlex>
+            </app-pipeline-rule-expression>
+        
+            <app-pipeline-flogo-flow *ngIf="flogoFlowConfig" [flogoFlowForm]="flogoFlowForm" fxFlex>
+            </app-pipeline-flogo-flow>
+
+            <app-pipeline-rest-service *ngIf="restServiceConfig" #restComponent [devices]="devices" [restForm]="restServiceForm" [filters]="filters" fxFlex>
+            </app-pipeline-rest-service>
+        </div>
+
+    </div>
+
+    <div>
+        <div class="table-container">
+            <table mat-table [dataSource]="pipelinesDataSource" matSort>
+                <!-- Id Column -->
+                <ng-container matColumnDef="id">
+                    <th mat-header-cell *matHeaderCellDef> Id </th>
+                    <td mat-cell *matCellDef="let pipeline"> {{pipeline.uid}} </td>
+                </ng-container>
+
+                <!-- Name Column -->
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef> Name </th>
+                    <td mat-cell *matCellDef="let pipeline"> {{pipeline.name}} </td>
+                </ng-container>
+
+                <!-- PipelineType Column -->
+                <ng-container matColumnDef="pipelineType">
+                    <th mat-header-cell *matHeaderCellDef> Pipeline Type </th>
+                    <td mat-cell *matCellDef="let pipeline"> {{pipeline.pipelineType}} </td>
+                </ng-container>
+
+                <!-- Status Column -->
+                <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef> Status </th>
+                    <td mat-cell *matCellDef="let pipeline"> {{pipeline.status}} </td>
+                </ng-container>
+
+                <!-- Created -->
+                <ng-container matColumnDef="created">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Created </th>
+                    <td mat-cell *matCellDef="let pipeline"> {{pipeline.created |  date: dateFormat}}}
+                    </td>
+                </ng-container>
+
+                <!-- Updated -->
+                <ng-container matColumnDef="modified">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Modified </th>
+                    <td mat-cell *matCellDef="let pipeline">
+                        {{pipeline.modified | date: dateFormat}}} </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="pipelineDisplayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: pipelineDisplayedColumns;" (click)="onPipelineClicked(row)"
+                    [ngClass]="{'selected': pipelineSelection.isSelected(row) }">
+                </tr>
+            </table>
+        </div>
+    </div>
+
+</div>

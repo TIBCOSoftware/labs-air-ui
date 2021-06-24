@@ -27,6 +27,15 @@
     "ng2-charts": "~2.4.2",
     "ng2-google-charts": "~6.1.0",
     "ngx-heatmap": "^1.0.2",
+    "node-sass": "^6.0.0",
+    "rete": "^1.4.5-rc.1",
+    "rete-angular-render-plugin": "^0.2.2",
+    "rete-area-plugin": "^0.2.1",
+    "rete-connection-mastery-plugin": "^0.2.4",
+    "rete-connection-plugin": "^0.9.0",
+    "rete-context-menu-plugin": "^0.6.0-rc.1",
+    "rete-readonly-plugin": "^0.4.1",
+    "rete-vue-render-plugin": "^0.5.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
@@ -43,6 +52,7 @@
     "karma-coverage": "~2.0.3",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "^1.5.0",
+    "postcss-loader": "~3.0.0",
     "typescript": "~4.2.3"
   }
 }

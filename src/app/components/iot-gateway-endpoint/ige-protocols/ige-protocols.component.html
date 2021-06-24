@@ -136,7 +136,7 @@
                                 <mat-form-field fxFlex="1 1 15%" appearance="outline">
                                     <mat-label>Encryption Mode</mat-label>
                                     <mat-select formControlName="encryptionMode"
-                                        (selectionChange)="onProtocolTypeSelected($event)">
+                                        (selectionChange)="onMQTTEncryptionModeSelected($event)">
                                         <mat-option *ngFor="let item of mqttEncriptionModes" [value]="item.value">
                                             {{item.viewValue}}
                                         </mat-option>
@@ -275,7 +275,7 @@
                                 <mat-form-field fxFlex="1 1 15%" appearance="outline">
                                     <mat-label>Authentication Mode</mat-label>
                                     <mat-select formControlName="authMode"
-                                        (selectionChange)="onProtocolTypeSelected($event)">
+                                        (selectionChange)="onKafkaAuthModeSelected($event)">
                                         <mat-option *ngFor="let item of kafkaAuthModes" [value]="item.value">
                                             {{item.viewValue}}
                                         </mat-option>

@@ -38,6 +38,20 @@ import { IotGatewayEndpointComponent } from './components/iot-gateway-endpoint/i
 import { IgeModelsComponent } from './components/iot-gateway-endpoint/ige-models/ige-models.component';
 import { IgeDataStoresComponent } from './components/iot-gateway-endpoint/ige-data-stores/ige-data-stores.component';
 import { IgeProtocolsComponent } from './components/iot-gateway-endpoint/ige-protocols/ige-protocols.component';
+import { IotPipelineComponent } from './components/iot-pipeline/iot-pipeline.component';
+import { ReteEditorModule } from './components/rete/rete.module';
+import { PipelineConfigComponent } from './components/iot-pipeline/pipeline-config/pipeline-config.component';
+import { PipelineDataPublisherComponent } from './components/iot-pipeline/pipeline-data-publisher/pipeline-data-publisher.component';
+import { PipelineDataStoreComponent } from './components/iot-pipeline/pipeline-data-store/pipeline-data-store.component';
+import { PipelineDataSubscriberComponent } from './components/iot-pipeline/pipeline-data-subscriber/pipeline-data-subscriber.component';
+import { PipelineEditorComponent } from './components/iot-pipeline/pipeline-editor/pipeline-editor.component';
+import { PipelineFilteringComponent } from './components/iot-pipeline/pipeline-filtering/pipeline-filtering.component';
+import { PipelineFlogoFlowComponent } from './components/iot-pipeline/pipeline-flogo-flow/pipeline-flogo-flow.component';
+import { PipelineInferencingComponent } from './components/iot-pipeline/pipeline-inferencing/pipeline-inferencing.component';
+import { PipelineRestServiceComponent } from './components/iot-pipeline/pipeline-rest-service/pipeline-rest-service.component';
+import { PipelineRuleExpressionComponent } from './components/iot-pipeline/pipeline-rule-expression/pipeline-rule-expression.component';
+import { PipelineRulesComponent } from './components/iot-pipeline/pipeline-rules/pipeline-rules.component';
+import { PipelineStreamingComponent } from './components/iot-pipeline/pipeline-streaming/pipeline-streaming.component';
 
 
 @NgModule({
@@ -64,7 +78,20 @@ import { IgeProtocolsComponent } from './components/iot-gateway-endpoint/ige-pro
     IotGatewayEndpointComponent,
     IgeModelsComponent,
     IgeDataStoresComponent,
-    IgeProtocolsComponent
+    IgeProtocolsComponent,
+    IotPipelineComponent,
+    PipelineConfigComponent,
+    PipelineDataPublisherComponent,
+    PipelineDataStoreComponent,
+    PipelineDataSubscriberComponent,
+    PipelineEditorComponent,
+    PipelineFilteringComponent,
+    PipelineFlogoFlowComponent,
+    PipelineInferencingComponent,
+    PipelineRestServiceComponent,
+    PipelineRuleExpressionComponent,
+    PipelineRulesComponent,
+    PipelineStreamingComponent
 
   ],
   imports: [
@@ -77,6 +104,7 @@ import { IgeProtocolsComponent } from './components/iot-gateway-endpoint/ige-pro
     MaterialModule,
     NgxHeatmapModule,
     Ng2GoogleChartsModule,
+    ReteEditorModule,
     ChartsModule
   ],
   providers: [

@@ -8,6 +8,7 @@
     "strict": true,
     "strictPropertyInitialization": false,
     "noImplicitReturns": true,
+    "allowJs": true,
     "noImplicitAny": false,
     "strictNullChecks":false,
     "noFallthroughCasesInSwitch": true,
