@@ -52,6 +52,19 @@ import { PipelineRestServiceComponent } from './components/iot-pipeline/pipeline
 import { PipelineRuleExpressionComponent } from './components/iot-pipeline/pipeline-rule-expression/pipeline-rule-expression.component';
 import { PipelineRulesComponent } from './components/iot-pipeline/pipeline-rules/pipeline-rules.component';
 import { PipelineStreamingComponent } from './components/iot-pipeline/pipeline-streaming/pipeline-streaming.component';
+import { IotDataPipelineComponent } from './components/iot-data-pipeline/iot-data-pipeline.component';
+import { DataFilteringComponent } from './components/iot-data-pipeline/data-filtering/data-filtering.component';
+import { DataFilteringViewComponent } from './components/iot-data-pipeline/data-filtering-view/data-filtering-view.component';
+import { DataStoresComponent } from './components/iot-data-pipeline/data-stores/data-stores.component';
+import { DataStoresViewComponent } from './components/iot-data-pipeline/data-stores-view/data-stores-view.component';
+import { DataStreamingComponent } from './components/iot-data-pipeline/data-streaming/data-streaming.component';
+import { DataStreamingViewComponent } from './components/iot-data-pipeline/data-streaming-view/data-streaming-view.component';
+import { ProtocolsComponent } from './components/iot-data-pipeline/protocols/protocols.component';
+import { ProtocolsViewComponent } from './components/iot-data-pipeline/protocols-view/protocols-view.component';
+import { IotEdgeDataPipelineComponent } from './components/iot-edge-data-pipeline/iot-edge-data-pipeline.component';
+import { FilteringComponent } from './components/iot-edge-data-pipeline/filtering/filtering.component';
+import { InferencingComponent } from './components/iot-edge-data-pipeline/inferencing/inferencing.component';
+import { RulesComponent } from './components/iot-edge-data-pipeline/rules/rules.component';
 
 
 @NgModule({
@@ -91,7 +104,21 @@ import { PipelineStreamingComponent } from './components/iot-pipeline/pipeline-s
     PipelineRestServiceComponent,
     PipelineRuleExpressionComponent,
     PipelineRulesComponent,
-    PipelineStreamingComponent
+    PipelineStreamingComponent,
+    IotDataPipelineComponent,
+    DataFilteringComponent,
+    DataFilteringViewComponent,
+    DataStoresComponent,
+    DataStoresViewComponent,
+    DataStreamingComponent,
+    DataStreamingViewComponent,
+    ProtocolsComponent,
+    ProtocolsViewComponent,
+    IotEdgeDataPipelineComponent,
+    FilteringComponent,
+    InferencingComponent,
+    RulesComponent
+
 
   ],
   imports: [

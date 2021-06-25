@@ -1,0 +1,34 @@
+<div id="filtering-details">
+
+    <div fxLayout="column" fxLayoutGap="20px" style="height: 100%;">
+
+        <div fxLayout="row" wrap fxFlex="100%" fxLayoutGap="15px">
+
+            <form [formGroup]="filteringForm">
+                <!-- <div *ngFor="let device of devices; let i = index;">
+                    <mat-checkbox (change)="onChange($event, i, device)">
+                      {{device.name}}
+                    </mat-checkbox>
+                </div> -->
+
+                <ng-container formArrayName="deviceNames">
+                    <div *ngFor="let device of devices let i = index">
+                        <mat-checkbox [formControlName]="i">
+                            {{device.name}}
+                        </mat-checkbox>
+                    </div>
+                </ng-container>
+
+
+            </form>
+
+        </div>
+
+        <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px">
+            <button type="button" matStepperPrevious>Back</button>
+            <button type="button" matStepperNext (click)="stepSubmitted()">Next</button>
+        </div>
+
+    </div>
+
+</div>
