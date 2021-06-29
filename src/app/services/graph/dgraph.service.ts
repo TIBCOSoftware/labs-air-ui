@@ -1025,6 +1025,7 @@ export class DgraphService implements GraphService {
    */
   getModels(gatewayName: any): Observable<Model[]> {
     const url = `${this.dgraphUrl}/query`;
+    console.log("url: ", url);
     let query = `{
       resp(func: has(model)) @filter(eq(scope, "${gatewayName}") OR eq(scope, "GLOBAL")) {
         uid
