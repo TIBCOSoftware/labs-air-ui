@@ -213,6 +213,8 @@ export class IotPipelineComponent implements OnInit {
     ];
 
     this.editor = new NodeEditor("demo@0.2.0", container);
+    console.log("conatiner is here", this.editor);
+  
 
     this.editor.use(ConnectionPlugin);
     console.log("AngularRenderPlugin", AngularRenderPlugin);

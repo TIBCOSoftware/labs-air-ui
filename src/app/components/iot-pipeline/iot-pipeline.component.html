@@ -21,15 +21,14 @@
         </div>
     </div>
 
-    <div fxLayout="row">
+    <div class="pipe-container">
 
         <!-- <app-pipeline-editor [gatewayId]="gatewayId" [gateway]="gateway" [devices]="devices" style="width: 100%; height: 600px;"></app-pipeline-editor> -->
         <div class="pipeline-editor">
-            <div #nodeEditor class="node-editor"></div>
+            <div #nodeEditor class="node-editor" style="height: 400px; width: 600px;"></div>
         </div>
 
         <div class="configuration-panel">
-            <!-- Configuration Panel Components -->
             <app-pipeline-config *ngIf="pipelineConfig" [pipelineForm]="pipelineForm" fxFlex></app-pipeline-config>
         
             <app-pipeline-data-subscriber *ngIf="dataSubscriberConfig" [dataSubscriberForm]="protocolForm" fxFlex>

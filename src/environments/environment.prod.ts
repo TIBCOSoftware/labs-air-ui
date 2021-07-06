@@ -5,3 +5,4 @@ export const environment = {
   airEndpointUrl:'http://a77d5e583ea66440bb0e26be76aec6bf-1483924641.us-west-2.elb.amazonaws.com',
   remoteGatewayUrl: 'http://localhost:8043'
 };
+

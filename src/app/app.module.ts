@@ -28,7 +28,6 @@ import { IotGatewayDiscreteValueComponent } from './components/iot-gateway-detai
 import { IotGatewayDescriptionsComponent } from './components/iot-gateway-details-charts/iot-gateway-descriptions/iot-gateway-descriptions.component';
 
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
-
 import { GraphService } from './services/graph/graph.service';
 import { DgraphService } from './services/graph/dgraph.service';
 import { Ng2GoogleChartsModule } from 'ng2-google-charts';
