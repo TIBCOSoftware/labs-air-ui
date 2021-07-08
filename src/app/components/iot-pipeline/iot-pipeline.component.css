@@ -1,6 +1,7 @@
 .table-container {
     overflow: auto;
     height: 300px;
+
 }
   
 table {
@@ -17,6 +18,7 @@ table {
 }
 
 .mat-header-cell {
+    background:transparent;
     font-size: 18px;
 }
 
