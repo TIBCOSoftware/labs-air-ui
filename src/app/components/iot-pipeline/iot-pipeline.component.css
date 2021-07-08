@@ -66,18 +66,17 @@ table {
 .pipeline-editor {
     flex: 3;
     background-color: #f4f4f4;
-    width:100%;
+    width:70%;
 
 }
 
 .configuration-panel {
     background: #ffffff;
-    flex: 1;
     max-height: 425px;
     min-height: 400px;
     max-width: 350px;
     min-width: 300px;
-    flex-shrink: 0;
-    flex-flow: column wrap;
+    flex: 1;
+    width: 30%;
     overflow: auto;
 }
