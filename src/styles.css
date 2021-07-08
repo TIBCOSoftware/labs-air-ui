@@ -7,6 +7,7 @@ html, body {
   margin: 0;
   background-color: #f4f4f4;
   overflow: hidden;
+
 }
 
 .tcs-style-dialog .mat-dialog-container {
@@ -14,4 +15,5 @@ html, body {
   border-radius: 3px;
   box-shadow: 0 2px 8px 0 #dedede;
   background-color: #ffffff;
+
 }

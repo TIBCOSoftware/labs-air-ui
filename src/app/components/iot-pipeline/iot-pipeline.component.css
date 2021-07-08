@@ -56,23 +56,26 @@ table {
     color: #212121;
 }
 
-.pipeline-container {
+.pipe-container {
     display: flex;
-}
 
-.node-editor {
-    height: 100%;
-    width: 60%;
 }
 
 .pipeline-editor {
-    flex: 2;
+    flex: 3;
     background-color: #f4f4f4;
+    width:100%;
+
 }
 
 .configuration-panel {
     background: #ffffff;
-    height: 600px;
     flex: 1;
-    display: initial;
+    max-height: 425px;
+    min-height: 400px;
+    max-width: 350px;
+    min-width: 300px;
+    flex-shrink: 0;
+    flex-flow: column wrap;
+    overflow: auto;
 }
