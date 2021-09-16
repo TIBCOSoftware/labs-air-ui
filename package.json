@@ -93,7 +93,7 @@
     "kind-of": ">=6.0.3",
     "properties-reader": "0.3.1",
     "protractor": "~5.4.2",
-    "set-value": ">=2.0.1",
+    "set-value": ">=4.0.1",
     "sync-rest-client": "^1.0.3",
     "tar": "^4.4.10",
     "ts-node": "~8.10.2",
