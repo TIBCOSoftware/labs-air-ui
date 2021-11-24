@@ -339,10 +339,14 @@ export class IotGatewayComponent implements OnInit, AfterViewInit {
   }
 
   generateColor(gatewayName: string) {
-    let hash = 0;
-    for (var i = 0; i < gatewayName.length; i++) {
-      hash = gatewayName.charCodeAt(i) + ((hash << 5) - hash);
+    if (gatewayName == "HelloWorldGroup") {
+      return '#1774E5'; //return TIBCO UX primary blue for Toolbars 
+    } else {  
+      let hash = 0;
+      for (var i = 0; i < gatewayName.length; i++) {
+        hash = gatewayName.charCodeAt(i) + ((hash << 5) - hash);
+      }
+      return 'hsl(' + hash % 360 + ', 100%, 40%)';
     }
-    return 'hsl(' + hash % 360 + ', 100%, 40%)';
   }
 }
