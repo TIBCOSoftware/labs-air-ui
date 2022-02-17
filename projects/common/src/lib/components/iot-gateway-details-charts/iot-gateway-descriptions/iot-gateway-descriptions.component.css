@@ -1,0 +1,38 @@
+.instrument-read-out {
+  font-size: 14px;
+}
+
+.instrument-table-description {
+  margin-bottom: 27px;
+}
+
+.instrument-table-description b {
+  font-size: 16px;
+  margin-left: 41px;
+}
+
+.instrument-table {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.instrument-table tr td:nth-child(1) {
+  padding: 0 50px 11px 0;
+}
+
+.instrument-table tr:nth-child(3) td {
+  padding-top: 24px;
+}
+
+.instrument-table td + td {
+  font-weight: 600;
+  padding: 0 0 11px;
+}
+
+.instrument-table-properties { 
+  margin-right: 85px;
+}
+
+.instrument-table-description {
+  margin-bottom: 27px;
+}

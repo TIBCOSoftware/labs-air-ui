@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# shellcheck disable=SC1091
 . scripts/tools.sh
 
 image_name=${1:?}

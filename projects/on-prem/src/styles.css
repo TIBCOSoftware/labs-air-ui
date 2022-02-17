@@ -1,0 +1,20 @@
+/* You can add global styles to this file, and also import other style files */
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+
+html,
+body {
+  background-color: #f4f4f4;
+  box-sizing: border-box;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+
+}
+
+.tcs-style-dialog .mat-dialog-container {
+  background-color: #fff;
+  border-radius: 3px;
+  box-shadow: 0 2px 8px 0 #dedede;
+  padding: 0;
+
+}

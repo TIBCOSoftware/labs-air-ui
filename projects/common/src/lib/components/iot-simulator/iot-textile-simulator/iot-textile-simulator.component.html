@@ -1,0 +1,78 @@
+<div class="defect-action">
+  <mat-button-toggle-group [(ngModel)]="currentDefect">
+    <mat-button-toggle (click)="handleAction(currentDefect)" value="*">
+      All
+    </mat-button-toggle>
+    <mat-button-toggle (click)="handleAction(currentDefect)" value="missing_pick">
+      Missing Pick
+      <img src="/assets/img/simulator/missing-pick.png">
+    </mat-button-toggle>
+    <mat-button-toggle (click)="handleAction(currentDefect)" value="selvedge">
+      Selvedge
+      <img src="/assets/img/simulator/selvedge.png">
+    </mat-button-toggle>
+    <mat-button-toggle (click)="handleAction(currentDefect)" value="hole">
+      Hole
+      <img src="/assets/img/simulator/hole.png">
+    </mat-button-toggle>
+    <mat-button-toggle (click)="handleAction(currentDefect)" value="stain">
+      Stain
+      <img src="/assets/img/simulator/stain.png">
+    </mat-button-toggle>
+    <mat-button-toggle (click)="handleAction(currentDefect)" value="color_flecks">
+      Color Flecks
+      <img src="/assets/img/simulator/color-flecks.png">
+    </mat-button-toggle>
+    <mat-button-toggle (click)="handleAction(currentDefect)" value="good">
+      Good
+    </mat-button-toggle>
+  </mat-button-toggle-group>
+</div>
+<div class="iot-textile-simulator">
+  <div>
+    <video width="400" height="300" src="/assets/video/textile.mp4" controls (ended)="handleRefresh()" (play)="playVideo()"></video>
+  </div>
+  <div>
+    <div class="table-container">
+      <span class="table-title">{{testId}}</span>
+      <table mat-table [dataSource]="defectsDataSource" matSort matSortActive="created" matSortStart="desc"
+        matSortDirection="desc">
+
+        <ng-container matColumnDef="created">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Created </th>
+          <td mat-cell *matCellDef="let dataCell"> {{dataCell.created | date: dateFormat}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="defect">
+          <th mat-header-cell *matHeaderCellDef> Defect </th>
+          <td mat-cell *matCellDef="let dataCell"> {{dataCell.defect}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="frameURL">
+          <th mat-header-cell *matHeaderCellDef> Frame URL </th>
+          <td mat-cell *matCellDef="let dataCell">
+            <div>
+              <a class="table-img" [href]="dataCell.frameURL">
+                {{dataCell.frameURL}}
+                <img [src]="dataCell.frameURL">
+              </a>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="defectsDisplayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: defectsDisplayedColumns;">
+        </tr>
+      </table>
+    </div>
+    <!-- <button class="refresh-button" mat-raised-button color="primary" (click)="handleRefresh()">Refresh</button> -->
+  </div>
+  <div>
+    <div class="chart-container">
+      <canvas baseChart [data]="pieChartData" [labels]="pieChartData.labels" [type]="pieChartType"
+        [options]="pieChartOptions" [plugins]="pieChartPlugins" [legend]="pieChartLegend" height="400px">
+      </canvas>
+    </div>
+  </div>
+</div>

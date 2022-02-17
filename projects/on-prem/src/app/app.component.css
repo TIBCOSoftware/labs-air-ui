@@ -1,0 +1,11 @@
+.tcla-components-pane {
+  margin-top: 20px;
+}
+
+.padded-widget {
+  padding: 20px;
+}
+
+:host ::ng-deep .mat-tab-body-wrapper {
+  height: 100%;
+}

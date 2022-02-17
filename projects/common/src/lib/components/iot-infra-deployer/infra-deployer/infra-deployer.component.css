@@ -1,0 +1,48 @@
+.table-container {
+  height: 300px;
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+}
+
+.example-container {
+  height: 400px;
+  max-width: 100%;
+  overflow: auto;
+}
+
+.mat-form-field {
+  display: inline-block;
+  font-size: 14px;
+  margin-right: 5%;
+  width: 30%;
+}
+
+  
+.mat-header-cell {
+  font-size: 18px;
+}
+
+.mat-row.highlighted {
+  background: #d3d3d3;
+}
+
+.mat-card-content {
+  padding-bottom: 5%;
+}
+
+.mat-card {
+  padding-bottom: 0.1%;
+}
+
+.ux-demo-table-width {
+  min-width: max-content;
+}
+
+.icon-delete {
+  background-image: url('/assets/icons/delete.svg');
+  background-repeat: no-repeat;
+  background-size: 100%;
+}

@@ -1,0 +1,11 @@
+<div fxLayout="column" class="iot-dashboard-top-level" fxFlex >
+    <app-spotfire-dashboard 
+        [url]="spotfireServer" 
+        [path]="analysisPath"
+        [version]="version"
+        [page]="activePage"
+        [customization]="configuration"
+        [markingOn]="markingOn"
+        (markingEvent)="marking($event)">
+    </app-spotfire-dashboard>
+</div>

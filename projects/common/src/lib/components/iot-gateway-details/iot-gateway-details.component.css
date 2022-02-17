@@ -1,0 +1,176 @@
+.status-bar {
+  display: flex;
+  height: 74px;
+}
+
+.status-bar-color {
+  background-color: #7dc95e;
+  width: 24px;
+}
+
+.status-bar-details {
+  align-items: center;
+  display: flex;
+  font-size: 14px;
+  line-height: 18px;
+  margin-left: 45px;
+}
+
+.status-bar-details span {
+  margin-right: 24px;
+}
+
+.card-actions {
+  margin-right: 37px;
+}
+
+.details-body {
+  display: flex;
+  height: 100%;
+}
+
+.cards {
+  border-right: 1px solid #979797;
+  box-sizing: border-box;
+  height: auto;
+  overflow: auto;
+  width: 365px;
+}
+
+.card-actions .device {
+  font-size: 16px;
+  margin-left: 69px;
+  vertical-align: sub;
+}
+
+.card-actions .filter-search {
+  color: #727272;
+  float: right;
+}
+
+.card-actions .filter-search mat-icon {
+  font-size: 28px;
+  margin-left: 44px;
+}
+
+.card-list {
+  display: block;
+}
+
+.card-header-filler {
+  background-color: #94aff0;
+  border-radius: 3px 3px 0 0;
+  height: 4px;
+  width: 100%;
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 3px;
+  box-shadow: 0 2px 6px 0 rgba(114, 114, 114, 0.33);
+  box-sizing: border-box;
+  cursor: pointer;
+  height: 184px;
+  margin-left: 69px;
+  margin-top: 18px;
+  width: 255px;
+}
+
+.card.active {
+  border-bottom: 2px solid #1774e5;
+  border-left: 2px solid #1774e5;
+  border-right: 2px solid #1774e5;
+}
+
+.card-header {
+  display: flex;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+  margin: 24px 16px;
+}
+ 
+.card-header-text {
+  margin-left: 8px;
+}
+
+.card-header-icon {
+  height: 64px;
+  width: 64px;
+}
+
+.card-header-icon mat-icon {
+  font-size: 64px;
+}
+
+.card-details {
+  flex-grow: 2;
+  margin-left: 31px;
+  margin-right: 73px;
+}
+
+.card-body {
+  display: flex;
+  height: 55px;
+  margin: 24px 14px 11px 24px;
+  width: 216px;
+}
+
+.card-body-text {
+  color: #727272;
+  font-size: 10px;
+  height: 55px;
+  letter-spacing: 0;
+  line-height: 13px;
+  width: 121px;
+}
+
+.card-body-load {
+  height: 55px;
+  margin-top: 11px;
+  width: 98px;
+}
+
+.card-body-load span {
+  float: right;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.card-details-metrics-header {
+  border-bottom: 2px solid #0e4f9e;
+  color: #1774e5;
+  font-size: 16px;
+  height: 34px;
+  margin-bottom: 28px;
+}
+
+.card-details-metrics-header .card-details-metrics-tabs {
+  display: flex;
+}
+
+.card-details-metrics-tabs .icon {
+  bottom: 6px;
+  color: #0e4f9e;
+  display: none;
+  height: 24px;
+  margin: auto;
+  position: relative;
+  width: 24px;
+}
+
+.card-details-metrics-tabs .icon.active {
+  display: flex;
+}
+
+.card-details-metrics-header .card-details-metrics-tabs span {
+  cursor: pointer;
+  letter-spacing: 0;
+  line-height: 24px;
+  padding-right: 36px;
+}
+
+.card-details-metrics-header .card-details-metrics-tabs .active {
+  color: #0e4f9e;
+  font-weight: 600;
+}

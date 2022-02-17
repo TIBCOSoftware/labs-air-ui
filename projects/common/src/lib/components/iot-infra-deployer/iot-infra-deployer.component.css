@@ -1,0 +1,37 @@
+.table-container {
+  height: 300px;
+  overflow: auto;
+
+}
+  
+table {
+  width: 100%;
+}
+  
+.mat-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+  
+.mat-row.selected {
+  background: #ddd;
+}
+
+.mat-header-cell {
+  background: transparent;
+  font-size: 18px;
+}
+
+
+.infra-deployer-image {
+  background-image: url('/assets/icons/provisioning.svg');
+  background-repeat: no-repeat;
+  background-size: 80%;
+}
+/*
+NOTE: these styles are here for demo purposes, you will need to adjust them according 
+to your application's needs
+*/
+.ux-demo-table-width {
+  min-width: max-content;
+}

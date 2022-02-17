@@ -1,0 +1,20 @@
+.mat-form-field {
+  display: inline-block;
+  font-size: 14px;
+  margin-right: 2%;
+  width: 45%;
+}
+
+.mat-card {
+  height: 100%;
+  overflow: auto;
+  padding-bottom: 1%;
+}
+
+.icon-display {
+  transform: scale(2);
+}
+
+.file-input {
+  display: none;
+}

@@ -1,0 +1,82 @@
+.table-container {
+  height: 300px;
+  overflow: auto;
+
+}
+  
+table {
+  width: 100%;
+}
+  
+.mat-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+  
+.mat-row.selected {
+  background: #ddd;
+}
+
+.mat-header-cell {
+  background: transparent;
+  font-size: 18px;
+}
+
+.box {
+  /*background-color: #444;*/
+  /*color: #fff;*/
+  border-radius: 5px;
+  font-size: 150%;
+  padding: 20px;
+}
+
+.pipeline-header {
+  align-items: center;
+  background-color: #fff;
+  border-bottom: 1px solid #979797;
+  display: flex;
+  height: 72px;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.pipeline-header-text {
+  margin-left: 20px;
+}
+
+.pipeline-header-buttons {
+  margin-right: 20px;
+}
+
+.pipeline-header-buttons button {
+  margin-left: 10px;
+}
+
+.table-container tr th {
+  color: #212121;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.pipe-container {
+  display: flex;
+
+}
+
+.pipeline-editor {
+  background-color: #f4f4f4;
+  flex: 3;
+  width: 70%;
+
+}
+
+.configuration-panel {
+  background: #fff;
+  flex: 1;
+  max-height: 425px;
+  max-width: 350px;
+  min-height: 400px;
+  min-width: 300px;
+  overflow: auto;
+  width: 30%;
+}

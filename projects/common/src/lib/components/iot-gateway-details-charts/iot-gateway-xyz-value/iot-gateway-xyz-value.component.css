@@ -1,0 +1,40 @@
+.table-container {
+  max-height: 450px;
+  overflow: auto;
+}
+
+.table-container table {
+  width: 100%;
+}
+
+.mat-column-created {
+  width: 10% !important;
+}
+
+/* stylelint-disable-next-line */
+.mat-column-inferredValue {
+  flex: 0 0 60% !important;
+  
+  hyphens: auto;
+  hyphens: auto;
+  hyphens: auto;
+  hyphens: auto;
+  overflow-wrap: break-word;
+  white-space: unset !important;
+  width: 70% !important;
+  
+  word-break: break-word;
+  word-wrap: break-word;
+}
+
+/* .mat-column-inferredValue {
+    padding-left: 16px;
+} */
+
+.mat-row.selected {
+  background: #ddd;
+}
+
+.query-row button {
+  margin: auto 10px;
+}

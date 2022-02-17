@@ -1,13 +1,12 @@
 .git
 /unused/*
 Dockerfile
+Dockerfile*
 .DS_Store
 .gitignore
 README.md
 env.*
-/devops/*
 /node_modules/*
-/dist/*
 
 # To prevent storing dev/temporary container data
 *.csv

@@ -1,0 +1,16 @@
+<mat-toolbar  class="navigation-bar">
+
+  <mat-toolbar-row>
+
+    <button mat-icon-button (click)="toggleSidenav.emit()">
+      <mat-icon>menu</mat-icon>
+    </button>
+
+    <span class="toolbar-title" *ngFor='let path of paths; let last=last' (click)='goBack()'> 
+      <span> {{ path }} </span>
+      <span class='showpath' *ngIf='!last'> -&nbsp;</span>
+    </span>
+
+  </mat-toolbar-row>
+
+</mat-toolbar>

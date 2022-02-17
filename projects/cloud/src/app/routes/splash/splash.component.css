@@ -1,0 +1,146 @@
+.example-button-row .mat-button-base {
+  background-color: #349bed;
+  border: 1px solid #349bed;
+  border-radius: 3px;
+  color: #fff;
+  font-family: Source Sans Pro;
+  font-size: 16px;
+  font-stretch: normal;
+  font-style: normal;
+  font-weight: 600;
+  height: 40px;
+  letter-spacing: 0.3px;
+  line-height: normal;
+  text-align: center;
+  width: 117px;
+}
+
+.splash-welcome-small {
+  color: #fff;
+  font-family: Source Sans Pro;
+  font-size: 40px;
+  font-stretch: normal;
+  font-style: normal;
+  font-style: normal;
+  font-weight: 300;
+  letter-spacing: 0.3px;
+  line-height: normal;
+  margin-top: 5px;
+  padding-top: 1%;
+  text-align: center;
+  text-shadow: 0 2px 8px rgb(6 46 121 / 50%);
+}
+
+.splash-welcome-message-small {
+  color: #fff;
+  font-family: Source Sans Pro;
+  font-size: 20px;
+  font-stretch: normal;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: 0.1px;
+  line-height: normal;
+  margin-top: 10px;
+  padding-bottom: 30px;
+  text-align: center;
+  text-shadow: 0 2px 8px rgb(6 46 121 / 50%);
+}
+
+.mat-form-field {
+  font-size: 14px;
+  margin-right: 20px;
+  vertical-align: middle;
+} 
+  
+.mat-row.selected {
+  background: #ddd;
+}
+
+
+.splash-highlightstable {
+  border: 0;
+  border-collapse: separate;
+  border-spacing: 45px;
+  padding-bottom: 0;
+  padding-top: 0;
+  text-align: left;
+}
+
+.back {
+  background: url('/assets/icons/background.jpg');
+  background-repeat: no-repeat;
+  background-size: 100% 100vh;
+  height: 100%;
+  min-height: 100%;
+  min-width: 100%;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.content {
+  align-items: center;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 100%;
+  width: 100%;
+}
+
+.splash-highlight-item-title {
+  color: #062e79;
+  font-family: Source Sans Pro;
+  font-size: 16px;
+  font-stretch: normal;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 0.1px;
+  line-height: 1.25;
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
+.splash-highlight-item-content {
+  color: #062e79;
+  font-family: Source Sans Pro;
+  font-size: 16px;
+  font-stretch: normal;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: 0.1px;
+  line-height: 1.25;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  padding-top: 12px;
+}
+
+.icon-documentation {
+  background-image: url('/assets/icons/documentation.svg');
+  background-repeat: no-repeat;
+  background-size: 100%;
+  height: 70px;
+  margin-right: 20px;
+  vertical-align: center;
+  width: 70px;
+}
+
+.icon-community {
+  background-image: url('/assets/icons/community.svg');
+  background-repeat: no-repeat;
+  background-size: 100%;
+  height: 70px;
+  margin-right: 20px;
+  vertical-align: center;
+  width: 70px;
+}
+
+.icon-track {
+  background-image: url('/assets/icons/track.svg');
+  background-repeat: no-repeat;
+  background-size: 100%;
+  height: 70px;
+  margin-right: 20px;
+  vertical-align: center;
+  width: 70px;
+}

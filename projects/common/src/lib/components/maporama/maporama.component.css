@@ -1,0 +1,39 @@
+.tai-container {
+  background-color: #000;
+  border-radius: 0;
+  padding: 0.25em;
+}
+
+.tai-maporama {
+  height: 300px;
+  width: 100%;
+}
+
+.box {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 5px;
+  font-family: Helvetica;
+  font-size: 14px;
+  line-height: 18px;
+  opacity: 0.9;
+  padding: 10px;
+  position: absolute;
+  z-index: 1;
+}
+
+.info {
+  color: #555;
+  right: 10px;
+  top: 20px;
+}
+
+.info .title {
+  color: #666;
+  font-weight: bold;
+}
+
+.legend {
+  bottom: 30px;
+  color: #555;
+  right: 10px;
+}

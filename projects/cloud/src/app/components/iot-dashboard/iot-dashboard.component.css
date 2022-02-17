@@ -1,0 +1,36 @@
+/* stylelint-disable-next-line :host ::ng-deep .mat-tab-label .mat-tab-label-content */
+:host ::ng-deep .mat-tab-label .mat-tab-label-content { /* stylelint-disable-line */
+  color: #0081cb;
+  font-family: Source Sans Pro;
+  font-size: 18px;
+  font-stretch: normal;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: normal;
+  line-height: normal;
+}
+
+.nav-switch-bar {
+  background-color: #fff;
+  border: solid 1px #b6b6b6;
+  border-radius: 100px;
+  height: 30px;
+}
+
+.mat-button-toggle-checked {
+  background-color: #062e79;
+  border: solid 1px #062e79;
+  border-radius: 100px;
+  color: #fff;
+  padding-left: 11px;
+  padding-right: 11px;
+}
+
+:host ::ng-deep .iot-dashboard-top-level {
+  background-color: #fff;
+  border-radius: 3px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.33);
+  height: 100vh;
+  margin-bottom: 10px;
+  overflow: auto;
+}

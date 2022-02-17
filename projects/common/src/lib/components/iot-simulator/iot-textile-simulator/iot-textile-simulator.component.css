@@ -1,0 +1,56 @@
+.iot-textile-simulator {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 24px;
+}
+
+.defect-action {
+  margin: 14px;
+}
+
+mat-button-toggle img {
+  display: none;
+}
+
+mat-button-toggle:hover img {
+  display: block;
+  position: fixed;
+  z-index: 111;
+}
+
+.table-img img {
+  display: none;
+}
+
+.table-img:hover img {
+  display: block;
+  position: fixed;
+  z-index: 111;
+}
+
+.chart-container {
+  display: block;
+}
+
+.table-title {
+  font-weight: 600;
+}
+
+.table-container {
+  max-height: 300px;
+  overflow: auto;
+}
+
+.table-container table {
+  width: 500px;
+}
+
+.table-img:hover img {
+  left: 450px;
+  max-height: 400px;
+  max-width: 300px;
+  position: fixed;
+  top: 200px;
+}

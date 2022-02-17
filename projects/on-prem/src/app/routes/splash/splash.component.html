@@ -1,0 +1,50 @@
+<div fxflex fxlayout="row" fxlayoutalign="start, stretch" class= "back">
+  <div class="splash-welcome-small">Welcome to Project AIR </div>
+  <div class="splash-welcome-message-small">An application to manage IoT Assets </div>
+
+  <div fxlayout="column" ng-reflect-fx-layout="column" class="content">
+      <mat-card style="height: 500px; width: 700px;"> 
+        <mat-card-title class="mat-card-title"></mat-card-title>
+        <mat-card-content>
+          <table class="splash-highlightstable">
+            <tr fxlayoutalign="start center" fxlayoutalign="start center" fxLayout="row" style="width: 100%;" fxLayoutGap="30px" style="flex-direction: row; box-sizing: border-box; display: flex; place-content: center flex-start; align-items: center; margin-bottom: 30px;">
+              <td style="margin-right: 30px;">
+                  <mat-icon class="icon-documentation"></mat-icon>
+              </td>
+              <td fxlayout="column" fxlayoutalign="space-around start" ng-reflect-fx-layout-align="space-around start" style="flex-direction: column; box-sizing: border-box; display: flex; place-content: flex-start space-around; align-items: flex-start;">
+                  <span class="splash-highlight-item-title">Engage:</span>
+                  <p class="splash-highlight-item-content">Handle all IoT related requests in a single place to manage gateways, manage devices, view device data.</p>
+              </td>
+            </tr>
+            <tr fxlayoutalign="start center" fxlayoutalign="start center" fxLayout="row" style="width: 100%;" fxLayoutGap="30px" style="flex-direction: row; box-sizing: border-box; display: flex; place-content: center flex-start; align-items: center; margin-bottom: 30px;">
+              <td style="margin-right: 30px;">
+                  <mat-icon class="icon-community"></mat-icon>
+              </td>
+              <td fxlayout="column" fxlayoutalign="space-around start" ng-reflect-fx-layout-align="space-around start" style="flex-direction: column; box-sizing: border-box; display: flex; place-content: flex-start space-around; align-items: flex-start;">
+                  <span class="splash-highlight-item-title">Collaborate:</span>
+                  <p class="splash-highlight-item-content">Collaborate on open and interoperable IoT solutions built on open standards</p>
+              </td>
+            </tr>
+            <tr fxlayoutalign="start center" fxlayoutalign="start center" fxLayout="row" style="width: 100%;" fxLayoutGap="30px" style="flex-direction: row; box-sizing: border-box; display: flex; place-content: center flex-start; align-items: center; margin-bottom: 30px;">
+              <td style="margin-right: 30px;">
+                  <mat-icon class="icon-track"></mat-icon>
+              </td>
+              <td fxlayout="column" fxlayoutalign="space-around start" ng-reflect-fx-layout-align="space-around start" style="flex-direction: column; box-sizing: border-box; display: flex; place-content: flex-start space-around; align-items: flex-start;">
+                  <span class="splash-highlight-item-title">Track:</span>
+                  <p class="splash-highlight-item-content">Track and respond to high priority devices using alerts and actions</p>
+              </td>
+            </tr>
+            <!-- <tr>
+              <span class="splash-highlight-item-title">Track:</span>
+              <p class="splash-highlight-item-content">Track and respond to high priority devices using alerts and actions</p>
+            </tr> -->
+          <mat-card-actions> 
+            <div class="example-button-row" style="text-align:center;">
+              <button mat-button (click)="handleGetStarted()">Get Started</button>
+            </div>
+          </mat-card-actions>
+        </table>
+        </mat-card-content>
+      </mat-card>
+  </div>
+</div>

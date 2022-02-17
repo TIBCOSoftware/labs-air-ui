@@ -1,0 +1,20 @@
+.device-tree-invisible {
+  display: none;
+}
+
+.device-tree ul,
+.device-tree li {
+  list-style-type: none;
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+.background-highlight {
+  background: #afb0b1;
+}
+
+.device-header {
+  font-size: 14px;
+  font-weight: bold;
+  padding-bottom: 5px; 
+}
