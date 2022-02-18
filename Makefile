@@ -28,7 +28,7 @@ build-air-ui: build-air-ui-cloud build-air-ui-on-prem
 build-push-delete-air-ui-cloud: build-air-ui-cloud push-image delete-local-image
 
 .PHONY: build-push-delete-air-ui-on-prem
-build-push-delete-air-ui-on-prem: build-air-on-prem push-image delete-local-image
+build-push-delete-air-ui-on-prem: build-air-ui-on-prem push-image delete-local-image
 
 build-air-ui-cloud: build-apps
 	@$(SCRIPTS_PATH)/build_air_ui.sh ${IMAGE_NAME} ${IMAGE_TAG} ${IMAGE_URL} Dockerfile
