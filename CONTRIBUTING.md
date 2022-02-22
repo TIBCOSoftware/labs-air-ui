@@ -73,5 +73,5 @@ A created schematic then needs to be exported from from `projects/common/src/pub
 multi-component schematic, then adding the new schematics to the `projects/common/src/lib/common-library.module.ts`
 may be necessary for the exported component to properly work.
 
-Not all new schematics need to be added to the common library. Only new schematics that are shared between the environments 
-needs to be placed in the common library.
+Not all new schematics need to be added to the common library. Only new schematics that are shared between the
+environments needs to be placed in the common library.
