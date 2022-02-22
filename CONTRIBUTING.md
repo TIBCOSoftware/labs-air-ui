@@ -60,4 +60,12 @@ formatted, these will appear directly in the changelog.
 Modifications are primarily in `projects/common` project. This is a common library that is shared between the deployment
 environments. The on-prem project is the default deployment environment and does not require any external modification to run.
 
-If running the cloud deployment environment, a TIBCO Cloud Account will be needed to access UI.
+If running the cloud deployment environment, a TIBCO Cloud Account will be needed to access the UI.
+
+### Adding New Components or Schematics to the Common Library
+
+Components or schematics need to be added using `ng g <schematic> <name> <options> --skip-import` in the root of the project. An example of creating a new common component would be `ng g c newComponent --project common --skip-import`. The `skip-import` is needed because there is more than one module that matches that name in the project.
+
+A created schematic then needs to be exported from from `projects/common/src/public-api.ts`. If creating a complex multi-component schematic, then adding the new schematics to the `projects/common/src/lib/common-library.module.ts` may be necessary for the exported component to properly work.
+
+Not all new schematics need to be added to the common library. Only new schematics that are shared between the environments needs to be placed in the common library.
