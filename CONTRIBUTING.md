@@ -65,12 +65,12 @@ If running the cloud deployment environment, a TIBCO Cloud Account will be neede
 
 ### Adding New Components or Schematics to the Common Library
 
-Components or schematics need to be added using `ng g <schematic> <name> <options> --skip-import` in the root of the project.
-An example of creating a new common component would be `ng g c newComponent --project common --skip-import`.
-The `skip-import` is needed because there is more than one module that matches that name in the project.
+Components or schematics need to be added using `ng g <schematic> <name> --project <project> --module <module>` in
+the root of the project. An example of creating a new common component would be:
+`ng generate component components/newComponent --project common --module common-library`.
 
 A created schematic then needs to be exported from from `projects/common/src/public-api.ts`. If creating a complex
-multi-component schematic, then adding the new schematics to the `projects/common/src/lib/common-library.module.ts`
+multi-component schematic, then adding the new schematics to `projects/common/src/lib/common-library.module.ts`
 may be necessary for the exported component to properly work.
 
 Not all new schematics need to be added to the common library. Only new schematics that are shared between the
