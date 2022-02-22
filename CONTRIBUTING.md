@@ -65,7 +65,7 @@ If running the cloud deployment environment, a TIBCO Cloud Account will be neede
 
 ### Adding New Components or Schematics to the Common Library
 
-Components or schematics need to be added using `ng g <schematic> <name> --project <project> --module <module>` in
+Components or schematics need to be added using `ng generate <schematic> <name> --project <project> --module <module>` in
 the root of the project. An example of creating a new common component would be:
 `ng generate component components/newComponent --project common --module common-library`.
 
