@@ -26,15 +26,19 @@
 
 .details-body {
   display: flex;
-  height: 100%;
 }
 
 .cards {
   border-right: 1px solid #979797;
   box-sizing: border-box;
-  height: auto;
+  max-height: 1180px;
+  min-width: 365px;
   overflow: auto;
-  width: 365px;
+}
+
+.card-list-container {
+  width: 100%;
+  overflow: auto;
 }
 
 .card-actions .device {
@@ -106,7 +110,7 @@
 .card-details {
   flex-grow: 2;
   margin-left: 31px;
-  margin-right: 73px;
+  overflow: auto;
 }
 
 .card-body {
@@ -141,16 +145,18 @@
   border-bottom: 2px solid #0e4f9e;
   color: #1774e5;
   font-size: 16px;
-  height: 34px;
+  height: 40px;
   margin-bottom: 28px;
+  overflow: auto;
 }
 
 .card-details-metrics-header .card-details-metrics-tabs {
   display: flex;
+  width: fit-content;
 }
 
 .card-details-metrics-tabs .icon {
-  bottom: 6px;
+  bottom: 0px;
   color: #0e4f9e;
   display: none;
   height: 24px;
