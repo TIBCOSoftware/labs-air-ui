@@ -2,7 +2,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { AppModule } from '../../../app.module';
-import { GraphService } from '../../../services/graph/graph.service';
+import { GraphService } from 'common';
 
 import { IgeProtocolsComponent } from './ige-protocols.component';
 

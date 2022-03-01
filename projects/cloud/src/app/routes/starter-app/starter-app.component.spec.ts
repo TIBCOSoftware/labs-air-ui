@@ -4,8 +4,8 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
-import { AppConfigService } from '../../services/config/app-config.service';
-import { GraphService } from '../../services/graph/graph.service';
+import { AppConfigService } from 'common';
+import { GraphService } from 'common';
 import { Gateway } from '../../shared/models/iot.model';
 
 import { StarterAppComponent } from './starter-app.component';
