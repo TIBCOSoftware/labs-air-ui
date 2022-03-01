@@ -1,5 +1,5 @@
 import { Component, OnInit, EventEmitter, Input, Output } from '@angular/core';
-import { BreadcrumbsService } from '../../services/breadcrumbs/breadcrumbs.service';
+import { BreadcrumbsService } from 'common';
 import { Location } from '@angular/common';
 
 @Component({

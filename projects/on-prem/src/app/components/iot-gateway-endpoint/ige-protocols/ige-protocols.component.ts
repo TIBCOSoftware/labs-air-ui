@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, AfterViewInit, ViewChild } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Protocol, Gateway } from '../../../shared/models/iot.model';
-import { GraphService } from '../../../services/graph/graph.service';
+import { GraphService } from 'common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
@@ -37,7 +37,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
   protocolsDataSource = new MatTableDataSource<Protocol>();
   protocolDisplayedColumns: string[] = ['id', 'name', 'protocol', 'scope', 'created', 'modified'];
   protocolSelection = new SelectionModel<Protocol>(false, []);
-  
+
 
 
   protocols: SelectItem[] = [
@@ -67,7 +67,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
       { value: 'TLS-Cert', viewValue: 'TLS-Cert' },
       { value: 'TLS-ClientAuth', viewValue: 'TLS-ClientAuth' }
   ];
-  
+
 
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
