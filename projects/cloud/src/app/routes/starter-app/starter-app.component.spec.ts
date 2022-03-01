@@ -5,7 +5,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 import { AppConfigService } from '../../services/config/app-config.service';
-import { EdgeService } from '../../services/edge/edge.service';
 import { GraphService } from '../../services/graph/graph.service';
 import { Gateway } from '../../shared/models/iot.model';
 
@@ -29,7 +28,6 @@ describe('StarterAppComponent', () => {
             providers: [
                 { provide: AppConfigService, useValue: mockAppConfigService },
                 { provide: GraphService, useValue: mockGraphService },
-                { provide: EdgeService, useValue: mockEdgeService },
                 { provide: ActivatedRoute, 
                     useValue: {
                         snapshot: {
