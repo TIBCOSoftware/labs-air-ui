@@ -1,5 +1,5 @@
 import { NgModule, APP_INITIALIZER } from '@angular/core';
-import { AppConfigService } from './services/config/app-config.service';
+import { AppConfigService } from 'common';
 import { HttpClientModule } from "@angular/common/http";
 import { BrowserModule } from '@angular/platform-browser';
 import { MaterialModule } from './material.module';
@@ -20,8 +20,8 @@ import { HomeComponent } from './routes/home/home.component';
 import { IotHomeCockpitComponent } from './components/iot-home-cockpit/iot-home-cockpit.component';
 
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
-import { GraphService } from './services/graph/graph.service';
-import { DgraphService } from './services/graph/dgraph.service';
+import { GraphService } from 'common';
+import { DgraphService } from 'common';
 import { Ng2GoogleChartsModule } from 'ng2-google-charts';
 import { IotGatewayEndpointComponent } from './components/iot-gateway-endpoint/iot-gateway-endpoint.component';
 import { IgeModelsComponent } from './components/iot-gateway-endpoint/ige-models/ige-models.component';
