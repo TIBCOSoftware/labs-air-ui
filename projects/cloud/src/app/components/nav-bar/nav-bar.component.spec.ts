@@ -2,8 +2,8 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BehaviorSubject, of } from 'rxjs';
-import { BreadcrumbsService } from '../../services/breadcrumbs/breadcrumbs.service';
-import { GraphService } from '../../services/graph/graph.service';
+import { BreadcrumbsService } from 'common';
+import { GraphService } from 'common';
 import { Gateway } from '../../shared/models/iot.model';
 
 import { NavBarComponent } from './nav-bar.component';
