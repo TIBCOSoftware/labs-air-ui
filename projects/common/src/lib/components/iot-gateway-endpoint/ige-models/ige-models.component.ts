@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, AfterViewInit, ViewChild } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
-import { Model, Gateway } from '../../../shared/models/iot.model';
+import { Model, Gateway } from '../../../models/iot.model';
 import { GraphService } from 'common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -213,7 +213,7 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
       model.inputTemplate = btoa(this.modelForm.get('inputTemplate').value);
 
       console.log('Adding model with uuid: ', model.uuid);
-
+    
 
       // First check that model with the same name already exist
       if (this.modelExist(model.uuid)) {
@@ -261,7 +261,7 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
 
       console.log('Update model to url: ', model.url);
       console.log('Update model to inputTemplate: ', model.inputTemplate);
-
+    
       this.graphService.updateModel(model)
           .subscribe(res => {
               console.log('Result from update model', res);

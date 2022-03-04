@@ -23,10 +23,6 @@ import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { GraphService } from 'common';
 import { DgraphService } from 'common';
 import { Ng2GoogleChartsModule } from 'ng2-google-charts';
-import { IotGatewayEndpointComponent } from './components/iot-gateway-endpoint/iot-gateway-endpoint.component';
-import { IgeModelsComponent } from './components/iot-gateway-endpoint/ige-models/ige-models.component';
-import { IgeDataStoresComponent } from './components/iot-gateway-endpoint/ige-data-stores/ige-data-stores.component';
-import { IgeProtocolsComponent } from './components/iot-gateway-endpoint/ige-protocols/ige-protocols.component';
 import { IotGatewayDashboardComponent } from './components/iot-gateway-dashboard/iot-gateway-dashboard.component';
 import { SpotfireDashboardComponent } from './components/spotfire-dashboard/spotfire-dashboard.component';
 import { CommonIotStoreSimulatorComponent } from 'common';
@@ -77,10 +73,6 @@ const tcCoreConfig: TcCoreConfig = {
     HomeComponent,
     IotHomeCockpitComponent,
     NavBarComponent,
-    IotGatewayEndpointComponent,
-    IgeModelsComponent,
-    IgeDataStoresComponent,
-    IgeProtocolsComponent,
     IotGatewayDashboardComponent,
     SpotfireDashboardComponent,
     IotDashboardComponent,

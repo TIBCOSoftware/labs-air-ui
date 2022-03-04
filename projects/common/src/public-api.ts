@@ -23,3 +23,4 @@ export * from './lib/components/iot-notifications/iot-notifications.component';
 export * from './lib/components/iot-edge-data-pipeline/iot-edge-data-pipeline.component';
 export * from './lib/components/iot-simulator/iot-store-simulator/iot-store-simulator.component';
 export * from './lib/components/iot-simulator/iot-textile-simulator/iot-textile-simulator.component';
+export * from './lib/components/iot-gateway-endpoint/iot-gateway-endpoint.component'

@@ -1,6 +1,6 @@
 import { SplashComponent } from '../../routes/splash/splash.component';
 import { HomeComponent } from '../../routes/home/home.component';
-import {IotGatewayEndpointComponent} from '../../components/iot-gateway-endpoint/iot-gateway-endpoint.component';
+import {IotGatewayEndpointComponent} from 'common';
 import { CommonIotGatewayComponent } from 'common';
 import { CommonIotGatewayDetailsComponent } from 'common';
 import { CommonIotPipelineComponent } from 'common';

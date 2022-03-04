@@ -43,6 +43,11 @@ import { InferencingComponent } from './components/iot-edge-data-pipeline/infere
 import { RulesComponent } from './components/iot-edge-data-pipeline/rules/rules.component'
 import { CommonIotStoreSimulatorComponent } from './components/iot-simulator/iot-store-simulator/iot-store-simulator.component';
 import { CommonIotTextileSimulatorComponent } from './components/iot-simulator/iot-textile-simulator/iot-textile-simulator.component';
+import { IotGatewayEndpointComponent } from './components/iot-gateway-endpoint/iot-gateway-endpoint.component';
+import { IgeDataStoresComponent } from './components/iot-gateway-endpoint/ige-data-stores/ige-data-stores.component';
+import { IgeModelsComponent } from './components/iot-gateway-endpoint/ige-models/ige-models.component';
+import { IgeProtocolsComponent } from './components/iot-gateway-endpoint/ige-protocols/ige-protocols.component';
+import { PipelinePythonComponent } from './components/iot-pipeline/pipeline-python/pipeline-python.component';
 
 // modules
 import { RouterModule } from '@angular/router';
@@ -117,7 +122,12 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     InferencingComponent,
     RulesComponent,
     CommonIotStoreSimulatorComponent,
-    CommonIotTextileSimulatorComponent
+    CommonIotTextileSimulatorComponent,
+    PipelinePythonComponent,
+    IotGatewayEndpointComponent,
+    IgeDataStoresComponent,
+    IgeModelsComponent,
+    IgeProtocolsComponent
   ],
   imports: [
     MaterialModule,

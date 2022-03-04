@@ -36,6 +36,9 @@ import { NotificationPublisherComponent } from '../rete/components/notification-
 import { FlogoFlowComponent } from '../rete/components/flogo-flow-component';
 import { RestServiceComponent } from '../rete/components/rest-service-component';
 import { NodePrimaryComponent } from '../rete/nodes/node-primary/node-primary.component';
+import { PythonComponent } from '../rete/components/python-component';
+
+import { PipelinePythonComponent } from './pipeline-python/pipeline-python.component';
 
 
 
@@ -71,6 +74,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
   streamingConfig = false;
   flogoFlowConfig = false;
   restServiceConfig = false;
+  pythonConfig = false;
   xcor = 0;
   ycor = 0;
 
@@ -88,6 +92,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
   flogoFlowForm: FormGroup;
   restServiceForm: FormGroup;
   dataOptionsForm: FormGroup;
+  pythonForm: FormGroup;
 
   ruleTuplesDescriptor = [
       {
@@ -209,7 +214,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           new ImageResizeComponent(),
           new CustomPublisherComponent(),
           new FlogoFlowComponent(),
-          new ErrorHandlerComponent()
+          new ErrorHandlerComponent(),
+          new PythonComponent()
       ];
 
       this.editor = new NodeEditor('demo@0.2.0', container);
@@ -488,6 +494,10 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           contextObj = this.buildNodeDataRESTServiceProperties();
           break;
       }
+      case 'Python': {
+          contextObj = this.buildPythonProperties();
+          break;
+      }
       default: {
 
           break;
@@ -511,6 +521,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
       this.streamingConfig = false;
       this.flogoFlowConfig = false;
       this.restServiceConfig = false;
+      this.pythonConfig = false;
 
       if (node != null || node != undefined) {
           console.log('Resetting context for node: ', node);
@@ -581,6 +592,11 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           case 'REST Service': {
               this.updateRESTServiceComponent(contextObj);
               this.restServiceConfig = true;
+              break;
+          }
+          case 'Python': {
+              this.updatePythonComponent(contextObj);
+              this.pythonConfig = true;
               break;
           }
           default: {
@@ -1167,6 +1183,15 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
       return restServiceObj;
   }
 
+  buildPythonProperties(): any {
+
+    const pythonObj = {
+        'description': this.pythonForm.get('description').value,
+    };
+
+    return pythonObj;
+}
+
   /**
    *
    * @param context
@@ -1507,6 +1532,13 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           });
 
       }
+  }
+
+  /**
+   * Update python component
+   */
+  updatePythonComponent(context) {
+      
   }
 
 

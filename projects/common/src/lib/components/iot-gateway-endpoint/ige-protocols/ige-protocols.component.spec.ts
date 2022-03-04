@@ -1,22 +1,22 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { of } from 'rxjs';
-import { AppModule } from '../../../app.module';
 import { GraphService } from 'common';
 
-import { IgeDataStoresComponent } from './ige-data-stores.component';
+import { IgeProtocolsComponent } from './ige-protocols.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
-describe('IgeDataStoresComponent', () => {
-    let component: IgeDataStoresComponent;
-    let fixture: ComponentFixture<IgeDataStoresComponent>;
-    const mockGraphService = jasmine.createSpyObj(['getDataStores', 'getReadings', 'getRouteCenter', 'getModels']);
+describe('IgeProtocolsComponent', () => {
+    let component: IgeProtocolsComponent;
+    let fixture: ComponentFixture<IgeProtocolsComponent>;
+    const mockGraphService = jasmine.createSpyObj(['getProtocols', 'getModels']);
 
-    mockGraphService.getDataStores.and.returnValue(of([]));
+    mockGraphService.getProtocols.and.returnValue(of([]));
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [IgeDataStoresComponent],
-            imports: [AppModule],
+            declarations: [IgeProtocolsComponent],
+            imports: [ReactiveFormsModule],
             providers: [
                 { provide: GraphService, useValue: mockGraphService }
             ],
@@ -26,7 +26,7 @@ describe('IgeDataStoresComponent', () => {
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(IgeDataStoresComponent);
+        fixture = TestBed.createComponent(IgeProtocolsComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
