@@ -2120,7 +2120,7 @@ export class DgraphService implements GraphService {
     const url = `${this.dgraphUrl}/query`;
     const query = `
     {
-      resp(func: has(PythonResource)) @filter(eq(scope, "${gatewayName}") {
+      resp(func: type(PythonResource)) @filter(eq(scope, "${gatewayName}")) {
         uid
         uuid
         created
@@ -2145,17 +2145,17 @@ export class DgraphService implements GraphService {
    */
   addResource(resource: PythonResource): Observable<string> {
     const url = `${this.dgraphUrl}/mutate?commitNow=true`;
-    const query = `
+    const query = ` {
       set {
-        _:PythonResource <dgraph.type> "PythonResource",
-        _:PythonResource <uuid> "${resource.uuid}",
-        _:PythonResource <name> "${resource.name}",
-        _:PythonResource <created> "${resource.created}",
-        _:PythonResource <modified> "${resource.modified}",
-        _:PythonResource <resourceType> "${resource.type}",
-        _:PythonResource <fileContent> "${resource.fileContent}",
-        _:PythonResource <scope> "${resource.scope}"
-      }`;
+        _:PythonResource <dgraph.type> "PythonResource".
+        _:PythonResource <uuid> "${resource.uuid}" .
+        _:PythonResource <name> "${resource.name}" .
+        _:PythonResource <created> "${resource.created}" .
+        _:PythonResource <modified> "${resource.modified}" .
+        _:PythonResource <resourceType> "${resource.type}" .
+        _:PythonResource <fileContent> "${resource.fileContent}" .
+        _:PythonResource <scope> "${resource.scope}" .
+      }}`;
 
     return this.http.post<any>(url, query, httpMutateOptions)
       .pipe(
@@ -2170,7 +2170,16 @@ export class DgraphService implements GraphService {
    */
   updateResource(resource: PythonResource): Observable<string> {
     const url = `${this.dgraphUrl}/mutate?commitNow=true`;
-    const query = `{}`;
+    const query = `{
+      set {
+        <${resource.uid}> <uuid> "${resource.uuid}" .
+        <${resource.uid}> <modified> "${resource.modified}" .
+        <${resource.uid}> <name> "${resource.name}" .
+        <${resource.uid}> <scope> "${resource.scope}" .
+        <${resource.uid}> <type> "${resource.type}" .
+        <${resource.uid}> <fileContent> "${resource.fileContent}" .
+      }
+    }`;
 
     return this.http.post<any>(url, query, httpMutateOptions)
       .pipe(
@@ -2184,11 +2193,15 @@ export class DgraphService implements GraphService {
    * @param gatewayUid
    * @param PythonResource
    */
-  deleteResource(gatewayUid: number, resourceUid: string): Observable<string> {
+  deleteResource(gatewayUid: string, resourceUid: string): Observable<string> {
     const url = `${this.dgraphUrl}/mutate?commitNow=true`;
-    const query = `{}`;
+    const query = `{
+      delete {
+        <${resourceUid}> * * .
+      }
+    }`;
 
-    return this.http.post<any>(url, query, httpOptions)
+    return this.http.post<any>(url, query, httpMutateOptions)
       .pipe(
         map(response => response.data.resp),
         catchError(this.handleError<string>('deleteResource'))

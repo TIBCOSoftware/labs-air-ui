@@ -124,5 +124,5 @@ export abstract class GraphService {
 
   abstract updateResource(resource: PythonResource): Observable<string>;
 
-  abstract deleteResource(gatewayUid: number, resourceUid: string): Observable<string>;
+  abstract deleteResource(gatewayUid: string, resourceUid: string): Observable<string>;
 }
