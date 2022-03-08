@@ -412,3 +412,14 @@ export class ScatterChartDataset {
   }
 
 }
+
+export class PythonResource {
+  uid: number;
+  created: number;
+  modified: number;
+  uuid: string;
+  name: string;
+  type: string;
+  fileContent: string;
+  scope: string;
+}

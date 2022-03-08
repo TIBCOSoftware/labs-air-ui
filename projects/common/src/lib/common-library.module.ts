@@ -68,6 +68,7 @@ import { DgraphService } from './services/graph/dgraph.service';
 import { DatastoreService } from './services/datastore/datastore.service';
 import { GraphService } from './services/graph/graph.service'
 import { DatePipe } from '@angular/common';
+import { IgeResourcesComponent } from './components/iot-gateway-endpoint/ige-resources/ige-resources.component';
 
 const appInitializerFn = (appConfig: AppConfigService) => {
   return () => {
@@ -127,7 +128,8 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     IotGatewayEndpointComponent,
     IgeDataStoresComponent,
     IgeModelsComponent,
-    IgeProtocolsComponent
+    IgeProtocolsComponent,
+    IgeResourcesComponent
   ],
   imports: [
     MaterialModule,

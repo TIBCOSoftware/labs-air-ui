@@ -4,7 +4,7 @@ import { Observable, of, pipe } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 
-import { Gateway, Subscription, Publisher, Pipeline, Rule, ModelConfig, GatewayFiltersConfig, Notification, Protocol, DataStore, Model } from '../../models/iot.model';
+import { Gateway, Subscription, Publisher, Pipeline, Rule, ModelConfig, GatewayFiltersConfig, Notification, Protocol, DataStore, Model, PythonResource } from '../../models/iot.model';
 import { TSReading } from '../../models/iot.model';
 import { AppConfigService } from '../config/app-config.service';
 import { GraphService } from './graph.service';
@@ -995,7 +995,7 @@ export class DgraphService implements GraphService {
   getGatewayAndModels(gatewayName: any): Observable<Gateway[]> {
       const url = `${this.dgraphUrl}/query`;
       const query = `{
-      resp(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
+      resp(func: has(gateway)) @filter(eq(uuid, "${gatewayName}"))) {
         uid uuid
         models: gateway_model {
           uid
@@ -2110,5 +2110,88 @@ export class DgraphService implements GraphService {
           // Let the app keep running by returning an empty result.
           return of(result as T);
       };
+  }
+
+  /**
+   * Get Python Resources.
+   * @param gatewayUid
+   */
+  getResources(gatewayName: string): Observable<PythonResource[]> {
+    const url = `${this.dgraphUrl}/query`;
+    const query = `
+    {
+      resp(func: has(PythonResource)) @filter(eq(scope, "${gatewayName}") {
+        uid
+        uuid
+        created
+        modified
+        name
+        type
+        scope
+        fileContent
+      }
+    }`;
+
+    return this.http.post<any>(url, query, httpOptions)
+      .pipe(
+        map(response => response.data.resp as PythonResource[]),
+        catchError(this.handleError<PythonResource[]>('getResources', []))
+      );
+  }
+
+  /**
+   * Add Python Resource.
+   * @param PythonResource
+   */
+  addResource(resource: PythonResource): Observable<string> {
+    const url = `${this.dgraphUrl}/mutate?commitNow=true`;
+    const query = `
+      set {
+        _:PythonResource <dgraph.type> "PythonResource",
+        _:PythonResource <uuid> "${resource.uuid}",
+        _:PythonResource <name> "${resource.name}",
+        _:PythonResource <created> "${resource.created}",
+        _:PythonResource <modified> "${resource.modified}",
+        _:PythonResource <resourceType> "${resource.type}",
+        _:PythonResource <fileContent> "${resource.fileContent}",
+        _:PythonResource <scope> "${resource.scope}"
+      }`;
+
+    return this.http.post<any>(url, query, httpMutateOptions)
+      .pipe(
+        map(response => response.data.resp),
+        catchError(this.handleError<string>('addResource'))
+      );
+  }
+
+  /**
+   * Update Python Resource.
+   * @param PythonResource
+   */
+  updateResource(resource: PythonResource): Observable<string> {
+    const url = `${this.dgraphUrl}/mutate?commitNow=true`;
+    const query = `{}`;
+
+    return this.http.post<any>(url, query, httpMutateOptions)
+      .pipe(
+        map(response => response.data.resp),
+        catchError(this.handleError<string>('updateResource'))
+      );
+  }
+
+  /**
+   * Delete Python Resource.
+   * @param gatewayUid
+   * @param PythonResource
+   */
+  deleteResource(gatewayUid: number, resourceUid: string): Observable<string> {
+    const url = `${this.dgraphUrl}/mutate?commitNow=true`;
+    const query = `{}`;
+
+    return this.http.post<any>(url, query, httpOptions)
+      .pipe(
+        map(response => response.data.resp),
+        catchError(this.handleError<string>('deleteResource'))
+      );
   }
 }
