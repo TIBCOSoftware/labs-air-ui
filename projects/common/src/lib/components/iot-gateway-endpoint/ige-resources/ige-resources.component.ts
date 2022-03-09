@@ -13,6 +13,10 @@ import { GraphService } from '../../../services/graph/graph.service';
 })
 export class IgeResourcesComponent implements OnInit {
 
+  // TODO 
+  // Form Lock Out
+  // Visuals
+
   @Input() gatewayId: string;
   resourcesDataSource = new MatTableDataSource<PythonResource>();
   dateFormat = 'yyyy-MM-dd  HH:mm:ss'
@@ -21,20 +25,22 @@ export class IgeResourcesComponent implements OnInit {
   resourceForm: FormGroup = new FormGroup({
     name: new FormControl,
     type: new FormControl,
-    fileContent: new FormControl
+    fileContent: new FormControl,
+    uuid: new FormControl,
+    uid: new FormControl,
+    created: new FormControl,
+    modified: new FormControl
   });
-  currentSelection: PythonResource;
   types = [
     { value: 'requirement', viewValue: 'Requirement' },
     { value: 'processor', viewValue: 'Processor' },
     { value: 'dockerfile', viewValue: 'Dockerfile'}
-];
+  ];
 
   constructor(private graphService: GraphService, private _snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.getResources();
-
   }
 
   getResources() {
@@ -47,10 +53,13 @@ export class IgeResourcesComponent implements OnInit {
     this.resourceForm.patchValue({
       name: row.name,
       type: row.type,
-      fileContent: row.fileContent
+      fileContent: decodeURIComponent(row.fileContent),
+      uuid: row.uuid,
+      uid: row.uid,
+      created: row.created,
+      modified: row.modified,
+      scope: row.scope
     })
-
-    this.currentSelection = row;
   }
 
   addResource() {
@@ -64,10 +73,10 @@ export class IgeResourcesComponent implements OnInit {
     resource.uuid = this.resourceForm.get('name').value;
     resource.name = this.resourceForm.get('name').value;
     resource.type = this.resourceForm.get('type').value;
-    resource.fileContent = this.resourceForm.get('fileContent').value;
+    resource.fileContent = encodeURIComponent(this.resourceForm.get('fileContent').value);
 
     if (this.resourceExists(resource.uuid)) {
-        this._snackBar.open('Model name is not unique.', 'Cancel', {
+        this._snackBar.open('Resource name is not unique.', 'Cancel', {
             duration: 3000,
         });
     }
@@ -84,14 +93,13 @@ export class IgeResourcesComponent implements OnInit {
     const ts = Date.now();
     const resource = new PythonResource();
 
-    resource.created = this.currentSelection.created;
-    resource.fileContent = this.resourceForm.get('fileContent').value;
+    resource.created = this.resourceForm.get('created').value;
     resource.modified = ts;
     resource.name = this.resourceForm.get('name').value;
     resource.uuid = this.resourceForm.get('name').value;
-    resource.uid = this.currentSelection.uid;
-    resource.scope = this.currentSelection.scope;
-    resource.type = this.resourceForm.get('type').value;
+    resource.uid = this.resourceForm.get('uid').value;
+    resource.scope = this.gatewayId;
+    resource.fileContent = encodeURIComponent(this.resourceForm.get('fileContent').value);
 
     this.graphService.updateResource(resource).subscribe(
       resp => {
@@ -101,7 +109,7 @@ export class IgeResourcesComponent implements OnInit {
   }
   
   deleteResource() {
-    this.graphService.deleteResource(this.gatewayId, this.currentSelection.uid).subscribe(
+    this.graphService.deleteResource(this.gatewayId, this.resourceForm.get('uid').value).subscribe(
       resp => {
         this.getResources();
       }
@@ -118,6 +126,37 @@ export class IgeResourcesComponent implements OnInit {
         }
     );
     return found;
-  }  
+  }
+
+  onFileUpload(input: Event) {
+    const inputElement = input.target as HTMLInputElement;
+    let validFile = false;
+    const file = inputElement.files.item(0);
+    if (file.type && file.type == 'text/x-python-script') {
+      this.resourceForm.patchValue({ type: 'processor' });
+      this.readFile(inputElement);
+      validFile = true;
+    } else if (file.name.match('(?:^|\W)dockerfile(?:$|\W)')) {
+      this.resourceForm.patchValue({ type: 'dockerfile' });
+      this.readFile(inputElement);
+      validFile = true;
+    } else if (file.name == "requirement.txt") {
+      this.resourceForm.patchValue({ type: 'requirement'});
+      this.readFile(inputElement);
+      validFile = true
+    } else {
+      this._snackBar.open('Resource file is not supported.', 'Cancel', {
+        duration: 3000,
+    });
+    }
+  }
+
+  readFile(inputEvent: HTMLInputElement) {
+    const fileReader = new FileReader();
+    fileReader.onload = () => { this.resourceForm.patchValue({
+      fileContent: fileReader.result.toString()
+    })};
+    fileReader.readAsText(inputEvent.files.item(0), 'utf-8');
+  }
  
 }

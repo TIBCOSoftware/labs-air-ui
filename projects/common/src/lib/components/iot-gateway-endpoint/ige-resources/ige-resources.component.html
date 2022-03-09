@@ -85,12 +85,11 @@
                                 <input matInput [readonly]=false formControlName="name" required>
                             </mat-form-field>
                         </div>
-
                         <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px">
-                            <mat-form-field fxFlex="1 1 15%" appearance="outline">
-                                <mat-label>File Content</mat-label>
-                                <textarea matInput [readonly]=false formControlName="fileContent" required></textarea>
-                            </mat-form-field>
+                            <input type="file"(change)="onFileUpload($event)">
+                        </div>
+                        <div>
+                            <textarea formControlName="fileContent" required></textarea>
                         </div>
                     </div>
 
@@ -98,11 +97,11 @@
             </mat-card-content>
             <mat-card-actions>
                 <button mat-raised-button [disabled]="" (click)="addResource()" color="primary">Add
-                    Model</button>
+                    Resource</button>
                 <button mat-raised-button [disabled]="" (click)="updateResource()"
-                    color="primary">Update Model</button>
+                    color="primary">Update Resource</button>
                 <button mat-raised-button [disabled]="" (click)="deleteResource()"
-                    color="primary">Remove Model</button>
+                    color="primary">Remove Resource</button>
             </mat-card-actions>
         </mat-card>
     </div>
