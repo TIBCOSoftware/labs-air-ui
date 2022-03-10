@@ -2152,7 +2152,7 @@ export class DgraphService implements GraphService {
         _:PythonResource <name> "${resource.name}" .
         _:PythonResource <created> "${resource.created}" .
         _:PythonResource <modified> "${resource.modified}" .
-        _:PythonResource <resourceType> "${resource.type}" .
+        _:PythonResource <type> "${resource.type}" .
         _:PythonResource <fileContent> "${resource.fileContent}" .
         _:PythonResource <scope> "${resource.scope}" .
       }}`;

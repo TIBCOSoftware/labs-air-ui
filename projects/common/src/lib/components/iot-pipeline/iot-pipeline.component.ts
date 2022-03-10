@@ -658,6 +658,11 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           propsEnv: 'auto',
       }, { emitEvent: false });
 
+    this.pythonForm.reset({
+          processor: '',
+          requirement: '',
+          dockerfile: ''
+    });
   }
 
 
@@ -844,6 +849,12 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           portMap2: [''],
           httpServicePort: [''],
           propsEnv: ['auto']
+      });
+
+      this.pythonForm = this.formBuilder.group({
+          processor: ['', Validators.required],
+          requirement: ['', Validators.required],
+          dockerfile: ['']
       });
 
   }
@@ -1186,7 +1197,9 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
   buildPythonProperties(): any {
 
     const pythonObj = {
-        'description': this.pythonForm.get('description').value,
+        'processor': this.pythonForm.get('processor').value,
+        'requirement': this.pythonForm.get('requirement').value,
+        'dockerfile': this.pythonForm.get('dockerfile').value
     };
 
     return pythonObj;
@@ -1535,10 +1548,17 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * Update python component
+   * Update python component. Stores the UID of each field in dgraph
    */
   updatePythonComponent(context) {
-      
+    if (context != null || context != undefined) {
+
+        this.pythonForm.patchValue({
+            processor: context.processor,
+            requirement: context.requirement,
+            dockerfile: context.dockerfile,
+        });
+    }
   }
 
 

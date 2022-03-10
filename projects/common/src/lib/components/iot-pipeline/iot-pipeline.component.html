@@ -62,7 +62,7 @@
         <app-common-pipeline-rest-service *ngIf="restServiceConfig" #restComponent [devices]="devices"
             [restForm]="restServiceForm" [filters]="filters" fxFlex>
         </app-common-pipeline-rest-service>
-        <app-pipeline-python *ngIf="pythonConfig"> </app-pipeline-python>
+        <app-pipeline-python *ngIf="pythonConfig" [pythonForm]="pythonForm" [gatewayId]="gatewayId"> </app-pipeline-python>
     </div>
 
 </div>

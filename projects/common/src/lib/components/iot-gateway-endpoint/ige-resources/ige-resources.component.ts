@@ -98,9 +98,9 @@ export class IgeResourcesComponent implements OnInit {
     resource.name = this.resourceForm.get('name').value;
     resource.uuid = this.resourceForm.get('name').value;
     resource.uid = this.resourceForm.get('uid').value;
+    resource.type = this.resourceForm.get('type').value; 
     resource.scope = this.gatewayId;
     resource.fileContent = encodeURIComponent(this.resourceForm.get('fileContent').value);
-
     this.graphService.updateResource(resource).subscribe(
       resp => {
         this.getResources();
@@ -130,20 +130,16 @@ export class IgeResourcesComponent implements OnInit {
 
   onFileUpload(input: Event) {
     const inputElement = input.target as HTMLInputElement;
-    let validFile = false;
     const file = inputElement.files.item(0);
     if (file.type && file.type == 'text/x-python-script') {
       this.resourceForm.patchValue({ type: 'processor' });
       this.readFile(inputElement);
-      validFile = true;
     } else if (file.name.match('(?:^|\W)dockerfile(?:$|\W)')) {
       this.resourceForm.patchValue({ type: 'dockerfile' });
       this.readFile(inputElement);
-      validFile = true;
     } else if (file.name == "requirement.txt") {
       this.resourceForm.patchValue({ type: 'requirement'});
       this.readFile(inputElement);
-      validFile = true
     } else {
       this._snackBar.open('Resource file is not supported.', 'Cancel', {
         duration: 3000,
