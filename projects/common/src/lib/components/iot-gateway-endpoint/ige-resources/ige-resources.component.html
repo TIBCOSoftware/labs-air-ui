@@ -65,9 +65,14 @@
                 <form [formGroup]="resourceForm" class="model-form" fxLayout="row wrap" fxLayoutGap="15px">
 
                     <div fxLayout="column" style="height: 100%; width: 100%">
-
-                        <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px" style="width: 100%;">
-
+                        
+                        <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px">
+                            <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                <mat-label>Name</mat-label>
+                                <input matInput [readonly]=false formControlName="name" required>
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px">
                             <mat-form-field fxFlex="1 1 15%" appearance="outline">
                                 <mat-label>Type</mat-label>
                                 <mat-select formControlName="type">
@@ -75,14 +80,6 @@
                                         {{item.viewValue}}
                                     </mat-option>
                                 </mat-select>
-                            </mat-form-field>
-
-                        </div>
-                        
-                        <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px">
-                            <mat-form-field fxFlex="1 1 15%" appearance="outline">
-                                <mat-label>Name</mat-label>
-                                <input matInput [readonly]=false formControlName="name" required>
                             </mat-form-field>
                         </div>
                         <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px">
@@ -96,11 +93,11 @@
                 </form>
             </mat-card-content>
             <mat-card-actions>
-                <button mat-raised-button [disabled]="" (click)="addResource()" color="primary">Add
+                <button mat-raised-button [disabled]="resourceForm.invalid" (click)="addResource()" color="primary">Add
                     Resource</button>
-                <button mat-raised-button [disabled]="" (click)="updateResource()"
+                <button mat-raised-button [disabled]="resourceForm.invalid" (click)="updateResource()"
                     color="primary">Update Resource</button>
-                <button mat-raised-button [disabled]="" (click)="deleteResource()"
+                <button mat-raised-button [disabled]="resourceForm.invalid" (click)="deleteResource()"
                     color="primary">Remove Resource</button>
             </mat-card-actions>
         </mat-card>

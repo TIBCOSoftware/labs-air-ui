@@ -13,10 +13,6 @@ import { GraphService } from '../../../services/graph/graph.service';
 })
 export class IgeResourcesComponent implements OnInit {
 
-  // TODO 
-  // Form Lock Out
-  // Visuals
-
   @Input() gatewayId: string;
   resourcesDataSource = new MatTableDataSource<PythonResource>();
   dateFormat = 'yyyy-MM-dd  HH:mm:ss'
