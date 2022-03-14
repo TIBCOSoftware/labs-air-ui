@@ -302,8 +302,8 @@ export class PipelineInferencingComponent implements OnInit, OnChanges  {
 
           if (item.parent != 'ROOT') {
               const filter = {
-                  'device': item.parent,
-                  'name': item.name
+                  'deviceName': item.parent,
+                  'resourceName': item.name
               };
               filters.push(filter);
           }
