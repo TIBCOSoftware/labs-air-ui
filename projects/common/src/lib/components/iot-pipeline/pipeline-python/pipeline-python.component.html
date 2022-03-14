@@ -2,31 +2,41 @@
     <div>
         <mat-form-field appearance="outline">
             <mat-label>Processor</mat-label>
-            <mat-select formControlName="processor">
+            <mat-select #processor formControlName="processor" (selectionChange)="updateContent($event.value, 'processors')">
                 <mat-option *ngFor="let item of resources.processors; let i = index" [value]="item.uid">
                     {{item.uuid}}
                 </mat-option>
             </mat-select>
         </mat-form-field>
+        <button (click)="showResourceContent(processor.value, 'processors')">Preview Processor</button>
     </div>
     <div>
         <mat-form-field appearance="outline">
             <mat-label>Requirement</mat-label>
-            <mat-select formControlName="requirement">
+            <mat-select #requirement formControlName="requirement" (selectionChange)="updateContent($event.value, 'requirements')">
                 <mat-option *ngFor="let item of resources.requirements; let i = index" [value]="item.uid">
                     {{item.uuid}}
                 </mat-option>
             </mat-select>
         </mat-form-field>
+        <button (click)="showResourceContent(requirement.value, 'requirements')">Preview Requirement</button>
     </div>
     <div>
         <mat-form-field appearance="outline">
             <mat-label>Dockerfile</mat-label>
-            <mat-select formControlName="dockerfile">
+            <mat-select #dockerfile formControlName="dockerfile" (selectionChange)="updateContent($event.value, 'dockerfile')">
                 <mat-option *ngFor="let item of resources.dockerfile; let i = index" [value]="item.uid">
                     {{item.uuid}}
                 </mat-option>
             </mat-select>
         </mat-form-field>
+        <button (click)="showResourceContent(dockerfile.value, 'dockerfile')">Preview dockerfile</button>
+    </div>
+</div>
+
+<div class="code-window" *ngIf="showResourceContentBoolean">
+    <div class="code">
+        <span class="close" (click)="showResourceContentBoolean = false">&times;</span>
+        <textarea>{{resourceContent}}</textarea>
     </div>
 </div>

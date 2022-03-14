@@ -16,7 +16,8 @@ export class PipelinePythonComponent implements OnInit {
     requirements: PythonResource[],
     dockerfile: PythonResource[]
   } = { processors: [], requirements: [], dockerfile: []}
-  
+  resourceContent: string;
+  showResourceContentBoolean = false;
 
   constructor(private graphService: GraphService) { }
 
@@ -36,4 +37,16 @@ export class PipelinePythonComponent implements OnInit {
     this.resources.dockerfile = resources.filter(resource => resource.type === 'dockerfile')
   }
 
+  updateContent(event: string, file: string) {
+    const fileContent = this.resources[file].find(resource => resource.uid == event).fileContent;
+    const fieldName = file === 'dockerfile' ? 'dockerfileContent' : file.slice(0, -1)+'Content';
+    this.pythonForm.get(fieldName).setValue(fileContent);
+  }
+
+  showResourceContent(uid: string, resourceType: string) {
+    if (uid){ 
+      this.resourceContent = decodeURIComponent(this.resources[resourceType].find(resource => resource.uid == uid).fileContent);
+      this.showResourceContentBoolean = true;
+    }
+  }
 }
