@@ -44,6 +44,7 @@
     "luxon": "^2.3.0",
     "ng2-google-charts": "~6.1.0",
     "ngx-heatmap": "^1.0.2",
+    "ngx-highlightjs": "^6.1.2",
     "rete": "^1.4.5-rc.1",
     "rete-alight-render-plugin": "^0.1.5",
     "rete-angular-render-plugin": "^0.2.2",

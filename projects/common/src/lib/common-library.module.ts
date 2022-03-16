@@ -60,6 +60,7 @@ import { NgChartsModule } from 'ng2-charts';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ReteEditorModule } from './components/rete/rete.module';
 import { NgxHeatmapModule } from 'ngx-heatmap'
+import { HighlightModule, HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
 
 //services
 import { AppConfigService } from './services/config/app-config.service';
@@ -141,7 +142,8 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     NgChartsModule,
     ReactiveFormsModule,
     ReteEditorModule,
-    NgxHeatmapModule
+    NgxHeatmapModule,
+    HighlightModule
   ],
   exports: [
     CommonIotGatewayComponent,
@@ -162,7 +164,18 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     EdgeService,
     DatastoreService,
     { provide: GraphService, useClass: DgraphService },
-    DatePipe
+    DatePipe,
+    {
+      provide: HIGHLIGHT_OPTIONS,
+      useValue: {
+        coreLibraryLoader: () => import('highlight.js/lib/core'),
+        lineNumbersLoader: () => import('highlightjs-line-numbers.js'),
+        languages: {
+          python: () => import('highlight.js/lib/languages/python'),
+        },
+        // themePath: 'assets/highlight/default.css'
+      }
+    }
   ]
 })
 export class CommonLibraryModule { }

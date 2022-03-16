@@ -71,6 +71,9 @@
                                 <mat-label>Name</mat-label>
                                 <input matInput [readonly]=false formControlName="name" required>
                             </mat-form-field>
+                            <div>
+                                <pre><code [highlight]="resourceForm.controls.fileContent.value" [lineNumbers]="true" [languages]="languages"></code></pre>
+                            </div>
                         </div>
                         <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px">
                             <mat-form-field fxFlex="1 1 15%" appearance="outline">
@@ -85,11 +88,7 @@
                         <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px">
                             <input type="file"(change)="onFileUpload($event)">
                         </div>
-                        <div>
-                            <textarea formControlName="fileContent" required></textarea>
-                        </div>
                     </div>
-
                 </form>
             </mat-card-content>
             <mat-card-actions>

@@ -32,6 +32,7 @@ export class IgeResourcesComponent implements OnInit {
     { value: 'processor', viewValue: 'Processor' },
     { value: 'dockerfile', viewValue: 'Dockerfile'}
   ];
+  languages = ['python'];
 
   constructor(private graphService: GraphService, private _snackBar: MatSnackBar) { }
 
