@@ -62,6 +62,8 @@
         <app-common-pipeline-rest-service *ngIf="restServiceConfig" #restComponent [devices]="devices"
             [restForm]="restServiceForm" [filters]="filters" fxFlex>
         </app-common-pipeline-rest-service>
+        <app-pipeline-rest-broadcast *ngIf="restBroadcastConfig" [restBroadcastForm]="restBroadcastForm">
+        </app-pipeline-rest-broadcast>
     </div>
 
 </div>

@@ -43,6 +43,7 @@ import { InferencingComponent } from './components/iot-edge-data-pipeline/infere
 import { RulesComponent } from './components/iot-edge-data-pipeline/rules/rules.component'
 import { CommonIotStoreSimulatorComponent } from './components/iot-simulator/iot-store-simulator/iot-store-simulator.component';
 import { CommonIotTextileSimulatorComponent } from './components/iot-simulator/iot-textile-simulator/iot-textile-simulator.component';
+import { PipelineRestBroadcastComponent } from './components/iot-pipeline/pipeline-rest-broadcast/pipeline-rest-broadcast.component';
 
 // modules
 import { RouterModule } from '@angular/router';
@@ -117,7 +118,8 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     InferencingComponent,
     RulesComponent,
     CommonIotStoreSimulatorComponent,
-    CommonIotTextileSimulatorComponent
+    CommonIotTextileSimulatorComponent,
+    PipelineRestBroadcastComponent
   ],
   imports: [
     MaterialModule,

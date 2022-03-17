@@ -412,3 +412,11 @@ export class ScatterChartDataset {
   }
 
 }
+
+export class RestBroadcast {
+  logLevel: string;
+  restTimeout: number;
+  restURLs: string[];
+  restMethods: string[];
+  restBodies: [];
+}
