@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angula
 
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -845,9 +845,9 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
       this.restBroadcastForm = this.formBuilder.group({
           logLevel: ['INFO', Validators.required],
           restTimeout: ['', Validators.required],
-          restURLs: ['', Validators.required],
-          restMethods: ['', Validators.required],
-          restBodies: ['', Validators.required]
+          restURLs: this.formBuilder.array([]),
+          restMethods: this.formBuilder.array([]),
+          restBodies: this.formBuilder.array([])
       })
   }
 
@@ -1187,14 +1187,13 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
   }
 
   buildNodeRestBroadcastServiceProperties(): any {
-    const restBroadcastObj = { 
+    const restBroadcastObj = {
         'logLevel': this.restBroadcastForm.get('logLevel').value,
         'restTimeout': this.restBroadcastForm.get('restTimeout').value,
-        'restURLs': this.restBroadcastForm.get('restURLs'),
-        'restMethods': this.restBroadcastForm.get('restMethods'),
+        'restURLs': this.restBroadcastForm.get('restURLs').value,
+        'restMethods': this.restBroadcastForm.get('restMethods').value,
         'restBodies': this.restBroadcastForm.get('restBodies').value
     }
-
     return restBroadcastObj;
   }
 
@@ -1544,15 +1543,15 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
    *
    * @param context
    */
-    updateRESTBroadcastComponent (context: RestBroadcast) {
+    updateRESTBroadcastComponent (context: any) {
         if (context != null || context != undefined) {
             this.restBroadcastForm.patchValue({
                 logLevel: context.logLevel,
                 restTimeout: context.restTimeout,
-                restURLs: context.restURLs,
-                restMethods: context.restMethods,
-                restBodies: context.restBodies
             });
+            this.restBroadcastForm.setControl('restURLs', this.formBuilder.array(context.restURLs));
+            this.restBroadcastForm.setControl('restMethods', this.formBuilder.array(context.restMethods));
+            this.restBroadcastForm.setControl('restBodies', this.formBuilder.array(context.restBodies));
         }
     }
 

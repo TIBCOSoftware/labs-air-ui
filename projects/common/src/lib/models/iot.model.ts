@@ -1,3 +1,4 @@
+import { FormArray } from "@angular/forms";
 
 export class PropertyValue {
   type: string;
@@ -416,7 +417,7 @@ export class ScatterChartDataset {
 export class RestBroadcast {
   logLevel: string;
   restTimeout: number;
-  restURLs: string[];
-  restMethods: string[];
-  restBodies: [];
+  restURLs: FormArray;
+  restMethods: FormArray;
+  restBodies: FormArray;
 }
