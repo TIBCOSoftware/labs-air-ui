@@ -1810,6 +1810,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           pipeline.status = 'Saved';
           pipeline.flowConfiguration = encodeURIComponent(JSON.stringify(editorData));
           pipeline.logLevel = this.pipelineForm.get('logLevel').value;
+          pipeline.subscriptionTopic = this.getSubscriptionTopic();
 
           // Add pipeline to graph
           this.graphService.addPipeline(this.gateway.uid, pipeline, '', '', null, null)
@@ -1848,6 +1849,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
       pipeline.status = this.pipelineForm.get('status').value;
       pipeline.flowConfiguration = encodeURIComponent(JSON.stringify(editorData));
       pipeline.logLevel = this.pipelineForm.get('logLevel').value;
+      pipeline.subscriptionTopic = this.getSubscriptionTopic();
 
       // Add pipeline to graph
       this.graphService.updatePipeline(pipeline)
@@ -2971,7 +2973,28 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
       return propertiesObj;
   }
 
+  getSubscriptionTopic(): string {
 
+    let subscriptionTopic = "";
+
+    const flow = this.editor.toJSON();
+    const orderedFlow = this.reorderFlow(this.editor.toJSON());
+
+    console.log('Ordered flow: ', orderedFlow);
+    
+    orderedFlow.forEach(flowNode => {
+        console.log('Inspecting from node: ', flowNode);
+        console.log('Inspecting from node name: ', flowNode.name);
+
+        if (flowNode.name == 'Data Subscriber') {
+            subscriptionTopic = flowNode.data.customdata.topic;
+        }
+    });
+
+
+    return subscriptionTopic;
+
+  }
 }
 
 

@@ -219,6 +219,7 @@ export class Pipeline {
   description: string;
   status: string;
   flowConfiguration: string;
+  subscriptionTopic: string;
   logLevel: string;
 }
 

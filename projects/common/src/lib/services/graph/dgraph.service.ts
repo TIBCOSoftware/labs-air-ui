@@ -1164,6 +1164,7 @@ export class DgraphService implements GraphService {
           status
           flowConfiguration
           logLevel
+          subscriptionTopic
           ${pipeline_protocol}
           ${pipeline_datastore}
           ${pipeline_filter}
@@ -1215,6 +1216,7 @@ export class DgraphService implements GraphService {
         status
         flowConfiguration
         logLevel
+        subscriptionTopic
         ${pipeline_protocol}
         ${pipeline_datastore}
         ${pipeline_filter}
@@ -1359,6 +1361,7 @@ export class DgraphService implements GraphService {
         _:Pipeline <status> "${pipeline.status}" .
         _:Pipeline <flowConfiguration> "${pipeline.flowConfiguration}" .
         _:Pipeline <logLevel> "${pipeline.logLevel}" .
+        _:Pipeline <subscriptionTopic> "${pipeline.subscriptionTopic}" .
         <${gatewayUid}> <gateway_pipeline> _:Pipeline .
       }
     }`;
@@ -1385,6 +1388,7 @@ export class DgraphService implements GraphService {
         <${pipeline.uid}> <modified> "${pipeline.modified}" .
         <${pipeline.uid}> <flowConfiguration> "${pipeline.flowConfiguration}" .
         <${pipeline.uid}> <logLevel> "${pipeline.logLevel}" .
+        <${pipeline.uid}> <subscriptionTopic> "${pipeline.subscriptionTopic}" .
       }
     }`;
       console.log('Mutate statement: ', query);
