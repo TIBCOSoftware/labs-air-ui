@@ -104,11 +104,11 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                   'type': 'String'
               },
               {
-                  'name': 'device',
+                  'name': 'deviceName',
                   'type': 'String'
               },
               {
-                  'name': 'resource',
+                  'name': 'resourceName',
                   'type': 'String'
               },
               {
@@ -127,11 +127,11 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                   'pk-index': 0
               },
               {
-                  'name': 'device',
+                  'name': 'deviceName',
                   'type': 'String'
               },
               {
-                  'name': 'resource',
+                  'name': 'resourceName',
                   'type': 'String'
               },
               {
@@ -2695,6 +2695,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
    */
   buildRulesDeployProperties(contextObj): any {
 
+      const tsms = Date.now();
       const ruleDescriptor = {
           'actionDevice': contextObj.actionDevice,
           'actionNotification': contextObj.actionNotification,
@@ -2712,9 +2713,9 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           'condCompareNewMetricValue': contextObj.condCompareNewMetricValue,
           'condDevice': contextObj.condDevice,
           'condResource': contextObj.condResource,
-          'created': 1615472546736,
+          'created': tsms,
           'description': contextObj.description,
-          'modified': 1615472546736,
+          'modified': tsms,
           'name': contextObj.name,
           'uuid': 'Test'
       };
