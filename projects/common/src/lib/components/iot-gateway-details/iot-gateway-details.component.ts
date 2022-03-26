@@ -9,6 +9,7 @@ import { CommonIotGatewayOverviewComponent } from '../iot-gateway-details-charts
 import { CommonIotGatewayMapComponent } from '../iot-gateway-details-charts/iot-gateway-map/iot-gateway-map.component';
 import { CommonIotGatewayDiscreteValueComponent } from '../iot-gateway-details-charts/iot-gateway-discrete-value/iot-gateway-discrete-value.component';
 import { CommonIotGatewayImageComponent } from '../iot-gateway-details-charts/iot-gateway-image/iot-gateway-image.component';
+import { CommonIotGatewayObjectComponent } from '../iot-gateway-details-charts/iot-gateway-object/iot-gateway-object.component';
 import { CommonIotGatewayTimeSeriesComponent } from '../iot-gateway-details-charts/iot-gateway-time-series/iot-gateway-time-series.component';
 import { CommonIotGatewayXyzValueComponent } from '../iot-gateway-details-charts/iot-gateway-xyz-value/iot-gateway-xyz-value.component';
 import { CommonIotGatewayTextComponent } from '../iot-gateway-details-charts/iot-gateway-text/iot-gateway-text.component';
@@ -139,6 +140,9 @@ export class CommonIotGatewayDetailsComponent implements OnInit {
               }
               else if (sensor.properties.valueType == 'Binary') {
                   return this.componentFactoryResolver.resolveComponentFactory(CommonIotGatewayImageComponent);
+              }
+              else if (sensor.properties.valueType == 'Object') {
+                return this.componentFactoryResolver.resolveComponentFactory(CommonIotGatewayObjectComponent);
               }
               else {
                   return this.componentFactoryResolver.resolveComponentFactory(CommonIotGatewayTimeSeriesComponent);
