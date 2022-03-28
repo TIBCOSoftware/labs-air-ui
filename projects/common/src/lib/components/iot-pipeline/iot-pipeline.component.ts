@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angula
 
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -2172,7 +2172,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                       break;
                   }
                   case 'REST Broadcast': {
-                      // pipelineFlow.AirDescriptor.logic.push(this.buildRESTBroadcastDeployObj(flowNode.data.customdata));
+                      pipelineFlow.AirDescriptor.logic.push(this.buildRESTBroadcastDeployObj(flowNode.data.customdata));
                       break;
                   }
                   }
@@ -2908,6 +2908,17 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
 
   }
 
+  buildRESTBroadcastDeployObj(contextObj): any {
+
+    const restServiceType = 'Pipe.REST';
+    const restServiceObj = {
+        name: restServiceType,
+        properties: this.buildRESTBroadcastDeployProperties(contextObj)
+    };
+
+    return restServiceObj;
+  }
+
   /**
    * @param contextObj
    */
@@ -2941,6 +2952,19 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
       ];
 
       return propertiesObj;
+  }
+
+  buildRESTBroadcastDeployProperties (contextObj) {
+
+    const propertiesObj = [
+        { 'Name': 'Logging.LogLevel', 'Value': contextObj.logLevel },
+        { 'Name': 'REST.Timeout', 'Value': contextObj.logLevel },
+        { 'Name': 'REST.URLs', 'Value': JSON.stringify(contextObj.restURLs) },
+        { 'Name': 'REST.Methods', 'Value': JSON.stringify(contextObj.restMethods) },
+        { 'Name': 'REST.Bodies', 'Value': JSON.stringify(contextObj.restBodies) }
+    ];
+
+    return propertiesObj
   }
 
   buildNotificationRuleDeployObj(): any {
