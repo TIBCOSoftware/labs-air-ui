@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
-
+import { MatTabGroup } from '@angular/material/tabs'
 @Component({
   selector: 'app-pipeline-rest-broadcast',
   templateUrl: './pipeline-rest-broadcast.component.html',
@@ -9,9 +9,9 @@ import { FormArray, FormControl, FormGroup } from '@angular/forms';
 export class PipelineRestBroadcastComponent implements OnInit {
 
   @Input() restBroadcastForm: FormGroup;
+  @ViewChild('tabs') tabGroup: MatTabGroup;
   logLevels = ['info', 'warn', 'error', 'debug'];
   methods = ['PUT', 'POST'];
-  currentEndpoint: number;
 
   constructor() { }
 
@@ -40,13 +40,10 @@ export class PipelineRestBroadcastComponent implements OnInit {
   }
 
   deleteEndpoint() {
-    this.restURLs.removeAt(this.currentEndpoint);
-    this.restMethods.removeAt(this.currentEndpoint);
-    this.restBodies.removeAt(this.currentEndpoint);
-  }
-
-  selectedEndpoint(number) {
-    this.currentEndpoint = number;
+    const currentEndpoint = this.tabGroup.selectedIndex;
+    this.restURLs.removeAt(currentEndpoint);
+    this.restMethods.removeAt(currentEndpoint);
+    this.restBodies.removeAt(currentEndpoint);
   }
 
 }

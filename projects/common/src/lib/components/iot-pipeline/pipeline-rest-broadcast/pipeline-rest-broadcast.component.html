@@ -15,8 +15,8 @@
         </mat-form-field>
         <button (click)="addNewEndpoint()">Add New Endpoint</button>
         <button (click)="deleteEndpoint()">Remove Endpoint</button>
-        <mat-tab-group>
-            <mat-tab *ngFor="let index of restURLs.controls; index as i" label="Endpoint {{i + 1}}" (click)="selectedEndpoint(i)">
+        <mat-tab-group #tabs>
+            <mat-tab *ngFor="let index of restURLs.controls; index as i" label="Endpoint {{i + 1}}">
                 <div formArrayName="restURLs">
                     <mat-form-field appearance="outline">
                         <mat-label>Request URLs</mat-label>
