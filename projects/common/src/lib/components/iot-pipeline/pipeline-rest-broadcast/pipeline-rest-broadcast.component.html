@@ -14,8 +14,9 @@
             <input matInput formControlName="restTimeout" required>
         </mat-form-field>
         <button (click)="addNewEndpoint()">Add New Endpoint</button>
+        <button (click)="deleteEndpoint()">Remove Endpoint</button>
         <mat-tab-group>
-            <mat-tab *ngFor="let index of restURLs.controls; index as i" label="Endpoint {{i + 1}}">
+            <mat-tab *ngFor="let index of restURLs.controls; index as i" label="Endpoint {{i + 1}}" (click)="selectedEndpoint(i)">
                 <div formArrayName="restURLs">
                     <mat-form-field appearance="outline">
                         <mat-label>Request URLs</mat-label>
@@ -32,36 +33,13 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
-                <!-- <div formArrayName="restBodies">
-                    <input [formControlName]="i">
-                    <input>
-                </div> -->
+                <div formArrayName="restBodies">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Body</mat-label>
+                        <textarea matInput [formControlName]="i"></textarea>
+                    </mat-form-field>
+                </div>
             </mat-tab>
         </mat-tab-group>
-        <!-- <div formArrayName="restURLs">
-            <div *ngFor="let url of restURLs.controls; index as i">
-                <mat-form-field appearance="outline">
-                    <mat-label>Request URLs</mat-label>
-                    <input matInput [formControlName]="i" placeholder="url">
-                </mat-form-field>
-            </div>
-        </div> -->
-        <!-- <div formArrayName="restMethods">
-            <div *ngFor="let method of restMethods.controls; index as j">
-                <mat-form-field appearance="outline">
-                    <mat-label>Rest Method</mat-label>
-                    <mat-select [formControlName]="j" appearance="outline">
-                        <mat-option *ngFor="let method of methods;" [value]="method">
-                            {{method | uppercase}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-        </div>
-        <div formArrayName="restBodies">
-            <div *ngFor="let body of restBodies.controls; index as k">
-                <input [formControlName]="k">
-            </div>
-        </div> -->
     </div>
 </div>

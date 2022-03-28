@@ -11,6 +11,7 @@ export class PipelineRestBroadcastComponent implements OnInit {
   @Input() restBroadcastForm: FormGroup;
   logLevels = ['info', 'warn', 'error', 'debug'];
   methods = ['PUT', 'POST'];
+  currentEndpoint: number;
 
   constructor() { }
 
@@ -18,12 +19,6 @@ export class PipelineRestBroadcastComponent implements OnInit {
     if (this.restBroadcastForm.get('restURLs').value.length < 1) {
       this.addNewEndpoint();
     }
-  }
-
-  addNewEndpoint() {
-    this.restURLs.push(new FormControl(''));
-    this.restMethods.push(new FormControl(''));
-    this.restBodies.push(new FormControl(''));
   }
 
   get restURLs (): FormArray {
@@ -36,6 +31,22 @@ export class PipelineRestBroadcastComponent implements OnInit {
 
   get restBodies(): FormArray {
     return this.restBroadcastForm.get('restBodies') as FormArray;
+  }
+
+  addNewEndpoint() {
+    this.restURLs.push(new FormControl(''));
+    this.restMethods.push(new FormControl(''));
+    this.restBodies.push(new FormControl(''));
+  }
+
+  deleteEndpoint() {
+    this.restURLs.removeAt(this.currentEndpoint);
+    this.restMethods.removeAt(this.currentEndpoint);
+    this.restBodies.removeAt(this.currentEndpoint);
+  }
+
+  selectedEndpoint(number) {
+    this.currentEndpoint = number;
   }
 
 }
