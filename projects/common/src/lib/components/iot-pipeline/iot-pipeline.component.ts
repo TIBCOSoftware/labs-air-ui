@@ -2958,7 +2958,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
 
     const propertiesObj = [
         { 'Name': 'Logging.LogLevel', 'Value': contextObj.logLevel },
-        { 'Name': 'REST.Timeout', 'Value': contextObj.logLevel },
+        { 'Name': 'REST.Timeout', 'Value': contextObj.restTimeout },
         { 'Name': 'REST.URLs', 'Value': JSON.stringify(contextObj.restURLs) },
         { 'Name': 'REST.Methods', 'Value': JSON.stringify(contextObj.restMethods) },
         { 'Name': 'REST.Bodies', 'Value': JSON.stringify(contextObj.restBodies) }
