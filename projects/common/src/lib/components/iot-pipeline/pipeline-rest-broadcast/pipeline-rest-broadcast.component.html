@@ -1,0 +1,49 @@
+<div class="content">
+    <mat-card-header>
+        <mat-card-title class="mat-card-header-text">Inference Configuration</mat-card-title>
+    </mat-card-header>
+    <div [formGroup]="restBroadcastForm">
+        <mat-form-field appearance="outline">
+            <mat-label>Log Level</mat-label>
+            <mat-select formControlName="logLevel">
+                <mat-option *ngFor="let item of logLevels;" [value]="item">
+                    {{item | uppercase}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Request Timeout</mat-label>
+            <input matInput formControlName="restTimeout" required>
+        </mat-form-field>
+        <div class="rest-actions">
+            <button mat-raised-button (click)="addNewEndpoint()">Add Endpoint</button>
+            <button mat-raised-button (click)="deleteEndpoint()">Remove Endpoint</button>
+        </div>
+        <mat-tab-group #tabs>
+            <mat-tab *ngFor="let index of restURLs.controls; index as i" label="Endpoint {{i + 1}}">
+                <div formArrayName="restURLs">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Request URLs</mat-label>
+                        <input matInput [formControlName]="i" placeholder="url">
+                    </mat-form-field>
+                </div>
+                <div formArrayName="restMethods">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Rest Method</mat-label>
+                        <mat-select [formControlName]="i">
+                            <mat-option *ngFor="let method of methods;" [value]="method">
+                                {{method | uppercase}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div formArrayName="restBodies">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Body</mat-label>
+                        <textarea matInput [formControlName]="i"></textarea>
+                    </mat-form-field>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+</div>

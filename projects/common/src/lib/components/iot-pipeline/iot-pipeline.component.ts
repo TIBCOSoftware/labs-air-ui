@@ -9,7 +9,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { GraphService } from '../../services/graph/graph.service';
 import { EdgeService } from '../../services/edge/edge.service';
 import { FlogoDeployService } from '../../services/deployment/flogo-deploy.service';
-import { Pipeline, Gateway, Device, Model } from '../../models/iot.model';
+import { Pipeline, Gateway, Device, Model, RestBroadcast } from '../../models/iot.model';
 
 import { PipelineFilteringComponent } from './pipeline-filtering/pipeline-filtering.component';
 import { PipelineInferencingComponent } from './pipeline-inferencing/pipeline-inferencing.component';
@@ -36,8 +36,7 @@ import { NotificationPublisherComponent } from '../rete/components/notification-
 import { FlogoFlowComponent } from '../rete/components/flogo-flow-component';
 import { RestServiceComponent } from '../rete/components/rest-service-component';
 import { NodePrimaryComponent } from '../rete/nodes/node-primary/node-primary.component';
-
-
+import { RestBroadcastComponent } from '../rete/components/rest-broadcast.component'
 
 @Component({
     selector: 'app-common-iot-pipeline',
@@ -71,6 +70,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
   streamingConfig = false;
   flogoFlowConfig = false;
   restServiceConfig = false;
+  restBroadcastConfig = false;
   xcor = 0;
   ycor = 0;
 
@@ -88,6 +88,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
   flogoFlowForm: FormGroup;
   restServiceForm: FormGroup;
   dataOptionsForm: FormGroup;
+  restBroadcastForm: FormGroup;
 
   ruleTuplesDescriptor = [
       {
@@ -205,6 +206,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           new StreamingComponent(),
           new RuleExpressionComponent(),
           new RestServiceComponent(),
+          new RestBroadcastComponent(),
           new NotificationPublisherComponent(),
           new ImageResizeComponent(),
           new CustomPublisherComponent(),
@@ -488,6 +490,10 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           contextObj = this.buildNodeDataRESTServiceProperties();
           break;
       }
+      case 'REST Broadcast': {
+          contextObj = this.buildNodeRestBroadcastServiceProperties();
+          break;
+      }
       default: {
 
           break;
@@ -511,6 +517,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
       this.streamingConfig = false;
       this.flogoFlowConfig = false;
       this.restServiceConfig = false;
+      this.restBroadcastConfig = false;
 
       if (node != null || node != undefined) {
           console.log('Resetting context for node: ', node);
@@ -581,6 +588,11 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           case 'REST Service': {
               this.updateRESTServiceComponent(contextObj);
               this.restServiceConfig = true;
+              break;
+          }
+          case 'REST Broadcast': {
+              this.updateRESTBroadcastComponent(contextObj);
+              this.restBroadcastConfig = true;
               break;
           }
           default: {
@@ -830,6 +842,13 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           propsEnv: ['auto']
       });
 
+      this.restBroadcastForm = this.formBuilder.group({
+          logLevel: ['INFO', Validators.required],
+          restTimeout: ['', Validators.required],
+          restURLs: this.formBuilder.array([]),
+          restMethods: this.formBuilder.array([]),
+          restBodies: this.formBuilder.array([])
+      })
   }
 
   /**
@@ -1165,6 +1184,17 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
       console.log('REST Service context saved: ', restServiceObj);
 
       return restServiceObj;
+  }
+
+  buildNodeRestBroadcastServiceProperties(): any {
+    const restBroadcastObj = {
+        'logLevel': this.restBroadcastForm.get('logLevel').value,
+        'restTimeout': this.restBroadcastForm.get('restTimeout').value,
+        'restURLs': this.restBroadcastForm.get('restURLs').value,
+        'restMethods': this.restBroadcastForm.get('restMethods').value,
+        'restBodies': this.restBroadcastForm.get('restBodies').value
+    }
+    return restBroadcastObj;
   }
 
   /**
@@ -1509,6 +1539,21 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
       }
   }
 
+   /**
+   *
+   * @param context
+   */
+    updateRESTBroadcastComponent (context: any) {
+        if (context != null || context != undefined) {
+            this.restBroadcastForm.patchValue({
+                logLevel: context.logLevel,
+                restTimeout: context.restTimeout,
+            });
+            this.restBroadcastForm.setControl('restURLs', this.formBuilder.array(context.restURLs));
+            this.restBroadcastForm.setControl('restMethods', this.formBuilder.array(context.restMethods));
+            this.restBroadcastForm.setControl('restBodies', this.formBuilder.array(context.restBodies));
+        }
+    }
 
   /**
    * Get Gateway, Pipelines and Devices information
@@ -1885,6 +1930,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
       this.streamingConfig = false;
       this.flogoFlowConfig = false;
       this.restServiceConfig = false;
+      this.restBroadcastConfig = false;
 
       this.pipelineForm.patchValue({
           uid: '',
@@ -2123,6 +2169,10 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                       pipelineFlow.AirDescriptor.logic.push(this.buildRESTServiceDeployObj(flowNode.data.customdata));
                       notificationSourcePos = pos;
                       notificationSource = 'REST Service';
+                      break;
+                  }
+                  case 'REST Broadcast': {
+                      pipelineFlow.AirDescriptor.logic.push(this.buildRESTBroadcastDeployObj(flowNode.data.customdata));
                       break;
                   }
                   }
@@ -2858,6 +2908,17 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
 
   }
 
+  buildRESTBroadcastDeployObj(contextObj): any {
+
+    const restServiceType = 'Pipe.REST';
+    const restServiceObj = {
+        name: restServiceType,
+        properties: this.buildRESTBroadcastDeployProperties(contextObj)
+    };
+
+    return restServiceObj;
+  }
+
   /**
    * @param contextObj
    */
@@ -2891,6 +2952,19 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
       ];
 
       return propertiesObj;
+  }
+
+  buildRESTBroadcastDeployProperties (contextObj) {
+
+    const propertiesObj = [
+        { 'Name': 'Logging.LogLevel', 'Value': contextObj.logLevel },
+        { 'Name': 'REST.Timeout', 'Value': contextObj.restTimeout },
+        { 'Name': 'REST.URLs', 'Value': JSON.stringify(contextObj.restURLs) },
+        { 'Name': 'REST.Methods', 'Value': JSON.stringify(contextObj.restMethods) },
+        { 'Name': 'REST.Bodies', 'Value': JSON.stringify(contextObj.restBodies) }
+    ];
+
+    return propertiesObj
   }
 
   buildNotificationRuleDeployObj(): any {
