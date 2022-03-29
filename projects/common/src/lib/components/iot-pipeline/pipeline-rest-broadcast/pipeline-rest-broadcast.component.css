@@ -1,12 +1,12 @@
 .content {
-    padding: 16px;
+  padding: 16px;
 }
 
 button + button {
-    margin-left: 6px;
+  margin-left: 6px;
 }
 
 .rest-actions {
-    display: flex;
-    margin-bottom: 10px;
+  display: flex;
+  margin-bottom: 10px;
 }
