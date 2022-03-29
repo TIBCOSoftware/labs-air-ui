@@ -2313,7 +2313,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
 
       let sourceType = '';
       // Events coming from Edgex MQTT (includes envelope for payload)
-      if (contextObj.topic == 'edgexevents') {
+      if (contextObj.topic == 'zmqedgexevents') {
           sourceType = 'DataSource.EDGEX_' + contextObj.protocol;
       }
       // Events coming  from ZMQToMQTT
