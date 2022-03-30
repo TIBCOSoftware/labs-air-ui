@@ -2044,6 +2044,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           let notificationSource = '';
           let isFlogoApp = false;
           let flogoAppVolPath = '';
+          let lastInferenceProducer = '';
           console.log('Building from: ', flow);
 
           orderedFlow.forEach(flowNode => {
@@ -2083,7 +2084,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                       }
 
                       if (useEnrichedReading) {
-                          const targetField = { 'Name': 'MQTTPub.TargetField', 'Value': 'Inference.REST..Inferred' };
+                        //   const targetField = { 'Name': 'MQTTPub.TargetField', 'Value': 'Inference.REST..Inferred' };
+                          const targetField = { 'Name': 'MQTTPub.TargetField', 'Value': lastInferenceProducer };
                           pipelineFlow.AirDescriptor.logic.push(this.buildDataPublisherDeployObj(flowNode.data.customdata, targetField));
                       }
 
@@ -2127,6 +2129,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                       break;
                   }
                   case 'Inferencing': {
+                      lastInferenceProducer = flowNode.data.customdata.modelName + "..Inferred";
                       pipelineFlow.AirDescriptor.logic.push(this.buildInferencingDeployObj(flowNode.data.customdata));
                       break;
                   }
