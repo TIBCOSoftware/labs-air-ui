@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { Subscription } from 'rxjs';
@@ -6,6 +6,7 @@ import { Device, Resource, TSReading } from '../../../models/iot.model';
 import { GraphService } from '../../../services/graph/graph.service';
 import { ChartConfiguration, ChartOptions, ChartType, Tooltip, Chart } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { BaseChartDirective } from 'ng2-charts';
 
 import 'chartjs-adapter-luxon';
 import StreamingPlugin from 'chartjs-plugin-streaming';
@@ -18,6 +19,8 @@ Chart.register(StreamingPlugin);
   styleUrls: ["./iot-gateway-time-series.component.css"],
 })
 export class CommonIotGatewayTimeSeriesComponent implements OnInit, OnDestroy {
+  @ViewChild(BaseChartDirective) chart: BaseChartDirective;
+
   device: Device;
   instrument: Resource;
   subscriptions: Subscription[] = [];
@@ -280,6 +283,7 @@ export class CommonIotGatewayTimeSeriesComponent implements OnInit, OnDestroy {
       }
     });
     this.chartDatasets.datasets[1].data = this.timeSeriesInferredData;
+    this.chart.update();
   }
 
   getStreamData(chart: any) {
