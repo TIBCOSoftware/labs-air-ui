@@ -85,7 +85,7 @@ export class CommonIotGatewayTimeSeriesComponent implements OnInit, OnDestroy {
     aspectRatio: 5,
     scales: {
       x: {
-        type: "timeseries",
+        type: "time",
         ticks: {
           autoSkip: true,
         },
