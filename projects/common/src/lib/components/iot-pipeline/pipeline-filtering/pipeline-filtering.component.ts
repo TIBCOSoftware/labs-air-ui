@@ -262,8 +262,8 @@ export class PipelineFilteringComponent implements OnInit, OnChanges, OnDestroy 
 
           if (item.parent != 'ROOT') {
               const filter = {
-                  'device': item.parent,
-                  'name': item.name
+                  'deviceName': item.parent,
+                  'resourceName': item.name
               };
               filters.push(filter);
           }
@@ -280,7 +280,7 @@ export class PipelineFilteringComponent implements OnInit, OnChanges, OnDestroy 
 
 
       this.filters.forEach(element => {
-          this.selectNode(element.device, element.name);
+          this.selectNode(element.deviceName, element.resourceName);
       });
   }
 
