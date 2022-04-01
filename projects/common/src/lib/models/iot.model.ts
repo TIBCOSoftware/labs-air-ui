@@ -1,30 +1,5 @@
 import { FormArray } from "@angular/forms";
 
-export class PropertyValue {
-  type: string;
-  readWrite: string;
-  minimum: string;
-  maximum: string;
-  defaultValue: string;
-  size: string;
-  word: string;
-  lsb: string;
-  mask: string;
-  shift: string;
-  scale: string;
-  offset: string;
-  base: string;
-  assertion: string;
-  signed: string;
-  precision: string;
-}
-
-export class PropertyUnit {
-  type: string;
-  readWrite: string;
-  defaultValue: string;
-}
-
 export class ResourceProperty {
   assertion: string;
   base: string;
@@ -51,6 +26,7 @@ export class ResourceAttribute {
 export class Resource {
   description: string;
   name: string;
+  isHidden: boolean;
   tag: string;
   properties: ResourceProperty;
   attributes: ResourceAttribute;
@@ -62,17 +38,18 @@ export class CommandResponse {
   expectedValues: string[];
 }
 
-export class CommandOp {
-  path: string;
-  responses: CommandResponse[];
-  parameterNames: string[];
+export class ResourceOperation {
+  deviceResource: string;
+  defaultValue: string;
+  mappings: string[][];
 }
 
-export class Command {
+export class DeviceCommand {
   id: string;
   name: string;
-  get: CommandOp;
-  put: CommandOp;
+  isHidden: boolean;
+  readWrite: string;
+  resourceOperations: ResourceOperation[];
 }
 
 export class Profile {
@@ -83,8 +60,9 @@ export class Profile {
   id: string;
   manufacturer: string;
   model: string;
+  labels: string[];
   deviceResources: Resource[];
-  deviceCommands: Command[];
+  deviceCommands: DeviceCommand[];
 }
 
 export class Service {
@@ -210,12 +188,6 @@ export class Pipeline {
   name: string;
   pipelineType: string;
   deployerType: string;
-  protocolType: string; //deprecated
-  protocol: any; // deprecated
-  dataStoreType: string; // deprecated
-  dataStore: any; // deprecated
-  filter: any; // deprecated
-  streaming: any; // deprecated
   description: string;
   status: string;
   flowConfiguration: string;
