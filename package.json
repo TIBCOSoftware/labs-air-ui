@@ -1,6 +1,6 @@
 {
   "name": "ProjectAir",
-  "version": "0.6.0-26",
+  "version": "0.7.0-725",
   "workspaces": [
     "projects/cloud",
     "projects/on-prem",
@@ -16,7 +16,11 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test common && ng test on-prem && ng test cloud",
     "lint": "ng lint --fix && npx stylelint --fix \"projects/**/*.css\"",
-    "prepare": "(husky install && git config --local commit.template .commit-template) || echo Could not setup the commit template && ng build common"
+    "prepare": "(husky install && git config --local commit.template .commit-template) || echo Could not setup the commit template && ng build common",
+    "release": "standard-version",
+    "release:minor": "standard-version --release-as minor",
+    "release:patch": "standard-version --release-as patch",
+    "release:major": "standard-version --release-as major"
   },
   "private": true,
   "dependencies": {
