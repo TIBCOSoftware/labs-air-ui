@@ -886,8 +886,6 @@ export class TgdbService implements GraphService {
         _:Pipeline <uuid> "${pipeline.name}" .
         _:Pipeline <type> "pipeline" .
         _:Pipeline <pipeline> "" .
-        _:Pipeline <protocolType> "${pipeline.protocolType}" .
-        _:Pipeline <dataStoreType> "${pipeline.dataStoreType}" .
         _:Pipeline <created> "${pipeline.created}" .
         _:Pipeline <modified> "${pipeline.modified}" .
         _:Pipeline <status> "${pipeline.status}" .
@@ -936,18 +934,9 @@ export class TgdbService implements GraphService {
    */
   deletePipeline(gatewayUid: number, pipeline: Pipeline): Observable<string> {
       const url = `${this.tgdbUrl}/mutate?commitNow=true`;
-      const protocol = pipeline.protocol;
-      const dataStore = pipeline.dataStore;
-      const filter = pipeline.filter;
 
       const query = `{
       delete {
-        <${protocol.uid}> * * .
-        <${dataStore.uid}> * * .
-        <${filter.uid}> * * .
-        <${pipeline.uid}> <pipeline_protocol> <${protocol.uid}> .
-        <${pipeline.uid}> <pipeline_datastore> <${dataStore.uid}> .
-        <${pipeline.uid}> <pipeline_filter> <${filter.uid}> .
         <${pipeline.uid}> * * .
         <${gatewayUid}> <gateway_pipeline> <${pipeline.uid}> .
       }
