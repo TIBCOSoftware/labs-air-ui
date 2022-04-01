@@ -48,12 +48,9 @@
 }
 
 .table-wrapper {
-  max-height: 400px;
+  max-height: 315px;
+  max-width: 303px;
   overflow: auto;
-  width: 100%;
-}
-
-.table-wrapper table {
   width: 100%;
 }
 
