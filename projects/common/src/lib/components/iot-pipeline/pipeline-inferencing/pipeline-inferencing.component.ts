@@ -318,7 +318,7 @@ export class PipelineInferencingComponent implements OnInit, OnChanges  {
 
 
       this.filters.forEach(element => {
-          this.selectNode(element.device, element.name);
+          this.selectNode(element.deviceName, element.resourceName);
       });
   }
 
