@@ -549,49 +549,6 @@ export class EdgeService {
   /**
    * 
    * @param gateway 
-   * @param rule 
-   */
-  addRule(gateway: Gateway, rule: Rule): Observable<string> {
-
-      // const url = `/${gateway.uuid}${this.edgeFlogoRulesUrl}addRule`;
-      const url = this.getEdgexURL(gateway.address, this.edgexFlogoRulesPath, 'addRule');
-
-      const authorizedHeaders = httpTextResponseOptions.headers.set('Authorization', 'Bearer ' + gateway.accessToken);
-      httpTextResponseOptions.headers = authorizedHeaders;
-
-      console.log('Adding Rule: ', rule);
-
-
-      return this.http.post<string>(url, rule, httpTextResponseOptions)
-          .pipe(
-              tap(_ => console.info('added rule')),
-              catchError(this.handleError<string>('addRule'))
-          );
-  }
-
-  /**
-   * 
-   * @param gateway 
-   * @param rule 
-   */
-  deleteRule(gateway: Gateway, rule: Rule): Observable<string> {
-
-      // const url = `/${gateway.uuid}${this.edgeFlogoRulesUrl}deleteRule`;
-      const url = this.getEdgexURL(gateway.address, this.edgexFlogoRulesPath, 'deleteRule');
-
-      const authorizedHeaders = httpTextResponseOptions.headers.set('Authorization', 'Bearer ' + gateway.accessToken);
-      httpTextResponseOptions.headers = authorizedHeaders;
-
-      return this.http.post<string>(url, rule, httpTextResponseOptions)
-          .pipe(
-              tap(_ => console.info('added rule')),
-              catchError(this.handleError<string>('deleteRule'))
-          );
-  }
-
-  /**
-   * 
-   * @param gateway 
    * @param modelConfig 
    */
   addModelConfig(gateway: Gateway, modelConfig: ModelConfig): Observable<string> {

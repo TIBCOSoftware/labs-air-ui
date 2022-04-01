@@ -12,15 +12,6 @@ import { CommonIotGatewayDiscreteValueComponent } from './components/iot-gateway
 import { CommonIotGatewayDescriptionsComponent } from './components/iot-gateway-details-charts/iot-gateway-descriptions/iot-gateway-descriptions.component';
 import { CommonIotGatewayTextComponent } from './components/iot-gateway-details-charts/iot-gateway-text/iot-gateway-text.component'
 import { CommonMaporamaComponent } from './components/maporama/maporama.component';
-import { CommonIotDataPipelineComponent } from './components/iot-data-pipeline/iot-data-pipeline.component'
-import { DataFilteringComponent } from './components/iot-data-pipeline/data-filtering/data-filtering.component';
-import { DataFilteringViewComponent } from './components/iot-data-pipeline/data-filtering-view/data-filtering-view.component';
-import { DataStoresComponent } from './components/iot-data-pipeline/data-stores/data-stores.component';
-import { DataStoresViewComponent } from './components/iot-data-pipeline/data-stores-view/data-stores-view.component';
-import { DataStreamingComponent } from './components/iot-data-pipeline/data-streaming/data-streaming.component';
-import { DataStreamingViewComponent } from './components/iot-data-pipeline/data-streaming-view/data-streaming-view.component';
-import { ProtocolsComponent } from './components/iot-data-pipeline/protocols/protocols.component';
-import { ProtocolsViewComponent } from './components/iot-data-pipeline/protocols-view/protocols-view.component';
 import { CommonIotPipelineComponent } from './components/iot-pipeline/iot-pipeline.component';
 import { PipelineConfigComponent } from './components/iot-pipeline/pipeline-config/pipeline-config.component';
 import { PipelineDataPublisherComponent } from './components/iot-pipeline/pipeline-data-publisher/pipeline-data-publisher.component';
@@ -38,10 +29,6 @@ import { InfraDeployerComponent } from './components/iot-infra-deployer/infra-de
 import { InfraRegistrationComponent } from './components/iot-infra-deployer/infra-registration/infra-registration.component';
 import { CommonIotInfraDeployerComponent } from './components/iot-infra-deployer/iot-infra-deployer.component'
 import { CommonIotNotificationsComponent } from './components/iot-notifications/iot-notifications.component'
-import { CommonIotEdgeDataPipelineComponent } from './components/iot-edge-data-pipeline/iot-edge-data-pipeline.component'
-import { FilteringComponent } from './components/iot-edge-data-pipeline/filtering/filtering.component'
-import { InferencingComponent } from './components/iot-edge-data-pipeline/inferencing/inferencing.component'
-import { RulesComponent } from './components/iot-edge-data-pipeline/rules/rules.component'
 import { CommonIotStoreSimulatorComponent } from './components/iot-simulator/iot-store-simulator/iot-store-simulator.component';
 import { CommonIotTextileSimulatorComponent } from './components/iot-simulator/iot-textile-simulator/iot-textile-simulator.component';
 import { PipelineRestBroadcastComponent } from './components/iot-pipeline/pipeline-rest-broadcast/pipeline-rest-broadcast.component';
@@ -89,14 +76,6 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     CommonMaporamaComponent,
     SensorDirective,
     CommonMaporamaComponent,
-    DataFilteringComponent,
-    DataFilteringViewComponent,
-    DataStoresComponent,
-    DataStoresViewComponent,
-    DataStreamingComponent,
-    DataStreamingViewComponent,
-    ProtocolsComponent,
-    ProtocolsViewComponent,
     CommonIotPipelineComponent,
     PipelineConfigComponent,
     PipelineDataPublisherComponent,
@@ -110,15 +89,10 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     PipelineRulesComponent,
     PipelineStreamingComponent,
     SingleValueDialogComponent,
-    CommonIotDataPipelineComponent,
     InfraDeployerComponent,
     InfraRegistrationComponent,
     CommonIotInfraDeployerComponent,
     CommonIotNotificationsComponent,
-    CommonIotEdgeDataPipelineComponent,
-    FilteringComponent,
-    InferencingComponent,
-    RulesComponent,
     CommonIotStoreSimulatorComponent,
     CommonIotTextileSimulatorComponent,
     PipelineRestBroadcastComponent
@@ -141,7 +115,6 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     CommonIotGatewayOverviewComponent,
     CommonIotInfraDeployerComponent,
     CommonIotNotificationsComponent,
-    CommonIotEdgeDataPipelineComponent
   ],
   providers: [
     AppConfigService,

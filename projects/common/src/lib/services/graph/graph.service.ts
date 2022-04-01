@@ -15,16 +15,6 @@ export abstract class GraphService {
 
   abstract deleteGateway(gatewayUid: number): Observable<string>;
 
-  abstract getGatewayAndPublishers(gatewayName: any): Observable<Gateway[]>;
-
-  abstract getPublishers(gatewayName: any): Observable<Publisher[]>;
-
-  abstract addPublisher(gatewayUid: number, publisher: Publisher): Observable<string>;
-
-  abstract updatePublisher(publisher: Publisher): Observable<string>;
-
-  abstract deletePublisher(gatewayUid: number, publisherUid: number): Observable<string>;
-
   abstract getGatewayAndProtocols(gatewayName: any): Observable<Gateway[]>;
 
   abstract getProtocols(gatewayName: any): Observable<Protocol[]>;
@@ -34,8 +24,6 @@ export abstract class GraphService {
   abstract updateProtocol(protocol: Protocol): Observable<string>;
 
   abstract deleteProtocol(gatewayUid: number, protocolUid: number): Observable<string>;
-
-  abstract getGatewayAndDataStores(gatewayName: any): Observable<Gateway[]>;
 
   abstract getDataStores(gatewayName: any): Observable<DataStore[]>;
 
@@ -70,14 +58,6 @@ export abstract class GraphService {
 
   abstract getPipelineIdsFromDataStoreUid(dataStoreUid: any): Observable<Pipeline[]>;
 
-  abstract getRules(gatewayName: any): Observable<Rule[]>;
-
-  abstract addRule(gatewayUid: number, rule: Rule): Observable<string>;
-
-  abstract updateRule(rule: Rule): Observable<string>;
-
-  abstract deleteRule(gatewayUid: number, ruleUid: number): Observable<string>;
-
   abstract getModelConfigs(gatewayName: any): Observable<ModelConfig[]>;
 
   abstract addModelConfig(gatewayUid: number, modelConfig: ModelConfig): Observable<string>;
@@ -107,15 +87,5 @@ export abstract class GraphService {
   abstract getRoute(deviceName: any): any;
 
   abstract getRouteCenter(deviceName: any): any;
-
-  abstract getGatewayAndSubscriptions(gatewayName: any): Observable<Gateway[]>;
-  
-  abstract getSubscriptions(gatewayName: any): Observable<Subscription[]>;
-
-  abstract addSubscription(gatewayUid: number, subscription: Subscription): Observable<string>;
-
-  abstract updateSubscription(subscription: Subscription): Observable<string>;
-
-  abstract deleteSubscription(gatewayUid: number, subscriptionUid: number): Observable<string>;
 
 }
