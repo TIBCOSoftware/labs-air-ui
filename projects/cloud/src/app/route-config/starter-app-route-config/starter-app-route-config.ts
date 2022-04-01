@@ -4,8 +4,6 @@ import {IotGatewayEndpointComponent} from '../../components/iot-gateway-endpoint
 import { CommonIotGatewayComponent } from 'common';
 import { CommonIotGatewayDetailsComponent } from 'common';
 import { CommonIotPipelineComponent } from 'common';
-import { CommonIotDataPipelineComponent } from 'common';
-import { CommonIotEdgeDataPipelineComponent } from 'common';
 import { IotGatewayDashboardComponent } from '../../components/iot-gateway-dashboard/iot-gateway-dashboard.component';
 import { ActivatedRouteSnapshot, NavigationEnd, Router, ActivatedRoute} from '@angular/router';
 import { Params } from '@angular/router';
@@ -53,11 +51,6 @@ export const STARTER_APP_ROUTES=
                 data: {breadcrumb: ['Gateways', 'Pipelines', 'Pipelines']}
             },
             {
-                path: 'datapipeline/:gatewayId',
-                component: CommonIotDataPipelineComponent,
-                data: {breadcrumb: ['Gateways']}
-            },
-            {
                 path: 'gatewaydashboard',
                 component: IotGatewayDashboardComponent,
                 data: {breadcrumb: ['Gateways']}
@@ -81,11 +74,6 @@ export const STARTER_APP_ROUTES=
                 path: 'textile-simulator',
                 component: CommonIotTextileSimulatorComponent,
                 data: {breadcrumb: ['Textile Simulator']}
-            },
-            {
-                path: 'edgedatapipeline/:gatewayId',
-                component: CommonIotEdgeDataPipelineComponent,
-                data: {breadcrumb: ['Gateways']}
             }
       
       
