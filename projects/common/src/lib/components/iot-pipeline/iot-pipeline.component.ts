@@ -9,7 +9,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { GraphService } from '../../services/graph/graph.service';
 import { EdgeService } from '../../services/edge/edge.service';
 import { FlogoDeployService } from '../../services/deployment/flogo-deploy.service';
-import { Pipeline, Gateway, Device, Model, RestBroadcast } from '../../models/iot.model';
+import { Pipeline, Gateway, Device, Model } from '../../models/iot.model';
 
 import { PipelineFilteringComponent } from './pipeline-filtering/pipeline-filtering.component';
 import { PipelineInferencingComponent } from './pipeline-inferencing/pipeline-inferencing.component';
@@ -3010,7 +3010,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
     const orderedFlow = this.reorderFlow(this.editor.toJSON());
 
     console.log('Ordered flow: ', orderedFlow);
-    
+
     orderedFlow.forEach(flowNode => {
         console.log('Inspecting from node: ', flowNode);
         console.log('Inspecting from node name: ', flowNode.name);

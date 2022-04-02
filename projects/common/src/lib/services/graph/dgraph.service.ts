@@ -25,7 +25,7 @@ const httpMutateOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/rdf' })
 };
 
-const route1 = [
+const route1: number[][] = [
     [25.771088, -80.163483],
     [27.439775, -80.32299],
     [28.349469, -80.731105],
@@ -41,7 +41,7 @@ const route1 = [
     [42.259951, -71.789244]
 ];
 
-const route2 = [
+const route2: number[][] = [
     [47.492471, -122.26888],
     [45.552207, -122.722648],
     [39.53246, -119.751524],
@@ -57,7 +57,7 @@ const route2 = [
     [39.796963, -104.995374]
 ];
 
-const route3 = [
+const route3: number[][] = [
     [29.302729, -98.638744],
     [29.638421, -95.292245],
     [32.615525, -96.693485],
@@ -73,7 +73,7 @@ const route3 = [
     [46.758181, -92.098748]
 ];
 
-const emptyroute = [];
+const emptyroute: number[][] = [];
 
 @Injectable()
 export class DgraphService implements GraphService {
@@ -81,13 +81,13 @@ export class DgraphService implements GraphService {
   private dgraphUrl;
 
   /**
-   * 
-   * @param logger 
-   * @param http 
+   *
+   * @param logger
+   * @param http
    */
   constructor(private http: HttpClient,
     private appConfigService: AppConfigService) {
-      
+
       console.log('Constructor Getting basic auth for dgraph');
       this.dgraphUrl = this.appConfigService.getFromConfigOrEnv('dgraphUrl');
       console.log('Constructor dgraphUrl: ', this.dgraphUrl);
@@ -100,7 +100,7 @@ export class DgraphService implements GraphService {
   }
 
   /**
-   * 
+   *
    */
   getGateway(gatewayName: string): Observable<Gateway[]> {
       console.log('GetGateway service called for: ', gatewayName);
@@ -120,7 +120,7 @@ export class DgraphService implements GraphService {
   }
 
   /**
-   * 
+   *
    */
   getGateways(): Observable<Gateway[]> {
       console.log('GetGateways service called');
@@ -142,8 +142,8 @@ export class DgraphService implements GraphService {
   }
 
   /**
-   * 
-   * @param gateway 
+   *
+   * @param gateway
    */
   updateGateway(gateway: Gateway): Observable<string> {
       const url = `${this.dgraphUrl}/mutate?commitNow=true`;
@@ -172,8 +172,8 @@ export class DgraphService implements GraphService {
   }
 
   /**
-   * 
-   * @param gateway 
+   *
+   * @param gateway
    */
   addGateway(gateway: Gateway): Observable<string> {
       const url = `${this.dgraphUrl}/mutate?commitNow=true`;
@@ -207,8 +207,8 @@ export class DgraphService implements GraphService {
   }
 
   /**
-   * 
-   * @param gatewayUid 
+   *
+   * @param gatewayUid
    */
   deleteGateway(gatewayUid: number): Observable<string> {
       const url = `${this.dgraphUrl}/mutate?commitNow=true`;
@@ -227,8 +227,8 @@ export class DgraphService implements GraphService {
   }
 
   /**
-   * 
-   * @param gatewayName 
+   *
+   * @param gatewayName
    */
   getDataStores(gatewayName: any): Observable<DataStore[]> {
       const url = `${this.dgraphUrl}/query`;
@@ -253,7 +253,7 @@ export class DgraphService implements GraphService {
         clientId
         clientSecret
         authorizationCode
-        redirectURI 
+        redirectURI
         loginTimeout
         url
         scope
@@ -270,9 +270,9 @@ export class DgraphService implements GraphService {
   }
 
   /**
-   * 
-   * @param gatewayUid 
-   * @param dataStore 
+   *
+   * @param gatewayUid
+   * @param dataStore
    */
   addDataStore(gatewayUid: number, dataStore: DataStore): Observable<string> {
       const url = `${this.dgraphUrl}/mutate?commitNow=true`;
@@ -315,8 +315,8 @@ export class DgraphService implements GraphService {
 
   }
   /**
-   * 
-   * @param dataStore 
+   *
+   * @param dataStore
    */
   updateDataStore(dataStore: DataStore): Observable<string> {
       const url = `${this.dgraphUrl}/mutate?commitNow=true`;
@@ -356,9 +356,9 @@ export class DgraphService implements GraphService {
   }
 
   /**
-   * 
-   * @param gatewayUid 
-   * @param dataStoreUid 
+   *
+   * @param gatewayUid
+   * @param dataStoreUid
    */
   deleteDataStore(gatewayUid: number, dataStoreUid: number): Observable<string> {
       const url = `${this.dgraphUrl}/mutate?commitNow=true`;
@@ -378,8 +378,8 @@ export class DgraphService implements GraphService {
 
 
   /**
-   * 
-   * @param gatewayName 
+   *
+   * @param gatewayName
    */
   getGatewayAndProtocols(gatewayName: any): Observable<Gateway[]> {
       const url = `${this.dgraphUrl}/query`;
@@ -401,7 +401,7 @@ export class DgraphService implements GraphService {
           retryBackoff
           fetchMinBytes
           fetchMaxWait
-          commitInterval 
+          commitInterval
           heartbeatInterval
           maximumQOS
           username
@@ -428,8 +428,8 @@ export class DgraphService implements GraphService {
 
   /**
    * Get all global protocols and the protocols scoped for the gateway
-   * @param gatewayName 
-   * @filter(gt(created, ${fromts}) AND lt(created, ${tots})) (first:-500) 
+   * @param gatewayName
+   * @filter(gt(created, ${fromts}) AND lt(created, ${tots})) (first:-500)
    */
   getProtocols(gatewayName: any): Observable<Protocol[]> {
       const url = `${this.dgraphUrl}/query`;
@@ -449,7 +449,7 @@ export class DgraphService implements GraphService {
         retryBackoff
         fetchMinBytes
         fetchMaxWait
-        commitInterval 
+        commitInterval
         heartbeatInterval
         maximumQOS
         username
@@ -474,9 +474,9 @@ export class DgraphService implements GraphService {
   }
 
   /**
-   * 
-   * @param gatewayUid 
-   * @param protocol 
+   *
+   * @param gatewayUid
+   * @param protocol
    */
   addProtocol(gatewayUid: number, protocol: Protocol): Observable<string> {
       const url = `${this.dgraphUrl}/mutate?commitNow=true`;
@@ -522,8 +522,8 @@ export class DgraphService implements GraphService {
   }
 
   /**
-   * 
-   * @param protocol 
+   *
+   * @param protocol
    */
   updateProtocol(protocol: Protocol): Observable<string> {
       const url = `${this.dgraphUrl}/mutate?commitNow=true`;
@@ -566,9 +566,9 @@ export class DgraphService implements GraphService {
   }
 
   /**
-   * 
-   * @param gatewayUid 
-   * @param protocolUid 
+   *
+   * @param gatewayUid
+   * @param protocolUid
    */
   deleteProtocol(gatewayUid: number, protocolUid: number): Observable<string> {
       const url = `${this.dgraphUrl}/mutate?commitNow=true`;
@@ -588,8 +588,8 @@ export class DgraphService implements GraphService {
 
 
   /**
-   * 
-   * @param gatewayName 
+   *
+   * @param gatewayName
    */
   getGatewayAndModels(gatewayName: any): Observable<Gateway[]> {
       const url = `${this.dgraphUrl}/query`;
@@ -622,8 +622,8 @@ export class DgraphService implements GraphService {
   }
 
   /**
-   * 
-   * @param gatewayName 
+   *
+   * @param gatewayName
    */
   getModels(gatewayName: any): Observable<Model[]> {
       const url = `${this.dgraphUrl}/query`;
@@ -652,9 +652,9 @@ export class DgraphService implements GraphService {
   }
 
   /**
-   * 
-   * @param gatewayUid 
-   * @param model 
+   *
+   * @param gatewayUid
+   * @param model
    */
   addModel(gatewayUid: number, model: Model): Observable<string> {
       const url = `${this.dgraphUrl}/mutate?commitNow=true`;
@@ -684,8 +684,8 @@ export class DgraphService implements GraphService {
 
   }
   /**
-   * 
-   * @param model 
+   *
+   * @param model
    */
   updateModel(model: Model): Observable<string> {
       const url = `${this.dgraphUrl}/mutate?commitNow=true`;
@@ -712,9 +712,9 @@ export class DgraphService implements GraphService {
   }
 
   /**
-   * 
-   * @param gatewayUid 
-   * @param modelUid 
+   *
+   * @param gatewayUid
+   * @param modelUid
    */
   deleteModel(gatewayUid: number, modelUid: number): Observable<string> {
       const url = `${this.dgraphUrl}/mutate?commitNow=true`;
@@ -733,8 +733,8 @@ export class DgraphService implements GraphService {
   }
 
   /**
-   * 
-   * @param gatewayName 
+   *
+   * @param gatewayName
    */
   getGatewayAndPipelines(gatewayName: any): Observable<Gateway[]> {
       const url = `${this.dgraphUrl}/query`;
@@ -783,8 +783,8 @@ export class DgraphService implements GraphService {
   }
 
   /**
-   * 
-   * @param gatewayName 
+   *
+   * @param gatewayName
    */
   getPipelines(gatewayName: any): Observable<Pipeline[]> {
       const url = `${this.dgraphUrl}/query`;
@@ -833,12 +833,12 @@ export class DgraphService implements GraphService {
   }
 
   /**
-   * 
-   * @param gatewayUid 
-   * @param pipeline 
-   * @param transportObj 
-   * @param dataStoreObj 
-   * @param filterObj 
+   *
+   * @param gatewayUid
+   * @param pipeline
+   * @param transportObj
+   * @param dataStoreObj
+   * @param filterObj
    */
   addPipeline(gatewayUid: number, pipeline: Pipeline, protocolUid: string,
       dataStoreUid: string, filterObj: any, streamingObj:any): Observable<string> {
@@ -875,10 +875,10 @@ export class DgraphService implements GraphService {
           );
 
   }
-  
+
   /**
-   * 
-   * @param pipeline 
+   *
+   * @param pipeline
    */
   updatePipeline(pipeline: Pipeline): Observable<string> {
       const url = `${this.dgraphUrl}/mutate?commitNow=true`;
@@ -903,9 +903,9 @@ export class DgraphService implements GraphService {
   }
 
   /**
-   * 
-   * @param gatewayUid 
-   * @param pipeline 
+   *
+   * @param gatewayUid
+   * @param pipeline
    */
   deletePipeline(gatewayUid: number, pipeline: Pipeline): Observable<string> {
       const url = `${this.dgraphUrl}/mutate?commitNow=true`;
@@ -950,7 +950,7 @@ export class DgraphService implements GraphService {
           );
 
   }
-  
+
   /**
    * Get ids of all the pipelines associated with the specified data store
    * @param dataStoreUid - the uid of the data store
@@ -979,8 +979,8 @@ export class DgraphService implements GraphService {
   }
 
   /**
-   * 
-   * @param gatewayName 
+   *
+   * @param gatewayName
    */
   getModelConfigs(gatewayName: any): Observable<ModelConfig[]> {
       const url = `${this.dgraphUrl}/query`;
@@ -1014,8 +1014,8 @@ export class DgraphService implements GraphService {
   }
 
   /**
-   * 
-   * @param gatewayUid 
+   *
+   * @param gatewayUid
    * @param modelConfig
    */
   addModelConfig(gatewayUid: number, modelConfig: ModelConfig): Observable<string> {
@@ -1047,8 +1047,8 @@ export class DgraphService implements GraphService {
   }
 
   /**
-   * 
-   * @param modelConfig 
+   *
+   * @param modelConfig
    */
   updateModelConfig(modelConfig: ModelConfig): Observable<string> {
       const url = `${this.dgraphUrl}/mutate?commitNow=true`;
@@ -1074,9 +1074,9 @@ export class DgraphService implements GraphService {
   }
 
   /**
-   * 
-   * @param gatewayUid 
-   * @param modelConfigUid 
+   *
+   * @param gatewayUid
+   * @param modelConfigUid
    */
   deleteModelConfig(gatewayUid: number, modelConfigUid: number): Observable<string> {
       const url = `${this.dgraphUrl}/mutate?commitNow=true`;
@@ -1096,8 +1096,8 @@ export class DgraphService implements GraphService {
   }
 
   /**
-   * 
-   * @param gatewayName 
+   *
+   * @param gatewayName
    */
   getFiltersConfig(gatewayName: any): Observable<GatewayFiltersConfig[]> {
       const url = `${this.dgraphUrl}/query`;
@@ -1124,8 +1124,8 @@ export class DgraphService implements GraphService {
   }
 
   /**
-   * 
-   * @param gatewayUid 
+   *
+   * @param gatewayUid
    * @param filtersConfig
    */
   addFiltersConfig(gatewayUid: number, filtersConfig: GatewayFiltersConfig): Observable<string> {
@@ -1151,8 +1151,8 @@ export class DgraphService implements GraphService {
   }
 
   /**
-   * 
-   * @param filtersConfig 
+   *
+   * @param filtersConfig
    */
   updateFiltersConfig(filtersConfig: GatewayFiltersConfig): Observable<string> {
       const url = `${this.dgraphUrl}/mutate?commitNow=true`;
@@ -1172,10 +1172,10 @@ export class DgraphService implements GraphService {
   }
 
   /**
-   * 
-   * @param deviceName 
-   * @param instrumentName 
-   * @param numReadings 
+   *
+   * @param deviceName
+   * @param instrumentName
+   * @param numReadings
    */
   getReadings(deviceName: any, instrumentName: any, numReadings: any): Observable<TSReading[]> {
       const url = `${this.dgraphUrl}/query`;
@@ -1206,10 +1206,10 @@ export class DgraphService implements GraphService {
   }
 
   /**
-   * 
-   * @param deviceName 
-   * @param instrumentName 
-   * @param ts 
+   *
+   * @param deviceName
+   * @param instrumentName
+   * @param ts
    */
   getReadingsAt(deviceName: any, instrumentName: any, ts: any): Observable<TSReading[]> {
       const url = `${this.dgraphUrl}/query`;
@@ -1237,10 +1237,10 @@ export class DgraphService implements GraphService {
   }
 
   /**
-   * 
-   * @param deviceName 
-   * @param instrumentName 
-   * @param fromts 
+   *
+   * @param deviceName
+   * @param instrumentName
+   * @param fromts
    */
   getReadingsStartingAt(deviceName: any, instrumentName: any, fromts: any): Observable<TSReading[]> {
       const url = `${this.dgraphUrl}/query`;
@@ -1269,11 +1269,11 @@ export class DgraphService implements GraphService {
   }
 
   /**
-   * 
-   * @param deviceName 
-   * @param instrumentName 
-   * @param fromts 
-   * @param tots 
+   *
+   * @param deviceName
+   * @param instrumentName
+   * @param fromts
+   * @param tots
    */
   getReadingsBetween(deviceName: any, instrumentName: any, fromts: any, tots: any): Observable<TSReading[]> {
       const url = `${this.dgraphUrl}/query`;
@@ -1302,8 +1302,8 @@ export class DgraphService implements GraphService {
   }
 
   /**
-   * 
-   * @param deviceName 
+   *
+   * @param deviceName
    */
   getLastReadingsForDevice(deviceName: any): Observable<TSReading[]> {
       const url = `${this.dgraphUrl}/query`;
@@ -1331,7 +1331,7 @@ export class DgraphService implements GraphService {
   }
 
   /**
-   * 
+   *
    */
   getNotifications(): Observable<Notification[]> {
       console.log('GetNotifications service called');
@@ -1354,10 +1354,10 @@ export class DgraphService implements GraphService {
   }
 
   /**
-   * 
-   * @param deviceName 
+   *
+   * @param deviceName
    */
-  getRoute(deviceName: string): any {
+  getRoute(deviceName: string): number[][] {
 
       let route = null;
 
@@ -1378,10 +1378,10 @@ export class DgraphService implements GraphService {
   }
 
   /**
-   * 
-   * @param deviceName 
+   *
+   * @param deviceName
    */
-  getRouteCenter(deviceName: string): any {
+  getRouteCenter(deviceName: string): number[][] {
       let center = null;
 
       // 39.0 -98.0 zoom 4

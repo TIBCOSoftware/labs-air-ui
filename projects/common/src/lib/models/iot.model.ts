@@ -1,6 +1,6 @@
 import { FormArray } from "@angular/forms";
 
-export class ResourceProperty {
+export interface ResourceProperty {
   assertion: string;
   base: string;
   defaultValue: string;
@@ -16,14 +16,14 @@ export class ResourceProperty {
   valueType: string;
 }
 
-export class ResourceAttribute {
+export interface ResourceAttribute {
   Interface: string;
   Pin_Num: string;
   Type: string;
   Visualization?: string
 }
 
-export class Resource {
+export interface Resource {
   description: string;
   name: string;
   isHidden: boolean;
@@ -32,19 +32,19 @@ export class Resource {
   attributes: ResourceAttribute;
 }
 
-export class CommandResponse {
+export interface CommandResponse {
   code: string;
   description: string;
   expectedValues: string[];
 }
 
-export class ResourceOperation {
+export interface ResourceOperation {
   deviceResource: string;
   defaultValue: string;
   mappings: string[][];
 }
 
-export class DeviceCommand {
+export interface DeviceCommand {
   id: string;
   name: string;
   isHidden: boolean;
@@ -52,7 +52,7 @@ export class DeviceCommand {
   resourceOperations: ResourceOperation[];
 }
 
-export class Profile {
+export interface Profile {
   created: number;
   modified: number;
   name: string;
@@ -65,14 +65,14 @@ export class Profile {
   deviceCommands: DeviceCommand[];
 }
 
-export class Service {
+export interface Service {
   created: string;
   description: string;
   name: string;
 }
 
 
-export class Device {
+export interface Device {
   created: string;
   modified: string;
   origin: string;
@@ -87,7 +87,7 @@ export class Device {
   service: Service;
 }
 
-export class Subscription {
+export interface Subscription {
   uid: number;
   origin: number;
   created: number;
@@ -114,7 +114,7 @@ export class Subscription {
   valueDescriptorFilter: string;
 }
 
-export class Publisher {
+export interface Publisher {
   uid: number;
   created: number;
   modified: number;
@@ -125,7 +125,7 @@ export class Publisher {
   topic: string;
 }
 
-export class Protocol{
+export interface Protocol{
   uid: number;
   uuid: string;
   created: number;
@@ -154,7 +154,7 @@ export class Protocol{
   scope: string;
 }
 
-export class DataStore {
+export interface DataStore {
   uid: number;
   uuid: string;
   created: number;
@@ -181,7 +181,7 @@ export class DataStore {
   scope: string;
 }
 
-export class Pipeline {
+export interface Pipeline {
   uid: number;
   created: number;
   modified: number;
@@ -195,16 +195,16 @@ export class Pipeline {
   logLevel: string;
 }
 
-export class NVPair {
+export interface NVPair {
   name: string;
   value: string;
 }
 
-export class ObjectProperties {
+export interface ObjectProperties {
   properties: NVPair[];
 }
 
-export class Addressable {
+export interface Addressable {
   created: number;
   modified: number;
   origin: number;
@@ -221,7 +221,7 @@ export class Addressable {
   password: string;
 }
 
-export class Gateway {
+export interface Gateway {
   uid: number;
   description: string;
   createdts: number;
@@ -247,20 +247,20 @@ export class Gateway {
 }
 
 
-export class GetCommandResponse {
+export interface GetCommandResponse {
   device: string;
   origin: number;
   readings: Reading[];
 }
 
-export class Reading {
+export interface Reading {
   origin: number;
   device: string;
   name: string;
   value: string;
 }
 
-export class Rule {
+export interface Rule {
   uid: number;
   created: number;
   modified: number;
@@ -286,7 +286,7 @@ export class Rule {
   actionValue: string;
 }
 
-export class Model {
+export interface Model {
   uid: number;
   created: number;
   modified: number;
@@ -299,7 +299,7 @@ export class Model {
   inputTemplate: string;
 }
 
-export class ModelConfig {
+export interface ModelConfig {
   uid: number;
   created: number;
   modified: number;
@@ -311,21 +311,21 @@ export class ModelConfig {
   model: string;
 }
 
-export class Filter {
+export interface Filter {
   device: string;
   resource: string;
 }
 
-export class FiltersConfig {
+export interface FiltersConfig {
   filters: Filter[];
 }
 
-export class GatewayFiltersConfig {
+export interface GatewayFiltersConfig {
   uid: number;
   deviceNames: string;
 }
 
-export class Notification {
+export interface Notification {
   uid: number;
   uuid: string;
   created: number;
@@ -339,58 +339,18 @@ export class Notification {
 }
 
 // TSReading - Time series reading.
-export class TSReading {
+export interface TSReading {
   value: string;
   created: number;
 }
 
-export class TSCombinedReading {
+export interface TSCombinedReading {
   value: string;
   inferredValue: string;
   created: number;
 }
 
-export class ChartTSData {
-  x: string;
-  y: number;
-
-  constructor(x: string, y: number) {
-      this.x = x;
-      this.y = y;
-  }
-
-}
-
-export class DataStoreMetadata {
+export interface DataStoreMetadata {
   gateway: Gateway;
   devices: Device[];
-}
-
-export class ScatterChartDataset {
-  label: string;
-  type: string;
-  pointRadius: number;
-  fill: boolean;
-  lineTension: number;
-  borderWidth: number;
-  data: {}[];
-
-  constructor(label: string, type: string, pointRadius: number, fill: boolean, lineTension: number, borderWidth: number, data: []) {
-      this.label = label;
-      this.type = type;
-      this.pointRadius = pointRadius;
-      this.fill = fill;
-      this.lineTension = lineTension;
-      this.borderWidth = borderWidth;
-      this.data = data;
-  }
-
-}
-
-export class RestBroadcast {
-  logLevel: string;
-  restTimeout: number;
-  restURLs: FormArray;
-  restMethods: FormArray;
-  restBodies: FormArray;
 }
