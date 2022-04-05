@@ -33,6 +33,9 @@ export class CommonIotGatewayImageComponent implements OnInit, OnDestroy, AfterV
   tableDataSource = new MatTableDataSource<TSCombinedReading>();
   combinedReadingSelection = new SelectionModel<TSCombinedReading>(false, []);
 
+  commandForm = new FormGroup({
+      command: new FormControl('')
+  });
 
   @ViewChild(MatSort) sort: MatSort;
 
@@ -189,5 +192,9 @@ export class CommonIotGatewayImageComponent implements OnInit, OnDestroy, AfterV
           this.inferredImageData = '';
       }
 
+  }
+
+  sendCommand() {
+      // to access the command value, use: this.commandForm.get('command').value
   }
 }

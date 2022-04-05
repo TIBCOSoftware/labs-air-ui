@@ -1,4 +1,15 @@
-<app-common-iot-gateway-descriptions [device]="device" [instrument]="instrument"></app-common-iot-gateway-descriptions>
+<div class="split-window">
+  <app-common-iot-gateway-descriptions [device]="device" [instrument]="instrument"></app-common-iot-gateway-descriptions>
+  <div>
+    <form [formGroup]="commandForm">
+      <mat-form-field appearance="fill">
+        <mat-label>Command</mat-label>
+        <textarea matInput placeholder="Input Command" formControlName="command"></textarea>
+      </mat-form-field>
+      <button mat-raised-button color="primary" (click)="sendCommand()">Send Command</button>
+    </form>
+  </div> 
+</div>
 <div>
   <div>
     <mat-slide-toggle color="primary" [checked]="streaming" (change)="toggleChart()">
