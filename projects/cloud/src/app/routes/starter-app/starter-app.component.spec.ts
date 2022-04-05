@@ -6,7 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 import { AppConfigService } from 'common';
 import { GraphService } from 'common';
-import { Gateway } from '../../shared/models/iot.model';
+import { Gateway } from 'common';
 
 import { StarterAppComponent } from './starter-app.component';
 
