@@ -6,7 +6,7 @@ import { CommonIotGatewayDetailsComponent } from 'common';
 import { CommonIotPipelineComponent } from 'common';
 import { IotGatewayDashboardComponent } from '../../components/iot-gateway-dashboard/iot-gateway-dashboard.component';
 import { ActivatedRouteSnapshot, NavigationEnd, Router, ActivatedRoute} from '@angular/router';
-import { Gateway } from '../../shared/models/iot.model';
+import { Gateway } from 'common';
 import { Params } from '@angular/router';
 import { Observable } from 'rxjs';
 import { CommonIotInfraDeployerComponent } from 'common';
