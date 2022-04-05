@@ -1,6 +1,6 @@
 <div class="split-window">
   <app-common-iot-gateway-descriptions [device]="device" [instrument]="instrument"></app-common-iot-gateway-descriptions>
-  <div>
+  <div *ngIf="!instrument?.isHidden">
     <form [formGroup]="commandForm">
       <mat-form-field appearance="fill">
         <mat-label>Command</mat-label>
