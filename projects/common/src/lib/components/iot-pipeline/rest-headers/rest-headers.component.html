@@ -1,0 +1,15 @@
+<div [formGroup]="restForm">
+    <div>
+        <button (click)="addHeader()">Add Key Pair</button>
+        <button (click)="deleteHeader()">Remove Key Pair</button>
+    </div>
+    <div formArray="headers">
+        <mat-label>Headers</mat-label>
+        <div *ngFor="let header of headerFormGroup; let i = index">
+            <div [formGroup]="header">
+                <input formControlName="key">
+                <input formControlName="value">
+            </div>
+        </div>
+    </div>
+</div>

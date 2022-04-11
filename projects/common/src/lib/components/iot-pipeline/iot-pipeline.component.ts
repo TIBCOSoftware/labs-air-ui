@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angula
 
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -625,6 +625,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           description: '',
           url: '',
           logLevel: 'INFO',
+          headers: new FormArray([])
       }, { emitEvent: false });
 
       this.protocolForm.patchValue({
@@ -793,7 +794,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
       this.restServiceForm = this.formBuilder.group({
           description: ['', Validators.required],
           url: ['', Validators.required],
-          logLevel: ['INFO', Validators.required]
+          logLevel: ['INFO', Validators.required],
+          headers: this.formBuilder.array([])
       });
 
       this.ruleForm = this.formBuilder.group({
@@ -1178,7 +1180,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           'description': this.restServiceForm.get('description').value,
           'url': this.restServiceForm.get('url').value,
           'filters': this.restComponent.getFilters(),
-          'logLevel': this.restServiceForm.get('logLevel').value
+          'logLevel': this.restServiceForm.get('logLevel').value,
+          'headers': this.restServiceForm.get('headers').value
       };
 
       console.log('REST Service context saved: ', restServiceObj);
@@ -1535,7 +1538,9 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
               url: context.url,
               logLevel: context.logLevel,
           });
-
+          // need to rebuild the formGroups from the context
+          const keyValueFormGroupArray = context.headers.map(x => this.formBuilder.group(x))
+          this.restServiceForm.setControl('headers', this.formBuilder.array(keyValueFormGroupArray));
       }
   }
 
@@ -2690,7 +2695,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           { 'Name': 'REST.Producer', 'Value': contextObj.modelName},
           { 'Name': 'REST.InferenceData', 'Value': inferenceData },
           { 'Name': 'REST.Conditions', 'Value': JSON.stringify(contextObj.filters) },
-          { 'Name': 'REST.URLMapping', 'Value': JSON.stringify(urlMapping) }
+          { 'Name': 'REST.URLMapping', 'Value': JSON.stringify(urlMapping) },
+          { 'Name': 'REST.HTTPHeaders', 'Value': JSON.stringify(contextObj.headers)}
       ];
 
       return inferenceObj;
@@ -2952,7 +2958,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           { 'Name': 'REST.Timeout', 'Value': '10000' },
           { 'Name': 'REST.InferenceData', 'Value': JSON.stringify(inferenceData) },
           { 'Name': 'REST.Conditions', 'Value': JSON.stringify(contextObj.filters) },
-          { 'Name': 'REST.URLMapping', 'Value': JSON.stringify(urlMapping) }
+          { 'Name': 'REST.URLMapping', 'Value': JSON.stringify(urlMapping) },
+          { 'Name': 'REST.HTTPHeaders', 'Value': JSON.stringify(contextObj.headers)}
       ];
 
       return propertiesObj;

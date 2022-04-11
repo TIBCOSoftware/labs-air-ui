@@ -52,6 +52,7 @@ import { DgraphService } from './services/graph/dgraph.service';
 import { DatastoreService } from './services/datastore/datastore.service';
 import { GraphService } from './services/graph/graph.service'
 import { DatePipe } from '@angular/common';
+import { RestHeadersComponent } from './components/iot-pipeline/rest-headers/rest-headers.component';
 
 const appInitializerFn = (appConfig: AppConfigService) => {
   return () => {
@@ -95,7 +96,8 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     CommonIotNotificationsComponent,
     CommonIotStoreSimulatorComponent,
     CommonIotTextileSimulatorComponent,
-    PipelineRestBroadcastComponent
+    PipelineRestBroadcastComponent,
+    RestHeadersComponent
   ],
   imports: [
     MaterialModule,
