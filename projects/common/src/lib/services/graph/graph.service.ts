@@ -1,91 +1,109 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Gateway, Subscription, Publisher, Protocol, DataStore, Pipeline, Rule, ModelConfig, GatewayFiltersConfig, Notification, TSReading, Model } from '../../models/iot.model';
+import { Gateway, Protocol, DataStore, Pipeline, ModelConfig, GatewayFiltersConfig, Notification, TSReading, Model } from '@TIBCOSoftware/labs-air-graph-service';
 
 @Injectable()
 export abstract class GraphService {
 
-  abstract getGateway(gatewayName:string|null): Observable<Gateway[]>;
-  
+  abstract getGateway(gatewayName: string): Observable<Gateway[]>;
+
   abstract getGateways(): Observable<Gateway[]>;
 
   abstract updateGateway(gateway: Gateway): Observable<string>;
 
-  abstract addGateway(gateway: Gateway): Observable<string>;
+  abstract addGateway(gateway: Gateway): Observable<Gateway>;
 
   abstract deleteGateway(gatewayUid: number): Observable<string>;
 
-  abstract getGatewayAndProtocols(gatewayName: any): Observable<Gateway[]>;
+  abstract getGatewayAndProtocols(gatewayName: string): Observable<Gateway[]>;
 
-  abstract getProtocols(gatewayName: any): Observable<Protocol[]>;
+  abstract getProtocols(gatewayName: string): Observable<Protocol[]>;
 
-  abstract addProtocol(gatewayUid: number, protocol: Protocol): Observable<string>;
+  abstract addProtocol(gatewayUid: number, protocol: Protocol): Observable<Protocol>;
 
-  abstract updateProtocol(protocol: Protocol): Observable<string>;
+  abstract updateProtocol(protocol: Protocol): Observable<Protocol>;
 
   abstract deleteProtocol(gatewayUid: number, protocolUid: number): Observable<string>;
 
-  abstract getDataStores(gatewayName: any): Observable<DataStore[]>;
+  abstract getDataStores(gatewayName: string): Observable<DataStore[]>;
 
-  abstract addDataStore(gatewayUid: number, dataStore: DataStore): Observable<string>;
+  abstract addDataStore(gatewayUid: number, dataStore: DataStore): Observable<DataStore>;
 
-  abstract updateDataStore(dataStore: DataStore): Observable<string>;
+  abstract updateDataStore(dataStore: DataStore): Observable<DataStore>;
 
   abstract deleteDataStore(gatewayUid: number, dataStoreUid: number): Observable<string>;
 
-  abstract getGatewayAndModels(gatewayName: any): Observable<Gateway[]>;
+  abstract getGatewayAndModels(gatewayName: string): Observable<Gateway[]>;
 
-  abstract getModels(gatewayName: any): Observable<Model[]>;
+  abstract getModels(gatewayName: string): Observable<Model[]>;
 
-  abstract addModel(gatewayUid: number, model: Model): Observable<string>;
+  abstract addModel(gatewayUid: number, model: Model): Observable<Model>;
 
-  abstract updateModel(model: Model): Observable<string>;
+  abstract updateModel(model: Model): Observable<Model>;
 
   abstract deleteModel(gatewayUid: number, modelUid: number): Observable<string>;
 
-  abstract getGatewayAndPipelines(gatewayName: any): Observable<Gateway[]>;
+  abstract getGatewayAndPipelines(gatewayName: string): Observable<Gateway[]>;
 
-  abstract getPipelines(gatewayName: any): Observable<Pipeline[]>;
+  abstract getPipelines(gatewayName: string): Observable<Pipeline[]>;
 
-  abstract addPipeline(gatewayUid: number, pipeline: Pipeline, transportObj: any,
-    dataStoreObj: any, filterObj: any, streamingObj: any): Observable<string>;
-  
-  abstract updatePipeline(pipeline: Pipeline): Observable<string>;
+  abstract addPipeline(
+    gatewayUid: number,
+    pipeline: Pipeline,
+    transportObj?: any,
+    dataStoreObj?: any,
+    filterObj?: any,
+    streamingObj?: any
+  ): Observable<Pipeline>;
+
+  abstract updatePipeline(pipeline: Pipeline): Observable<Pipeline>;
 
   abstract deletePipeline(gatewayUid: number, pipeline: Pipeline): Observable<string>;
 
-  abstract getPipelineIdsFromProtocolUid(protocolUid: any): Observable<Pipeline[]>;
+  abstract getPipelineIdsFromProtocolUid(protocolUid: number): Observable<Pipeline[]>;
 
-  abstract getPipelineIdsFromDataStoreUid(dataStoreUid: any): Observable<Pipeline[]>;
+  abstract getPipelineIdsFromDataStoreUid(dataStoreUid: number): Observable<Pipeline[]>;
 
-  abstract getModelConfigs(gatewayName: any): Observable<ModelConfig[]>;
+  abstract getModelConfigs(gatewayName: string): Observable<ModelConfig[]>;
 
-  abstract addModelConfig(gatewayUid: number, modelConfig: ModelConfig): Observable<string>;
+  abstract addModelConfig(gatewayUid: number, modelConfig: ModelConfig): Observable<ModelConfig>;
 
-  abstract updateModelConfig(modelConfig: ModelConfig): Observable<string>;
+  abstract updateModelConfig(modelConfig: ModelConfig): Observable<ModelConfig>;
 
   abstract deleteModelConfig(gatewayUid: number, modelConfigUid: number): Observable<string>;
 
-  abstract getFiltersConfig(gatewayName: any): Observable<GatewayFiltersConfig[]>;
+  abstract getFiltersConfig(gatewayName: string): Observable<GatewayFiltersConfig[]>;
 
-  abstract addFiltersConfig(gatewayUid: number, filtersConfig: GatewayFiltersConfig): Observable<string>;
+  abstract addFiltersConfig(
+    gatewayUid: number,
+    filtersConfig: GatewayFiltersConfig
+  ): Observable<GatewayFiltersConfig>;
 
-  abstract updateFiltersConfig(filtersConfig: GatewayFiltersConfig): Observable<string>;
-  
-  abstract getReadings(deviceName: any, instrumentName: any, numReadings: any): Observable<TSReading[]>;
+  abstract updateFiltersConfig(filtersConfig: GatewayFiltersConfig): Observable<GatewayFiltersConfig>;
 
-  abstract getReadingsAt(deviceName: any, instrumentName: any, ts: any): Observable<TSReading[]>;
+  abstract getReadings(deviceName: string, instrumentName: string, numReadings: number): Observable<TSReading[]>;
 
-  abstract getReadingsStartingAt(deviceName: any, instrumentName: any, fromts: any): Observable<TSReading[]>;
+  abstract getReadingsAt(deviceName: string, instrumentName: string, ts: number): Observable<TSReading[]>;
 
-  abstract getReadingsBetween(deviceName: any, instrumentName: any, fromts: any, tots: any): Observable<TSReading[]>;
+  abstract getReadingsStartingAt(
+    deviceName: string,
+    instrumentName: string,
+    fromts: number
+  ): Observable<TSReading[]>;
 
-  abstract getLastReadingsForDevice(deviceName: any): Observable<TSReading[]>;
+  abstract getReadingsBetween(
+    deviceName: string,
+    instrumentName: string,
+    fromts: number,
+    tots: number
+  ): Observable<TSReading[]>;
+
+  abstract getLastReadingsForDevice(deviceName: string): Observable<TSReading[]>;
 
   abstract getNotifications(): Observable<Notification[]>;
 
-  abstract getRoute(deviceName: any): any;
+  abstract getRoute(deviceName: string): Observable<number[]>;
 
-  abstract getRouteCenter(deviceName: any): any;
+  abstract getRouteCenter(deviceName: string): Observable<number[]>;
 
 }

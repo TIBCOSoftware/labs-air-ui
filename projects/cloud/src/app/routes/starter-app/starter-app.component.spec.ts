@@ -6,7 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 import { AppConfigService } from 'common';
 import { GraphService } from 'common';
-import { Gateway } from 'common';
+import { Gateway } from '@TIBCOSoftware/labs-air-graph-service';
 
 import { StarterAppComponent } from './starter-app.component';
 
@@ -18,7 +18,7 @@ describe('StarterAppComponent', () => {
     const mockAppConfigService: Partial<AppConfigService> = jasmine.createSpyObj(['getFromConfigOrEnv']);
     const mockEdgeService = jasmine.createSpyObj(['getDevices']);
 
-    mockGraphService.getGatewayAndPipelines.and.returnValue(of([new Gateway()] as Gateway[]));
+    mockGraphService.getGatewayAndPipelines.and.returnValue(of([{} as Gateway] as Gateway[]));
     mockEdgeService.getDevices.and.returnValue(of([]));
 
     beforeEach(waitForAsync(() => {
@@ -28,7 +28,7 @@ describe('StarterAppComponent', () => {
             providers: [
                 { provide: AppConfigService, useValue: mockAppConfigService },
                 { provide: GraphService, useValue: mockGraphService },
-                { provide: ActivatedRoute, 
+                { provide: ActivatedRoute,
                     useValue: {
                         snapshot: {
                             data: {
@@ -36,7 +36,7 @@ describe('StarterAppComponent', () => {
                                     browserTitle: 'test',
                                 }
                             }
-                        }  
+                        }
                     }
                 }
             ],

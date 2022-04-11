@@ -37,6 +37,7 @@
     "@angular/router": "~12.2.12",
     "@tibco-tcstk/tc-liveapps-lib": "^3.2.0",
     "@tibco/spotfire-wrapper": "^0.16.0",
+    "@TIBCOSoftware/labs-air-graph-service": "file:./TIBCOSoftware-labs-air-graph-service-0.0.25.tgz",
     "@types/lodash": "~4.14.171",
     "chart.js": "3.6.0",
     "chartjs-adapter-luxon": "^1.1.0",

@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { TSReading } from '@TIBCOSoftware/labs-air-graph-service';
 import { interval, Subscription } from 'rxjs';
-import { Device, Resource, TSReading } from '../../../models/iot.model';
+import { Device, Resource } from '../../../models/iot.model';
 import { GraphService } from '../../../services/graph/graph.service';
 
 @Component({

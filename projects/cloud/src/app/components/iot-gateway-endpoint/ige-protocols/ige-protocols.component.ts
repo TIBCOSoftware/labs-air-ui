@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, AfterViewInit, ViewChild } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
-import { Protocol, Gateway } from 'common';
+import { Protocol } from '@TIBCOSoftware/labs-air-graph-service';
 import { GraphService } from 'common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -37,7 +37,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
   protocolsDataSource = new MatTableDataSource<Protocol>();
   protocolDisplayedColumns: string[] = ['id', 'name', 'protocol', 'scope', 'created', 'modified'];
   protocolSelection = new SelectionModel<Protocol>(false, []);
-  
+
 
 
   protocols: SelectItem[] = [
@@ -67,7 +67,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
       { value: 'TLS-Cert', viewValue: 'TLS-Cert' },
       { value: 'TLS-ClientAuth', viewValue: 'TLS-ClientAuth' }
   ];
-  
+
 
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
@@ -343,7 +343,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
    */
   addProtocol() {
       const ts = Date.now();
-      const protocol = new Protocol();
+      const protocol = {} as Protocol;
 
       let scope = this.protocolForm.get('scope').value;
       if (scope != 'GLOBAL') {
@@ -443,7 +443,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
       console.log('Inside updateProtocol function');
 
       const ts = Date.now();
-      const protocol = new Protocol();
+      const protocol = {} as Protocol;
       protocol.uid = this.protocolForm.get('uid').value;
 
 

@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { GraphService } from '../../../services/graph/graph.service';
-import { Notification } from '../../..//models/iot.model';
+import { Notification } from '@TIBCOSoftware/labs-air-graph-service'
 import {MatSort} from '@angular/material/sort';
 
 import { RtsfSimulatorService } from '../../../services/simulator/rtsf-simulator.service';

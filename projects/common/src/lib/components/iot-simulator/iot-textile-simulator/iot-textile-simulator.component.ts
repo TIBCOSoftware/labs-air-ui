@@ -3,7 +3,7 @@ import { ChartType, ChartConfiguration, ChartData } from 'chart.js';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TextileSimulatorService } from '../../../services/simulator/textile-simulator.service';
 import { GraphService } from '../../../services/graph/graph.service';
-import { Notification } from '../../../models/iot.model';
+import { Notification } from '@TIBCOSoftware/labs-air-graph-service';
 import { MatTableDataSource } from '@angular/material/table';
 
 export class DefectInfo {

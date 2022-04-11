@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { GraphService } from '../../../services/graph/graph.service';
-import { Protocol } from '../../../models/iot.model';
+import { Protocol } from '@TIBCOSoftware/labs-air-graph-service';
 
 export interface SelectItem {
   value: string;

@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { Subscription } from 'rxjs';
-import { Device, Resource, TSReading } from '../../../models/iot.model';
+import { Device, Resource } from '../../../models/iot.model';
 import { GraphService } from '../../../services/graph/graph.service';
 import { ChartConfiguration, ChartOptions, ChartType, Tooltip, Chart } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -10,6 +10,7 @@ import { BaseChartDirective } from 'ng2-charts';
 
 import 'chartjs-adapter-luxon';
 import StreamingPlugin from 'chartjs-plugin-streaming';
+import { TSReading } from '@TIBCOSoftware/labs-air-graph-service';
 
 Chart.register(StreamingPlugin);
 

@@ -1,9 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { TSReading } from '@TIBCOSoftware/labs-air-graph-service';
 import { ChartConfiguration, ChartType, ChartData, Tooltip } from 'chart.js';
 import { Subscription } from 'rxjs';
-import { Device, Resource, TSReading } from '../../../models/iot.model';
+import { Device, Resource } from '../../../models/iot.model';
 import { GraphService } from '../../../services/graph/graph.service';
 
 @Component({

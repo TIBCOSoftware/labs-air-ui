@@ -4,7 +4,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { BehaviorSubject, of } from 'rxjs';
 import { BreadcrumbsService } from 'common';
 import { GraphService } from 'common';
-import { Gateway } from 'common';
+import { Gateway } from '@TIBCOSoftware/labs-air-graph-service';
 
 import { NavBarComponent } from './nav-bar.component';
 
@@ -17,7 +17,7 @@ describe('NavBarComponent', () => {
 
     mockBreadCrumbService.path = new BehaviorSubject<string[]>([]);
     mockGraphService.getGateways.and.returnValue(of([]));
-    mockGraphService.getGatewayAndPipelines.and.returnValue(of([new Gateway()] as Gateway[]));
+    mockGraphService.getGatewayAndPipelines.and.returnValue(of([{} as Gateway] as Gateway[]));
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({

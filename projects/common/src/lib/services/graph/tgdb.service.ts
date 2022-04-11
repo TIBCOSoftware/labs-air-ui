@@ -1,11 +1,20 @@
 import { Injectable } from '@angular/core';
 
-import { Observable, of, pipe } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 
-import { Gateway, Subscription, Publisher, Pipeline, Rule, ModelConfig, GatewayFiltersConfig, Notification, Protocol, DataStore, Model } from '../../models/iot.model';
-import { TSReading } from '../../models/iot.model';
+import {
+  DataStore,
+  Gateway,
+  GatewayFiltersConfig,
+  Model,
+  ModelConfig,
+  Notification,
+  Pipeline,
+  Protocol,
+  TSReading
+} from '@TIBCOSoftware/labs-air-graph-service';
 import { GraphService } from './graph.service';
 
 const httpOptions = {
@@ -74,7 +83,7 @@ export class TgdbService implements GraphService {
   }
 
   /**
-   * 
+   *
    */
   getGateway(gatewayName: string): Observable<Gateway[]> {
       console.log('GetGateway service called for: ', gatewayName);
@@ -94,7 +103,7 @@ export class TgdbService implements GraphService {
   }
 
   /**
-   * 
+   *
    */
   getGateways(): Observable<Gateway[]> {
       console.log('GetGateways tgdb service called');
@@ -109,7 +118,7 @@ export class TgdbService implements GraphService {
 
       return this.http.post<any>(url, query, httpOptions)
           .pipe(
-        
+
               tap(_ => console.log('Got response from tgdb')),
               map(response => response.queryResult.content.nodes as Gateway[]),
               tap(_ => console.info('fetched gateways')),
@@ -118,8 +127,8 @@ export class TgdbService implements GraphService {
   }
 
   /**
-   * 
-   * @param gateway 
+   *
+   * @param gateway
    */
   updateGateway(gateway: Gateway): Observable<string> {
       const url = `${this.tgdbUrl}/mutate?commitNow=true`;
@@ -143,10 +152,10 @@ export class TgdbService implements GraphService {
   }
 
   /**
-   * 
-   * @param gateway 
+   *
+   * @param gateway
    */
-  addGateway(gateway: Gateway): Observable<string> {
+  addGateway(gateway: Gateway): Observable<Gateway> {
       const url = `${this.tgdbUrl}/mutate?commitNow=true`;
       const query = `{
       set {
@@ -168,13 +177,13 @@ export class TgdbService implements GraphService {
       return this.http.post<any>(url, query, httpMutateOptions)
           .pipe(
               tap(_ => console.info('add gateway')),
-              catchError(this.handleError<string>('addGateway'))
+              catchError(this.handleError<Gateway>('addGateway'))
           );
   }
 
   /**
-   * 
-   * @param gatewayUid 
+   *
+   * @param gatewayUid
    */
   deleteGateway(gatewayUid: number): Observable<string> {
       const url = `${this.tgdbUrl}/mutate?commitNow=true`;
@@ -193,8 +202,8 @@ export class TgdbService implements GraphService {
   }
 
   /**
-   * 
-   * @param gatewayName 
+   *
+   * @param gatewayName
    */
   getDataStores(gatewayName: any): Observable<DataStore[]> {
       const url = `${this.tgdbUrl}/query`;
@@ -223,7 +232,7 @@ export class TgdbService implements GraphService {
         clientId
         clientSecret
         authorizationCode
-        redirectURI 
+        redirectURI
         loginTimeout
         url
       }
@@ -239,11 +248,11 @@ export class TgdbService implements GraphService {
   }
 
   /**
-   * 
-   * @param gatewayUid 
-   * @param dataStore 
+   *
+   * @param gatewayUid
+   * @param dataStore
    */
-  addDataStore(gatewayUid: number, dataStore: DataStore): Observable<string> {
+  addDataStore(gatewayUid: number, dataStore: DataStore): Observable<DataStore> {
       const url = `${this.tgdbUrl}/mutate?commitNow=true`;
       const query = `{
       set {
@@ -279,15 +288,15 @@ export class TgdbService implements GraphService {
       return this.http.post<any>(url, query, httpMutateOptions)
           .pipe(
               tap(_ => console.info('add dataStores')),
-              catchError(this.handleError<string>('addDataStores'))
+              catchError(this.handleError<DataStore>('addDataStores'))
           );
 
   }
   /**
-   * 
-   * @param dataStore 
+   *
+   * @param dataStore
    */
-  updateDataStore(dataStore: DataStore): Observable<string> {
+  updateDataStore(dataStore: DataStore): Observable<DataStore> {
       const url = `${this.tgdbUrl}/mutate?commitNow=true`;
       const query = `{
       set {
@@ -319,15 +328,15 @@ export class TgdbService implements GraphService {
       return this.http.post<any>(url, query, httpMutateOptions)
           .pipe(
               tap(_ => console.info('updated dataStores')),
-              catchError(this.handleError<string>('updateDataStores'))
+            catchError(this.handleError<DataStore>('updateDataStores'))
           );
 
   }
 
   /**
-   * 
-   * @param gatewayUid 
-   * @param dataStoreUid 
+   *
+   * @param gatewayUid
+   * @param dataStoreUid
    */
   deleteDataStore(gatewayUid: number, dataStoreUid: number): Observable<string> {
       const url = `${this.tgdbUrl}/mutate?commitNow=true`;
@@ -348,8 +357,8 @@ export class TgdbService implements GraphService {
 
 
   /**
-   * 
-   * @param gatewayName 
+   *
+   * @param gatewayName
    */
   getGatewayAndProtocols(gatewayName: any): Observable<Gateway[]> {
       const url = `${this.tgdbUrl}/query`;
@@ -371,7 +380,7 @@ export class TgdbService implements GraphService {
           retryBackoff
           fetchMinBytes
           fetchMaxWait
-          commitInterval 
+          commitInterval
           heartbeatInterval
           maximumQOS
           username
@@ -397,8 +406,8 @@ export class TgdbService implements GraphService {
   }
 
   /**
-   * 
-   * @param gatewayName 
+   *
+   * @param gatewayName
    */
   getProtocols(gatewayName: any): Observable<Protocol[]> {
       const url = `${this.tgdbUrl}/query`;
@@ -422,7 +431,7 @@ export class TgdbService implements GraphService {
         retryBackoff
         fetchMinBytes
         fetchMaxWait
-        commitInterval 
+        commitInterval
         heartbeatInterval
         maximumQOS
         username
@@ -446,11 +455,11 @@ export class TgdbService implements GraphService {
   }
 
   /**
-   * 
-   * @param gatewayUid 
-   * @param protocol 
+   *
+   * @param gatewayUid
+   * @param protocol
    */
-  addProtocol(gatewayUid: number, protocol: Protocol): Observable<string> {
+  addProtocol(gatewayUid: number, protocol: Protocol): Observable<Protocol> {
       const url = `${this.tgdbUrl}/mutate?commitNow=true`;
       const query = `{
       set {
@@ -489,15 +498,15 @@ export class TgdbService implements GraphService {
       return this.http.post<any>(url, query, httpMutateOptions)
           .pipe(
               tap(_ => console.info('add protocols')),
-              catchError(this.handleError<string>('addProtocols'))
+            catchError(this.handleError<Protocol>('addProtocols'))
           );
 
   }
   /**
-   * 
-   * @param protocol 
+   *
+   * @param protocol
    */
-  updateProtocol(protocol: Protocol): Observable<string> {
+  updateProtocol(protocol: Protocol): Observable<Protocol> {
       const url = `${this.tgdbUrl}/mutate?commitNow=true`;
       const query = `{
       set {
@@ -531,15 +540,15 @@ export class TgdbService implements GraphService {
       return this.http.post<any>(url, query, httpMutateOptions)
           .pipe(
               tap(_ => console.info('updated protocols')),
-              catchError(this.handleError<string>('updateProtocols'))
+            catchError(this.handleError<Protocol>('updateProtocols'))
           );
 
   }
 
   /**
-   * 
-   * @param gatewayUid 
-   * @param protocolUid 
+   *
+   * @param gatewayUid
+   * @param protocolUid
    */
   deleteProtocol(gatewayUid: number, protocolUid: number): Observable<string> {
       const url = `${this.tgdbUrl}/mutate?commitNow=true`;
@@ -560,8 +569,8 @@ export class TgdbService implements GraphService {
 
 
   /**
-   * 
-   * @param gatewayName 
+   *
+   * @param gatewayName
    */
   getGatewayAndModels(gatewayName: any): Observable<Gateway[]> {
       const url = `${this.tgdbUrl}/query`;
@@ -591,8 +600,8 @@ export class TgdbService implements GraphService {
   }
 
   /**
-   * 
-   * @param gatewayName 
+   *
+   * @param gatewayName
    */
   getModels(gatewayName: any): Observable<Model[]> {
       const url = `${this.tgdbUrl}/query`;
@@ -623,11 +632,11 @@ export class TgdbService implements GraphService {
   }
 
   /**
-   * 
-   * @param gatewayUid 
-   * @param model 
+   *
+   * @param gatewayUid
+   * @param model
    */
-  addModel(gatewayUid: number, model: Model): Observable<string> {
+  addModel(gatewayUid: number, model: Model): Observable<Model> {
       const url = `${this.tgdbUrl}/mutate?commitNow=true`;
       const query = `{
       set {
@@ -649,15 +658,15 @@ export class TgdbService implements GraphService {
       return this.http.post<any>(url, query, httpMutateOptions)
           .pipe(
               tap(_ => console.info('add models')),
-              catchError(this.handleError<string>('addModels'))
+            catchError(this.handleError<Model>('addModels'))
           );
 
   }
   /**
-   * 
-   * @param model 
+   *
+   * @param model
    */
-  updateModel(model: Model): Observable<string> {
+  updateModel(model: Model): Observable<Model> {
       const url = `${this.tgdbUrl}/mutate?commitNow=true`;
       const query = `{
       set {
@@ -674,15 +683,15 @@ export class TgdbService implements GraphService {
       return this.http.post<any>(url, query, httpMutateOptions)
           .pipe(
               tap(_ => console.info('updated models')),
-              catchError(this.handleError<string>('updateModels'))
+              catchError(this.handleError<Model>('updateModels'))
           );
 
   }
 
   /**
-   * 
-   * @param gatewayUid 
-   * @param modelUid 
+   *
+   * @param gatewayUid
+   * @param modelUid
    */
   deleteModel(gatewayUid: number, modelUid: number): Observable<string> {
       const url = `${this.tgdbUrl}/mutate?commitNow=true`;
@@ -702,8 +711,8 @@ export class TgdbService implements GraphService {
   }
 
   /**
-   * 
-   * @param gatewayName 
+   *
+   * @param gatewayName
    */
   getGatewayAndPipelines(gatewayName: any): Observable<Gateway[]> {
       const url = `${this.tgdbUrl}/query`;
@@ -711,7 +720,7 @@ export class TgdbService implements GraphService {
       const pipeline_protocol = 'protocol: pipeline_protocol {uid uuid brokerURL topic maximumQOS username password encryptionMode caCertificate clientCertificate clientKey authMode serverCerticate consumerGroupId connectionTimeout sessionTimeout retryBackoff commitInterval initialOffset fetchMinBytes fetchMaxWait heartbeatInterval}';
       const pipeline_datastore = 'dataStore: pipeline_datastore {uid uuid host port databaseName user password accountName warehouse database schema authType username clientId clientSecret authorizationCode redirectURI loginTimeout url}';
       const pipeline_filter = 'filter: pipeline_filter {uid deviceNames}';
-    
+
       const query = `{
       resp(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
         uid uuid accessToken
@@ -744,8 +753,8 @@ export class TgdbService implements GraphService {
   }
 
   /**
-   * 
-   * @param gatewayName 
+   *
+   * @param gatewayName
    */
   getPipelines(gatewayName: any): Observable<Pipeline[]> {
       const url = `${this.tgdbUrl}/query`;
@@ -786,15 +795,15 @@ export class TgdbService implements GraphService {
   }
 
   /**
-   * 
-   * @param gatewayUid 
-   * @param pipeline 
-   * @param transportObj 
-   * @param dataStoreObj 
-   * @param filterObj 
+   *
+   * @param gatewayUid
+   * @param pipeline
+   * @param transportObj
+   * @param dataStoreObj
+   * @param filterObj
    */
   addPipeline(gatewayUid: number, pipeline: Pipeline, transportObj: any,
-      dataStoreObj: any, filterObj: any, streamingObj: any): Observable<string> {
+      dataStoreObj: any, filterObj: any, streamingObj: any): Observable<Pipeline> {
 
       const url = `${this.tgdbUrl}/mutate?commitNow=true`;
 
@@ -900,16 +909,16 @@ export class TgdbService implements GraphService {
       return this.http.post<any>(url, query, httpMutateOptions)
           .pipe(
               tap(_ => console.info('add pipeline')),
-              catchError(this.handleError<string>('addPipelines'))
+              catchError(this.handleError<Pipeline>('addPipelines'))
           );
 
   }
 
   /**
-   * 
-   * @param pipeline 
+   *
+   * @param pipeline
    */
-  updatePipeline(pipeline: Pipeline): Observable<string> {
+  updatePipeline(pipeline: Pipeline): Observable<Pipeline> {
       const url = `${this.tgdbUrl}/mutate?commitNow=true`;
       const query = `{
       set {
@@ -922,15 +931,15 @@ export class TgdbService implements GraphService {
       return this.http.post<any>(url, query, httpMutateOptions)
           .pipe(
               tap(_ => console.info('updated pipelines')),
-              catchError(this.handleError<string>('updatePipelines'))
+            catchError(this.handleError<Pipeline>('updatePipelines'))
           );
 
   }
 
   /**
-   * 
-   * @param gatewayUid 
-   * @param pipeline 
+   *
+   * @param gatewayUid
+   * @param pipeline
    */
   deletePipeline(gatewayUid: number, pipeline: Pipeline): Observable<string> {
       const url = `${this.tgdbUrl}/mutate?commitNow=true`;
@@ -976,7 +985,7 @@ export class TgdbService implements GraphService {
           );
 
   }
-  
+
   /**
    * Get ids of all the pipelines associated with the specified data store
    * @param dataStoreUid - the uid of the data store
@@ -1005,8 +1014,8 @@ export class TgdbService implements GraphService {
   }
 
   /**
-   * 
-   * @param gatewayName 
+   *
+   * @param gatewayName
    */
   getModelConfigs(gatewayName: any): Observable<ModelConfig[]> {
       const url = `${this.tgdbUrl}/query`;
@@ -1040,11 +1049,11 @@ export class TgdbService implements GraphService {
   }
 
   /**
-   * 
-   * @param gatewayUid 
+   *
+   * @param gatewayUid
    * @param modelConfig
    */
-  addModelConfig(gatewayUid: number, modelConfig: ModelConfig): Observable<string> {
+  addModelConfig(gatewayUid: number, modelConfig: ModelConfig): Observable<ModelConfig> {
       const url = `${this.tgdbUrl}/mutate?commitNow=true`;
       const query = `{
       set {
@@ -1067,16 +1076,16 @@ export class TgdbService implements GraphService {
       return this.http.post<any>(url, query, httpMutateOptions)
           .pipe(
               tap(_ => console.info('add modelConfig')),
-              catchError(this.handleError<string>('addModelConfig'))
+            catchError(this.handleError<ModelConfig>('addModelConfig'))
           );
 
   }
 
   /**
-   * 
-   * @param modelConfig 
+   *
+   * @param modelConfig
    */
-  updateModelConfig(modelConfig: ModelConfig): Observable<string> {
+  updateModelConfig(modelConfig: ModelConfig): Observable<ModelConfig> {
       const url = `${this.tgdbUrl}/mutate?commitNow=true`;
       const query = `{
       set {
@@ -1094,15 +1103,15 @@ export class TgdbService implements GraphService {
       return this.http.post<any>(url, query, httpMutateOptions)
           .pipe(
               tap(_ => console.info('updated modelConfig')),
-              catchError(this.handleError<string>('updateModelConfig'))
+            catchError(this.handleError<ModelConfig>('updateModelConfig'))
           );
 
   }
 
   /**
-   * 
-   * @param gatewayUid 
-   * @param modelConfigUid 
+   *
+   * @param gatewayUid
+   * @param modelConfigUid
    */
   deleteModelConfig(gatewayUid: number, modelConfigUid: number): Observable<string> {
       const url = `${this.tgdbUrl}/mutate?commitNow=true`;
@@ -1122,8 +1131,8 @@ export class TgdbService implements GraphService {
   }
 
   /**
-   * 
-   * @param gatewayName 
+   *
+   * @param gatewayName
    */
   getFiltersConfig(gatewayName: any): Observable<GatewayFiltersConfig[]> {
       const url = `${this.tgdbUrl}/query`;
@@ -1150,11 +1159,11 @@ export class TgdbService implements GraphService {
   }
 
   /**
-   * 
-   * @param gatewayUid 
+   *
+   * @param gatewayUid
    * @param filtersConfig
    */
-  addFiltersConfig(gatewayUid: number, filtersConfig: GatewayFiltersConfig): Observable<string> {
+  addFiltersConfig(gatewayUid: number, filtersConfig: GatewayFiltersConfig): Observable<GatewayFiltersConfig> {
       const url = `${this.tgdbUrl}/mutate?commitNow=true`;
 
       const query = `{
@@ -1171,16 +1180,16 @@ export class TgdbService implements GraphService {
       return this.http.post<any>(url, query, httpMutateOptions)
           .pipe(
               tap(_ => console.info('add filtersConfig')),
-              catchError(this.handleError<string>('addFiltersConfig'))
+            catchError(this.handleError<GatewayFiltersConfig>('addFiltersConfig'))
           );
 
   }
 
   /**
-   * 
-   * @param filtersConfig 
+   *
+   * @param filtersConfig
    */
-  updateFiltersConfig(filtersConfig: GatewayFiltersConfig): Observable<string> {
+  updateFiltersConfig(filtersConfig: GatewayFiltersConfig): Observable<GatewayFiltersConfig> {
       const url = `${this.tgdbUrl}/mutate?commitNow=true`;
       const query = `{
       set {
@@ -1192,16 +1201,16 @@ export class TgdbService implements GraphService {
       return this.http.post<any>(url, query, httpMutateOptions)
           .pipe(
               tap(_ => console.info('updated filtersConfig')),
-              catchError(this.handleError<string>('updateFiltersConfig'))
+            catchError(this.handleError<GatewayFiltersConfig>('updateFiltersConfig'))
           );
 
   }
 
   /**
-   * 
-   * @param deviceName 
-   * @param instrumentName 
-   * @param numReadings 
+   *
+   * @param deviceName
+   * @param instrumentName
+   * @param numReadings
    */
   getReadings(deviceName: any, instrumentName: any, numReadings: any): Observable<TSReading[]> {
       const url = `${this.tgdbUrl}/search`;
@@ -1235,10 +1244,10 @@ export class TgdbService implements GraphService {
           );
   }
   /**
-   * 
-   * @param deviceName 
-   * @param instrumentName 
-   * @param ts 
+   *
+   * @param deviceName
+   * @param instrumentName
+   * @param ts
    */
   getReadingsAt(deviceName: any, instrumentName: any, ts: any): Observable<TSReading[]> {
       const url = `${this.tgdbUrl}/query`;
@@ -1267,10 +1276,10 @@ export class TgdbService implements GraphService {
   }
 
   /**
-   * 
-   * @param deviceName 
-   * @param instrumentName 
-   * @param fromts 
+   *
+   * @param deviceName
+   * @param instrumentName
+   * @param fromts
    */
   getReadingsStartingAt(deviceName: any, instrumentName: any, fromts: any): Observable<TSReading[]> {
       const url = `${this.tgdbUrl}/query`;
@@ -1299,11 +1308,11 @@ export class TgdbService implements GraphService {
   }
 
   /**
-   * 
-   * @param deviceName 
-   * @param instrumentName 
-   * @param fromts 
-   * @param tots 
+   *
+   * @param deviceName
+   * @param instrumentName
+   * @param fromts
+   * @param tots
    */
   getReadingsBetween(deviceName: any, instrumentName: any, fromts: any, tots: any): Observable<TSReading[]> {
       const url = `${this.tgdbUrl}/query`;
@@ -1332,8 +1341,8 @@ export class TgdbService implements GraphService {
   }
 
   /**
-   * 
-   * @param deviceName 
+   *
+   * @param deviceName
    */
   getLastReadingsForDevice(deviceName: any): Observable<TSReading[]> {
       const url = `${this.tgdbUrl}/query`;
@@ -1361,7 +1370,7 @@ export class TgdbService implements GraphService {
   }
 
   /**
-   * 
+   *
    */
   getNotifications(): Observable<Notification[]> {
       console.log('GetNotifications service called');
@@ -1384,8 +1393,8 @@ export class TgdbService implements GraphService {
   }
 
   /**
-   * 
-   * @param deviceName 
+   *
+   * @param deviceName
    */
   getRoute(deviceName: string): any {
 
@@ -1405,8 +1414,8 @@ export class TgdbService implements GraphService {
   }
 
   /**
-   * 
-   * @param deviceName 
+   *
+   * @param deviceName
    */
   getRouteCenter(deviceName: string): any {
       let center = null;
