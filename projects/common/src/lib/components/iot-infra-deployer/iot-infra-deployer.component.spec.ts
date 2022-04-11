@@ -8,7 +8,7 @@ import { Gateway } from '@TIBCOSoftware/labs-air-graph-service';
 
 import { CommonIotInfraDeployerComponent } from './iot-infra-deployer.component';
 
-describe('COmmonIotInfraDeployerComponent', () => {
+describe('CommonIotInfraDeployerComponent', () => {
     let component: CommonIotInfraDeployerComponent;
     let fixture: ComponentFixture<CommonIotInfraDeployerComponent>;
     const mockGraphService = jasmine.createSpyObj(['getGateways', 'getGatewayAndPipelines', 'getModels']);
