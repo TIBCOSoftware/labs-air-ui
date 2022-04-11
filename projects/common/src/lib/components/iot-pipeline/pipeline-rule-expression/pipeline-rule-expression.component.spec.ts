@@ -4,7 +4,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { of } from 'rxjs';
 import { EdgeService } from '../../../services/edge/edge.service';
 import { GraphService } from '../../../services/graph/graph.service';
-import { Gateway } from '../../../models/iot.model';
+import { Gateway } from '@TIBCOSoftware/labs-air-graph-service';
 
 import { PipelineRuleExpressionComponent } from './pipeline-rule-expression.component';
 
@@ -15,7 +15,7 @@ describe('PipelineRuleExpressionComponent', () => {
     const mockGraphService = jasmine.createSpyObj(['getGatewayAndPipelines', 'addPipeline', 'getModels']);
     const mockEdgeService: Partial<EdgeService> = jasmine.createSpyObj(['xxx']);
 
-    mockGraphService.getGatewayAndPipelines.and.returnValue(of([new Gateway()] as Gateway[]));
+    mockGraphService.getGatewayAndPipelines.and.returnValue(of([{}] as Gateway[]));
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({

@@ -4,7 +4,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
 import { AppConfigService } from '../../services/config/app-config.service';
 import { GraphService } from '../../services/graph/graph.service';
-import { Gateway } from '../../models/iot.model';
+import { Gateway } from '@TIBCOSoftware/labs-air-graph-service';
 
 import { CommonMaporamaComponent } from './maporama.component';
 
@@ -16,7 +16,7 @@ describe('CommonMaporamaComponent', () => {
     const mockGraphService = jasmine.createSpyObj(['getGateways', 'getGatewayAndPipelines', 'getModels']);
 
     mockGraphService.getGateways.and.returnValue(of([]));
-    mockGraphService.getGatewayAndPipelines.and.returnValue(of([new Gateway()] as Gateway[]));
+    mockGraphService.getGatewayAndPipelines.and.returnValue(of([{}] as Gateway[]));
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({

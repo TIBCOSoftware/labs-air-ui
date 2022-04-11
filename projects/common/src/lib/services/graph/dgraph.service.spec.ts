@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { Gateway } from '../../models/iot.model';
+import { Gateway } from '@TIBCOSoftware/labs-air-graph-service';
 import { AuthService } from '../auth/auth.service';
 import { DgraphService } from './dgraph.service';
 import { AppConfigService } from '../config/app-config.service';

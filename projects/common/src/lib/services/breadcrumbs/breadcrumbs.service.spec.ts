@@ -2,7 +2,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
-import { Gateway } from '../../models/iot.model';
+import { Gateway } from '@TIBCOSoftware/labs-air-graph-service';
 import { GraphService } from '../graph/graph.service';
 
 import { BreadcrumbsService } from './breadcrumbs.service';
@@ -12,7 +12,7 @@ describe('BreadcrumbsService', () => {
     const mockGraphService = jasmine.createSpyObj(['getGateways', 'getGatewayAndPipelines', 'getModels']);
 
     mockGraphService.getGateways.and.returnValue(of([]));
-    mockGraphService.getGatewayAndPipelines.and.returnValue(of([new Gateway()] as Gateway[]));
+    mockGraphService.getGatewayAndPipelines.and.returnValue(of([{} as Gateway] as Gateway[]));
 
     beforeEach(() => {
         TestBed.configureTestingModule({
