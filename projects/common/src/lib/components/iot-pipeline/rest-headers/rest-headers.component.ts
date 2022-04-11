@@ -8,7 +8,8 @@ import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 })
 export class RestHeadersComponent {
 
-  @Input() restForm: FormGroup
+  @Input() restForm: FormGroup;
+  displayedColumns = ['Key', 'Value'];
 
   constructor() { }
 
@@ -30,8 +31,8 @@ export class RestHeadersComponent {
     this.headers.push(formGroup);
   }
 
-  deleteHeader() {
-
+  deleteHeader(index: number) {
+    this.headers.removeAt(index);
   }
 
 }
