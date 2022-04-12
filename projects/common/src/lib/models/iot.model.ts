@@ -1,5 +1,5 @@
 import { FormArray } from "@angular/forms";
-import { Gateway } from "@TIBCOSoftware/labs-air-graph-service";
+import { Gateway } from "@TIBCOSoftware/labs-air-graph-client";
 
 export class ResourceProperty {
   assertion: string;

@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Device, Resource } from '../../../models/iot.model';
 import { Subscription } from 'rxjs';
-import { GraphService } from '../../../services/graph/graph.service';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-service';
 import { GoogleChartInterface } from 'ng2-google-charts';
-import { TSReading } from '@TIBCOSoftware/labs-air-graph-service';
+import { TSReading } from '@TIBCOSoftware/labs-air-graph-client';
 
 @Component({
     selector: 'app-common-iot-gateway-discrete-value',

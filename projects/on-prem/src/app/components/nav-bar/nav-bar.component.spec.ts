@@ -4,7 +4,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { BehaviorSubject, of } from 'rxjs';
 import { BreadcrumbsService } from 'common';
 import { GraphService } from 'common';
-import { Gateway } from '@TIBCOSoftware/labs-air-graph-service';
+import { Gateway } from '@TIBCOSoftware/labs-air-graph-client';
 
 import { NavBarComponent } from './nav-bar.component';
 

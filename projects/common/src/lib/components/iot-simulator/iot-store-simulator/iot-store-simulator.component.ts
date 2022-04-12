@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
-import { GraphService } from '../../../services/graph/graph.service';
-import { Notification } from '@TIBCOSoftware/labs-air-graph-service'
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-service';
+import { Notification } from '@TIBCOSoftware/labs-air-graph-client'
 import {MatSort} from '@angular/material/sort';
 
 import { RtsfSimulatorService } from '../../../services/simulator/rtsf-simulator.service';

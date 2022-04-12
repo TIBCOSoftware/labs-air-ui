@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular
 import { SelectionModel } from '@angular/cdk/collections';
 import { Subscription } from 'rxjs';
 import { Device, Resource, TSReading, TSCombinedReading } from 'src/app/shared/models/iot.model';
-import { GraphService } from '../../../services/graph/graph.service';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-service';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
@@ -65,7 +65,7 @@ export class IotGatewayXyzValueComponent implements OnInit, OnDestroy, AfterView
         this.resourceReadings = res as TSReading[];
 
         console.log("GetReadings Resource: ", this.resourceReadings);
-        
+
 
         if (this.resourceReadings.length > 0) {
           this.getResourceInferredReadings(this.device.name, this.instrument.name + "_Inferred", this.resourceReadings.length)
@@ -79,7 +79,7 @@ export class IotGatewayXyzValueComponent implements OnInit, OnDestroy, AfterView
         this.resourceInferredReadings = res as TSReading[];
 
         console.log("GetReadings Resource Inferred: ", this.resourceInferredReadings);
-        
+
 
         this.setResourceCombinedReadings();
 
@@ -171,23 +171,23 @@ export class IotGatewayXyzValueComponent implements OnInit, OnDestroy, AfterView
   setInferredXYZData(row) {
 
     console.log("Setting inferred xyz data", row);
-    
+
     this.inferredXYZData = row.inferredValue;
 
     console.log("Value set to inferredXYZData: ", row.inferredValue);
-    
+
 
     if (this.isBase64(row.inferredValue)) {
       console.log("value is base64");
-      
+
       this.inferredXYZData = atob(row.inferredValue);
 
       console.log("Inferred value set to: ", this.inferredXYZData);
-      
+
     }
     else {
       console.log("Value is not base64");
-      
+
     }
 
   }
@@ -213,7 +213,7 @@ export class IotGatewayXyzValueComponent implements OnInit, OnDestroy, AfterView
   public setXYZHeatmapDataSet(combinedReading) {
 
     console.log("setXYZHeatmapDataSet: ", combinedReading);
-    
+
     var xyzData = [];
 
     // var objstr = atob(this.resourceReadings[0].value)

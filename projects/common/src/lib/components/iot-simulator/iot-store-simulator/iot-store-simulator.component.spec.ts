@@ -4,7 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { of } from 'rxjs';
 import { AppConfigService } from '../../../services/config/app-config.service';
-import { GraphService } from '../../../services/graph/graph.service';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-service';
 import { RtsfSimulatorService } from '../../../services/simulator/rtsf-simulator.service';
 
 import { CommonIotStoreSimulatorComponent } from './iot-store-simulator.component';

@@ -3,8 +3,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormGroup } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
-import { GraphService } from '../../services/graph/graph.service';
-import { Gateway } from '@TIBCOSoftware/labs-air-graph-service';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-service';
+import { Gateway } from '@TIBCOSoftware/labs-air-graph-client';
 
 import { CommonIotInfraDeployerComponent } from './iot-infra-deployer.component';
 

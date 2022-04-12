@@ -2,11 +2,11 @@ import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular
 import { SelectionModel } from '@angular/cdk/collections';
 import { Subscription } from 'rxjs';
 import { Device, Resource, TSCombinedReading } from '../../../models/iot.model';
-import { GraphService } from '../../../services/graph/graph.service';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-service';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { FormGroup } from '@angular/forms';
-import { TSReading } from '@TIBCOSoftware/labs-air-graph-service';
+import { TSReading } from '@TIBCOSoftware/labs-air-graph-client';
 
 @Component({
     selector: 'app-common-iot-gateway-xyz-value',

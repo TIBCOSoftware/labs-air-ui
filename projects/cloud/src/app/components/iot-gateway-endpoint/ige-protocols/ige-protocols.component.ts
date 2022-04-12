@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, AfterViewInit, ViewChild } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
-import { Protocol } from '@TIBCOSoftware/labs-air-graph-service';
+import { Protocol } from '@TIBCOSoftware/labs-air-graph-client';
 import { GraphService } from 'common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';

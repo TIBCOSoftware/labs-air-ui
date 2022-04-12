@@ -1,5 +1,16 @@
 import { TestBed } from '@angular/core/testing';
-import { DataStoreService, FilterConfigService, Gateway, GatewayService, ModelConfigService, ModelService, NotificationService, PipelineService, ProtocolService, ReadingService, RouteService } from '@TIBCOSoftware/labs-air-graph-service';
+import {
+    DataStoreService,
+    FilterConfigService,
+    GatewayService,
+    ModelConfigService,
+    ModelService,
+    NotificationService,
+    PipelineService,
+    ProtocolService,
+    ReadingService,
+    RouteService
+} from '@TIBCOSoftware/labs-air-graph-client';
 import { DgraphService } from './dgraph.service';
 import {
     HttpClientTestingModule,

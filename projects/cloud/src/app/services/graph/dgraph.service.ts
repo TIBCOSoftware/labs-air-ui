@@ -20,7 +20,7 @@ import {
   ReadingService,
   RouteService,
   TSReading
-} from '@TIBCOSoftware/labs-air-graph-service';
+} from '@TIBCOSoftware/labs-air-graph-client';
 import { Observable } from 'rxjs';
 
 

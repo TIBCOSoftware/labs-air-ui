@@ -5,16 +5,13 @@ import { SelectionModel } from '@angular/cdk/collections';
 
 import { DataStoreMetadata, Device } from '../../models/iot.model';
 import { EdgeService } from '../../services/edge/edge.service';
-import { GraphService } from '../../services/graph/graph.service';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-service';
 import { DatastoreService } from '../../services/datastore/datastore.service';
-//import { merge } from "rxjs/observable/merge";
-//import { fromEvent } from 'rxjs/observable/fromEvent';
-// // import { DevicesDataSource } from "../services/edge/devices.datasource";
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Gateway } from '@TIBCOSoftware/labs-air-graph-service';
+import { Gateway } from '@TIBCOSoftware/labs-air-graph-client';
 
 @Component({
     selector: 'app-common-iot-gateway',

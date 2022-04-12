@@ -6,10 +6,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { GraphService } from '../../services/graph/graph.service';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-service';
 import { EdgeService } from '../../services/edge/edge.service';
 import { FlogoDeployService } from '../../services/deployment/flogo-deploy.service';
-import { Device, RestBroadcast } from '../../models/iot.model';
+import { Device } from '../../models/iot.model';
 
 import { PipelineFilteringComponent } from './pipeline-filtering/pipeline-filtering.component';
 import { PipelineInferencingComponent } from './pipeline-inferencing/pipeline-inferencing.component';
@@ -37,7 +37,7 @@ import { FlogoFlowComponent } from '../rete/components/flogo-flow-component';
 import { RestServiceComponent } from '../rete/components/rest-service-component';
 import { NodePrimaryComponent } from '../rete/nodes/node-primary/node-primary.component';
 import { RestBroadcastComponent } from '../rete/components/rest-broadcast.component'
-import { Gateway, Model, Pipeline } from '@TIBCOSoftware/labs-air-graph-service';
+import { Gateway, Model, Pipeline } from '@TIBCOSoftware/labs-air-graph-client';
 
 @Component({
     selector: 'app-common-iot-pipeline',
@@ -1814,7 +1814,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           pipeline.subscriptionTopic = this.getSubscriptionTopic();
 
           // Add pipeline to graph
-          this.graphService.addPipeline(this.gateway.uid, pipeline)
+          this.graphService.addPipeline(this.gateway.uid, pipeline, '', '', null, null)
               .subscribe(res => {
                   console.log('Added pipeline: ', res);
 

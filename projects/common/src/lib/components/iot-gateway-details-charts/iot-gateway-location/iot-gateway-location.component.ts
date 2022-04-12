@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
-import { TSReading } from '@TIBCOSoftware/labs-air-graph-service';
+import { TSReading } from '@TIBCOSoftware/labs-air-graph-client';
 import { ChartConfiguration, ChartType, ChartData, Tooltip } from 'chart.js';
 import { Subscription } from 'rxjs';
 import { Device, Resource } from '../../../models/iot.model';
-import { GraphService } from '../../../services/graph/graph.service';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-service';
 
 @Component({
     selector: 'app-common-iot-gateway-location',

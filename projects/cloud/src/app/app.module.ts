@@ -42,7 +42,7 @@ import {
 import { TcFormsLibModule } from '@tibco-tcstk/tc-forms-lib';
 import { TcLiveappsLibModule } from '@tibco-tcstk/tc-liveapps-lib';
 import { DgraphService } from './services/graph/dgraph.service';
-import { ApiModule as LabsAirGraphApiModule } from '@TIBCOSoftware/labs-air-graph-service';
+import { ApiModule as LabsAirGraphApiModule } from '@TIBCOSoftware/labs-air-graph-client';
 
 const appInitializerFn = (appConfig: AppConfigService) => {
   return () => {

@@ -6,7 +6,7 @@ import { catchError, tap, timeout } from 'rxjs/operators';
 
 import { Device, Profile, Service, Subscription, GetCommandResponse, FiltersConfig } from '../../models/iot.model';
 import { AppConfigService } from '../config/app-config.service';
-import { Gateway, ModelConfig } from '@TIBCOSoftware/labs-air-graph-service';
+import { Gateway, ModelConfig } from '@TIBCOSoftware/labs-air-graph-client';
 
 const httpOptions = {
     headers: new HttpHeaders({

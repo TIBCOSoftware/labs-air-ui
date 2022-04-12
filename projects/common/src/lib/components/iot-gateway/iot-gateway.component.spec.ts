@@ -6,7 +6,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { of } from 'rxjs';
 import { CommonLibraryModule } from '../../common-library.module';
 import { AppConfigService } from '../../services/config/app-config.service';
-import { GraphService } from '../../services/graph/graph.service';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-service';
 
 import { CommonIotGatewayComponent } from './iot-gateway.component';
 
