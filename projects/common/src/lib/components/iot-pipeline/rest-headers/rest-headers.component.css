@@ -5,3 +5,7 @@ mat-form-field {
 .click {
   cursor: pointer;
 }
+
+.space {
+  padding-bottom: 15px;
+}

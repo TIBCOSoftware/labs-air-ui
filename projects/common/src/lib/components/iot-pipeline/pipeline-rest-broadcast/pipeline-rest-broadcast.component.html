@@ -1,6 +1,6 @@
 <div class="content">
     <mat-card-header>
-        <mat-card-title class="mat-card-header-text">Inference Configuration</mat-card-title>
+        <mat-card-title class="mat-card-header-text">Rest Broadcast</mat-card-title>
     </mat-card-header>
     <div [formGroup]="restBroadcastForm">
         <mat-form-field appearance="outline">
@@ -15,6 +15,7 @@
             <mat-label>Request Timeout</mat-label>
             <input matInput formControlName="restTimeout" required>
         </mat-form-field>
+        <app-rest-headers [formData]="restBroadcastForm"></app-rest-headers>
         <div class="rest-actions">
             <button mat-raised-button (click)="addNewEndpoint()">Add Endpoint</button>
             <button mat-raised-button (click)="deleteEndpoint()">Remove Endpoint</button>

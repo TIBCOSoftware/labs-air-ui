@@ -17,7 +17,7 @@ describe('RestHeadersComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(RestHeadersComponent);
     component = fixture.componentInstance;
-    component.restForm = new FormGroup({
+    component.formData = new FormGroup({
       description: new FormControl(''),
       url: new FormControl(''),
       filters: new FormControl(''),

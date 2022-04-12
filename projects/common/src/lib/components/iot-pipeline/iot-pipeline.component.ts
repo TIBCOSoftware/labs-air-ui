@@ -619,6 +619,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           url: '',
           inputTemplate: '',
           logLevel: 'INFO',
+          headers: new FormArray([])
       }, { emitEvent: false });
 
       this.restServiceForm.reset({
@@ -788,7 +789,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           inputType: ['', Validators.required],
           url: ['', Validators.required],
           inputTemplate: ['', Validators.required],
-          logLevel: ['INFO', Validators.required]
+          logLevel: ['INFO', Validators.required],
+          headers: this.formBuilder.array([])
       });
 
       this.restServiceForm = this.formBuilder.group({
@@ -849,7 +851,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           restTimeout: ['', Validators.required],
           restURLs: this.formBuilder.array([]),
           restMethods: this.formBuilder.array([]),
-          restBodies: this.formBuilder.array([])
+          restBodies: this.formBuilder.array([]),
+          headers: this.formBuilder.array([])
       })
   }
 
@@ -1068,6 +1071,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           'filters': this.inferenceComponent.getFilters(),
           'inputTemplate': this.modelForm.get('inputTemplate').value,
           'logLevel': this.modelForm.get('logLevel').value,
+          'headers': this.modelForm.get('headers').value
       };
 
       return inferenceObj;
@@ -1195,7 +1199,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
         'restTimeout': this.restBroadcastForm.get('restTimeout').value,
         'restURLs': this.restBroadcastForm.get('restURLs').value,
         'restMethods': this.restBroadcastForm.get('restMethods').value,
-        'restBodies': this.restBroadcastForm.get('restBodies').value
+        'restBodies': this.restBroadcastForm.get('restBodies').value,
+        'headers': this.restBroadcastForm.get('headers').value
     }
     return restBroadcastObj;
   }
@@ -1417,6 +1422,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
               inputTemplate: context.inputTemplate,
               LogLevel: context.logLevel
           });
+          const keyValueFormGroupArray = context.headers.map(x => this.formBuilder.group(x))
+          this.modelForm.setControl('headers', this.formBuilder.array(keyValueFormGroupArray));
 
       }
   }
@@ -1557,6 +1564,9 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
             this.restBroadcastForm.setControl('restURLs', this.formBuilder.array(context.restURLs));
             this.restBroadcastForm.setControl('restMethods', this.formBuilder.array(context.restMethods));
             this.restBroadcastForm.setControl('restBodies', this.formBuilder.array(context.restBodies));
+
+            const keyValueFormGroupArray = context.headers.map(x => this.formBuilder.group(x))
+            this.restServiceForm.setControl('headers', this.formBuilder.array(keyValueFormGroupArray));
         }
     }
 

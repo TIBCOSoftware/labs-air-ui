@@ -1,25 +1,9 @@
-<div [formGroup]="restForm">
-    <div>
-        <button (click)="addHeader()">Add Key Pair</button>
+<div [formGroup]="formData">
+    <h4>REST Headers</h4>
+    <div class="space">
+        <button mat-raised-button (click)="addHeader()">Add Header</button>
     </div>
-    <div formArray="headers">
-        <mat-label>Headers</mat-label>
-        <!-- <mat-table [dataSource]="headerFormGroup">
-            <ng-container matColumnDef="Key">
-                <th mat-header-cell *matHeaderCellDef> Key </th>
-                <td mat-cell *matCellDef="let element" [formGroup]="element">
-                    <input formControlName="key">
-                </td>
-            </ng-container>
-            <ng-container matColumnDef="Value">
-                <th mat-header-cell *matHeaderCellDef> Value </th>
-                <td mat-cell *matCellDef="let element"  [formGroup]="element">
-                    <input formControlName="value">
-                </td>
-            </ng-container>
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </mat-table> -->
+    <div class="space" formArray="headers">
         <div *ngFor="let header of headerFormGroup; let i = index">
             <div [formGroup]="header">
                 <mat-form-field appearance="outline">

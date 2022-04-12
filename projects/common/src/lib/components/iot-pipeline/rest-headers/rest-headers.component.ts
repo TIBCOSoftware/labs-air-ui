@@ -8,15 +8,14 @@ import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 })
 export class RestHeadersComponent {
 
-  @Input() restForm: FormGroup;
-  displayedColumns = ['Key', 'Value'];
+  @Input() formData: FormGroup;
 
   constructor() { }
 
   // headers need to be in [{key: keyName, value: keyValue}, ...]
 
   get headers () {
-    return this.restForm.get('headers') as FormArray
+    return this.formData.get('headers') as FormArray
   }
   
   get headerFormGroup () {
