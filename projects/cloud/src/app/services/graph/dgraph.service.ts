@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { GraphService } from 'common';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-service';
 import {
   DataStore,
   DataStoreService,
@@ -385,7 +385,7 @@ export class DgraphService implements GraphService {
    *
    * @param deviceName
    */
-  getRoute(deviceName: string): Observable<number[]> {
+  getRoute(deviceName: string): any {
     return this.routeService.getRoute(deviceName);
   }
 
@@ -393,7 +393,7 @@ export class DgraphService implements GraphService {
    *
    * @param deviceName
    */
-  getRouteCenter(deviceName: string): Observable<number[]> {
+  getRouteCenter(deviceName: string): any {
     return this.routeService.getRouteCenter(deviceName);
   }
 

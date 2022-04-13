@@ -20,8 +20,8 @@ import { HomeComponent } from './routes/home/home.component';
 import { IotHomeCockpitComponent } from './components/iot-home-cockpit/iot-home-cockpit.component';
 
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
-import { GraphService } from 'common';
-import { DgraphService } from 'common';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-service';
+import { DGraphService } from '@TIBCOSoftware/labs-air-graph-service';
 import { Ng2GoogleChartsModule } from 'ng2-google-charts';
 import { IotGatewayEndpointComponent } from './components/iot-gateway-endpoint/iot-gateway-endpoint.component';
 import { IgeModelsComponent } from './components/iot-gateway-endpoint/ige-models/ige-models.component';
@@ -77,7 +77,7 @@ const appInitializerFn = (appConfig: AppConfigService) => {
             deps: [AppConfigService],
         },
         DatePipe,
-        { provide: GraphService, useClass: DgraphService },
+        { provide: GraphService, useClass: DGraphService },
         { provide: LocationStrategy, useClass: HashLocationStrategy },
     ],
     bootstrap: [AppComponent],

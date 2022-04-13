@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ViewChild, AfterViewInit } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { DataStore } from '@TIBCOSoftware/labs-air-graph-client';
-import { GraphService } from 'common';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';

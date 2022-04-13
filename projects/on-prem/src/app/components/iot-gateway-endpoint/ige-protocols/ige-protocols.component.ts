@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, AfterViewInit, ViewChild } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Protocol } from '@TIBCOSoftware/labs-air-graph-client';
-import { GraphService } from 'common';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
@@ -356,7 +356,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
       if (protocolType == 'MQTT') {
           protocol.authMode = '';
           protocol.brokerURL = 'tcp://' + this.protocolForm.get('mqtt.hostname').value + ':' + this.protocolForm.get('mqtt.port').value;
-          protocol.caCerticate = this.protocolForm.get('mqtt.caCertificate').value;
+          protocol.caCertificate = this.protocolForm.get('mqtt.caCertificate').value;
           protocol.clientCertificate = this.protocolForm.get('mqtt.clientCertificate').value;
           protocol.clientKey = this.protocolForm.get('mqtt.clientKey').value;
           protocol.commitInterval = '';
@@ -372,7 +372,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
           protocol.modified = ts;
           protocol.password = this.protocolForm.get('mqtt.password').value;
           protocol.protocolType = protocolType;
-          protocol.retryBackoff = '';
+          protocol.retryBackOff = '';
           protocol.serverCertificate = '';
           protocol.sessionTimeout = '';
           protocol.topic = this.protocolForm.get('mqtt.topic').value;
@@ -382,7 +382,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
       else if (protocolType == 'Kafka') {
           protocol.authMode = this.protocolForm.get('kafka.authMode').value;
           protocol.brokerURL = this.protocolForm.get('kafka.hostname').value + ':' + this.protocolForm.get('kafka.port').value;
-          protocol.caCerticate = '';
+          protocol.caCertificate = '';
           protocol.clientCertificate = this.protocolForm.get('kafka.clientCertificate').value;
           protocol.clientKey = this.protocolForm.get('kafka.clientKey').value;
           protocol.commitInterval = this.protocolForm.get('kafka.commitInterval').value;
@@ -398,7 +398,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
           protocol.modified = ts;
           protocol.password = this.protocolForm.get('kafka.password').value;
           protocol.protocolType = protocolType;
-          protocol.retryBackoff = this.protocolForm.get('kafka.retryBackoff').value;
+          protocol.retryBackOff = this.protocolForm.get('kafka.retryBackoff').value;
           protocol.serverCertificate = this.protocolForm.get('kafka.serverCertificate').value;
           protocol.sessionTimeout = this.protocolForm.get('kafka.sessionTimeout').value;
           protocol.topic = this.protocolForm.get('kafka.topic').value;
@@ -472,7 +472,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
                   if (protocolType == 'MQTT') {
                       protocol.authMode = '';
                       protocol.brokerURL = 'tcp://' + this.protocolForm.get('mqtt.hostname').value + ':' + this.protocolForm.get('mqtt.port').value;
-                      protocol.caCerticate = this.protocolForm.get('mqtt.caCertificate').value;
+                      protocol.caCertificate = this.protocolForm.get('mqtt.caCertificate').value;
                       protocol.clientCertificate = this.protocolForm.get('mqtt.clientCertificate').value;
                       protocol.clientKey = this.protocolForm.get('mqtt.clientKey').value;
                       protocol.commitInterval = '';
@@ -488,7 +488,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
                       protocol.modified = ts;
                       protocol.password = this.protocolForm.get('mqtt.password').value;
                       protocol.protocolType = protocolType;
-                      protocol.retryBackoff = '';
+                      protocol.retryBackOff = '';
                       protocol.serverCertificate = '';
                       protocol.sessionTimeout = '';
                       protocol.topic = this.protocolForm.get('mqtt.topic').value;
@@ -498,7 +498,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
                   else if (protocolType == 'Kafka') {
                       protocol.authMode = this.protocolForm.get('kafka.authMode').value;
                       protocol.brokerURL = this.protocolForm.get('kafka.hostname').value + ':' + this.protocolForm.get('kafka.port').value;
-                      protocol.caCerticate = '';
+                      protocol.caCertificate = '';
                       protocol.clientCertificate = this.protocolForm.get('kafka.clientCertificate').value;
                       protocol.clientKey = this.protocolForm.get('kafka.clientKey').value;
                       protocol.commitInterval = this.protocolForm.get('kafka.commitInterval').value;
@@ -514,7 +514,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
                       protocol.modified = ts;
                       protocol.password = this.protocolForm.get('kafka.password').value;
                       protocol.protocolType = protocolType;
-                      protocol.retryBackoff = this.protocolForm.get('kafka.retryBackoff').value;
+                      protocol.retryBackOff = this.protocolForm.get('kafka.retryBackoff').value;
                       protocol.serverCertificate = this.protocolForm.get('kafka.serverCertificate').value;
                       protocol.sessionTimeout = this.protocolForm.get('kafka.sessionTimeout').value;
                       protocol.topic = this.protocolForm.get('kafka.topic').value;
