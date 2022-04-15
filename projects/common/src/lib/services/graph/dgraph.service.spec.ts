@@ -11,21 +11,24 @@ import {
     ReadingService,
     RouteService
 } from '@TIBCOSoftware/labs-air-graph-client';
-import { DgraphService } from './dgraph.service';
+import { DGraphService } from './dgraph.service';
 import {
     HttpClientTestingModule,
     HttpTestingController
 } from '@angular/common/http/testing';
 import { HttpClient } from '@angular/common/http';
-import { of } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import Axios from 'axios-observable';
+import { AppConfigService } from '../config/app-config.service';
 
 
 describe('DgraphService', () => {
-    let dgraphService: DgraphService;
+    let dgraphService: DGraphService;
     const httpClientSpy = jasmine.createSpyObj(['get', 'post']);
     let httpTestingController: HttpTestingController;
 
+    const axios: Partial<Axios> = jasmine.createSpyObj(['xxx']);
+    const appConfigService: Partial<AppConfigService> = jasmine.createSpyObj(['getFromConfigOrEnv']);
     const dataStoreService: Partial<DataStoreService> = jasmine.createSpyObj(['xxx']);
     const filterConfigService: Partial<FilterConfigService> = jasmine.createSpyObj(['xxx']);
     const mockGatewayService: Partial<GatewayService> = jasmine.createSpyObj(['getGateways', 'getGatewayAndPipelines', 'getModels']);
@@ -42,7 +45,8 @@ describe('DgraphService', () => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule, CommonModule],
             providers: [
-                DgraphService,
+                { provide: Axios, useValue: axios },
+                { provide: AppConfigService, useValue: appConfigService },
                 { provide: DataStoreService, useValue: dataStoreService },
                 { provide: FilterConfigService, useValue: filterConfigService },
                 { provide: GatewayService, useValue: mockGatewayService },
@@ -53,15 +57,16 @@ describe('DgraphService', () => {
                 { provide: ProtocolService, useValue: protocolService },
                 { provide: ReadingService, useValue: readingService },
                 { provide: RouteService, useValue: routeService },
-                { provide: HttpClient, useValue: httpClientSpy }
+                { provide: HttpClient, useValue: httpClientSpy },
+                DGraphService
             ]
         });
-        dgraphService = TestBed.inject(DgraphService);
+        dgraphService = TestBed.inject(DGraphService);
         httpTestingController = TestBed.inject(HttpTestingController);
     });
 
     it('should be created', () => {
-        const service: DgraphService = TestBed.inject(DgraphService);
+        const service: DGraphService = TestBed.inject(DGraphService);
         expect(service).toBeTruthy();
     });
 });

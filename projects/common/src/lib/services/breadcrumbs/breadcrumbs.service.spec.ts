@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
 import { Gateway } from '@TIBCOSoftware/labs-air-graph-client';
-import { GraphService } from '../graph/graph.service';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 
 import { BreadcrumbsService } from './breadcrumbs.service';
 

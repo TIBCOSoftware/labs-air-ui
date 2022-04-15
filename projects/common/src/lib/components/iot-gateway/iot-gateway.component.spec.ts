@@ -4,11 +4,11 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { of } from 'rxjs';
-import { CommonLibraryModule } from '../../common-library.module';
 import { AppConfigService } from '../../services/config/app-config.service';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 
 import { CommonIotGatewayComponent } from './iot-gateway.component';
+import { DatePipe } from '@angular/common';
 
 describe('CommonIotGatewayComponent', () => {
     let component: CommonIotGatewayComponent;
@@ -22,10 +22,11 @@ describe('CommonIotGatewayComponent', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [CommonIotGatewayComponent],
-            imports: [HttpClientTestingModule, ReactiveFormsModule, MatSnackBarModule, CommonLibraryModule],
+            imports: [HttpClientTestingModule, ReactiveFormsModule, MatSnackBarModule],
             providers: [
                 { provide: AppConfigService, useValue: mockAppConfigService },
-                { provide: GraphService, useValue: mockGraphService }
+                { provide: GraphService, useValue: mockGraphService },
+                DatePipe
             ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA]
         })

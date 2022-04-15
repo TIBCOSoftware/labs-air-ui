@@ -73,8 +73,9 @@ const route3 = [
     [46.758181, -92.098748]
 ];
 
+// TODO this does not seem to be in use.
 @Injectable()
-export class TgdbService implements GraphService {
+export class TgdbService { // extends GraphService {
 
   // Defined as a proxy.  (i.e. http://137.117.38.255:8080)
   private tgdbUrl = '/tgdb';
@@ -476,7 +477,7 @@ export class TgdbService implements GraphService {
         _:Protocol <connectionTimeout> "${protocol.connectionTimeout}" .
         _:Protocol <sessionTimeout> "${protocol.sessionTimeout}" .
         _:Protocol <initialOffset> "${protocol.initialOffset}" .
-        _:Protocol <retryBackoff> "${protocol.retryBackoff}" .
+        _:Protocol <retryBackoff> "${protocol.retryBackOff}" .
         _:Protocol <fetchMinBytes> "${protocol.fetchMinBytes}" .
         _:Protocol <fetchMaxWait> "${protocol.fetchMaxWait}" .
         _:Protocol <commitInterval > "${protocol.commitInterval}" .
@@ -485,7 +486,7 @@ export class TgdbService implements GraphService {
         _:Protocol <username> "${protocol.username}" .
         _:Protocol <password> "${protocol.password}" .
         _:Protocol <encryptionMode> "${protocol.encryptionMode}" .
-        _:Protocol <caCertificate> "${protocol.caCerticate}" .
+        _:Protocol <caCertificate> "${protocol.caCertificate}" .
         _:Protocol <clientCertificate> "${protocol.clientCertificate}" .
         _:Protocol <clientKey> "${protocol.clientKey}" .
         _:Protocol <authMode> "${protocol.authMode}" .
