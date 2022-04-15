@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChildren } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -9,20 +9,32 @@ import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 export class RestHeadersComponent {
 
   @Input() formData: FormGroup;
+  @Input() formArrayIndex: number = 0;
 
   constructor() { }
 
-  // headers need to be in [{key: keyName, value: keyValue}, ...]
+  // headers need to be in [[{key: keyName, value: keyValue}, ...], ...]
 
-  get headers () {
+  get headersArray (): FormArray {
     return this.formData.get('headers') as FormArray
   }
+
+  get headers (): FormArray {
+    return this.headersArray.controls[this.formArrayIndex] as FormArray
+  }
   
-  get headerFormGroup () {
-    return this.headers.controls as [FormGroup]
+  get headerFormGroup (): [FormGroup] {
+    return this.headers?.controls as [FormGroup]
   }
 
-  addHeader() {
+  addHeaderArray (): void {
+    this.headersArray.push(new FormArray([]));
+  }
+
+  addHeader(): void {
+    if (!this.headers) {
+      this.addHeaderArray();
+    } 
     const formGroup = new FormGroup({
       key: new FormControl('',),
       value: new FormControl('',)
@@ -30,8 +42,12 @@ export class RestHeadersComponent {
     this.headers.push(formGroup);
   }
 
-  deleteHeader(index: number) {
+  deleteHeader(index: number): void {
     this.headers.removeAt(index);
+  }
+
+  public removeHeaderGroup (index: number): void {
+    this.headersArray.removeAt(index);
   }
 
 }

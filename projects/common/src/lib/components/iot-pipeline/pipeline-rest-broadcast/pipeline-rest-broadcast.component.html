@@ -15,7 +15,6 @@
             <mat-label>Request Timeout</mat-label>
             <input matInput formControlName="restTimeout" required>
         </mat-form-field>
-        <app-rest-headers [formData]="restBroadcastForm"></app-rest-headers>
         <div class="rest-actions">
             <button mat-raised-button (click)="addNewEndpoint()">Add Endpoint</button>
             <button mat-raised-button (click)="deleteEndpoint()">Remove Endpoint</button>
@@ -43,6 +42,7 @@
                         <mat-label>Body</mat-label>
                         <textarea matInput [formControlName]="i"></textarea>
                     </mat-form-field>
+                    <app-rest-headers #restHeaders [formData]="restBroadcastForm" [formArrayIndex]="i"></app-rest-headers>
                 </div>
             </mat-tab>
         </mat-tab-group>

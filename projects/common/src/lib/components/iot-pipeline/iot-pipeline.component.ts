@@ -1422,8 +1422,10 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
               inputTemplate: context.inputTemplate,
               LogLevel: context.logLevel
           });
-          const keyValueFormGroupArray = context.headers.map(x => this.formBuilder.group(x))
-          this.modelForm.setControl('headers', this.formBuilder.array(keyValueFormGroupArray));
+
+          const formGroups = context.headers.map(x => this.formBuilder.array(x.map(y => this.formBuilder.group(y)))) as [];
+          const headersArray = this.formBuilder.array(formGroups) as FormArray
+          this.modelForm.setControl('headers', headersArray);
 
       }
   }
@@ -1545,9 +1547,10 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
               url: context.url,
               logLevel: context.logLevel,
           });
-          // need to rebuild the formGroups from the context
-          const keyValueFormGroupArray = context.headers.map(x => this.formBuilder.group(x))
-          this.restServiceForm.setControl('headers', this.formBuilder.array(keyValueFormGroupArray));
+
+          const formGroups = context.headers.map(x => this.formBuilder.array(x.map(y => this.formBuilder.group(y)))) as [];
+          const headersArray = this.formBuilder.array(formGroups) as FormArray
+          this.restServiceForm.setControl('headers', headersArray);
       }
   }
 
@@ -1565,8 +1568,9 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
             this.restBroadcastForm.setControl('restMethods', this.formBuilder.array(context.restMethods));
             this.restBroadcastForm.setControl('restBodies', this.formBuilder.array(context.restBodies));
 
-            const keyValueFormGroupArray = context.headers.map(x => this.formBuilder.group(x))
-            this.restServiceForm.setControl('headers', this.formBuilder.array(keyValueFormGroupArray));
+            const formGroups = context.headers.map(x => this.formBuilder.array(x.map(y => this.formBuilder.group(y)))) as [];
+            const headersArray = this.formBuilder.array(formGroups) as FormArray
+            this.restBroadcastForm.setControl('headers', headersArray);
         }
     }
 
