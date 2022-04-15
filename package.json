@@ -36,7 +36,7 @@
     "@angular/platform-browser-dynamic": "~12.2.12",
     "@angular/router": "~12.2.12",
     "@nestjs/swagger": "^5.2.1",
-    "@tibco-tcstk/tc-liveapps-lib": "^3.2.0",
+    "@tibco-tcstk/tc-liveapps-lib": "^3.3.1",
     "@tibco/spotfire-wrapper": "^0.16.0",
     "@TIBCOSoftware/labs-air-graph-client": "file:./TIBCOSoftware-labs-air-graph-client-0.0.25.tgz",
     "@types/lodash": "~4.14.171",
