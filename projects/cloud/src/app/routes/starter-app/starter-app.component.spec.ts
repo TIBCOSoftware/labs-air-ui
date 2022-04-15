@@ -5,7 +5,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 import { AppConfigService } from 'common';
-import { GraphService } from 'common';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { Gateway } from '@TIBCOSoftware/labs-air-graph-client';
 
 import { StarterAppComponent } from './starter-app.component';

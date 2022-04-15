@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BehaviorSubject, of } from 'rxjs';
 import { BreadcrumbsService } from 'common';
-import { GraphService } from 'common';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { Gateway } from '@TIBCOSoftware/labs-air-graph-client';
 
 import { NavBarComponent } from './nav-bar.component';
