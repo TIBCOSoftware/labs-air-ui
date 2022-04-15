@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { AppConfigService } from 'dist/common/fesm2015/common';
 import { Axios } from 'axios-observable';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
+import { AppConfigService } from 'common';
 
 @Injectable({
   providedIn: 'root'
