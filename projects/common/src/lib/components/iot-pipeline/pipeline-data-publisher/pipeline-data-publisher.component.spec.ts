@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup } from '@angular/forms';
 import { of } from 'rxjs';
 import { EdgeService } from '../../../services/edge/edge.service';
-import { GraphService } from '@TIBCOSoftware/labs-air-graph-service';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 
 import { PipelineDataPublisherComponent } from './pipeline-data-publisher.component';
 

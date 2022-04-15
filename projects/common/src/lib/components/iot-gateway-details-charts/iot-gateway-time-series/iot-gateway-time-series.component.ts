@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { Subscription } from 'rxjs';
 import { Device, Resource } from '../../../models/iot.model';
-import { GraphService } from '@TIBCOSoftware/labs-air-graph-service';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { ChartConfiguration, ChartOptions, ChartType, Tooltip, Chart } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { BaseChartDirective } from 'ng2-charts';

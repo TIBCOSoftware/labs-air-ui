@@ -6,7 +6,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { GraphService } from '@TIBCOSoftware/labs-air-graph-service';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { EdgeService } from '../../services/edge/edge.service';
 import { FlogoDeployService } from '../../services/deployment/flogo-deploy.service';
 import { Device } from '../../models/iot.model';

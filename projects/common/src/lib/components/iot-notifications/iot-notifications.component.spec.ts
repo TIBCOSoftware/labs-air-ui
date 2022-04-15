@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { of } from 'rxjs';
-import { GraphService } from '@TIBCOSoftware/labs-air-graph-service';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 
 import { CommonIotNotificationsComponent } from './iot-notifications.component';
 

@@ -1,7 +1,7 @@
 import { Component, OnInit, Directive, ViewContainerRef, ViewChild, ComponentFactoryResolver } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
-import { GraphService } from '@TIBCOSoftware/labs-air-graph-service';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { Device, Resource } from '../../models/iot.model';
 import { EdgeService } from '../../services/edge/edge.service';
 import { BreadcrumbsService } from '../../services/breadcrumbs/breadcrumbs.service';

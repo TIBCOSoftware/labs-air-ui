@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { GraphService } from '@TIBCOSoftware/labs-air-graph-service';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import {
   DataStore,
   DataStoreService,
@@ -21,11 +21,12 @@ import {
   RouteService,
   TSReading
 } from '@TIBCOSoftware/labs-air-graph-client';
+import { AppConfigService } from 'common';
 import { Observable } from 'rxjs';
-
+import { Axios } from 'axios-observable';
 
 @Injectable()
-export class DgraphService implements GraphService {
+export class DGraphService extends GraphService {
 
   private dgraphUrl;
 
@@ -35,6 +36,8 @@ export class DgraphService implements GraphService {
    * @param http
    */
   constructor(
+    http: Axios,
+    private appConfigService: AppConfigService,
     private dataStoreService: DataStoreService,
     private filterConfigService: FilterConfigService,
     private gatewayService: GatewayService,
@@ -45,7 +48,15 @@ export class DgraphService implements GraphService {
     private protocolService: ProtocolService,
     private readingService: ReadingService,
     private routeService: RouteService) {
+    super(http, appConfigService.getFromConfigOrEnv('dgraphUrl'));
     console.log('Constructor Getting basic auth for dGraph');
+
+    const dgraphBasicAuthEnabled = this.appConfigService.getFromConfigOrEnv('dgraphBasicAuthEnabled');
+    /*if (dgraphBasicAuthEnabled) {
+      const dgraphBasicAuth = this.appConfigService.getFromConfigOrEnv('dgraphBasicAuth');
+      httpOptions.headers = httpOptions.headers.append('Authorization', dgraphBasicAuth);
+      httpMutateOptions.headers = httpMutateOptions.headers.append('Authorization', dgraphBasicAuth);
+    }*/
   }
 
   /**

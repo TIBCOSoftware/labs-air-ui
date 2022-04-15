@@ -20,7 +20,7 @@ import { HomeComponent } from './routes/home/home.component';
 import { IotHomeCockpitComponent } from './components/iot-home-cockpit/iot-home-cockpit.component';
 
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
-import { GraphService } from '@TIBCOSoftware/labs-air-graph-service';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { Ng2GoogleChartsModule } from 'ng2-google-charts';
 import { IotGatewayEndpointComponent } from './components/iot-gateway-endpoint/iot-gateway-endpoint.component';
 import { IgeModelsComponent } from './components/iot-gateway-endpoint/ige-models/ige-models.component';
@@ -41,7 +41,7 @@ import {
 } from '@tibco-tcstk/tc-core-lib';
 import { TcFormsLibModule } from '@tibco-tcstk/tc-forms-lib';
 import { TcLiveappsLibModule } from '@tibco-tcstk/tc-liveapps-lib';
-import { DgraphService } from './services/graph/dgraph.service';
+import { DGraphService } from './services/graph/dgraph.service';
 import { ApiModule as LabsAirGraphApiModule } from '@TIBCOSoftware/labs-air-graph-client';
 
 const appInitializerFn = (appConfig: AppConfigService) => {
@@ -108,7 +108,7 @@ const tcCoreConfig: TcCoreConfig = {
       deps: [AppConfigService]
     },
     DatePipe,
-    { provide: GraphService, useClass: DgraphService },
+    { provide: GraphService, useClass: DGraphService },
     { provide: LocationStrategy, useClass: HashLocationStrategy },
     LogService,
   ],

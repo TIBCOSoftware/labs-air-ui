@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
 import { AppConfigService } from '../../services/config/app-config.service';
-import { GraphService } from '@TIBCOSoftware/labs-air-graph-service';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { Gateway } from '@TIBCOSoftware/labs-air-graph-client';
 
 import { CommonMaporamaComponent } from './maporama.component';

@@ -2,7 +2,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppConfigService } from '../../services/config/app-config.service';
-import { GraphService } from '@TIBCOSoftware/labs-air-graph-service';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 
 import { CommonIotGatewayDetailsComponent } from './iot-gateway-details.component';
 

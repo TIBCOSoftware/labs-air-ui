@@ -40,6 +40,7 @@
     "@tibco/spotfire-wrapper": "^0.16.0",
     "@TIBCOSoftware/labs-air-graph-client": "file:./TIBCOSoftware-labs-air-graph-client-0.0.25.tgz",
     "@types/lodash": "~4.14.171",
+    "axios-observable": "^1.4.0",
     "chart.js": "3.6.0",
     "chartjs-adapter-luxon": "^1.1.0",
     "chartjs-plugin-datalabels": "^2.0.0",

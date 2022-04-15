@@ -5,7 +5,7 @@ import { TSReading } from '@TIBCOSoftware/labs-air-graph-client';
 import { ChartConfiguration, ChartType, ChartData, Tooltip } from 'chart.js';
 import { Subscription } from 'rxjs';
 import { Device, Resource } from '../../../models/iot.model';
-import { GraphService } from '@TIBCOSoftware/labs-air-graph-service';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 
 @Component({
     selector: 'app-common-iot-gateway-location',

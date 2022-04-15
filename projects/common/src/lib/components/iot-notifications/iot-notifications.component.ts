@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
-import { GraphService } from '@TIBCOSoftware/labs-air-graph-service';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { Notification } from '@TIBCOSoftware/labs-air-graph-client';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatSort } from '@angular/material/sort';

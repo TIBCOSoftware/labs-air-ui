@@ -15,7 +15,7 @@ import {
   Protocol,
   TSReading
 } from '@TIBCOSoftware/labs-air-graph-client';
-import { GraphService } from '@TIBCOSoftware/labs-air-graph-service';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })

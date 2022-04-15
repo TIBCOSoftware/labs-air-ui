@@ -5,7 +5,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 
 import { DataStoreMetadata, Device } from '../../models/iot.model';
 import { EdgeService } from '../../services/edge/edge.service';
-import { GraphService } from '@TIBCOSoftware/labs-air-graph-service';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { DatastoreService } from '../../services/datastore/datastore.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';

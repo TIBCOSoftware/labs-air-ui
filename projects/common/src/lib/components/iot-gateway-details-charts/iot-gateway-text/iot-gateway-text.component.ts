@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Device, Resource } from '../../../models/iot.model';
-import { GraphService } from '@TIBCOSoftware/labs-air-graph-service';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { TSReading } from '@TIBCOSoftware/labs-air-graph-client';

@@ -4,7 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CommonLibraryModule } from '../../../common-library.module';
 import { AppConfigService } from '../../../services/config/app-config.service';
 import { EdgeService } from '../../../services/edge/edge.service';
-import { GraphService } from '../@TIBCOSoftware/labs-air-graph-service';
+import { GraphService } from '../@TIBCOSoftware/labs-air-graph-client';
 
 import { InfraDeployerComponent } from './infra-deployer.component';
 

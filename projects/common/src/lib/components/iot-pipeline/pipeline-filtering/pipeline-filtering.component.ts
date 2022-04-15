@@ -4,7 +4,7 @@ import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { SelectionModel } from '@angular/cdk/collections';
 import { EdgeService } from '../../../services/edge/edge.service';
-import { GraphService } from '@TIBCOSoftware/labs-air-graph-service';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 
 import { Device, FiltersConfig } from '../../../models/iot.model';
 
