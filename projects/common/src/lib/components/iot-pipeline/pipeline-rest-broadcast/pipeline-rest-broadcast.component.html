@@ -1,6 +1,6 @@
 <div class="content">
     <mat-card-header>
-        <mat-card-title class="mat-card-header-text">Inference Configuration</mat-card-title>
+        <mat-card-title class="mat-card-header-text">Rest Broadcast</mat-card-title>
     </mat-card-header>
     <div [formGroup]="restBroadcastForm">
         <mat-form-field appearance="outline">
@@ -42,6 +42,7 @@
                         <mat-label>Body</mat-label>
                         <textarea matInput [formControlName]="i"></textarea>
                     </mat-form-field>
+                    <app-rest-headers #restHeaders [formData]="restBroadcastForm" [formArrayIndex]="i"></app-rest-headers>
                 </div>
             </mat-tab>
         </mat-tab-group>

@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { MatTabGroup } from '@angular/material/tabs'
+import { RestHeadersComponent } from '../rest-headers/rest-headers.component';
 @Component({
   selector: 'app-pipeline-rest-broadcast',
   templateUrl: './pipeline-rest-broadcast.component.html',
@@ -10,6 +11,8 @@ export class PipelineRestBroadcastComponent implements OnInit {
 
   @Input() restBroadcastForm: FormGroup;
   @ViewChild('tabs') tabGroup: MatTabGroup;
+  @ViewChild('restHeaders') restHeaders!: RestHeadersComponent;
+
   logLevels = ['info', 'warn', 'error', 'debug'];
   methods = ['PUT', 'POST'];
 
@@ -44,6 +47,7 @@ export class PipelineRestBroadcastComponent implements OnInit {
     this.restURLs.removeAt(currentEndpoint);
     this.restMethods.removeAt(currentEndpoint);
     this.restBodies.removeAt(currentEndpoint);
+    this.restHeaders.removeHeaderGroup(currentEndpoint)
   }
 
 }

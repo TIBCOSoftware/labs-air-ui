@@ -1,0 +1,11 @@
+mat-form-field {
+  width: 115px;
+}
+
+.click {
+  cursor: pointer;
+}
+
+.space {
+  padding-bottom: 15px;
+}
