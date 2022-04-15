@@ -6,7 +6,7 @@ import { AppConfigService } from 'common';
 
 import { DGraphService } from './dgraph.service';
 
-describe('DgraphService', () => {
+describe('DGraphService', () => {
   let service: DGraphService;
 
   const axios: Partial<Axios> = jasmine.createSpyObj(['xxx']);
