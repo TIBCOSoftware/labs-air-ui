@@ -41,7 +41,7 @@ import {
 } from '@tibco-tcstk/tc-core-lib';
 import { TcFormsLibModule } from '@tibco-tcstk/tc-forms-lib';
 import { TcLiveappsLibModule } from '@tibco-tcstk/tc-liveapps-lib';
-import { DGraphService } from './services/graph/dgraph.service';
+import { DGraphService } from 'common';
 import { ApiModule as LabsAirGraphApiModule } from '@TIBCOSoftware/labs-air-graph-client';
 
 const appInitializerFn = (appConfig: AppConfigService) => {

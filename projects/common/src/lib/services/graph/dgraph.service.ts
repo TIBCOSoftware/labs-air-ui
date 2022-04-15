@@ -21,9 +21,9 @@ import {
   RouteService,
   TSReading
 } from '@TIBCOSoftware/labs-air-graph-client';
-import { AppConfigService } from 'common';
 import { Observable } from 'rxjs';
 import { Axios } from 'axios-observable';
+import { AppConfigService } from '../config/app-config.service';
 
 @Injectable()
 export class DGraphService extends GraphService {

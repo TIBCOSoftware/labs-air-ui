@@ -21,7 +21,6 @@ import { IotHomeCockpitComponent } from './components/iot-home-cockpit/iot-home-
 
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
-import { DGraphService } from 'common';
 import { Ng2GoogleChartsModule } from 'ng2-google-charts';
 import { IotGatewayEndpointComponent } from './components/iot-gateway-endpoint/iot-gateway-endpoint.component';
 import { IgeModelsComponent } from './components/iot-gateway-endpoint/ige-models/ige-models.component';
@@ -32,6 +31,7 @@ import { SpotfireDashboardComponent } from './components/spotfire-dashboard/spot
 import { IotDashboardComponent } from './components/iot-dashboard/iot-dashboard.component';
 
 import { CommonLibraryModule } from 'common';
+import { DGraphService } from 'common';
 
 const appInitializerFn = (appConfig: AppConfigService) => {
     return () => {
