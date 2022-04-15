@@ -1814,7 +1814,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           pipeline.subscriptionTopic = this.getSubscriptionTopic();
 
           // Add pipeline to graph
-          this.graphService.addPipeline(this.gateway.uid, pipeline, '', '', null, null)
+          this.graphService.addPipeline(this.gateway.uid, pipeline)
               .subscribe(res => {
                   console.log('Added pipeline: ', res);
 

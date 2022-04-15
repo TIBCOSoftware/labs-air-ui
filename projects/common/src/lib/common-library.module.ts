@@ -48,7 +48,6 @@ import { NgxHeatmapModule } from 'ngx-heatmap'
 //services
 import { AppConfigService } from './services/config/app-config.service';
 import { EdgeService } from './services/edge/edge.service';
-import { DGraphService } from 'common';
 import { DatastoreService } from './services/datastore/datastore.service';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client'
 import { DatePipe } from '@angular/common';
@@ -126,7 +125,7 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     },
     EdgeService,
     DatastoreService,
-    { provide: GraphService, useClass: DGraphService },
+    GraphService,
     DatePipe
   ]
 })

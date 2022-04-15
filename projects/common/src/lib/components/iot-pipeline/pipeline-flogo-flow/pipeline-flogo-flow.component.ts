@@ -111,11 +111,11 @@ export class PipelineFlogoFlowComponent implements OnInit {
 
       console.log('Inside dataSourceChanged() event: ', event);
 
-      console.log('Inside dataSourceChanged() rowId and celltype: ', rowId, cellsType);
+      console.log('Inside dataSourceChanged() rowId and cellsType: ', rowId, cellsType);
 
       console.log('dataSource Inside dataSourceChanged(): ', this.dataSource);
 
-      this.dataSourceChange.next();
+      this.dataSourceChange.next(event);
   }
 
   openDialog(rowId, element): void {

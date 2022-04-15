@@ -48,7 +48,7 @@ export class DGraphService extends GraphService {
     private protocolService: ProtocolService,
     private readingService: ReadingService,
     private routeService: RouteService) {
-    super(http, appConfigService.getFromConfigOrEnv('dgraphUrl'));
+    super(http, appConfigService.getFromConfigOrEnv('dgraphUrl'), false);
     console.log('Constructor Getting basic auth for dGraph');
 
     const dgraphBasicAuthEnabled = this.appConfigService.getFromConfigOrEnv('dgraphBasicAuthEnabled');

@@ -6,6 +6,7 @@ import { ChartConfiguration, ChartType, ChartData, Tooltip } from 'chart.js';
 import { Subscription } from 'rxjs';
 import { Device, Resource } from '../../../models/iot.model';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
+import { AppConfigService } from '../../../services/config/app-config.service';
 
 @Component({
     selector: 'app-common-iot-gateway-location',
@@ -129,7 +130,7 @@ export class CommonIotGatewayLocationComponent implements OnInit, OnDestroy {
   }
 
   public getReadingsBetween(deviceName: string, resourceName: string, fromts: number, tots: number) {
-      this.subscriptions.push(this.graphService.getReadingsBetween(deviceName, resourceName, fromts, tots)
+    this.subscriptions.push(this.graphService.getReadingsBetween(deviceName, resourceName, fromts, tots)
           .subscribe(res => {
               this.resourceReadings = res as TSReading[];
               this.setScatterChartDataSet();
