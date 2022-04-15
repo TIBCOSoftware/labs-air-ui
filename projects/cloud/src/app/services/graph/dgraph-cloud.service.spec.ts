@@ -3,6 +3,7 @@ import {
     DataStoreService,
     FilterConfigService,
     GatewayService,
+    GraphService,
     ModelConfigService,
     ModelService,
     NotificationService,
@@ -11,7 +12,7 @@ import {
     ReadingService,
     RouteService
 } from '@TIBCOSoftware/labs-air-graph-client';
-import { DGraphService } from './dgraph.service';
+import { DGraphCloudService } from './dgraph-cloud.service';
 import {
     HttpClientTestingModule,
     HttpTestingController
@@ -19,11 +20,11 @@ import {
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import Axios from 'axios-observable';
-import { AppConfigService } from '../config/app-config.service';
+import { AppConfigService } from 'common';
 
 
 describe('DgraphService', () => {
-    let dgraphService: DGraphService;
+    let dgraphService: DGraphCloudService;
     const httpClientSpy = jasmine.createSpyObj(['get', 'post']);
     let httpTestingController: HttpTestingController;
 
@@ -58,15 +59,15 @@ describe('DgraphService', () => {
                 { provide: ReadingService, useValue: readingService },
                 { provide: RouteService, useValue: routeService },
                 { provide: HttpClient, useValue: httpClientSpy },
-                DGraphService
+                DGraphCloudService
             ]
         });
-        dgraphService = TestBed.inject(DGraphService);
+        dgraphService = TestBed.inject(DGraphCloudService);
         httpTestingController = TestBed.inject(HttpTestingController);
     });
 
     it('should be created', () => {
-        const service: DGraphService = TestBed.inject(DGraphService);
+        const service: GraphService = TestBed.inject(DGraphCloudService);
         expect(service).toBeTruthy();
     });
 });

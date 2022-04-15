@@ -31,7 +31,8 @@ import { SpotfireDashboardComponent } from './components/spotfire-dashboard/spot
 import { IotDashboardComponent } from './components/iot-dashboard/iot-dashboard.component';
 
 import { CommonLibraryModule } from 'common';
-import { DGraphService } from 'common';
+import { DGraphService } from './services/graph/dgraph.service';
+
 
 const appInitializerFn = (appConfig: AppConfigService) => {
     return () => {

@@ -23,12 +23,11 @@ import {
 } from '@TIBCOSoftware/labs-air-graph-client';
 import { Observable } from 'rxjs';
 import { Axios } from 'axios-observable';
-import { AppConfigService } from '../config/app-config.service';
+import { AppConfigService } from 'common';
 
 @Injectable()
-export class DGraphService extends GraphService {
+export class DGraphCloudService extends GraphService {
 
-  private dgraphUrl;
 
   /**
    *
@@ -49,10 +48,10 @@ export class DGraphService extends GraphService {
     private readingService: ReadingService,
     private routeService: RouteService) {
     super(http, appConfigService.getFromConfigOrEnv('dgraphUrl'), false);
-    console.log('Constructor Getting basic auth for dGraph');
+    console.log(`Constructor dGraphCloud service with url ${super.dGraphUrl}`);
 
-    const dgraphBasicAuthEnabled = this.appConfigService.getFromConfigOrEnv('dgraphBasicAuthEnabled');
-    /*if (dgraphBasicAuthEnabled) {
+    /* const dgraphBasicAuthEnabled = this.appConfigService.getFromConfigOrEnv('dgraphBasicAuthEnabled');
+    if (dgraphBasicAuthEnabled) {
       const dgraphBasicAuth = this.appConfigService.getFromConfigOrEnv('dgraphBasicAuth');
       httpOptions.headers = httpOptions.headers.append('Authorization', dgraphBasicAuth);
       httpMutateOptions.headers = httpMutateOptions.headers.append('Authorization', dgraphBasicAuth);
