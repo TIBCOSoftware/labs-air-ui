@@ -3,17 +3,15 @@ import { DatePipe } from '@angular/common';
 
 import { SelectionModel } from '@angular/cdk/collections';
 
-import { Gateway, DataStoreMetadata, Device } from '../../models/iot.model';
+import { DataStoreMetadata, Device } from '../../models/iot.model';
 import { EdgeService } from '../../services/edge/edge.service';
-import { GraphService } from '../../services/graph/graph.service';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { DatastoreService } from '../../services/datastore/datastore.service';
-//import { merge } from "rxjs/observable/merge";
-//import { fromEvent } from 'rxjs/observable/fromEvent';
-// // import { DevicesDataSource } from "../services/edge/devices.datasource";
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Gateway } from '@TIBCOSoftware/labs-air-graph-client';
 
 @Component({
     selector: 'app-common-iot-gateway',
@@ -29,7 +27,7 @@ export class CommonIotGatewayComponent implements OnInit, AfterViewInit {
   publisherDisabled = true;
   cloudDataPipelineDisable = true;
   edgeDataPipelineDisable = true;
-  selectedGateway: Gateway = new Gateway();
+  selectedGateway: Gateway = {} as Gateway;
   hideAccessToken = true;
   dateFormat = 'yyyy-MM-dd  HH:mm:ss';
 
@@ -135,7 +133,7 @@ export class CommonIotGatewayComponent implements OnInit, AfterViewInit {
           });
       }
       else {
-          const gate = new Gateway();
+          const gate = {} as Gateway;
 
           // let dateNow = this._datePipe.transform(new Date(), 'yyyy-MM-ddTHH:mm:ssZZZZZ');
           const tsms = Date.now();
@@ -160,7 +158,7 @@ export class CommonIotGatewayComponent implements OnInit, AfterViewInit {
   }
 
   updateGateway() {
-      const gate = new Gateway();
+      const gate = {} as Gateway;
 
       // let dateNow = this._datePipe.transform(new Date(), 'yyyy-MM-ddTHH:mm:ssZZZZZ');
 
@@ -327,7 +325,7 @@ export class CommonIotGatewayComponent implements OnInit, AfterViewInit {
           this.selectedGateway = gateway;
           this.gatewayOpDisabled = false;
       } else {
-          this.selectedGateway = new Gateway();
+          this.selectedGateway = {} as Gateway;
           this.gatewayOpDisabled = true;
       }
   }

@@ -52,9 +52,8 @@ import { NgxHeatmapModule } from 'ngx-heatmap'
 //services
 import { AppConfigService } from './services/config/app-config.service';
 import { EdgeService } from './services/edge/edge.service';
-import { DgraphService } from './services/graph/dgraph.service';
 import { DatastoreService } from './services/datastore/datastore.service';
-import { GraphService } from './services/graph/graph.service'
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client'
 import { DatePipe } from '@angular/common';
 import { RestHeadersComponent } from './components/iot-pipeline/rest-headers/rest-headers.component';
 
@@ -136,7 +135,6 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     },
     EdgeService,
     DatastoreService,
-    { provide: GraphService, useClass: DgraphService },
     DatePipe
   ]
 })

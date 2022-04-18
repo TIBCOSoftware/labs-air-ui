@@ -1,7 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { TSReading } from '@TIBCOSoftware/labs-air-graph-client';
 import { interval, Subscription } from 'rxjs';
-import { Device, Resource, TSReading } from '../../../models/iot.model';
-import { GraphService } from '../../../services/graph/graph.service';
+import { Device, Resource } from '../../../models/iot.model';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 
 @Component({
     selector: 'app-common-iot-gateway-map',

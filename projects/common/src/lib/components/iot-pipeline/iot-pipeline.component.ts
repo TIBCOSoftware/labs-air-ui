@@ -6,10 +6,10 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { GraphService } from '../../services/graph/graph.service';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { EdgeService } from '../../services/edge/edge.service';
 import { FlogoDeployService } from '../../services/deployment/flogo-deploy.service';
-import { Pipeline, Gateway, Device, Model, RestBroadcast } from '../../models/iot.model';
+import { Device } from '../../models/iot.model';
 
 import { PipelineFilteringComponent } from './pipeline-filtering/pipeline-filtering.component';
 import { PipelineInferencingComponent } from './pipeline-inferencing/pipeline-inferencing.component';
@@ -37,6 +37,7 @@ import { FlogoFlowComponent } from '../rete/components/flogo-flow-component';
 import { RestServiceComponent } from '../rete/components/rest-service-component';
 import { NodePrimaryComponent } from '../rete/nodes/node-primary/node-primary.component';
 import { RestBroadcastComponent } from '../rete/components/rest-broadcast.component'
+import { Gateway, Model, Pipeline } from '@TIBCOSoftware/labs-air-graph-client';
 
 @Component({
     selector: 'app-common-iot-pipeline',
@@ -1818,7 +1819,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           console.log('Saved editor data: ', editorData);
 
           // Save pipeline
-          const pipeline = new Pipeline();
+          const pipeline = {} as  Pipeline;
           const tsms = Date.now();
           pipeline.created = tsms;
           pipeline.modified = tsms;
@@ -1832,7 +1833,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           pipeline.subscriptionTopic = this.getSubscriptionTopic();
 
           // Add pipeline to graph
-          this.graphService.addPipeline(this.gateway.uid, pipeline, '', '', null, null)
+          this.graphService.addPipeline(this.gateway.uid, pipeline)
               .subscribe(res => {
                   console.log('Added pipeline: ', res);
 
@@ -1857,7 +1858,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
       const editorData = this.editor.toJSON();
 
       // Update pipeline
-      const pipeline = new Pipeline();
+      const pipeline = {} as Pipeline;
       const tsms = Date.now();
       pipeline.modified = tsms;
       pipeline.name = this.pipelineForm.get('name').value;
@@ -3031,7 +3032,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
     const orderedFlow = this.reorderFlow(this.editor.toJSON());
 
     console.log('Ordered flow: ', orderedFlow);
-    
+
     orderedFlow.forEach(flowNode => {
         console.log('Inspecting from node: ', flowNode);
         console.log('Inspecting from node name: ', flowNode.name);

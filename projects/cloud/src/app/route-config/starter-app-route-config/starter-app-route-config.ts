@@ -5,9 +5,6 @@ import { CommonIotGatewayComponent } from 'common';
 import { CommonIotGatewayDetailsComponent } from 'common';
 import { CommonIotPipelineComponent } from 'common';
 import { IotGatewayDashboardComponent } from '../../components/iot-gateway-dashboard/iot-gateway-dashboard.component';
-import { ActivatedRouteSnapshot, NavigationEnd, Router, ActivatedRoute} from '@angular/router';
-import { Params } from '@angular/router';
-import { Observable } from 'rxjs';
 import { CommonIotInfraDeployerComponent } from 'common';
 import { CommonIotNotificationsComponent } from 'common';
 import { CommonIotStoreSimulatorComponent } from 'common';
@@ -15,10 +12,7 @@ import { IotDashboardComponent } from '../../components/iot-dashboard/iot-dashbo
 import { CommonIotTextileSimulatorComponent } from 'common';
 
 export const HOME_ROUTE = 'splash';
-let router:Router;
-let params: Observable<Params>;
-let snapshot: ActivatedRouteSnapshot;
-let route: ActivatedRoute;
+
 export const STARTER_APP_ROUTES=
 [
     {

@@ -1,6 +1,13 @@
-<div fxFill fxLayout="column" style="overflow: hidden;">
-  <tc-tibco-cloud-navbar class="tcla-cloud-navbar" [integratedHelp]="true" [appName]="config.applicationTitle" [docUrl]="config.documentationUrl"></tc-tibco-cloud-navbar>
-</div>
-<div fxFlex class="tcs-starter-app-router-pane" fxLayout="row" fxLayoutAlign="start, stretch">
-  <router-outlet></router-outlet>
+<!-- make case screen full height-->
+<div fxFill fxLayout="column"
+  style="overflow: hidden;height: 100%; min-height: 100%; min-width: 100%; width: 100%; flex-direction: column; box-sizing: border-box; display: flex;">
+  <!-- Toolbar -->
+  <div class="toolbar" role="banner">
+    <img height="55px" alt="TIBCO Logo" src="../../../assets/icons/TIBCO_Labs.png" />
+    <h2>TIBCO Project AIR</h2>
+  </div>
+  <!-- this is now full height '-' size of header -->
+  <div fxFlex class="tcs-starter-app-router-pane" fxLayout="row" fxLayoutAlign="start, stretch">
+    <router-outlet></router-outlet>
+  </div>
 </div>

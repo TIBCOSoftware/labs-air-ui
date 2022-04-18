@@ -1,5 +1,4 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
 import {Title} from '@angular/platform-browser';
 
 @Component({
@@ -10,7 +9,7 @@ import {Title} from '@angular/platform-browser';
 })
 export class StarterAppComponent implements OnInit {
 
-    constructor(private route: ActivatedRoute, private router: Router, private titleService: Title) { }
+    constructor(private titleService: Title) { }
 
     ngOnInit() {
         this.titleService.setTitle('Project Air App');

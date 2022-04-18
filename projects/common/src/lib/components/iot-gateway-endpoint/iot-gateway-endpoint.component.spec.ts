@@ -3,7 +3,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
-import { GraphService } from 'common';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 
 import { CommonIotGatewayEndpointComponent } from './iot-gateway-endpoint.component';
 

@@ -1,12 +1,11 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
-import { GraphService } from '../../../services/graph/graph.service';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 
 import { IgeModelsComponent } from './ige-models.component';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { MaterialModule } from '../../../material.module'
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { FormBuilder } from '@angular/forms';
 
 describe('IgeModelsComponent', () => {
     let component: IgeModelsComponent;
@@ -18,9 +17,10 @@ describe('IgeModelsComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [IgeModelsComponent],
-            imports: [ReactiveFormsModule, FormsModule, MaterialModule, BrowserAnimationsModule],
+            imports: [MatSnackBarModule],
             providers: [
-                { provide: GraphService, useValue: mockGraphService }
+                { provide: GraphService, useValue: mockGraphService },
+                FormBuilder
             ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA]
         })
