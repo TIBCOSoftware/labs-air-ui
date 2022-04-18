@@ -1,4 +1,5 @@
 import { FormArray } from "@angular/forms";
+import { Gateway } from "@TIBCOSoftware/labs-air-graph-client";
 
 export class ResourceProperty {
   assertion: string;
@@ -125,75 +126,6 @@ export class Publisher {
   topic: string;
 }
 
-export class Protocol{
-  uid: number;
-  uuid: string;
-  created: number;
-  modified: number;
-  protocolType: string;
-  brokerURL: string;
-  topic: string;
-  consumerGroupId: string;
-  connectionTimeout: string;
-  sessionTimeout: string;
-  initialOffset: string;
-  retryBackoff: string;
-  fetchMinBytes: string;
-  fetchMaxWait: string;
-  commitInterval: string;
-  heartbeatInterval: string;
-  maximumQOS: string;
-  username: string;
-  password: string;
-  encryptionMode: string;
-  caCerticate: string;
-  clientCertificate: string;
-  clientKey: string;
-  authMode: string;
-  serverCertificate: string;
-  scope: string;
-}
-
-export class DataStore {
-  uid: number;
-  uuid: string;
-  created: number;
-  modified: number;
-  dataStoreType: string;
-  host: string;
-  port: string;
-  databaseName: string;
-  user: string;
-  password: string;
-  accountName: string;
-  warehouse: string;
-  database: string;
-  schema: string;
-  authType: string;
-  username: string;
-  role: string;
-  clientId: string;
-  clientSecret: string;
-  authorizationCode: string;
-  redirectURI: string;
-  loginTimeout: string;
-  url: string;
-  scope: string;
-}
-
-export class Pipeline {
-  uid: number;
-  created: number;
-  modified: number;
-  name: string;
-  pipelineType: string;
-  deployerType: string;
-  description: string;
-  status: string;
-  flowConfiguration: string;
-  subscriptionTopic: string;
-  logLevel: string;
-}
 
 export class NVPair {
   name: string;
@@ -219,31 +151,6 @@ export class Addressable {
   url: string;
   user: string;
   password: string;
-}
-
-export class Gateway {
-  uid: number;
-  description: string;
-  createdts: number;
-  updatedts: number;
-  uuid: string;
-  address: string;
-  router: string;
-  routerPort: string;
-  deployNetwork: string;
-  latitude: number;
-  longitude: number;
-  accessToken: string;
-  platform: string;
-  numDevices: number;
-  username: string;
-  devicesMetadata: string;
-  subscriptions: Subscription[];
-  publishers: Publisher[];
-  pipelines: Pipeline[];
-  dataStores: DataStore[];
-  protocols: Protocol[];
-  models: Model[];
 }
 
 
@@ -286,31 +193,6 @@ export class Rule {
   actionValue: string;
 }
 
-export class Model {
-  uid: number;
-  created: number;
-  modified: number;
-  uuid: string;
-  name: string;
-  description: string;
-  inputType: string;
-  url: string;
-  scope: string;
-  inputTemplate: string;
-}
-
-export class ModelConfig {
-  uid: number;
-  created: number;
-  modified: number;
-  uuid: string;
-  name: string;
-  description: string;
-  device: string;
-  resource: string;
-  model: string;
-}
-
 export class Filter {
   device: string;
   resource: string;
@@ -318,30 +200,6 @@ export class Filter {
 
 export class FiltersConfig {
   filters: Filter[];
-}
-
-export class GatewayFiltersConfig {
-  uid: number;
-  deviceNames: string;
-}
-
-export class Notification {
-  uid: number;
-  uuid: string;
-  created: number;
-  notifySource: string;
-  notifyDevice: string;
-  notifyResource: string;
-  notifyLevel: string;
-  gateway: string;
-  value: string;
-  description: string;
-}
-
-// TSReading - Time series reading.
-export class TSReading {
-  value: string;
-  created: number;
 }
 
 export class TSCombinedReading {

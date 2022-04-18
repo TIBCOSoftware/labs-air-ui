@@ -4,10 +4,11 @@ import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { SelectionModel } from '@angular/cdk/collections';
 import { EdgeService } from '../../../services/edge/edge.service';
-import { GraphService } from '../../../services/graph/graph.service';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 
-import { Device, FiltersConfig, Model } from '../../../models/iot.model';
+import { Device, FiltersConfig } from '../../../models/iot.model';
 import { FormGroup } from '@angular/forms';
+import { Model } from '@TIBCOSoftware/labs-air-graph-client';
 
 export interface SelectItem {
   value: string;

@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
-import { GraphService } from '../../services/graph/graph.service';
-import { Notification } from '../../models/iot.model';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
+import { Notification } from '@TIBCOSoftware/labs-air-graph-client';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';

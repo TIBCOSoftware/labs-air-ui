@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, AfterViewInit, ViewChild } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
-import { Model, Gateway } from 'common';
-import { GraphService } from 'common';
+import { Model } from '@TIBCOSoftware/labs-air-graph-client';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
@@ -195,7 +195,7 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
    */
   addModel() {
       const ts = Date.now();
-      const model = new Model();
+      const model = {} as Model;
 
       let scope = this.modelForm.get('scope').value;
       if (scope != 'GLOBAL') {
@@ -213,7 +213,7 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
       model.inputTemplate = btoa(this.modelForm.get('inputTemplate').value);
 
       console.log('Adding model with uuid: ', model.uuid);
-    
+
 
       // First check that model with the same name already exist
       if (this.modelExist(model.uuid)) {
@@ -242,7 +242,7 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
       console.log('Inside updateModel function');
 
       const ts = Date.now();
-      const model = new Model();
+      const model = {} as Model;
 
       let scope = this.modelForm.get('scope').value;
       if (scope != 'GLOBAL') {
@@ -261,7 +261,7 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
 
       console.log('Update model to url: ', model.url);
       console.log('Update model to inputTemplate: ', model.inputTemplate);
-    
+
       this.graphService.updateModel(model)
           .subscribe(res => {
               console.log('Result from update model', res);

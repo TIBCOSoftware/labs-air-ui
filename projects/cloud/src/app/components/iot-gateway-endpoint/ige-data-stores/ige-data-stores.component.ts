@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ViewChild, AfterViewInit } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
-import { DataStore } from 'common';
-import { GraphService } from 'common';
+import { DataStore } from '@TIBCOSoftware/labs-air-graph-client';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
@@ -311,7 +311,7 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
   addDataStore() {
 
       const ts = Date.now();
-      const dataStore = new DataStore();
+      const dataStore = {} as DataStore;
 
       let scope = this.dataStoreForm.get('scope').value;
       if (scope != 'GLOBAL') {
@@ -446,7 +446,7 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
       console.log('Inside updateDataStore function');
 
       const ts = Date.now();
-      const dataStore = new DataStore();
+      const dataStore = {} as DataStore;
       dataStore.uid = this.dataStoreForm.get('uid').value;
 
       // First Check if there are pipelines associated with the data store

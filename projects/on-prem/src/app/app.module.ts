@@ -8,20 +8,15 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { NgxHeatmapModule } from 'ngx-heatmap';
 import { NgChartsModule } from 'ng2-charts';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
-
 import { StarterAppComponent } from './routes/starter-app/starter-app.component';
 import { SplashComponent } from './routes/splash/splash.component';
-
 import { HomeComponent } from './routes/home/home.component';
 import { IotHomeCockpitComponent } from './components/iot-home-cockpit/iot-home-cockpit.component';
-
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
-import { GraphService } from 'common';
-import { DgraphService } from 'common';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { Ng2GoogleChartsModule } from 'ng2-google-charts';
 import { IotGatewayEndpointComponent } from './components/iot-gateway-endpoint/iot-gateway-endpoint.component';
 import { IgeModelsComponent } from './components/iot-gateway-endpoint/ige-models/ige-models.component';
@@ -30,8 +25,8 @@ import { IgeProtocolsComponent } from './components/iot-gateway-endpoint/ige-pro
 import { IotGatewayDashboardComponent } from './components/iot-gateway-dashboard/iot-gateway-dashboard.component';
 import { SpotfireDashboardComponent } from './components/spotfire-dashboard/spotfire-dashboard.component';
 import { IotDashboardComponent } from './components/iot-dashboard/iot-dashboard.component';
-
 import { CommonLibraryModule } from 'common';
+import { DGraphService } from './services/graph/dgraph.service';
 
 const appInitializerFn = (appConfig: AppConfigService) => {
     return () => {
@@ -77,7 +72,7 @@ const appInitializerFn = (appConfig: AppConfigService) => {
             deps: [AppConfigService],
         },
         DatePipe,
-        { provide: GraphService, useClass: DgraphService },
+        { provide: GraphService, useClass: DGraphService },
         { provide: LocationStrategy, useClass: HashLocationStrategy },
     ],
     bootstrap: [AppComponent],

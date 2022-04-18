@@ -1,12 +1,11 @@
 import { SplashComponent } from '../../routes/splash/splash.component';
 import { HomeComponent } from '../../routes/home/home.component';
-import {IotGatewayEndpointComponent} from '../../components/iot-gateway-endpoint/iot-gateway-endpoint.component';
+import { IotGatewayEndpointComponent } from '../../components/iot-gateway-endpoint/iot-gateway-endpoint.component';
 import { CommonIotGatewayComponent } from 'common';
 import { CommonIotGatewayDetailsComponent } from 'common';
 import { CommonIotPipelineComponent } from 'common';
 import { IotGatewayDashboardComponent } from '../../components/iot-gateway-dashboard/iot-gateway-dashboard.component';
-import { ActivatedRouteSnapshot, NavigationEnd, Router, ActivatedRoute} from '@angular/router';
-import { Gateway } from 'common';
+import { ActivatedRouteSnapshot, Router, ActivatedRoute } from '@angular/router';
 import { Params } from '@angular/router';
 import { Observable } from 'rxjs';
 import { CommonIotInfraDeployerComponent } from 'common';

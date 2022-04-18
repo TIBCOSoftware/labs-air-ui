@@ -3,18 +3,18 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormGroup } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
-import { GraphService } from '../../services/graph/graph.service';
-import { Gateway } from '../../models/iot.model';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
+import { Gateway } from '@TIBCOSoftware/labs-air-graph-client';
 
 import { CommonIotInfraDeployerComponent } from './iot-infra-deployer.component';
 
-describe('COmmonIotInfraDeployerComponent', () => {
+describe('CommonIotInfraDeployerComponent', () => {
     let component: CommonIotInfraDeployerComponent;
     let fixture: ComponentFixture<CommonIotInfraDeployerComponent>;
     const mockGraphService = jasmine.createSpyObj(['getGateways', 'getGatewayAndPipelines', 'getModels']);
 
     mockGraphService.getGateways.and.returnValue(of([]));
-    mockGraphService.getGatewayAndPipelines.and.returnValue(of([new Gateway()] as Gateway[]));
+    mockGraphService.getGatewayAndPipelines.and.returnValue(of([{}] as Gateway[]));
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
