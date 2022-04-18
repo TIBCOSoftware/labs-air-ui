@@ -2,7 +2,7 @@ import { Component, OnInit, Input, AfterViewInit, ViewChild } from '@angular/cor
 import { SelectionModel } from '@angular/cdk/collections';
 import { Model, Gateway } from '../../../models/iot.model';
 import { GraphService } from '../../../services/graph/graph.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -50,10 +50,19 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
       { value: 'audio', viewValue: 'audio' }
   ];
 
+  methods = ['PUT', 'POST'];
+
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   @Input() gatewayId: string;
 
+  get headers (): FormArray {
+    return this.modelForm.get('headers') as FormArray
+  }
+
+  get headerGroups (): [FormGroup] {
+    return this.headers.controls as [FormGroup]
+  }
   /**
    *
    * @param graphService
@@ -114,7 +123,9 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
           inputType: ['', Validators.required],
           url: ['', Validators.required],
           scope: ['', Validators.required],
-          inputTemplate: ['', Validators.required]
+          inputTemplate: ['', Validators.required],
+          headers: this.formBuilder.array([]),
+          method: ['', Validators.required]
       });
   }
 
@@ -169,7 +180,11 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
           url: model.url,
           scope: scope,
           inputTemplate: atob(model.inputTemplate),
+          method: model.method
       });
+
+      const headersArray = model.headers.map(x => this.formBuilder.group(x));
+      this.modelForm.setControl('headers', headersArray);
 
       this.graphDeleteOpDisabled = false;
       this.graphAddOpDisabled = true;
@@ -211,7 +226,8 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
       model.inputType = this.modelForm.get('inputType').value;
       model.url = this.modelForm.get('url').value;
       model.inputTemplate = btoa(this.modelForm.get('inputTemplate').value);
-
+      model.headers = btoa(this.modelForm.get('models').value);
+      model.method = this.modelForm.get('method').value;
       console.log('Adding model with uuid: ', model.uuid);
     
 
@@ -258,6 +274,8 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
       model.inputType = this.modelForm.get('inputType').value;
       model.url = this.modelForm.get('url').value;
       model.inputTemplate = btoa(this.modelForm.get('inputTemplate').value);
+      model.headers = btoa(this.modelForm.get('models').value);
+      model.method = this.modelForm.get('method').value;
 
       console.log('Update model to url: ', model.url);
       console.log('Update model to inputTemplate: ', model.inputTemplate);
@@ -325,6 +343,18 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
       );
 
       return found;
+  }
+
+  addHeader(): void {
+    const formGroup = new FormGroup({
+      key: new FormControl('',),
+      value: new FormControl('',)
+    })
+    this.headers.push(formGroup);
+  }
+
+  deleteHeader(index: number): void {
+    this.headers.removeAt(index);
   }
 
 }

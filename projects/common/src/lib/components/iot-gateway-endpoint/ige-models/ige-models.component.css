@@ -39,3 +39,11 @@ table {
   margin-right: 2%;
   width: 20%;
 }
+
+.model-form {
+  display: flex;
+}
+
+.model-form-configuration {
+  flex: 1;
+}

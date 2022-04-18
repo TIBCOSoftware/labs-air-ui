@@ -297,6 +297,8 @@ export class Model {
   url: string;
   scope: string;
   inputTemplate: string;
+  headers: string;
+  method: string;
 }
 
 export class ModelConfig {
