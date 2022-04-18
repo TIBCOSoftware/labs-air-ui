@@ -9,7 +9,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve on-prem --ssl true",
-    "start-cloud": "ng serve cloud --proxy-config ./proxy.conf.prod.us.js --ssl true",
+    "start-cloud": "ng serve cloud --ssl true",
     "build": "ng build on-prem",
     "build-cloud": "ng build cloud",
     "build-common": "ng build common",

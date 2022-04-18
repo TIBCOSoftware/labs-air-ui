@@ -31,8 +31,6 @@ import { SpotfireDashboardComponent } from './components/spotfire-dashboard/spot
 import { IotDashboardComponent } from './components/iot-dashboard/iot-dashboard.component';
 
 import { CommonLibraryModule } from 'common';
-import { LoginComponent } from './routes/login/login.component';
-import { LoginOauthComponent } from './routes/login-oauth/login-oauth.component';
 import { ApiModule as LabsAirGraphApiModule } from '@TIBCOSoftware/labs-air-graph-client';
 import { DGraphCloudService } from './services/graph/dgraph-cloud.service';
 
@@ -56,9 +54,7 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     IgeProtocolsComponent,
     IotGatewayDashboardComponent,
     SpotfireDashboardComponent,
-    IotDashboardComponent,
-    LoginComponent,
-    LoginOauthComponent
+    IotDashboardComponent
   ],
   imports: [
     BrowserModule,
