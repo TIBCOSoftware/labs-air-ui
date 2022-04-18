@@ -12,16 +12,17 @@ router-outlet + * {
 }
 
 * { font-family: 'Source Sans Pro', 'Helvetica Neue', 'Sans Serif'; }
+
 .toolbar {
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 60px;
-  display: flex;
   align-items: center;
   background-color: #062e79;
   color: white;
+  display: flex;
   font-weight: 600;
+  height: 60px;
+  left: 0;
+  right: 0;
+  top: 0;
 }
 
 .toolbar img {
