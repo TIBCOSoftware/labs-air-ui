@@ -1,10 +1,11 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { of } from 'rxjs';
-import { AppModule } from '../../../app.module';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 
 import { IgeProtocolsComponent } from './ige-protocols.component';
+import { FormBuilder } from '@angular/forms';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 describe('IgeProtocolsComponent', () => {
     let component: IgeProtocolsComponent;
@@ -16,9 +17,10 @@ describe('IgeProtocolsComponent', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [IgeProtocolsComponent],
-            imports: [AppModule],
+            imports: [MatSnackBarModule],
             providers: [
-                { provide: GraphService, useValue: mockGraphService }
+                { provide: GraphService, useValue: mockGraphService },
+                FormBuilder
             ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA]
         })
