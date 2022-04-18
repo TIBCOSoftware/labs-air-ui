@@ -1,10 +1,12 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { of } from 'rxjs';
-import { AppModule } from '../../../app.module';
-import { GraphService } from 'common';
+import { GraphService } from '../../../services/graph/graph.service';
 
 import { IgeProtocolsComponent } from './ige-protocols.component';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MaterialModule } from '../../../material.module'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('IgeProtocolsComponent', () => {
     let component: IgeProtocolsComponent;
@@ -16,7 +18,7 @@ describe('IgeProtocolsComponent', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [IgeProtocolsComponent],
-            imports: [AppModule],
+            imports: [ReactiveFormsModule, FormsModule, MaterialModule, BrowserAnimationsModule],
             providers: [
                 { provide: GraphService, useValue: mockGraphService }
             ],

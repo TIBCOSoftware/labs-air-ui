@@ -32,6 +32,10 @@ import { CommonIotNotificationsComponent } from './components/iot-notifications/
 import { CommonIotStoreSimulatorComponent } from './components/iot-simulator/iot-store-simulator/iot-store-simulator.component';
 import { CommonIotTextileSimulatorComponent } from './components/iot-simulator/iot-textile-simulator/iot-textile-simulator.component';
 import { PipelineRestBroadcastComponent } from './components/iot-pipeline/pipeline-rest-broadcast/pipeline-rest-broadcast.component';
+import { CommonIotGatewayEndpointComponent } from './components/iot-gateway-endpoint/iot-gateway-endpoint.component';
+import { IgeDataStoresComponent } from './components/iot-gateway-endpoint/ige-data-stores/ige-data-stores.component';
+import { IgeModelsComponent } from './components/iot-gateway-endpoint/ige-models/ige-models.component'
+import { IgeProtocolsComponent } from './components/iot-gateway-endpoint/ige-protocols/ige-protocols.component'
 
 // modules
 import { RouterModule } from '@angular/router';
@@ -97,7 +101,11 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     CommonIotStoreSimulatorComponent,
     CommonIotTextileSimulatorComponent,
     PipelineRestBroadcastComponent,
-    RestHeadersComponent
+    RestHeadersComponent,
+    CommonIotGatewayEndpointComponent,
+    IgeDataStoresComponent,
+    IgeModelsComponent,
+    IgeProtocolsComponent
   ],
   imports: [
     MaterialModule,

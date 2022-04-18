@@ -1,10 +1,13 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { of } from 'rxjs';
-import { AppModule } from '../../../app.module';
 import { GraphService } from 'common';
 
 import { IgeDataStoresComponent } from './ige-data-stores.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MaterialModule } from '../../../material.module'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 describe('IgeDataStoresComponent', () => {
     let component: IgeDataStoresComponent;
@@ -16,7 +19,7 @@ describe('IgeDataStoresComponent', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [IgeDataStoresComponent],
-            imports: [AppModule],
+            imports: [ReactiveFormsModule, FormsModule, MaterialModule, BrowserAnimationsModule],
             providers: [
                 { provide: GraphService, useValue: mockGraphService }
             ],

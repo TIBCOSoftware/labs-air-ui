@@ -6,7 +6,7 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
     templateUrl: './iot-gateway-endpoint.component.html',
     styleUrls: ['./iot-gateway-endpoint.component.css']
 })
-export class IotGatewayEndpointComponent implements OnInit {
+export class CommonIotGatewayEndpointComponent implements OnInit {
 
   gatewayId = '';
 
