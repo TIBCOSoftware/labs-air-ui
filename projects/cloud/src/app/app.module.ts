@@ -33,14 +33,6 @@ import { IotDashboardComponent } from './components/iot-dashboard/iot-dashboard.
 import { CommonLibraryModule } from 'common';
 import { LoginComponent } from './routes/login/login.component';
 import { LoginOauthComponent } from './routes/login-oauth/login-oauth.component';
-
-import {
-  LogService,
-  TcCoreConfig,
-  TcCoreLibModule
-} from '@tibco-tcstk/tc-core-lib';
-import { TcFormsLibModule } from '@tibco-tcstk/tc-forms-lib';
-import { TcLiveappsLibModule } from '@tibco-tcstk/tc-liveapps-lib';
 import { ApiModule as LabsAirGraphApiModule } from '@TIBCOSoftware/labs-air-graph-client';
 import { DGraphCloudService } from './services/graph/dgraph-cloud.service';
 
@@ -50,20 +42,6 @@ const appInitializerFn = (appConfig: AppConfigService) => {
   };
 };
 
-const tcCoreConfig: TcCoreConfig = {
-  disableFormLibs: false,
-  // for test mode ONLY you can enter an oAuth key as the local storage key as long as it starts CIC~
-  // do NOT use this for production code - instead enter the local storage key where external app will save oauth key.
-  // oauth keys should NEVER be saved in code for production or when checked into source control!
-  // oAuthLocalStorageKey: 'TC_DEV_KEY',
-  oAuthLocalStorageKey: '',
-  proxy_url: '',
-  proxy_liveapps_path: '',
-  proxy_tce_path: '',
-  api_key: '',
-  api_key_param: 'api_key',
-  enable_tce: false
-}
 @NgModule({
   declarations: [
     AppComponent,
@@ -93,9 +71,6 @@ const tcCoreConfig: TcCoreConfig = {
     NgxHeatmapModule,
     Ng2GoogleChartsModule,
     NgChartsModule,
-    TcCoreLibModule.forRoot(tcCoreConfig),
-    TcFormsLibModule,
-    TcLiveappsLibModule.forRoot(),
     CommonLibraryModule,
     LabsAirGraphApiModule
   ],
@@ -110,7 +85,6 @@ const tcCoreConfig: TcCoreConfig = {
     DatePipe,
     { provide: GraphService, useClass: DGraphCloudService },
     { provide: LocationStrategy, useClass: HashLocationStrategy },
-    LogService,
   ],
   bootstrap: [AppComponent]
 })
