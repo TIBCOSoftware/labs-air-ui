@@ -16,7 +16,7 @@ router-outlet + * {
 .toolbar {
   align-items: center;
   background-color: #062e79;
-  color: white;
+  color: #fff;
   display: flex;
   font-weight: 600;
   height: 60px;
