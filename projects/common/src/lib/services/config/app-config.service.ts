@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-
 import * as _ from 'lodash';
+import { lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class AppConfigService {
@@ -11,8 +11,7 @@ export class AppConfigService {
     constructor(private http: HttpClient) { }
 
     loadAppConfig() {
-        return this.http.get('/assets/data/appConfig.json')
-            .toPromise()
+        return lastValueFrom(this.http.get('/assets/data/appConfig.json'))
             .then(data => {
                 console.log('the application config is', data)
                 this.appConfig = data;

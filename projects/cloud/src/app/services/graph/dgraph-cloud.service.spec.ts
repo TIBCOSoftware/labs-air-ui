@@ -19,7 +19,6 @@ import {
 } from '@angular/common/http/testing';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import Axios from 'axios-observable';
 import { AppConfigService } from 'common';
 
 
@@ -28,7 +27,7 @@ describe('DgraphService', () => {
     const httpClientSpy = jasmine.createSpyObj(['get', 'post']);
     let httpTestingController: HttpTestingController;
 
-    const axios: Partial<Axios> = jasmine.createSpyObj(['xxx']);
+    const httpClient: Partial<HttpClient> = jasmine.createSpyObj(['xxx']);
     const appConfigService: Partial<AppConfigService> = jasmine.createSpyObj(['getFromConfigOrEnv']);
     const dataStoreService: Partial<DataStoreService> = jasmine.createSpyObj(['xxx']);
     const filterConfigService: Partial<FilterConfigService> = jasmine.createSpyObj(['xxx']);
@@ -46,7 +45,7 @@ describe('DgraphService', () => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule, CommonModule],
             providers: [
-                { provide: Axios, useValue: axios },
+                { provide: HttpClient, useValue: httpClient },
                 { provide: AppConfigService, useValue: appConfigService },
                 { provide: DataStoreService, useValue: dataStoreService },
                 { provide: FilterConfigService, useValue: filterConfigService },
