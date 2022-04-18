@@ -1,7 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { of } from 'rxjs';
-import { GraphService } from 'common';
+import { GraphService } from '../../../services/graph/graph.service';
 
 import { IgeDataStoresComponent } from './ige-data-stores.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';

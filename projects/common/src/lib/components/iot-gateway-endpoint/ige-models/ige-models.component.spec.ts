@@ -1,7 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
-import { GraphService } from 'common';
+import { GraphService } from '../../../services/graph/graph.service';
 
 import { IgeModelsComponent } from './ige-models.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';

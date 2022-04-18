@@ -4,7 +4,7 @@ import { of } from 'rxjs';
 import { GraphService } from '../../../services/graph/graph.service';
 
 import { IgeProtocolsComponent } from './ige-protocols.component';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../../../material.module'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
