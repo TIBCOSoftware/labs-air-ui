@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Axios } from 'axios-observable';
+import { HttpClient } from '@angular/common/http';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { AppConfigService } from 'common';
 
@@ -8,7 +8,7 @@ import { AppConfigService } from 'common';
 })
 export class DGraphService extends GraphService {
 
-  constructor(http: Axios, appConfigService: AppConfigService) {
+  constructor(http: HttpClient, appConfigService: AppConfigService) {
     super(http, appConfigService.getFromConfigOrEnv('dgraphUrl'), false);
    }
 }

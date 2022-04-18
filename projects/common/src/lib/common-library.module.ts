@@ -125,7 +125,6 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     },
     EdgeService,
     DatastoreService,
-    GraphService,
     DatePipe
   ]
 })

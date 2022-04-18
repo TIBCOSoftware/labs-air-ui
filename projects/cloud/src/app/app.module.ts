@@ -20,7 +20,7 @@ import { HomeComponent } from './routes/home/home.component';
 import { IotHomeCockpitComponent } from './components/iot-home-cockpit/iot-home-cockpit.component';
 
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
-import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
+import { BASE_PATH, GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { Ng2GoogleChartsModule } from 'ng2-google-charts';
 import { IotGatewayEndpointComponent } from './components/iot-gateway-endpoint/iot-gateway-endpoint.component';
 import { IgeModelsComponent } from './components/iot-gateway-endpoint/ige-models/ige-models.component';
@@ -34,10 +34,14 @@ import { CommonLibraryModule } from 'common';
 import { ApiModule as LabsAirGraphApiModule } from '@TIBCOSoftware/labs-air-graph-client';
 import { DGraphCloudService } from './services/graph/dgraph-cloud.service';
 
-const appInitializerFn = (appConfig: AppConfigService) => {
+const appInitializerFn = (appConfigService: AppConfigService) => {
   return () => {
-    return appConfig.loadAppConfig();
+    return appConfigService.loadAppConfig();
   };
+};
+
+const configurationProviderPath = (appConfigService: AppConfigService) => {
+  return appConfigService.getFromConfigOrEnv('dgraphUrl');
 };
 
 @NgModule({
@@ -79,6 +83,7 @@ const appInitializerFn = (appConfig: AppConfigService) => {
       deps: [AppConfigService]
     },
     DatePipe,
+    { provide: BASE_PATH, useFactory: configurationProviderPath, deps: [AppConfigService] },
     { provide: GraphService, useClass: DGraphCloudService },
     { provide: LocationStrategy, useClass: HashLocationStrategy },
   ],
