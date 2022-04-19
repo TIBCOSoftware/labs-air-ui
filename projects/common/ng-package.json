@@ -2,20 +2,6 @@
   "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../../dist/common",
   "lib": {
-    "entryFile": "src/public-api.ts",
-    "umdModuleIds": {
-      "lodash": "lodash",
-      "ng2-google-charts": "ng2-google-charts",
-      "chart.js": "chart.js",
-      "chartjs-plugin-datalabels": "ChartDataLabels",
-      "chartjs-plugin-streaming": "StreamingPlugin",
-      "ng2-charts": "ng2-charts",
-      "ngx-heatmap": "ngx-heatmap",
-      "rete": "rete",
-      "rete-connection-plugin": "ConnectionPlugin",
-      "rete-angular-render-plugin": "rete-angular-render-plugin",
-      "rete-context-menu-plugin": "ContextMenuPlugin",
-      "yaml": "YAML"
-    }
+    "entryFile": "src/public-api.ts"
   }
 }
