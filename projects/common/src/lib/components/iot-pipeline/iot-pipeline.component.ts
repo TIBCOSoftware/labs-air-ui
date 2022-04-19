@@ -19,7 +19,6 @@ import { NodeEditor, Engine } from 'rete';
 import ConnectionPlugin from 'rete-connection-plugin';
 import { AngularRenderPlugin } from 'rete-angular-render-plugin';
 import ContextMenuPlugin from 'rete-context-menu-plugin';
-// import { zoomAt } from "rete-area-plugin";
 
 import { DataStoreComponent } from '../rete/components/data-store-component';
 import { DataSubscriberComponent } from '../rete/components/data-subscriber-component';
