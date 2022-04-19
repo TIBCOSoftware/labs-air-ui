@@ -1,21 +1,17 @@
 <div [formGroup]="formData" >
     <h4>REST Headers</h4>
-    <div class="space">
-        <button mat-raised-button (click)="addHeader()">Add Header</button>
-    </div>
     <div class="space" formArray="headersArray">
         <div formArray="headers">
             <div *ngFor="let header of headerFormGroup; let i = index">
                 <div [formGroup]="header">
                     <mat-form-field appearance="outline">
                         <mat-label>Key</mat-label>
-                        <input matInput formControlName="key">
+                        <input readonly matInput formControlName="key">
                     </mat-form-field>
                     <mat-form-field appearance="outline">
                         <mat-label>Value</mat-label>
-                        <input matInput formControlName="value">
+                        <input readonly matInput formControlName="value">
                     </mat-form-field>
-                    <mat-icon  class="click" (click)="deleteHeader(i)">delete_outline</mat-icon>
                 </div>
             </div>
         </div>

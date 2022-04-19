@@ -21,28 +21,40 @@
         </div>
         <mat-tab-group #tabs>
             <mat-tab *ngFor="let index of restURLs.controls; index as i" label="Endpoint {{i + 1}}">
-                <div formArrayName="restURLs">
+                <div formArrayName="endpointNames">
                     <mat-form-field appearance="outline">
-                        <mat-label>Request URLs</mat-label>
-                        <input matInput [formControlName]="i" placeholder="url">
-                    </mat-form-field>
-                </div>
-                <div formArrayName="restMethods">
-                    <mat-form-field appearance="outline">
-                        <mat-label>Rest Method</mat-label>
-                        <mat-select [formControlName]="i">
-                            <mat-option *ngFor="let method of methods;" [value]="method">
-                                {{method | uppercase}}
+                        <mat-label>Endpoint</mat-label>
+                        <mat-select [formControlName]="i" (selectionChange)="onModelSelected($event, i)">
+                            <mat-option *ngFor="let item of models;" [value]="item.name">
+                                {{item.name}}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>
-                <div formArrayName="restBodies">
-                    <mat-form-field appearance="outline">
-                        <mat-label>Body</mat-label>
-                        <textarea matInput [formControlName]="i"></textarea>
-                    </mat-form-field>
-                    <app-rest-headers #restHeaders [formData]="restBroadcastForm" [formArrayIndex]="i"></app-rest-headers>
+                <div>
+                    <div formArrayName="restURLs">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Request URLs</mat-label>
+                            <input readonly matInput [formControlName]="i" placeholder="url">
+                        </mat-form-field>
+                    </div>
+                    <div formArrayName="restMethods">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Rest Method</mat-label>
+                            <mat-select [formControlName]="i">
+                                <mat-option *ngFor="let method of methods;" [value]="method">
+                                    {{method | uppercase}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div formArrayName="restBodies">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Body</mat-label>
+                            <textarea readonly matInput [formControlName]="i"></textarea>
+                        </mat-form-field>
+                        <app-rest-headers #restHeaders [formData]="restBroadcastForm" [formArrayIndex]="i"></app-rest-headers>
+                    </div>
                 </div>
             </mat-tab>
         </mat-tab-group>
