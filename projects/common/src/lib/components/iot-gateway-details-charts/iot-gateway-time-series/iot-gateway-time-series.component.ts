@@ -8,7 +8,6 @@ import { ChartConfiguration, ChartOptions, ChartType, Tooltip, Chart } from 'cha
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { BaseChartDirective } from 'ng2-charts';
 
-import 'chartjs-adapter-luxon';
 import StreamingPlugin from 'chartjs-plugin-streaming';
 import { TSReading } from '@TIBCOSoftware/labs-air-graph-client';
 
