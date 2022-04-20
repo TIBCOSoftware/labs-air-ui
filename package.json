@@ -13,6 +13,7 @@
     "build": "ng build on-prem",
     "build-cloud": "ng build cloud",
     "build-common": "ng build common",
+    "build-all": "npm run build-common && npm run build-cloud && npm run build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test common && ng test on-prem && ng test cloud",
     "lint": "ng lint --fix && npx stylelint --fix \"projects/**/*.css\"",
