@@ -71,6 +71,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
   flogoFlowConfig = false;
   restServiceConfig = false;
   restBroadcastConfig = false;
+  requestReplyConfig = false;
   xcor = 0;
   ycor = 0;
 
@@ -89,6 +90,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
   restServiceForm: FormGroup;
   dataOptionsForm: FormGroup;
   restBroadcastForm: FormGroup;
+  requestReplyForm: FormGroup;
 
   ruleTuplesDescriptor = [
       {
@@ -494,6 +496,9 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           contextObj = this.buildNodeRestBroadcastServiceProperties();
           break;
       }
+      case 'MQTT Request Reply': {
+          contextObj = this.buildNodeMQTTRequestReplyProperties();
+      }
       default: {
 
           break;
@@ -595,6 +600,10 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
               this.restBroadcastConfig = true;
               break;
           }
+          case 'MQTT Request Reply': {
+              this.updateMQTTRequestReplyComponent(contextObj);
+              this.requestReplyConfig = true;
+          }
           default: {
               this.pipelineConfig = true;
               break;
@@ -658,6 +667,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           propsEnv: 'auto',
       }, { emitEvent: false });
 
+      this.requestReplyForm.reset();
   }
 
 
@@ -857,7 +867,29 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           restMethods: this.formBuilder.array([]),
           restBodies: this.formBuilder.array([]),
           headers: this.formBuilder.array([])
-      })
+      });
+
+      this.requestReplyForm = this.formBuilder.group({
+          uid: ['', Validators.required],
+          gateway: [this.gatewayId, Validators.required],
+          protocolId: ['', Validators.required],
+          protocol: ['', Validators.required],
+          logLevel: ['INFO', Validators.required],
+          timeout: ['', Validators.required],
+          dataTemplate: ['', Validators.required],
+          mqtt: this.formBuilder.group({
+              hostname: ['changeme', Validators.required],
+              port: ['changeme', Validators.required],
+              username: ['changeme', Validators.required],
+              password: ['changeme', Validators.required],
+              encryptionMode: ['None', Validators.required],
+              caCertificate: [''],
+              clientCertificate: [''],
+              clientKey: [''],
+              topic: ['changeme', Validators.required],
+              maximumQOS: ['2', Validators.required]
+          }),
+       });
   }
 
   /**
@@ -1209,6 +1241,10 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
         'endpointNames': this.restBroadcastForm.get('endpointNames').value
     }
     return restBroadcastObj;
+  }
+
+  buildNodeMQTTRequestReplyProperties(): any {
+      
   }
 
   /**
