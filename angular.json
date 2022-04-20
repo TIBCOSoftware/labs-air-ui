@@ -292,6 +292,7 @@
   },
   "defaultProject": "on-prem",
   "cli": {
+    "analytics": false,
     "defaultCollection": "@angular-eslint/schematics"
   }
 }

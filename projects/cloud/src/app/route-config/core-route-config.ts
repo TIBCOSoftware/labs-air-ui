@@ -1,3 +1,5 @@
+import { AuthGuardService } from '../guards/auth-guard.service';
+import { CallbackComponent } from '../routes/callback/callback.component';
 import {StarterAppComponent} from '../routes/starter-app/starter-app.component';
 import {STARTER_APP_ROUTES, HOME_ROUTE } from './starter-app-route-config/starter-app-route-config';
 
@@ -8,7 +10,12 @@ export const CORE_ROUTES = [
         // because we cache at http level using an interceptor
         path: 'starterApp',
         component: StarterAppComponent,
-        children: STARTER_APP_ROUTES
+        children: STARTER_APP_ROUTES,
+        canActivate: [AuthGuardService]
+      },
+      {
+        path: 'auth/callback',
+        component: CallbackComponent
       },
       {
         path: '', redirectTo: '/starterApp/' + HOME_ROUTE, pathMatch: 'full'

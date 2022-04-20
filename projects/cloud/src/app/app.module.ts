@@ -5,7 +5,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { MaterialModule } from './material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DatePipe } from '@angular/common';
+import { DatePipe, PathLocationStrategy } from '@angular/common';
 import { NgxHeatmapModule } from 'ngx-heatmap';
 import { NgChartsModule } from 'ng2-charts';
 
@@ -34,6 +34,12 @@ import { CommonLibraryModule } from 'common';
 import { ApiModule as LabsAirGraphApiModule } from '@TIBCOSoftware/labs-air-graph-client';
 import { DGraphCloudService } from './services/graph/dgraph-cloud.service';
 
+import { environment } from '../../environments/environment';
+import { AuthorizationService } from './services/authorization.service';
+import { Requestor, FetchRequestor } from '@openid/appauth';
+import { CallbackComponent } from './routes/callback/callback.component';
+import { TokenService } from './services/token.service';
+
 const appInitializerFn = (appConfigService: AppConfigService) => {
   return () => {
     return appConfigService.loadAppConfig();
@@ -58,7 +64,8 @@ const configurationProviderPath = (appConfigService: AppConfigService) => {
     IgeProtocolsComponent,
     IotGatewayDashboardComponent,
     SpotfireDashboardComponent,
-    IotDashboardComponent
+    IotDashboardComponent,
+    CallbackComponent
   ],
   imports: [
     BrowserModule,
@@ -83,9 +90,13 @@ const configurationProviderPath = (appConfigService: AppConfigService) => {
       deps: [AppConfigService]
     },
     DatePipe,
+    AuthorizationService,
+    TokenService,
     { provide: BASE_PATH, useFactory: configurationProviderPath, deps: [AppConfigService] },
     { provide: GraphService, useClass: DGraphCloudService },
-    { provide: LocationStrategy, useClass: HashLocationStrategy },
+    { provide: LocationStrategy, useClass: PathLocationStrategy },
+    { provide: Requestor, useValue: new FetchRequestor()},
+    { provide: 'AuthorizationConfig', useValue: environment}
   ],
   bootstrap: [AppComponent]
 })

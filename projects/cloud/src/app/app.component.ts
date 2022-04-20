@@ -1,16 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
+import { AuthorizationService } from './services/authorization.service';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'Project Air';
   constructor(private matIconRegistry: MatIconRegistry,
-    private domSanitizer: DomSanitizer) {
+    private domSanitizer: DomSanitizer, private authorizationService: AuthorizationService) {
       // Register Icons
       this.matIconRegistry.addSvgIcon(
           'command',
@@ -64,4 +65,12 @@ export class AppComponent {
           'ping',
           this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/ping.svg'));
   }
+    ngOnInit(): void {
+        if (window.location.pathname.includes('/auth/callback')) {
+            // console.info('Callback path - handle token');
+        } else {
+            localStorage.setItem('airRequestedPath', location.pathname);
+            this.authorizationService.authorize();
+        }
+    }
 }

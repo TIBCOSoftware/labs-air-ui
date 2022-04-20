@@ -5,6 +5,10 @@ export const environment = {
     f1EndpointUrl: 'http://54.81.13.248:5408',
     airEndpointUrl:'https://air.labs-air.labs.oocto.eu-west-1.tcie.pro',
     remoteGatewayUrl: '',
-    localGatewayUrl: ''
+    localGatewayUrl: '',
+    issuer_uri: 'https://account.oocto.eu-west-1.tcie.pro',
+    client_id: '',
+    redirect_uri: 'https://localhost:4200/auth/callback',
+    scope: 'securitycontext internal.refresh-session offline openid profile email openid labs tsc offline_access'
 };
 
