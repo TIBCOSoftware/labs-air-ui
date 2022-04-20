@@ -199,9 +199,7 @@ export class AuthorizationService {
                 .pipe(filter((value: any) => value != null))
                 .pipe(take(1))
                 .subscribe((configuration: AuthorizationServiceConfiguration) => {
-                    // console.info('setting listener');
                     this.notifier.setAuthorizationListener((request, response, error) => {
-                        // console.info('Authorization request complete ', request, response, error);
                         if (response && response.code) {
                             const tokenHandler = new BaseTokenRequestHandler(this.requestor);
 
@@ -221,10 +219,8 @@ export class AuthorizationService {
                                 extras: extras
                             });
 
-                            // console.log('making token request:' + JSON.stringify(tokenRequest.toStringMap()));
                             tokenHandler.performTokenRequest(configuration, tokenRequest)
                                 .then((tokenResponse) => {
-                                    // console.log('received token response ', tokenResponse);
                                     this._tokenResponses.next(tokenResponse);
                                     resolve(tokenResponse);
                                 });
@@ -232,7 +228,6 @@ export class AuthorizationService {
                             reject(error);
                         }
                     });
-                    // console.log('attempt to complete request');
                     this.authorizationHandler.completeAuthorizationRequestIfPossible();
                 }, reject);
         });

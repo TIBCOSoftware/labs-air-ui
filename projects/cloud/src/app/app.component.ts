@@ -67,7 +67,6 @@ export class AppComponent implements OnInit {
   }
     ngOnInit(): void {
         if (window.location.pathname.includes('/auth/callback')) {
-            // console.info('Callback path - handle token');
         } else {
             localStorage.setItem('airRequestedPath', location.pathname);
             this.authorizationService.authorize();
