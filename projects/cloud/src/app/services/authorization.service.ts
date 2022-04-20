@@ -220,7 +220,6 @@ export class AuthorizationService {
                                 extras: extras
                             });
 
-                            // console.log('making token request:' + JSON.stringify(tokenRequest.toStringMap()));
                             tokenHandler.performTokenRequest(configuration, tokenRequest)
                                 .then((tokenResponse) => {
                                     // console.log('received token response ', tokenResponse);
