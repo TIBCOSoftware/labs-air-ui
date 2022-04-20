@@ -8,28 +8,22 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DatePipe, PathLocationStrategy } from '@angular/common';
 import { NgxHeatmapModule } from 'ngx-heatmap';
 import { NgChartsModule } from 'ng2-charts';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { LocationStrategy, HashLocationStrategy } from '@angular/common';
-
+import { LocationStrategy } from '@angular/common';
 import { StarterAppComponent } from './routes/starter-app/starter-app.component';
 import { SplashComponent } from './routes/splash/splash.component';
-
 import { HomeComponent } from './routes/home/home.component';
 import { IotHomeCockpitComponent } from './components/iot-home-cockpit/iot-home-cockpit.component';
-
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
-import { BASE_PATH, GraphService } from '@TIBCOSoftware/labs-air-graph-client';
+import { BASE_PATH, Configuration, GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { Ng2GoogleChartsModule } from 'ng2-google-charts';
 import { IotGatewayDashboardComponent } from './components/iot-gateway-dashboard/iot-gateway-dashboard.component';
 import { SpotfireDashboardComponent } from './components/spotfire-dashboard/spotfire-dashboard.component';
 import { IotDashboardComponent } from './components/iot-dashboard/iot-dashboard.component';
-
 import { CommonLibraryModule } from 'common';
 import { ApiModule as LabsAirGraphApiModule } from '@TIBCOSoftware/labs-air-graph-client';
 import { DGraphCloudService } from './services/graph/dgraph-cloud.service';
-
 import { environment } from '../../environments/environment';
 import { AuthorizationService } from './services/authorization.service';
 import { Requestor, FetchRequestor } from '@openid/appauth';
@@ -85,6 +79,16 @@ const configurationProviderPath = (appConfigService: AppConfigService) => {
     AuthorizationService,
     TokenService,
     { provide: BASE_PATH, useFactory: configurationProviderPath, deps: [AppConfigService] },
+    {
+      provide: Configuration,
+      useFactory: (appConfigService: AppConfigService, tokenService: TokenService) =>
+        new Configuration(
+          {
+            basePath: appConfigService.getFromConfigOrEnv('dgraphUrl'),
+            accessToken: tokenService.oauthToken ? tokenService.oauthToken : ''
+          }),
+      deps: [AppConfigService, TokenService]
+    },
     { provide: GraphService, useClass: DGraphCloudService },
     { provide: LocationStrategy, useClass: PathLocationStrategy },
     { provide: Requestor, useValue: new FetchRequestor()},
