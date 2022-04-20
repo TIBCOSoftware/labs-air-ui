@@ -174,7 +174,7 @@
               ],
               "fileReplacements": [
                 {
-                  "replace": "projects/common/src/lib/environments/environment.ts",
+                  "replace": "projects/cloud/environments/environment.ts",
                   "with": "projects/cloud/environments/environment.prod.ts"
                 }
               ],
@@ -189,7 +189,7 @@
               "namedChunks": true,
               "fileReplacements": [
                 {
-                  "replace": "projects/common/src/lib/environments/environment.ts",
+                  "replace": "projects/cloud/environments/environment.ts",
                   "with": "projects/cloud/environments/environment.prod.ts"
                 }
               ]
