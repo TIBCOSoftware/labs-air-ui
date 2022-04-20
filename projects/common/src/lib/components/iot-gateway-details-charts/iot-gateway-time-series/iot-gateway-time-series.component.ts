@@ -11,6 +11,9 @@ import { BaseChartDirective } from 'ng2-charts';
 import StreamingPlugin from 'chartjs-plugin-streaming';
 import { TSReading } from '@TIBCOSoftware/labs-air-graph-client';
 
+// this import is actually needed for chart.js to render the time-series charts.
+import 'chartjs-adapter-luxon';
+
 Chart.register(StreamingPlugin);
 
 @Component({
