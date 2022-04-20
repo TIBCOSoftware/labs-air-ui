@@ -7,7 +7,7 @@ import { EdgeService } from '../../../services/edge/edge.service';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 
 import { Device, FiltersConfig } from '../../../models/iot.model';
-import { FormGroup } from '@angular/forms';
+import { FormArray, FormGroup, FormBuilder } from '@angular/forms';
 import { Model } from '@TIBCOSoftware/labs-air-graph-client';
 
 export interface SelectItem {
@@ -55,7 +55,8 @@ export class PipelineInferencingComponent implements OnInit, OnChanges  {
   checklistSelection = new SelectionModel<DeviceNode>(true /* multiple */);
 
   constructor(private edgeService: EdgeService,
-    private graphService: GraphService) {
+    private graphService: GraphService,
+    private formBuilder: FormBuilder) {
 
   }
 
@@ -264,9 +265,7 @@ export class PipelineInferencingComponent implements OnInit, OnChanges  {
   }
 
   setForm(model) {
-
       console.log('Selected model: ', model.name);
-
       // Update model Form
       this.modelForm.patchValue(
           {
@@ -274,11 +273,17 @@ export class PipelineInferencingComponent implements OnInit, OnChanges  {
               description: model.description,
               inputType: model.inputType,
               url: model.url,
-              inputTemplate: model.inputTemplate
+              inputTemplate: model.inputTemplate,
+              method: model.method
           },
           { emitEvent: false }
       );
-
+      const modelHeaderObjArray = JSON.parse(atob(model.headers))
+      const formGroups = modelHeaderObjArray.map(y => this.formBuilder.group(y)) as [];
+      const formGroupsArray = this.formBuilder.array(formGroups) as FormArray;
+      const headers = new FormArray([]);
+      headers.push(formGroupsArray);
+      this.modelForm.setControl('headers', headers);
   }
 
   onFormChanges(): void {

@@ -193,6 +193,33 @@ export class Rule {
   actionValue: string;
 }
 
+class Model {
+  uid: number;
+  created: number;
+  modified: number;
+  uuid: string;
+  name: string;
+  description: string;
+  inputType: string;
+  url: string;
+  scope: string;
+  inputTemplate: string;
+  headers: string;
+  method: string;
+}
+
+export class ModelConfig {
+  uid: number;
+  created: number;
+  modified: number;
+  uuid: string;
+  name: string;
+  description: string;
+  device: string;
+  resource: string;
+  model: string;
+}
+
 export class Filter {
   device: string;
   resource: string;

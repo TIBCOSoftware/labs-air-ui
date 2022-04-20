@@ -17,6 +17,7 @@ export * from './lib/components/iot-infra-deployer/iot-infra-deployer.component'
 export * from './lib/components/iot-notifications/iot-notifications.component';
 export * from './lib/components/iot-simulator/iot-store-simulator/iot-store-simulator.component';
 export * from './lib/components/iot-simulator/iot-textile-simulator/iot-textile-simulator.component';
+export * from './lib/components/iot-gateway-endpoint/iot-gateway-endpoint.component'
 
 // models
 export * from './lib/models/iot.model';
