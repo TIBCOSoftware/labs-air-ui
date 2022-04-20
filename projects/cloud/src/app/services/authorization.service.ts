@@ -228,7 +228,6 @@ export class AuthorizationService {
                             reject(error);
                         }
                     });
-                    // console.log('attempt to complete request');
                     this.authorizationHandler.completeAuthorizationRequestIfPossible();
                 }, reject);
         });
