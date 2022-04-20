@@ -199,7 +199,6 @@ export class AuthorizationService {
                 .pipe(filter((value: any) => value != null))
                 .pipe(take(1))
                 .subscribe((configuration: AuthorizationServiceConfiguration) => {
-                    // console.info('setting listener');
                     this.notifier.setAuthorizationListener((request, response, error) => {
                         // console.info('Authorization request complete ', request, response, error);
                         if (response && response.code) {
