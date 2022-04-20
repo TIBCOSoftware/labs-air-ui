@@ -498,6 +498,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
       }
       case 'MQTT Request Reply': {
           contextObj = this.buildNodeMQTTRequestReplyProperties();
+          break;
       }
       default: {
 
@@ -603,6 +604,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           case 'MQTT Request Reply': {
               this.updateMQTTRequestReplyComponent(contextObj);
               this.requestReplyConfig = true;
+              break;
           }
           default: {
               this.pipelineConfig = true;
@@ -927,7 +929,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
               'port': protocolForm.get('mqtt.port').value,
               'username': protocolForm.get('mqtt.username').value,
               'password': protocolForm.get('mqtt.password').value,
-              'encriptionMode': protocolForm.get('mqtt.encryptionMode').value,
+              'encryptionMode': protocolForm.get('mqtt.encryptionMode').value,
               'caCertificate': protocolForm.get('mqtt.caCertificate').value,
               'clientCertificate': protocolForm.get('mqtt.clientCertificate').value,
               'clientKey': protocolForm.get('mqtt.clientKey').value,
@@ -1244,7 +1246,26 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
   }
 
   buildNodeMQTTRequestReplyProperties(): any {
-      
+    const mqttRequestReplyObj = {
+        'uid': this.requestReplyForm.get('uid').value,
+        'protocol': this.requestReplyForm.get('protocol').value,
+        'protocolId': this.requestReplyForm.get('protocolId').value,
+        'logLevel': this.requestReplyForm.get('logLevel').value,
+        'hostname': this.requestReplyForm.get('mqtt.hostname').value,
+        'port': this.requestReplyForm.get('mqtt.port').value,
+        'username': this.requestReplyForm.get('mqtt.username').value,
+        'password': this.requestReplyForm.get('mqtt.password').value,
+        'encryptionMode': this.requestReplyForm.get('mqtt.encryptionMode').value,
+        'caCertificate': this.requestReplyForm.get('mqtt.caCertificate').value,
+        'clientCertificate': this.requestReplyForm.get('mqtt.clientCertificate').value,
+        'clientKey': this.requestReplyForm.get('mqtt.clientKey').value,
+        'topic': this.requestReplyForm.get('mqtt.topic').value,
+        'maximumQOS': this.requestReplyForm.get('mqtt.maximumQOS').value,
+        'timeout': this.requestReplyForm.get('restTimeout').value,
+        'gateway': this.requestReplyForm.get('gateway').value,
+        'dataTemplate': this.requestReplyForm.get('dataTemplate').value
+    }
+    return mqttRequestReplyObj;
   }
 
   /**
@@ -1618,6 +1639,35 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
         }
     }
 
+    /**
+   *
+   * @param context
+   */
+    updateMQTTRequestReplyComponent (context: any) {
+        if (context != null || context != undefined) {
+            this.requestReplyForm.patchValue({
+                uid: context.uid,
+                protocol: context.protocol,
+                protocolId: context.protocolId,
+                logLevel: context.logLevel,
+                timeout: context.timeout,
+                gateway: context.gateway,
+                dataTemplate: context.dataTemplate,
+                mqtt: {
+                    hostname: context.hostname,
+                    port: context.hostname,
+                    username: context.username,
+                    password: context.password,
+                    encryptionMode: context.encryptionMode,
+                    caCertificate: context.caCertificate,
+                    clientCertificate: context.clientCertificate,
+                    clientKey: context.clientKey,
+                    topic: context.topic,
+                    maximumQOS: context.maximumQOS,
+                }
+            })
+        }
+    }
   /**
    * Get Gateway, Pipelines and Devices information
    */
@@ -3065,6 +3115,38 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
       ];
 
       return propertiesObj;
+  }
+
+  buildMQTTRequestDeployObj(context): any {
+    const requestReplyObj = {
+        name: '',
+        properties: this.buildMQTTRequestReplyDeployProperties(context)
+    };
+
+    return requestReplyObj;     
+  }
+
+  buildMQTTRequestReplyDeployProperties(contextObj): any {
+    let mqttRequestReplyDeployProperties = null;
+
+    const encpass = 'SECRET:' + btoa(contextObj.password);
+
+    mqttRequestReplyDeployProperties = [
+          { 'Name': 'MQTTPub.Topic', 'Value': contextObj.topic },
+          { 'Name': 'MQTTPub.MaximumQOS', 'Value': contextObj.maximumQOS },
+          { 'Name': 'Mqtt.IoTMQTT.Broker_URL', 'Value': 'tcp://' + contextObj.hostname + ':' + contextObj.port },
+          { 'Name': 'Mqtt.IoTMQTT.Username', 'Value': contextObj.username },
+          { 'Name': 'Mqtt.IoTMQTT.Password', 'Value': encpass },
+          { 'Name': 'Mqtt.encryptionMode', 'Value': 'changeme' },
+          { 'Name': 'Mqtt.caCertificate', 'Value': 'changeme' },
+          { 'Name': 'Mqtt.clientCertificate', 'Value': 'changeme' },
+          { 'Name': 'Mqtt.clientKey', 'Value': 'changeme' },
+          { 'Name': 'Logging.LogLevel', 'Value': contextObj.logLevel },
+          { 'Name': 'timeout', 'Value': contextObj.timeout },
+          { 'Name': 'dataTemplate', 'Value': contextObj.dataTemplate }
+    ];
+     return mqttRequestReplyDeployProperties
+
   }
 
   getSubscriptionTopic(): string {
