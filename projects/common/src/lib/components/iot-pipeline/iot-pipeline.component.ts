@@ -36,6 +36,7 @@ import { FlogoFlowComponent } from '../rete/components/flogo-flow-component';
 import { RestServiceComponent } from '../rete/components/rest-service-component';
 import { NodePrimaryComponent } from '../rete/nodes/node-primary/node-primary.component';
 import { RestBroadcastComponent } from '../rete/components/rest-broadcast.component'
+import { MQTTRequestReplyComponent } from '../rete/components/mqtt-request-reply.component'
 import { Gateway, Model, Pipeline } from '@TIBCOSoftware/labs-air-graph-client';
 
 @Component({
@@ -209,6 +210,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           new RuleExpressionComponent(),
           new RestServiceComponent(),
           new RestBroadcastComponent(),
+          new MQTTRequestReplyComponent(),
           new NotificationPublisherComponent(),
           new ImageResizeComponent(),
           new CustomPublisherComponent(),
@@ -524,6 +526,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
       this.flogoFlowConfig = false;
       this.restServiceConfig = false;
       this.restBroadcastConfig = false;
+      this.requestReplyConfig = false;
 
       if (node != null || node != undefined) {
           console.log('Resetting context for node: ', node);
@@ -1261,7 +1264,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
         'clientKey': this.requestReplyForm.get('mqtt.clientKey').value,
         'topic': this.requestReplyForm.get('mqtt.topic').value,
         'maximumQOS': this.requestReplyForm.get('mqtt.maximumQOS').value,
-        'timeout': this.requestReplyForm.get('restTimeout').value,
+        'timeout': this.requestReplyForm.get('timeout').value,
         'gateway': this.requestReplyForm.get('gateway').value,
         'dataTemplate': this.requestReplyForm.get('dataTemplate').value
     }
@@ -2044,6 +2047,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
       this.flogoFlowConfig = false;
       this.restServiceConfig = false;
       this.restBroadcastConfig = false;
+      this.requestReplyConfig = false;
 
       this.pipelineForm.patchValue({
           uid: '',
@@ -2290,6 +2294,10 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                   case 'REST Broadcast': {
                       pipelineFlow.AirDescriptor.logic.push(this.buildRESTBroadcastDeployObj(flowNode.data.customdata));
                       break;
+                  }
+                  case 'MQTT Request Reply': {
+                    pipelineFlow.AirDescriptor.logic.push(this.buildMQTTRequestDeployObj(flowNode.data.customdata));
+                    break
                   }
                   }
                   pos++;
