@@ -7,7 +7,7 @@ export const environment = {
     remoteGatewayUrl: '',
     localGatewayUrl: '',
     issuer_uri: 'https://account.oocto.eu-west-1.tcie.pro',
-    client_id: '',
+    client_id: 'SET_ME_TO_A_VALID_CLIENT_ID',
     redirect_uri: 'https://localhost:4200/auth/callback',
     scope: 'securitycontext internal.refresh-session offline openid profile email openid labs tsc offline_access'
 };
