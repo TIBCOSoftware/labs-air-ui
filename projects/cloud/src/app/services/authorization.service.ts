@@ -200,7 +200,6 @@ export class AuthorizationService {
                 .pipe(take(1))
                 .subscribe((configuration: AuthorizationServiceConfiguration) => {
                     this.notifier.setAuthorizationListener((request, response, error) => {
-                        // console.info('Authorization request complete ', request, response, error);
                         if (response && response.code) {
                             const tokenHandler = new BaseTokenRequestHandler(this.requestor);
 
