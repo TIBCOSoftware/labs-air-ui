@@ -221,7 +221,6 @@ export class AuthorizationService {
 
                             tokenHandler.performTokenRequest(configuration, tokenRequest)
                                 .then((tokenResponse) => {
-                                    // console.log('received token response ', tokenResponse);
                                     this._tokenResponses.next(tokenResponse);
                                     resolve(tokenResponse);
                                 });
