@@ -47,3 +47,15 @@ table {
 .model-form-configuration {
   flex: 1;
 }
+
+.header-title {
+  display: flex;
+}
+
+.header-title  button{
+  margin-left: 15px;
+}
+
+.header-body {
+  margin-top: 15px;
+}

@@ -3,7 +3,7 @@
 
     <div fxLayout="row" fxLayoutAlign="center center">
         <mat-form-field fxFlex="40%">
-            <input matInput (keyup)="applyFilter($event.target)" placeholder="Filter Models">
+            <input matInput (keyup)="applyFilter($event.target)" placeholder="Filter REST Endpoints">
         </mat-form-field>
     </div>
 
@@ -12,7 +12,7 @@
             <mat-card fxFlex>
                 <mat-card-header>
                     <div mat-card-avatar class="device-header-image"></div>
-                    <mat-card-title>Endpoints</mat-card-title>
+                    <mat-card-title>REST Endpoints</mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
                     <div class="table-container mat-elevation-z8">
@@ -98,7 +98,14 @@
                                     <mat-label>URL</mat-label>
                                     <input matInput [readonly]=false formControlName="url" required>
                                 </mat-form-field>
-
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Rest Method</mat-label>
+                                    <mat-select formControlName="method">
+                                        <mat-option *ngFor="let method of methods;" [value]="method">
+                                            {{method | uppercase}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
                             </div>
 
                             <!-- <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px">
@@ -131,20 +138,13 @@
                                     <textarea matInput [readonly]=false formControlName="description" required></textarea>
                                 </mat-form-field>
                             </div>
-                            <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px">
-                                <mat-form-field appearance="outline">
-                                    <mat-label>Rest Method</mat-label>
-                                    <mat-select formControlName="method">
-                                        <mat-option *ngFor="let method of methods;" [value]="method">
-                                            {{method | uppercase}}
-                                        </mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                            </div>
                         </div>
-                        <div fxLayout="column" style="height: 100%; width: 100%">
-                            <h4>Custom Headers</h4>
-                            <div class="space" formArray="headersArray">
+                        <div fxLayout="column" style="height: 100%; width: 55%">
+                            <div class="header-title">
+                                <h4>Custom Headers</h4>
+                                <button mat-raised-button color="primary" (click)="addHeader()">Add Header</button>
+                            </div>
+                            <div class="header-body" formArray="headersArray">
                                 <div formArray="headers">
                                     <div *ngFor="let header of headerGroups; let i = index">
                                         <div [formGroup]="header">
@@ -166,12 +166,11 @@
                 </mat-card-content>
                 <mat-card-actions>
                     <button mat-raised-button [disabled]="graphAddOpDisabled" (click)="addModel()" color="primary">Add
-                        Model</button>
+                        Endpoint</button>
                     <button mat-raised-button [disabled]="graphUpdateOpDisabled" (click)="updateModel()"
-                        color="primary">Update Model</button>
+                        color="primary">Update Endpoint</button>
                     <button mat-raised-button [disabled]="graphDeleteOpDisabled" (click)="deleteModel()"
-                        color="primary">Remove Model</button>
-                    <button mat-raised-button color="primary" (click)="addHeader()">Add Header</button>
+                        color="primary">Remove Endpoint</button>
                 </mat-card-actions>
             </mat-card>
         </div>
