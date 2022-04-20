@@ -8,10 +8,8 @@ table {
 }
   
 .mat-form-field {
-  display: inline-block;
   font-size: 14px;
-  margin-right: 2%;
-  width: 18%;
+  width: 100%;
 }
   
 .mat-row.selected {
@@ -33,4 +31,19 @@ table {
   border-radius: 5px;
   font-size: 150%;
   padding: 20px;
+}
+
+.mat-form-field {
+  display: inline-block;
+  font-size: 14px;
+  margin-right: 2%;
+  width: 20%;
+}
+
+.model-form {
+  display: flex;
+}
+
+.model-form-configuration {
+  flex: 1;
 }
