@@ -274,7 +274,8 @@ export class PipelineInferencingComponent implements OnInit, OnChanges  {
               inputType: model.inputType,
               url: model.url,
               inputTemplate: model.inputTemplate,
-              method: model.method
+              method: model.method,
+              base64Encoded: model.base64Encoded
           },
           { emitEvent: false }
       );
