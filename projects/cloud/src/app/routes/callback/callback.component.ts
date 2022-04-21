@@ -1,15 +1,4 @@
-// Copyright 2018 Ping Identity
-//
-// Licensed under the MIT License (the "License"); you may not use this file
-// except in compliance with the License.
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-// WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit } from '@angular/core';
 import { AuthorizationService } from '../../services/authorization.service';
 import { Router } from '@angular/router';
 import { TokenService } from '../../services/token.service';
@@ -30,7 +19,7 @@ export class CallbackComponent implements AfterViewInit {
             window.location.assign(new URL(path, window.location.href).toString());
         } else if (new URLSearchParams(window.location.hash.substring(1)).has('code')) {
             this.authorizationService.completeAuthorizationRequest().then((tokenResponse) => {
-                this.tokenService.tokenResponse(tokenResponse);
+                this.tokenService.setTokenResponse(tokenResponse);
                 const dest = localStorage.getItem('airRequestedPath');
                 if (dest) {
                     this.router.navigate([dest]);    

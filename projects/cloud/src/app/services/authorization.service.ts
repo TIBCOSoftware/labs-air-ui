@@ -27,11 +27,12 @@ import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
 import { distinctUntilChanged, filter, take } from 'rxjs/operators';
 import { UserInfo            } from '../model/userinfo';
 import { AuthorizationConfig } from '../model/authorization_config';
+import { TokenService } from './token.service';
 
-const LS_ISSUER_URI     = 'authorization.service.issuer_uri';
-const LS_USER_INFO      = 'authorization.service.user_info';
-const LS_OPENID_CONFIG  = 'authorization.service.parsed_openid_configuration';
-const LS_TOKEN_RESPONSE = 'authorization.service.token_response';
+const LS_ISSUER_URI     = 'air.authorization.service.issuer_uri';
+const LS_USER_INFO      = 'air.authorization.service.user_info';
+const LS_OPENID_CONFIG  = 'air.authorization.service.parsed_openid_configuration';
+const LS_TOKEN_RESPONSE = 'air.authorization.service.token_response';
 @Injectable()
 export class AuthorizationService {
 
@@ -52,7 +53,7 @@ export class AuthorizationService {
 
     constructor(
         private requestor: Requestor,
-        @Inject('AuthorizationConfig') private environment: AuthorizationConfig) {
+        @Inject('AuthorizationConfig') private environment: AuthorizationConfig, private tokenService: TokenService) {
         this.authorizationHandler.setAuthorizationNotifier(this.notifier);
 
         // attempt to restore previous values of the metadata config, token response, and user info
@@ -104,6 +105,7 @@ export class AuthorizationService {
         });
         this._userInfos.subscribe((info: UserInfo | null) => {
             if (info) {
+                this.tokenService.setUserinfo(info);
                 window.localStorage.setItem(LS_USER_INFO, JSON.stringify(info));
             } else {
                 window.localStorage.removeItem(LS_USER_INFO);
@@ -186,11 +188,6 @@ export class AuthorizationService {
                 });
                 this.authorizationHandler.performAuthorizationRequest(configuration, request);
             });
-    }
-
-    signOut(): void {
-        console.log('signing out');
-        this._tokenResponses.next(null);
     }
 
     completeAuthorizationRequest(): Promise<TokenResponse> {
