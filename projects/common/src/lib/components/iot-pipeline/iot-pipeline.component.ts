@@ -634,7 +634,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           inputTemplate: '',
           logLevel: 'INFO',
           method: 'PUT',
-          headers: new FormArray([])
+          headers: new FormArray([]),
+          base64Encoded: false
       }, { emitEvent: false });
 
       this.restServiceForm.reset({
@@ -808,7 +809,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           inputTemplate: ['', Validators.required],
           logLevel: ['INFO', Validators.required],
           method: ['PUT', Validators.required],
-          headers: this.formBuilder.array([])
+          headers: this.formBuilder.array([]),
+          base64Encoded: [false, Validators.required]
       });
 
       this.restServiceForm = this.formBuilder.group({
@@ -1113,7 +1115,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           'inputTemplate': this.modelForm.get('inputTemplate').value,
           'logLevel': this.modelForm.get('logLevel').value,
           'method': this.modelForm.get('method').value,
-          'headers': this.modelForm.get('headers').value
+          'headers': this.modelForm.get('headers').value,
+          'base64Encoded': this.modelForm.get('base64Encoded').value
       };
 
       return inferenceObj;
@@ -1487,7 +1490,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
               url: context.modelUrl,
               inputTemplate: context.inputTemplate,
               LogLevel: context.logLevel,
-              method: context.method
+              method: context.method,
+              base64Encoded: context.base64Encoded
           });
 
           const formGroups = context.headers.map(x => this.formBuilder.array(x.map(y => this.formBuilder.group(y)))) as [];
@@ -2812,7 +2816,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           { 'Name': 'REST.InferenceData', 'Value': inferenceData },
           { 'Name': 'REST.Conditions', 'Value': JSON.stringify(contextObj.filters) },
           { 'Name': 'REST.URLMapping', 'Value': JSON.stringify(urlMapping) },
-          { 'Name': 'REST.HTTPHeaders', 'Value': JSON.stringify(contextObj.headers)}
+          { 'Name': 'REST.HTTPHeaders', 'Value': JSON.stringify(contextObj.headers)},
+          { 'Name': 'REST.Base64Encoded', 'Value': contextObj.base64Encoded}
       ];
 
       return inferenceObj;

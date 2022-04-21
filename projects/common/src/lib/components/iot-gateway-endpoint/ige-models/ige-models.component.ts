@@ -50,7 +50,7 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
       { value: 'audio', viewValue: 'audio' }
   ];
 
-  methods = ['PUT', 'POST'];
+  methods = ['PUT', 'POST', 'GET'];
 
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
@@ -125,7 +125,8 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
           scope: ['', Validators.required],
           inputTemplate: ['', Validators.required],
           headers: this.formBuilder.array([]),
-          method: ['', Validators.required]
+          method: ['', Validators.required],
+          base64Encoded: [false, Validators.required]
       });
   }
 
@@ -180,7 +181,8 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
           url: model.url,
           scope: scope,
           inputTemplate: atob(model.inputTemplate),
-          method: model.method
+          method: model.method,
+          base64Encoded: JSON.parse(model.base64Encoded)
       });
 
       if (model.headers?.length > 0) {
@@ -201,6 +203,7 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
       this.modelForm.reset({
       }, { emitEvent: false });
 
+      this.modelForm.setControl('headers', new FormArray([]));
       this.graphDeleteOpDisabled = true;
       this.graphAddOpDisabled = true;
       this.graphUpdateOpDisabled = true;
@@ -231,6 +234,7 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
       model.inputTemplate = btoa(this.modelForm.get('inputTemplate').value);
       model.headers = btoa(JSON.stringify(this.modelForm.get('headers').value));
       model.method = this.modelForm.get('method').value;
+      model.base64Encoded = this.modelForm.get('base64Encoded').value;
       console.log('Adding model with uuid: ', model.uuid);
 
       // First check that model with the same name already exist
@@ -276,7 +280,7 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
       model.inputTemplate = btoa(this.modelForm.get('inputTemplate').value);
       model.headers = btoa(JSON.stringify(this.modelForm.get('headers').value));
       model.method = this.modelForm.get('method').value;
-
+      model.base64Encoded = this.modelForm.get('base64Encoded').value;
       console.log('Update model to url: ', model.url);
       console.log('Update model to inputTemplate: ', model.inputTemplate);
 

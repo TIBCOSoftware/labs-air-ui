@@ -107,7 +107,6 @@
                                     </mat-select>
                                 </mat-form-field>
                             </div>
-
                             <!-- <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px">
 
                                 <mat-form-field fxFlex="1 1 15%" appearance="outline">
@@ -137,6 +136,11 @@
                                     <mat-label>Description</mat-label>
                                     <textarea matInput [readonly]=false formControlName="description" required></textarea>
                                 </mat-form-field>
+                            </div>
+                            <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px">
+                                <mat-checkbox formControlName="base64Encoded" color="primary">
+                                    Value Encoded 
+                                </mat-checkbox>
                             </div>
                         </div>
                         <div fxLayout="column" style="height: 100%; width: 55%">
