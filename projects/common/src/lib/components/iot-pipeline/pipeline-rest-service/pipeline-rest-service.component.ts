@@ -6,7 +6,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 
 import { Device, FiltersConfig } from '../../../models/iot.model';
 import { EdgeService } from '../../../services/edge/edge.service';
-import { GraphService } from '../../../services/graph/graph.service';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 
 export interface SelectItem {
   value: string;

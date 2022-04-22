@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, AfterViewInit, ViewChild } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
-import { Model, Gateway } from '../../../models/iot.model';
-import { GraphService } from '../../../services/graph/graph.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Model } from '@TIBCOSoftware/labs-air-graph-client';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -50,10 +50,19 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
       { value: 'audio', viewValue: 'audio' }
   ];
 
+  methods = ['PUT', 'POST', 'GET'];
+
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   @Input() gatewayId: string;
 
+  get headers (): FormArray {
+    return this.modelForm.get('headers') as FormArray
+  }
+
+  get headerGroups (): [FormGroup] {
+    return this.headers.controls as [FormGroup]
+  }
   /**
    *
    * @param graphService
@@ -114,7 +123,10 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
           inputType: ['', Validators.required],
           url: ['', Validators.required],
           scope: ['', Validators.required],
-          inputTemplate: ['', Validators.required]
+          inputTemplate: ['', Validators.required],
+          headers: this.formBuilder.array([]),
+          method: ['', Validators.required],
+          base64Encoded: [false, Validators.required]
       });
   }
 
@@ -169,7 +181,15 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
           url: model.url,
           scope: scope,
           inputTemplate: atob(model.inputTemplate),
+          method: model.method,
+          base64Encoded: JSON.parse(model.base64Encoded)
       });
+
+      if (model.headers?.length > 0) {
+        const modelHeaderObj = JSON.parse(atob(model.headers))
+        const headersArray = new FormArray(modelHeaderObj.map(x => this.formBuilder.group(x)));
+        this.modelForm.setControl('headers', headersArray);
+      }
 
       this.graphDeleteOpDisabled = false;
       this.graphAddOpDisabled = true;
@@ -183,6 +203,7 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
       this.modelForm.reset({
       }, { emitEvent: false });
 
+      this.modelForm.setControl('headers', new FormArray([]));
       this.graphDeleteOpDisabled = true;
       this.graphAddOpDisabled = true;
       this.graphUpdateOpDisabled = true;
@@ -195,7 +216,7 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
    */
   addModel() {
       const ts = Date.now();
-      const model = new Model();
+      const model = {} as Model;
 
       let scope = this.modelForm.get('scope').value;
       if (scope != 'GLOBAL') {
@@ -211,9 +232,10 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
       model.inputType = this.modelForm.get('inputType').value;
       model.url = this.modelForm.get('url').value;
       model.inputTemplate = btoa(this.modelForm.get('inputTemplate').value);
-
+      model.headers = btoa(JSON.stringify(this.modelForm.get('headers').value));
+      model.method = this.modelForm.get('method').value;
+      model.base64Encoded = this.modelForm.get('base64Encoded').value;
       console.log('Adding model with uuid: ', model.uuid);
-    
 
       // First check that model with the same name already exist
       if (this.modelExist(model.uuid)) {
@@ -238,11 +260,9 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
    * Updates the model on the graph data store
    */
   updateModel() {
-
-      console.log('Inside updateModel function');
-
+      
       const ts = Date.now();
-      const model = new Model();
+      const model = {} as Model;
 
       let scope = this.modelForm.get('scope').value;
       if (scope != 'GLOBAL') {
@@ -258,10 +278,12 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
       model.inputType = this.modelForm.get('inputType').value;
       model.url = this.modelForm.get('url').value;
       model.inputTemplate = btoa(this.modelForm.get('inputTemplate').value);
-
+      model.headers = btoa(JSON.stringify(this.modelForm.get('headers').value));
+      model.method = this.modelForm.get('method').value;
+      model.base64Encoded = this.modelForm.get('base64Encoded').value;
       console.log('Update model to url: ', model.url);
       console.log('Update model to inputTemplate: ', model.inputTemplate);
-    
+
       this.graphService.updateModel(model)
           .subscribe(res => {
               console.log('Result from update model', res);
@@ -325,6 +347,18 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
       );
 
       return found;
+  }
+
+  addHeader(): void {
+    const formGroup = new FormGroup({
+      key: new FormControl('',),
+      value: new FormControl('',)
+    })
+    this.headers.push(formGroup);
+  }
+
+  deleteHeader(index: number): void {
+    this.headers.removeAt(index);
   }
 
 }

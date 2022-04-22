@@ -1,30 +1,26 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
-import { GraphService } from 'common';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 
 import { IgeModelsComponent } from './ige-models.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { MaterialModule } from '../../../material.module';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { FormBuilder } from '@angular/forms';
 
 describe('IgeModelsComponent', () => {
     let component: IgeModelsComponent;
     let fixture: ComponentFixture<IgeModelsComponent>;
     const mockGraphService = jasmine.createSpyObj(['getModels']);
-    const mockSnackBarService = jasmine.createSpyObj(['open']);
 
     mockGraphService.getModels.and.returnValue(of([]));
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [IgeModelsComponent],
-            imports: [ReactiveFormsModule, MaterialModule, BrowserAnimationsModule],
+            imports: [MatSnackBarModule],
             providers: [
                 { provide: GraphService, useValue: mockGraphService },
-                { provide: MatSnackBar, useValue: mockSnackBarService }
-
+                FormBuilder
             ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA]
         })

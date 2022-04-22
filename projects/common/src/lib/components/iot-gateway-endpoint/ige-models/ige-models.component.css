@@ -39,3 +39,23 @@ table {
   margin-right: 2%;
   width: 20%;
 }
+
+.model-form {
+  display: flex;
+}
+
+.model-form-configuration {
+  flex: 1;
+}
+
+.header-title {
+  display: flex;
+}
+
+.header-title  button {
+  margin-left: 15px;
+}
+
+.header-body {
+  margin-top: 15px;
+}

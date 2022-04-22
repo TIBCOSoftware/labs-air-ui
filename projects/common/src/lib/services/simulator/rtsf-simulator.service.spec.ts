@@ -1,7 +1,7 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { AppConfigService } from '../config/app-config.service';
-import { GraphService } from '../graph/graph.service';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 
 import { RtsfSimulatorService } from './rtsf-simulator.service';
 

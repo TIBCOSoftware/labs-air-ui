@@ -63,6 +63,10 @@
             [restForm]="restServiceForm" [filters]="filters" fxFlex>
         </app-common-pipeline-rest-service>
         <app-pipeline-python *ngIf="pythonConfig" [pythonForm]="pythonForm" [gatewayId]="gatewayId"> </app-pipeline-python>
+        <app-pipeline-rest-broadcast *ngIf="restBroadcastConfig" [restBroadcastForm]="restBroadcastForm" [models]="models">
+        </app-pipeline-rest-broadcast>
+        <app-pipeline-request-reply *ngIf="requestReplyConfig" [requestReplyForm]="requestReplyForm">
+        </app-pipeline-request-reply>
     </div>
 
 </div>

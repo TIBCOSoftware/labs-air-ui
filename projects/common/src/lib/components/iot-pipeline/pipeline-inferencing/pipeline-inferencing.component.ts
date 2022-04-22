@@ -4,10 +4,11 @@ import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { SelectionModel } from '@angular/cdk/collections';
 import { EdgeService } from '../../../services/edge/edge.service';
-import { GraphService } from '../../../services/graph/graph.service';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 
-import { Device, FiltersConfig, Model } from '../../../models/iot.model';
-import { FormGroup } from '@angular/forms';
+import { Device, FiltersConfig } from '../../../models/iot.model';
+import { FormArray, FormGroup, FormBuilder } from '@angular/forms';
+import { Model } from '@TIBCOSoftware/labs-air-graph-client';
 
 export interface SelectItem {
   value: string;
@@ -54,7 +55,8 @@ export class PipelineInferencingComponent implements OnInit, OnChanges  {
   checklistSelection = new SelectionModel<DeviceNode>(true /* multiple */);
 
   constructor(private edgeService: EdgeService,
-    private graphService: GraphService) {
+    private graphService: GraphService,
+    private formBuilder: FormBuilder) {
 
   }
 
@@ -263,9 +265,7 @@ export class PipelineInferencingComponent implements OnInit, OnChanges  {
   }
 
   setForm(model) {
-
       console.log('Selected model: ', model.name);
-
       // Update model Form
       this.modelForm.patchValue(
           {
@@ -273,11 +273,18 @@ export class PipelineInferencingComponent implements OnInit, OnChanges  {
               description: model.description,
               inputType: model.inputType,
               url: model.url,
-              inputTemplate: model.inputTemplate
+              inputTemplate: model.inputTemplate,
+              method: model.method,
+              base64Encoded: model.base64Encoded
           },
           { emitEvent: false }
       );
-
+      const modelHeaderObjArray = JSON.parse(atob(model.headers))
+      const formGroups = modelHeaderObjArray.map(y => this.formBuilder.group(y)) as [];
+      const formGroupsArray = this.formBuilder.array(formGroups) as FormArray;
+      const headers = new FormArray([]);
+      headers.push(formGroupsArray);
+      this.modelForm.setControl('headers', headers);
   }
 
   onFormChanges(): void {
@@ -318,7 +325,7 @@ export class PipelineInferencingComponent implements OnInit, OnChanges  {
 
 
       this.filters.forEach(element => {
-          this.selectNode(element.device, element.name);
+          this.selectNode(element.deviceName, element.resourceName);
       });
   }
 

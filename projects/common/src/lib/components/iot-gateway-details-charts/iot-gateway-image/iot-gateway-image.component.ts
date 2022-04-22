@@ -1,11 +1,12 @@
 import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { SelectionModel } from '@angular/cdk/collections';
-import { Device, Resource, TSReading, TSCombinedReading } from '../../../models/iot.model';
-import { GraphService } from '../../../services/graph/graph.service';
+import { Device, Resource, TSCombinedReading } from '../../../models/iot.model';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { FormControl, FormGroup } from '@angular/forms';
+import { TSReading } from '@TIBCOSoftware/labs-air-graph-client';
 
 @Component({
     selector: 'app-common-iot-gateway-image',
@@ -33,6 +34,9 @@ export class CommonIotGatewayImageComponent implements OnInit, OnDestroy, AfterV
   tableDataSource = new MatTableDataSource<TSCombinedReading>();
   combinedReadingSelection = new SelectionModel<TSCombinedReading>(false, []);
 
+  commandForm = new FormGroup({
+      command: new FormControl('')
+  });
 
   @ViewChild(MatSort) sort: MatSort;
 
@@ -189,5 +193,9 @@ export class CommonIotGatewayImageComponent implements OnInit, OnDestroy, AfterV
           this.inferredImageData = '';
       }
 
+  }
+
+  sendCommand() {
+      // to access the command value, use: this.commandForm.get('command').value
   }
 }

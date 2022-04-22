@@ -1,28 +1,5 @@
-
-export class PropertyValue {
-  type: string;
-  readWrite: string;
-  minimum: string;
-  maximum: string;
-  defaultValue: string;
-  size: string;
-  word: string;
-  lsb: string;
-  mask: string;
-  shift: string;
-  scale: string;
-  offset: string;
-  base: string;
-  assertion: string;
-  signed: string;
-  precision: string;
-}
-
-export class PropertyUnit {
-  type: string;
-  readWrite: string;
-  defaultValue: string;
-}
+import { FormArray } from "@angular/forms";
+import { Gateway } from "@TIBCOSoftware/labs-air-graph-client";
 
 export class ResourceProperty {
   assertion: string;
@@ -50,6 +27,7 @@ export class ResourceAttribute {
 export class Resource {
   description: string;
   name: string;
+  isHidden: boolean;
   tag: string;
   properties: ResourceProperty;
   attributes: ResourceAttribute;
@@ -61,17 +39,18 @@ export class CommandResponse {
   expectedValues: string[];
 }
 
-export class CommandOp {
-  path: string;
-  responses: CommandResponse[];
-  parameterNames: string[];
+export class ResourceOperation {
+  deviceResource: string;
+  defaultValue: string;
+  mappings: string[][];
 }
 
-export class Command {
+export class DeviceCommand {
   id: string;
   name: string;
-  get: CommandOp;
-  put: CommandOp;
+  isHidden: boolean;
+  readWrite: string;
+  resourceOperations: ResourceOperation[];
 }
 
 export class Profile {
@@ -82,8 +61,9 @@ export class Profile {
   id: string;
   manufacturer: string;
   model: string;
+  labels: string[];
   deviceResources: Resource[];
-  deviceCommands: Command[];
+  deviceCommands: DeviceCommand[];
 }
 
 export class Service {
@@ -146,81 +126,6 @@ export class Publisher {
   topic: string;
 }
 
-export class Protocol{
-  uid: number;
-  uuid: string;
-  created: number;
-  modified: number;
-  protocolType: string;
-  brokerURL: string;
-  topic: string;
-  consumerGroupId: string;
-  connectionTimeout: string;
-  sessionTimeout: string;
-  initialOffset: string;
-  retryBackoff: string;
-  fetchMinBytes: string;
-  fetchMaxWait: string;
-  commitInterval: string;
-  heartbeatInterval: string;
-  maximumQOS: string;
-  username: string;
-  password: string;
-  encryptionMode: string;
-  caCerticate: string;
-  clientCertificate: string;
-  clientKey: string;
-  authMode: string;
-  serverCertificate: string;
-  scope: string;
-}
-
-export class DataStore {
-  uid: number;
-  uuid: string;
-  created: number;
-  modified: number;
-  dataStoreType: string;
-  host: string;
-  port: string;
-  databaseName: string;
-  user: string;
-  password: string;
-  accountName: string;
-  warehouse: string;
-  database: string;
-  schema: string;
-  authType: string;
-  username: string;
-  role: string;
-  clientId: string;
-  clientSecret: string;
-  authorizationCode: string;
-  redirectURI: string;
-  loginTimeout: string;
-  url: string;
-  scope: string;
-}
-
-export class Pipeline {
-  uid: number;
-  created: number;
-  modified: number;
-  name: string;
-  pipelineType: string;
-  deployerType: string;
-  protocolType: string; //deprecated
-  protocol: any; // deprecated
-  dataStoreType: string; // deprecated
-  dataStore: any; // deprecated
-  filter: any; // deprecated
-  streaming: any; // deprecated
-  description: string;
-  status: string;
-  flowConfiguration: string;
-  subscriptionTopic: string;
-  logLevel: string;
-}
 
 export class NVPair {
   name: string;
@@ -246,31 +151,6 @@ export class Addressable {
   url: string;
   user: string;
   password: string;
-}
-
-export class Gateway {
-  uid: number;
-  description: string;
-  createdts: number;
-  updatedts: number;
-  uuid: string;
-  address: string;
-  router: string;
-  routerPort: string;
-  deployNetwork: string;
-  latitude: number;
-  longitude: number;
-  accessToken: string;
-  platform: string;
-  numDevices: number;
-  username: string;
-  devicesMetadata: string;
-  subscriptions: Subscription[];
-  publishers: Publisher[];
-  pipelines: Pipeline[];
-  dataStores: DataStore[];
-  protocols: Protocol[];
-  models: Model[];
 }
 
 
@@ -313,7 +193,7 @@ export class Rule {
   actionValue: string;
 }
 
-export class Model {
+class Model {
   uid: number;
   created: number;
   modified: number;
@@ -324,6 +204,8 @@ export class Model {
   url: string;
   scope: string;
   inputTemplate: string;
+  headers: string;
+  method: string;
 }
 
 export class ModelConfig {
@@ -345,30 +227,6 @@ export class Filter {
 
 export class FiltersConfig {
   filters: Filter[];
-}
-
-export class GatewayFiltersConfig {
-  uid: number;
-  deviceNames: string;
-}
-
-export class Notification {
-  uid: number;
-  uuid: string;
-  created: number;
-  notifySource: string;
-  notifyDevice: string;
-  notifyResource: string;
-  notifyLevel: string;
-  gateway: string;
-  value: string;
-  description: string;
-}
-
-// TSReading - Time series reading.
-export class TSReading {
-  value: string;
-  created: number;
 }
 
 export class TSCombinedReading {
@@ -414,13 +272,10 @@ export class ScatterChartDataset {
 
 }
 
-export class PythonResource {
-  uid: string;
-  created: number;
-  modified: number;
-  uuid: string;
-  name: string;
-  type: string;
-  fileContent: string;
-  scope: string;
+export class RestBroadcast {
+  logLevel: string;
+  restTimeout: number;
+  restURLs: FormArray;
+  restMethods: FormArray;
+  restBodies: FormArray;
 }

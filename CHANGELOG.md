@@ -1,0 +1,65 @@
+# Changelog
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+## [0.7.0-725](https://github.com/TIBCOSoftware/labs-air-ui/compare/v0.6.0-29...v0.7.0-725) (2022-04-01)
+
+
+### Features
+
+* add rest-broadcast acitivity ([a186a1d](https://github.com/TIBCOSoftware/labs-air-ui/commits/a186a1d3ec039edf81a7f8315c400ed0cbfbf4c0))
+* add restBroadcast deploy logic ([8dc3b20](https://github.com/TIBCOSoftware/labs-air-ui/commits/8dc3b20f3b26a4b31ba7fbbcdcbb50b767155dbe))
+* **both:** update to EdgeX V2 endpoints ([83c6342](https://github.com/TIBCOSoftware/labs-air-ui/commits/83c634208721630a8fdd684adb7beed337bceb4e))
+* Build the cloud and on-prem docker containers ([e116b64](https://github.com/TIBCOSoftware/labs-air-ui/commits/e116b64827fbb4487c32010ea839a573b4c75b97))
+* change body and add remove endpoint ([d80cbab](https://github.com/TIBCOSoftware/labs-air-ui/commits/d80cbab373f2f70c5cd990152dd6779a48a601f1))
+* **cicd:** add in testing and lint check report of the UI ([c8853b7](https://github.com/TIBCOSoftware/labs-air-ui/commits/c8853b70ca4d7d4f3489f23b80fc5cf7213d5b58))
+* **cicd:** introduction of static tools ([7e06e3d](https://github.com/TIBCOSoftware/labs-air-ui/commits/7e06e3d3e2528d3c6da3f215b7f9d6a284c1291b))
+* **cloud/on-prem:** move iot-details to common library ([6c4ea31](https://github.com/TIBCOSoftware/labs-air-ui/commits/6c4ea31da3ea74efa6f28926257ddeecb96fb77c))
+* **cloud/on-prem:** move pipeline editor to library ([792d66f](https://github.com/TIBCOSoftware/labs-air-ui/commits/792d66fdf0096a32480bb57f94c4ba8310219cd6))
+* **common:** move simulators to library ([a97d865](https://github.com/TIBCOSoftware/labs-air-ui/commits/a97d865be239f270c8032a8af2c5efab954a5d89))
+* **libary:** move notification component to library ([e00cbec](https://github.com/TIBCOSoftware/labs-air-ui/commits/e00cbec86c3d2eae2ad4e35bdfe8d7f6ef9fd88e))
+* **library:** Move edge data pipeline component to common library ([0ed5549](https://github.com/TIBCOSoftware/labs-air-ui/commits/0ed5549bce9cb8cb1ac294a7cea2706d11c58d05))
+* **library:** move infra deployer over to common library ([a9e9749](https://github.com/TIBCOSoftware/labs-air-ui/commits/a9e974919017fbe554e55ba18907c94154b09df5))
+* **projects:** create shared assets and environments ([445d270](https://github.com/TIBCOSoftware/labs-air-ui/commits/445d27037031fc7ae79d25aa1808ed623bcf00b6))
+* rest broadcast activity fields ([9001906](https://github.com/TIBCOSoftware/labs-air-ui/commits/9001906c2ba171c41a926761e8917302a2620696))
+
+
+### Bugfixes
+
+* add default values for environment variables ([4662386](https://github.com/TIBCOSoftware/labs-air-ui/commits/46623869697b7ba7b70af74c9d572cc860216cef))
+* **cicd:** correct the syntax to split the string ([012ee7e](https://github.com/TIBCOSoftware/labs-air-ui/commits/012ee7e50e69fadeeaad46593e42a667258815a0))
+* **cicd:** do not error during build of labs-air-ui container ([51435bf](https://github.com/TIBCOSoftware/labs-air-ui/commits/51435bf4d0b8b96cd351a17e945378c756c3ba7b))
+* **cicd:** remove link to private registry ([4f6f91c](https://github.com/TIBCOSoftware/labs-air-ui/commits/4f6f91c2ae31b75a0e5f7c1bbdbe24f25e1c310d))
+* **cicd:** remove requirement for the fourth parameter ([8a14537](https://github.com/TIBCOSoftware/labs-air-ui/commits/8a14537f8f93cacd1cc88a9873094beb8bc1cfa0))
+* **cicd:** remove superfluous space character ([7aaf75b](https://github.com/TIBCOSoftware/labs-air-ui/commits/7aaf75bea66eb472bc47b50e2bc93f1b8c1f7f11))
+* **common-lib:** fixes inconsistent compilation errors from cloud ([340167a](https://github.com/TIBCOSoftware/labs-air-ui/commits/340167a32869c06154536ba716d737e7f492f581))
+* correct rest broadcast deploy ([bd53f64](https://github.com/TIBCOSoftware/labs-air-ui/commits/bd53f64a253a7a217524b9db2efc41f87c2592cf))
+* corrected path to output ([adda4bc](https://github.com/TIBCOSoftware/labs-air-ui/commits/adda4bc40bf8cd2af45fa7273cb828ece2009802))
+* eslint plugins for the configuration ([c6f4abc](https://github.com/TIBCOSoftware/labs-air-ui/commits/c6f4abcdd87fc61849b37428bcb9b82de6b21dc7))
+* fix test ([4a922f7](https://github.com/TIBCOSoftware/labs-air-ui/commits/4a922f73cff7d8b5250d1a4a21d3e63a03cf6d37))
+* **infra:** add libraries to cache ([26c25c6](https://github.com/TIBCOSoftware/labs-air-ui/commits/26c25c64a1607d2d779b50c59c5bf49106e0f8f0))
+* **infra:** added missing command ([bff6b40](https://github.com/TIBCOSoftware/labs-air-ui/commits/bff6b401b55cc02420355689e99463b30595108d))
+* **infra:** adds common library building, and fixes working directory of tests ([75d2f6d](https://github.com/TIBCOSoftware/labs-air-ui/commits/75d2f6df0495635f4543544f49d18ec94a3c0876))
+* **infra:** adds missing library build step to git flow ([0e78555](https://github.com/TIBCOSoftware/labs-air-ui/commits/0e78555e5e9c4e4723e0916311133711975a3012))
+* **infra:** change dependency list ([0773504](https://github.com/TIBCOSoftware/labs-air-ui/commits/077350485c1e6669d2a2c9d34a4256754a640f3d))
+* **infra:** change directory strategy ([a98694f](https://github.com/TIBCOSoftware/labs-air-ui/commits/a98694f87eb814d3db761b489ec1b938728f810e))
+* **infra:** fix git action run test case ([a777879](https://github.com/TIBCOSoftware/labs-air-ui/commits/a7778792ddeea1ca92abcf14300d24771ee2118a))
+* **infra:** fix github flow directories ([aaa4ce0](https://github.com/TIBCOSoftware/labs-air-ui/commits/aaa4ce046344ce33ef50437e290ac70c91297846))
+* **infra:** fix working directory of common library ([c4c3422](https://github.com/TIBCOSoftware/labs-air-ui/commits/c4c34228e75efab56a9a4bf524cf3a2ea68afe74))
+* **infra:** fixes git flow for tests ([c39334f](https://github.com/TIBCOSoftware/labs-air-ui/commits/c39334fe9ad69e23683b8dcd94f31b1b144bfb70))
+* **infra:** fixes github test flow ([7f37774](https://github.com/TIBCOSoftware/labs-air-ui/commits/7f377742c0ad5fb95a234c9b54394eba58ed7a7f))
+* **infra:** fixes project directories for git ([db3368d](https://github.com/TIBCOSoftware/labs-air-ui/commits/db3368da7c7c60a395ff2c36b56dcd2e1a67a6a6))
+* **infra:** matrix structure ([d3b1aeb](https://github.com/TIBCOSoftware/labs-air-ui/commits/d3b1aeb69a1da119beb5cde3e9facca973249306))
+* **infra:** remove bracket ([004f195](https://github.com/TIBCOSoftware/labs-air-ui/commits/004f1955184877165e2c7ea28fada878657c7ed0))
+* **infra:** remove build library step ([2d14daa](https://github.com/TIBCOSoftware/labs-air-ui/commits/2d14daaa81fa4c5790a54190ee2f03eb90b7691d))
+* **infra:** remove uneeded syntax ([8ce8203](https://github.com/TIBCOSoftware/labs-air-ui/commits/8ce8203435d8cf2ee6d67f1ad301fc6482fcf1d7))
+* **infra:** restore previous build ([faa4259](https://github.com/TIBCOSoftware/labs-air-ui/commits/faa4259faf1d0fd0394a66aeb42d1a0d381f54cf))
+* **infra:** update directories ([68da4cb](https://github.com/TIBCOSoftware/labs-air-ui/commits/68da4cb4830f4c861efbc6333208a0e3fd832834))
+* **lint:** fixes github issue [#172](https://github.com/TIBCOSoftware/labs-air-ui/issues/172) ([e233687](https://github.com/TIBCOSoftware/labs-air-ui/commits/e2336878a50ce1cb9036a6422c41ae99ef32a173))
+* **on-prem/cloud:** fixes compilation issues with common lib ([00179eb](https://github.com/TIBCOSoftware/labs-air-ui/commits/00179eb4e93fe2ab6064ccb0b3488b024eb43aba))
+* **on-prem/cloud:** lint and github comment fixes ([a97f851](https://github.com/TIBCOSoftware/labs-air-ui/commits/a97f8511fb73188a19b16e03e597e3fb1a1b8e41))
+* **on-prem:** fix tests ([715dfa3](https://github.com/TIBCOSoftware/labs-air-ui/commits/715dfa34fd03f87d52fd2c7cfa5a992e67d965bb))
+* remove endpoint from rest broadcast ([83046d5](https://github.com/TIBCOSoftware/labs-air-ui/commits/83046d52ad74ff851a6907ad5116a9dd1f4e69c0))
+* **tests:** fix unit test assets ([46118da](https://github.com/TIBCOSoftware/labs-air-ui/commits/46118daf3ed9131d97c37d841f8a60a3b0db76d7))
+* **tests:** fixes ng test ([eefdf78](https://github.com/TIBCOSoftware/labs-air-ui/commits/eefdf788543ab7c1dcb680b9f9965bba96ac2d7c))
+* update references in tests ([fa17e45](https://github.com/TIBCOSoftware/labs-air-ui/commits/fa17e45592e1c8637963e938ac651e4aed2f2fbc))

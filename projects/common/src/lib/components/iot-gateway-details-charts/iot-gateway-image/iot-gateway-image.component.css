@@ -19,3 +19,7 @@
 .query-row button {
   margin: auto 10px;
 }
+
+.split-window {
+  display: flex;
+}

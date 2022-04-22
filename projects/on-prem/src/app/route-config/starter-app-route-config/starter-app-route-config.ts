@@ -1,14 +1,11 @@
 import { SplashComponent } from '../../routes/splash/splash.component';
 import { HomeComponent } from '../../routes/home/home.component';
-import {IotGatewayEndpointComponent} from 'common';
+import { CommonIotGatewayEndpointComponent} from 'common';
 import { CommonIotGatewayComponent } from 'common';
 import { CommonIotGatewayDetailsComponent } from 'common';
 import { CommonIotPipelineComponent } from 'common';
-import { CommonIotDataPipelineComponent } from 'common';
-import { CommonIotEdgeDataPipelineComponent } from 'common';
 import { IotGatewayDashboardComponent } from '../../components/iot-gateway-dashboard/iot-gateway-dashboard.component';
-import { ActivatedRouteSnapshot, NavigationEnd, Router, ActivatedRoute} from '@angular/router';
-import { Gateway } from '../../shared/models/iot.model';
+import { ActivatedRouteSnapshot, Router, ActivatedRoute } from '@angular/router';
 import { Params } from '@angular/router';
 import { Observable } from 'rxjs';
 import { CommonIotInfraDeployerComponent } from 'common';
@@ -40,7 +37,7 @@ export const STARTER_APP_ROUTES=
             },
             {
                 path: 'gatewayendpoint/:gatewayId',
-                component: IotGatewayEndpointComponent,
+                component: CommonIotGatewayEndpointComponent,
                 data: {breadcrumb: ['Gateways', 'Endpoints', 'Endpoints']}
             },
             {
@@ -52,11 +49,6 @@ export const STARTER_APP_ROUTES=
                 path: 'pipeline/:gatewayId',
                 component: CommonIotPipelineComponent,
                 data: {breadcrumb: ['Gateways', 'Pipelines', 'Pipelines']}
-            },
-            {
-                path: 'datapipeline/:gatewayId',
-                component: CommonIotDataPipelineComponent,
-                data: {breadcrumb: ['Gateways']}
             },
             {
                 path: 'gatewaydashboard',
@@ -82,11 +74,6 @@ export const STARTER_APP_ROUTES=
                 path: 'textile-simulator',
                 component: CommonIotTextileSimulatorComponent,
                 data: {breadcrumb: ['Textile Simulator']}
-            },
-            {
-                path: 'edgedatapipeline/:gatewayId',
-                component: CommonIotEdgeDataPipelineComponent,
-                data: {breadcrumb: ['Gateways']}
             }
 
 

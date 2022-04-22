@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 
 import { Observable, of } from 'rxjs';
-import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { catchError, map, tap, timeout } from 'rxjs/operators';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { catchError, tap, timeout } from 'rxjs/operators';
 
-import { Device, Profile, Service, Subscription, GetCommandResponse, Gateway, Rule, ModelConfig, FiltersConfig } from '../../models/iot.model';
+import { Device, Profile, Service, Subscription, GetCommandResponse, FiltersConfig } from '../../models/iot.model';
 import { AppConfigService } from '../config/app-config.service';
+import { Gateway, ModelConfig } from '@TIBCOSoftware/labs-air-graph-client';
 
 const httpOptions = {
     headers: new HttpHeaders({
@@ -51,20 +52,20 @@ export class EdgeService {
   private remoteGatewayUrl = this.appConfigService.getFromConfigOrEnv('remoteGatewayUrl');
 
   /**
-   * 
-   * @param http 
-   * @param logger 
+   *
+   * @param http
+   * @param logger
    */
   constructor(private http: HttpClient,
     private appConfigService: AppConfigService) {
   }
 
   /**
-   * 
+   *
    * @param accessToken used to determine if call should be to a secured proxy or not
-   * @param hostname 
-   * @param servicePath 
-   * @param operation 
+   * @param hostname
+   * @param servicePath
+   * @param operation
    */
   private getEdgexURL(hostname: string, servicePath: string, operation: string): string {
 
@@ -82,11 +83,11 @@ export class EdgeService {
   }
 
   /**
-   * 
+   *
    * @param accessToken used to determine if call should be to a secured proxy or not
-   * @param hostname 
-   * @param servicePath 
-   * @param operation 
+   * @param hostname
+   * @param servicePath
+   * @param operation
    */
   private getUnsecuredEdgexURL(hostname: string, servicePath: string, operation: string): string {
 
@@ -101,8 +102,8 @@ export class EdgeService {
   // Core Metadata Operations
 
   /**
-   * 
-   * @param gateway 
+   *
+   * @param gateway
    */
   pingCoreMetadata(gateway: Gateway): Observable<string> {
 
@@ -113,18 +114,18 @@ export class EdgeService {
       const secured = gateway.accessToken != 'NONE';
 
       console.log('Service is secured: ', secured);
-    
+
 
       if (secured) {
           console.log('Calling secured url');
-      
+
           url = this.getEdgexURL(gateway.address, this.edgexCoreMetadataPath, 'ping');
       }
       else {
           console.log('Calling unsecured url');
           url = this.getUnsecuredEdgexURL(gateway.address, this.edgexCoreMetadataPortAndPath, 'ping');
       }
-    
+
 
       const authorizedHeaders = httpTextResponseOptions.headers.set('Authorization', 'Bearer ' + gateway.accessToken);
       httpTextResponseOptions.headers = authorizedHeaders;
@@ -138,8 +139,8 @@ export class EdgeService {
   }
 
   /**
-   * 
-   * @param gateway 
+   *
+   * @param gateway
    */
   getDevices(gateway: Gateway): Observable<Device[]> {
       // const url = `/${gateway.uuid}${this.gatewayCoreMetadataPath}/device`;
@@ -168,9 +169,9 @@ export class EdgeService {
   }
 
   /**
-   * 
-   * @param gateway 
-   * @param id 
+   *
+   * @param gateway
+   * @param id
    */
   getDevice(gateway: Gateway, id: string): Observable<Device> {
       // const url = `/${gateway.uuid}${this.gatewayCoreMetadataPath}/device/${id}`;
@@ -197,9 +198,9 @@ export class EdgeService {
   }
 
   /**
-   * 
-   * @param gateway 
-   * @param device 
+   *
+   * @param gateway
+   * @param device
    */
   addDevice(gateway: Gateway, device: any): Observable<string> {
       // const url = `/${gateway.uuid}${this.gatewayCoreMetadataPath}/device`;
@@ -213,7 +214,7 @@ export class EdgeService {
       else {
           url = this.getUnsecuredEdgexURL(gateway.address, this.edgexCoreMetadataPortAndPath, 'device');
       }
-    
+
 
       const authorizedHeaders = httpTextResponseOptions.headers.set('Authorization', 'Bearer ' + gateway.accessToken);
       httpTextResponseOptions.headers = authorizedHeaders;
@@ -226,9 +227,9 @@ export class EdgeService {
   }
 
   /**
-   * 
-   * @param gateway 
-   * @param deviceName 
+   *
+   * @param gateway
+   * @param deviceName
    */
   deleteDeviceByName(gateway: Gateway, deviceName: string): Observable<string> {
       // const url = `/${gateway.uuid}${this.gatewayCoreMetadataPath}/device/name/${deviceName}`;
@@ -243,7 +244,7 @@ export class EdgeService {
       else {
           url = this.getUnsecuredEdgexURL(gateway.address, this.edgexCoreMetadataPortAndPath, op);
       }
-    
+
       const authorizedHeaders = httpTextResponseOptions.headers.set('Authorization', 'Bearer ' + gateway.accessToken);
       httpTextResponseOptions.headers = authorizedHeaders;
 
@@ -255,8 +256,8 @@ export class EdgeService {
   }
 
   /**
-   * 
-   * @param gateway 
+   *
+   * @param gateway
    */
   getProfiles(gateway: Gateway): Observable<Profile[]> {
       // const url = `/${gateway.uuid}${this.gatewayCoreMetadataPath}/deviceprofile`;
@@ -284,9 +285,9 @@ export class EdgeService {
   }
 
   /**
-   * 
-   * @param gateway 
-   * @param profile 
+   *
+   * @param gateway
+   * @param profile
    */
   addProfile(gateway: Gateway, profile: Profile): Observable<string> {
 
@@ -313,9 +314,9 @@ export class EdgeService {
   }
 
   /**
-   * 
-   * @param gateway 
-   * @param profile 
+   *
+   * @param gateway
+   * @param profile
    */
   updateProfile(gateway: Gateway, profile: Profile): Observable<string> {
 
@@ -341,8 +342,8 @@ export class EdgeService {
   }
 
   /**
-   * 
-   * @param gateway 
+   *
+   * @param gateway
    */
   getServices(gateway: Gateway): Observable<Service[]> {
       // const url = `/${gateway.uuid}${this.gatewayCoreMetadataPath}/deviceservice`;
@@ -371,9 +372,9 @@ export class EdgeService {
   // Core Command Operations
 
   /**
-   * 
-   * @param gateway 
-   * @param cmdPath 
+   *
+   * @param gateway
+   * @param cmdPath
    */
   getCommand(gateway: Gateway, cmdPath: string): Observable<GetCommandResponse> {
       // const url = `/${gateway.uuid}${this.gatewayCoreCommandPath}/${cmdPath}`;
@@ -403,9 +404,9 @@ export class EdgeService {
   // Export Client Operations
 
   /**
-   * 
-   * @param gateway 
-   * @param subscription 
+   *
+   * @param gateway
+   * @param subscription
    */
   addRegisteration(gateway: Gateway, subscription: Subscription): Observable<string> {
       // const url = `/${gateway.uuid}${this.gatewayExportClientPath}/registration`;
@@ -468,9 +469,9 @@ export class EdgeService {
   }
 
   /**
-   * 
-   * @param gateway 
-   * @param subscription 
+   *
+   * @param gateway
+   * @param subscription
    */
   updateRegisteration(gateway: Gateway, subscription: Subscription): Observable<string> {
       // const url = `/${gateway.uuid}${this.gatewayExportClientPath}/registration`;
@@ -527,9 +528,9 @@ export class EdgeService {
   }
 
   /**
-   * 
-   * @param gateway 
-   * @param subscriptionName 
+   *
+   * @param gateway
+   * @param subscriptionName
    */
   deleteRegisteration(gateway: Gateway, subscriptionName: string): Observable<string> {
       // const url = `/${gateway.uuid}${this.gatewayExportClientPath}/registration/name/${subscriptionName}`;
@@ -547,52 +548,9 @@ export class EdgeService {
   }
 
   /**
-   * 
-   * @param gateway 
-   * @param rule 
-   */
-  addRule(gateway: Gateway, rule: Rule): Observable<string> {
-
-      // const url = `/${gateway.uuid}${this.edgeFlogoRulesUrl}addRule`;
-      const url = this.getEdgexURL(gateway.address, this.edgexFlogoRulesPath, 'addRule');
-
-      const authorizedHeaders = httpTextResponseOptions.headers.set('Authorization', 'Bearer ' + gateway.accessToken);
-      httpTextResponseOptions.headers = authorizedHeaders;
-
-      console.log('Adding Rule: ', rule);
-
-
-      return this.http.post<string>(url, rule, httpTextResponseOptions)
-          .pipe(
-              tap(_ => console.info('added rule')),
-              catchError(this.handleError<string>('addRule'))
-          );
-  }
-
-  /**
-   * 
-   * @param gateway 
-   * @param rule 
-   */
-  deleteRule(gateway: Gateway, rule: Rule): Observable<string> {
-
-      // const url = `/${gateway.uuid}${this.edgeFlogoRulesUrl}deleteRule`;
-      const url = this.getEdgexURL(gateway.address, this.edgexFlogoRulesPath, 'deleteRule');
-
-      const authorizedHeaders = httpTextResponseOptions.headers.set('Authorization', 'Bearer ' + gateway.accessToken);
-      httpTextResponseOptions.headers = authorizedHeaders;
-
-      return this.http.post<string>(url, rule, httpTextResponseOptions)
-          .pipe(
-              tap(_ => console.info('added rule')),
-              catchError(this.handleError<string>('deleteRule'))
-          );
-  }
-
-  /**
-   * 
-   * @param gateway 
-   * @param modelConfig 
+   *
+   * @param gateway
+   * @param modelConfig
    */
   addModelConfig(gateway: Gateway, modelConfig: ModelConfig): Observable<string> {
 
@@ -609,9 +567,9 @@ export class EdgeService {
   }
 
   /**
-   * 
-   * @param gateway 
-   * @param modelConfig 
+   *
+   * @param gateway
+   * @param modelConfig
    */
   deleteModelConfig(gateway: Gateway, modelConfig: ModelConfig): Observable<string> {
 
@@ -628,9 +586,9 @@ export class EdgeService {
   }
 
   /**
-   * 
-   * @param gateway 
-   * @param filtersConfig 
+   *
+   * @param gateway
+   * @param filtersConfig
    */
   setFiltersConfig(gateway: Gateway, filtersConfig: FiltersConfig): Observable<string> {
 

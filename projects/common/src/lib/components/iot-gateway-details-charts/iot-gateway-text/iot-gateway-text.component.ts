@@ -1,9 +1,10 @@
 import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Device, Resource, TSReading } from '../../../models/iot.model';
-import { GraphService } from '../../../services/graph/graph.service';
+import { Device, Resource } from '../../../models/iot.model';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { TSReading } from '@TIBCOSoftware/labs-air-graph-client';
 
 @Component({
     selector: 'app-common-iot-gateway-text',

@@ -174,8 +174,8 @@
               ],
               "fileReplacements": [
                 {
-                  "replace": "projects/shared/environments/environment.ts",
-                  "with": "projects/shared/environments/environment.prod.ts"
+                  "replace": "projects/cloud/environments/environment.ts",
+                  "with": "projects/cloud/environments/environment.prod.ts"
                 }
               ],
               "outputHashing": "all"
@@ -186,7 +186,13 @@
               "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
-              "namedChunks": true
+              "namedChunks": true,
+              "fileReplacements": [
+                {
+                  "replace": "projects/cloud/environments/environment.ts",
+                  "with": "projects/cloud/environments/environment.prod.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -286,6 +292,7 @@
   },
   "defaultProject": "on-prem",
   "cli": {
+    "analytics": false,
     "defaultCollection": "@angular-eslint/schematics"
   }
 }

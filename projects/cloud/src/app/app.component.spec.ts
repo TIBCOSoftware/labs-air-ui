@@ -1,16 +1,25 @@
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
+import { AuthorizationService } from './services/authorization.service';
 
 describe('AppComponent', () => {
+
+    let authorizationService: Partial<AuthorizationService> = jasmine.createSpyObj(['xxx']);
+
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [
                 RouterTestingModule
             ],
+            providers: [
+                { provide: AuthorizationService, useValue: authorizationService }
+            ],
             declarations: [
                 AppComponent
             ],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA]
         }).compileComponents();
     });
 

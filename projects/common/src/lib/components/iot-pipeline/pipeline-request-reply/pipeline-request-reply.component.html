@@ -1,0 +1,83 @@
+<mat-card fxFlex style="height: 100%; box-shadow:none;" [formGroup]="requestReplyForm">
+    <mat-card-header>
+        <mat-card-title>MQTT Request Reply</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+
+        <div fxLayout="column" fxLayoutAlign="center start" style="height: 100%;">
+
+            <div fxLayout="row" style="width: 100%;" fxLayoutGap="15px">
+
+                <mat-form-field fxFlex="1 1 35%" appearance="outline">
+                    <mat-label>Log Level</mat-label>
+                    <mat-select formControlName="logLevel">
+                        <mat-option *ngFor="let item of logLevels;" [value]="item.value">
+                            {{item.viewValue}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field fxFlex="1 1 35%" appearance="outline">
+                    <mat-label>Timeout</mat-label>
+                    <input matInput formControlName="timeout" required>
+                </mat-form-field>
+            </div>
+
+            <div fxLayout="row" style="width: 100%;" fxLayoutGap="15px">
+                <mat-tab-group style="width: 100%">
+                    <mat-tab label="Protocol">
+
+                        <div fxLayout="row" style="width: 100%;;padding-top: 10px" fxLayoutGap="15px">
+                            <mat-form-field fxFlex="1 1 35%" appearance="outline">
+                                <mat-label>Protocols</mat-label>
+                                <mat-select formControlName="protocolId" (selectionChange)="onProtocolSelected($event)">
+                                    <mat-option *ngFor="let item of protocols; let i = index" [value]="item.uuid">
+                                        {{item.uuid}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <div fxLayout="column" *ngIf="showFields" fxLayoutAlign="center start" formGroupName="mqtt" style="height: 100%;">
+
+                            <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px" style="width: 100%;">
+                                <mat-form-field fxFlex="1 1 35%" appearance="outline">
+                                    <mat-label>Hostname</mat-label>
+                                    <input matInput [readonly]=true formControlName="hostname" required>
+                                </mat-form-field>
+
+                                <mat-form-field fxFlex="1 1 35%" appearance="outline">
+                                    <mat-label>Port</mat-label>
+                                    <input matInput [readonly]=true formControlName="port" required>
+                                </mat-form-field>
+
+                            </div>
+
+                            <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                <mat-label>Username</mat-label>
+                                <input matInput [readonly]=true formControlName="username" required>
+                            </mat-form-field>
+
+                            <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                <mat-label>Password</mat-label>
+                                <input matInput placeholder="Enter your password" [readonly]=true
+                                    [type]="hidePassword ? 'password' : 'text'" formControlName="password" required>
+                                <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
+                                    [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+                                    <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                </button>
+                            </mat-form-field>
+                        </div>
+                    </mat-tab>
+                    <mat-tab label="Data Template">
+                        <div>
+                            <mat-form-field class="full-width" appearance="outline">
+                                <mat-label>Data Template</mat-label>
+                                <textarea matInput formControlName="dataTemplate"></textarea>
+                              </mat-form-field>                         
+                        </div>
+                    </mat-tab>
+                </mat-tab-group>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>
