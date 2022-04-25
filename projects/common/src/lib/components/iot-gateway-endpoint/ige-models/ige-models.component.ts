@@ -126,7 +126,7 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
           inputTemplate: ['', Validators.required],
           headers: this.formBuilder.array([]),
           method: ['', Validators.required],
-          base64Encoded: [false, Validators.required]
+          base64Encoded: [true, Validators.required]
       });
   }
 
