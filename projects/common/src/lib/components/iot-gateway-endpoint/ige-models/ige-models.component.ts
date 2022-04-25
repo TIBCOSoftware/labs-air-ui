@@ -81,7 +81,6 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
 
       this.createForm();
 
-
       this.onFormChanges();
 
       console.log('Getting models');
