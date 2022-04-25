@@ -33,6 +33,10 @@ import { CommonIotNotificationsComponent } from './components/iot-notifications/
 import { CommonIotStoreSimulatorComponent } from './components/iot-simulator/iot-store-simulator/iot-store-simulator.component';
 import { CommonIotTextileSimulatorComponent } from './components/iot-simulator/iot-textile-simulator/iot-textile-simulator.component';
 import { PipelineRestBroadcastComponent } from './components/iot-pipeline/pipeline-rest-broadcast/pipeline-rest-broadcast.component';
+import { CommonIotGatewayEndpointComponent } from './components/iot-gateway-endpoint/iot-gateway-endpoint.component';
+import { IgeDataStoresComponent } from './components/iot-gateway-endpoint/ige-data-stores/ige-data-stores.component';
+import { IgeModelsComponent } from './components/iot-gateway-endpoint/ige-models/ige-models.component'
+import { IgeProtocolsComponent } from './components/iot-gateway-endpoint/ige-protocols/ige-protocols.component'
 
 // modules
 import { RouterModule } from '@angular/router';
@@ -49,10 +53,11 @@ import { NgxHeatmapModule } from 'ngx-heatmap'
 //services
 import { AppConfigService } from './services/config/app-config.service';
 import { EdgeService } from './services/edge/edge.service';
-import { DgraphService } from './services/graph/dgraph.service';
 import { DatastoreService } from './services/datastore/datastore.service';
-import { GraphService } from './services/graph/graph.service'
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client'
 import { DatePipe } from '@angular/common';
+import { RestHeadersComponent } from './components/iot-pipeline/rest-headers/rest-headers.component';
+import { PipelineRequestReplyComponent } from './components/iot-pipeline/pipeline-request-reply/pipeline-request-reply.component';
 
 const appInitializerFn = (appConfig: AppConfigService) => {
   return () => {
@@ -97,7 +102,13 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     CommonIotNotificationsComponent,
     CommonIotStoreSimulatorComponent,
     CommonIotTextileSimulatorComponent,
-    PipelineRestBroadcastComponent
+    PipelineRestBroadcastComponent,
+    RestHeadersComponent,
+    CommonIotGatewayEndpointComponent,
+    IgeDataStoresComponent,
+    IgeModelsComponent,
+    IgeProtocolsComponent,
+    PipelineRequestReplyComponent
   ],
   imports: [
     MaterialModule,
@@ -128,7 +139,6 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     },
     EdgeService,
     DatastoreService,
-    { provide: GraphService, useClass: DgraphService },
     DatePipe
   ]
 })

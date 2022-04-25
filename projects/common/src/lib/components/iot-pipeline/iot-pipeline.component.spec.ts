@@ -6,8 +6,8 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
 import { AppConfigService } from '../../services/config/app-config.service';
 import { EdgeService } from '../../services/edge/edge.service';
-import { GraphService } from '../../services/graph/graph.service';
-import { Gateway } from '../../models/iot.model';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
+import { Gateway } from '@TIBCOSoftware/labs-air-graph-client';
 
 import { CommonIotPipelineComponent } from './iot-pipeline.component';
 
@@ -19,7 +19,7 @@ describe('IotPipelineComponent', () => {
     const mockGraphService = jasmine.createSpyObj(['getGateways', 'getGatewayAndPipelines', 'getModels']);
     const mockEdgeService: Partial<EdgeService> = jasmine.createSpyObj(['getDevices']);
 
-    mockGraphService.getGatewayAndPipelines.and.returnValue(of([new Gateway()] as Gateway[]));
+    mockGraphService.getGatewayAndPipelines.and.returnValue(of([{}] as Gateway[]));
     mockGraphService.getModels.and.returnValue(of([]));
 
     beforeEach(async () => {

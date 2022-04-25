@@ -1,8 +1,8 @@
 import { Component, OnInit, Directive, ViewContainerRef, ViewChild, ComponentFactoryResolver } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
-import { GraphService } from '../../services/graph/graph.service';
-import { Device, Gateway, Resource } from '../../models/iot.model';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
+import { Device, Resource } from '../../models/iot.model';
 import { EdgeService } from '../../services/edge/edge.service';
 import { BreadcrumbsService } from '../../services/breadcrumbs/breadcrumbs.service';
 import { CommonIotGatewayOverviewComponent } from '../iot-gateway-details-charts/iot-gateway-overview/iot-gateway-overview.component';
@@ -14,6 +14,7 @@ import { CommonIotGatewayObjectComponent } from '../iot-gateway-details-charts/i
 import { CommonIotGatewayTimeSeriesComponent } from '../iot-gateway-details-charts/iot-gateway-time-series/iot-gateway-time-series.component';
 import { CommonIotGatewayXyzValueComponent } from '../iot-gateway-details-charts/iot-gateway-xyz-value/iot-gateway-xyz-value.component';
 import { CommonIotGatewayTextComponent } from '../iot-gateway-details-charts/iot-gateway-text/iot-gateway-text.component';
+import { Gateway } from '@TIBCOSoftware/labs-air-graph-client';
 
 @Directive({
     // eslint-disable-next-line @angular-eslint/directive-selector

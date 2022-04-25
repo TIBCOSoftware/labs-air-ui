@@ -9,7 +9,8 @@ describe('PipelineRestBroadcastComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PipelineRestBroadcastComponent ]
+      declarations: [ PipelineRestBroadcastComponent ],
+      providers: [ FormBuilder]
     })
     .compileComponents();
   });
@@ -22,8 +23,10 @@ describe('PipelineRestBroadcastComponent', () => {
       restTimeout: new FormControl(1),
       restURLs: new FormArray([]),
       restMethods: new FormArray([]),
-      restBodies: new FormArray([])
+      restBodies: new FormArray([]),
+      endpointNames: new FormArray([])
     })
+    component.models = [];
     fixture.detectChanges();
   });
 

@@ -5,70 +5,41 @@ import { BrowserModule } from '@angular/platform-browser';
 import { MaterialModule } from './material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DatePipe } from '@angular/common';
+import { DatePipe, PathLocationStrategy } from '@angular/common';
 import { NgxHeatmapModule } from 'ngx-heatmap';
 import { NgChartsModule } from 'ng2-charts';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { LocationStrategy, HashLocationStrategy } from '@angular/common';
-
+import { LocationStrategy } from '@angular/common';
 import { StarterAppComponent } from './routes/starter-app/starter-app.component';
 import { SplashComponent } from './routes/splash/splash.component';
-
 import { HomeComponent } from './routes/home/home.component';
 import { IotHomeCockpitComponent } from './components/iot-home-cockpit/iot-home-cockpit.component';
-
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
-import { GraphService } from 'common';
-import { DgraphService } from 'common';
+import { BASE_PATH, Configuration, GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { Ng2GoogleChartsModule } from 'ng2-google-charts';
-import { IotGatewayEndpointComponent } from './components/iot-gateway-endpoint/iot-gateway-endpoint.component';
-import { IgeModelsComponent } from './components/iot-gateway-endpoint/ige-models/ige-models.component';
-import { IgeDataStoresComponent } from './components/iot-gateway-endpoint/ige-data-stores/ige-data-stores.component';
-import { IgeProtocolsComponent } from './components/iot-gateway-endpoint/ige-protocols/ige-protocols.component';
 import { IotGatewayDashboardComponent } from './components/iot-gateway-dashboard/iot-gateway-dashboard.component';
 import { SpotfireDashboardComponent } from './components/spotfire-dashboard/spotfire-dashboard.component';
-import { CommonIotStoreSimulatorComponent } from 'common';
-import { CommonIotTextileSimulatorComponent } from 'common';
 import { IotDashboardComponent } from './components/iot-dashboard/iot-dashboard.component';
-
 import { CommonLibraryModule } from 'common';
-import { LoginComponent } from './routes/login/login.component';
-import { LoginOauthComponent } from './routes/login-oauth/login-oauth.component';
+import { ApiModule as LabsAirGraphApiModule } from '@TIBCOSoftware/labs-air-graph-client';
+import { DGraphCloudService } from './services/graph/dgraph-cloud.service';
+import { environment } from '../../environments/environment';
+import { AuthorizationService } from './services/authorization.service';
+import { Requestor, FetchRequestor } from '@openid/appauth';
+import { CallbackComponent } from './routes/callback/callback.component';
+import { TokenService } from './services/token.service';
 
-import {
-  LogService, OAuthInterceptor,
-  ProxyInterceptor,
-  SessionRefreshService,
-  TcCoreConfig,
-  TcCoreConfigService,
-  TcCoreLibModule
-} from '@tibco-tcstk/tc-core-lib';
-import { TcFormsLibModule } from '@tibco-tcstk/tc-forms-lib';
-import { TcLiveappsLibModule } from '@tibco-tcstk/tc-liveapps-lib';
-
-
-const appInitializerFn = (appConfig: AppConfigService) => {
+const appInitializerFn = (appConfigService: AppConfigService) => {
   return () => {
-    return appConfig.loadAppConfig();
+    return appConfigService.loadAppConfig();
   };
 };
 
-const tcCoreConfig: TcCoreConfig = {
-  disableFormLibs: false,
-  // for test mode ONLY you can enter an oAuth key as the local storage key as long as it starts CIC~
-  // do NOT use this for production code - instead enter the local storage key where external app will save oauth key.
-  // oauth keys should NEVER be saved in code for production or when checked into source control!
-  // oAuthLocalStorageKey: 'TC_DEV_KEY',
-  oAuthLocalStorageKey: '',
-  proxy_url: '',
-  proxy_liveapps_path: '',
-  proxy_tce_path: '',
-  api_key: '',
-  api_key_param: 'api_key',
-  enable_tce: false
-}
+const configurationProviderPath = (appConfigService: AppConfigService) => {
+  return appConfigService.getFromConfigOrEnv('dgraphUrl');
+};
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -77,15 +48,10 @@ const tcCoreConfig: TcCoreConfig = {
     HomeComponent,
     IotHomeCockpitComponent,
     NavBarComponent,
-    IotGatewayEndpointComponent,
-    IgeModelsComponent,
-    IgeDataStoresComponent,
-    IgeProtocolsComponent,
     IotGatewayDashboardComponent,
     SpotfireDashboardComponent,
     IotDashboardComponent,
-    LoginComponent,
-    LoginOauthComponent
+    CallbackComponent
   ],
   imports: [
     BrowserModule,
@@ -98,10 +64,8 @@ const tcCoreConfig: TcCoreConfig = {
     NgxHeatmapModule,
     Ng2GoogleChartsModule,
     NgChartsModule,
-    TcCoreLibModule.forRoot(tcCoreConfig),
-    TcFormsLibModule,
-    TcLiveappsLibModule.forRoot(),    
-    CommonLibraryModule
+    CommonLibraryModule,
+    LabsAirGraphApiModule
   ],
   providers: [
     AppConfigService,
@@ -112,9 +76,23 @@ const tcCoreConfig: TcCoreConfig = {
       deps: [AppConfigService]
     },
     DatePipe,
-    { provide: GraphService, useClass: DgraphService },
-    { provide: LocationStrategy, useClass: HashLocationStrategy },
-    LogService,
+    AuthorizationService,
+    TokenService,
+    { provide: BASE_PATH, useFactory: configurationProviderPath, deps: [AppConfigService] },
+    {
+      provide: Configuration,
+      useFactory: (appConfigService: AppConfigService, tokenService: TokenService) =>
+        new Configuration(
+          {
+            basePath: appConfigService.getFromConfigOrEnv('dgraphUrl'),
+            accessToken: tokenService.oauthToken ? tokenService.oauthToken : ''
+          }),
+      deps: [AppConfigService, TokenService]
+    },
+    { provide: GraphService, useClass: DGraphCloudService },
+    { provide: LocationStrategy, useClass: PathLocationStrategy },
+    { provide: Requestor, useValue: new FetchRequestor()},
+    { provide: 'AuthorizationConfig', useValue: environment}
   ],
   bootstrap: [AppComponent]
 })

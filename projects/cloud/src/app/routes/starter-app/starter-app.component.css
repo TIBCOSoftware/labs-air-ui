@@ -10,3 +10,21 @@ router-outlet + * {
   min-height: 100%;
   overflow: hidden;
 }
+
+* { font-family: 'Source Sans Pro', 'Helvetica Neue', 'Sans Serif'; }
+
+.toolbar {
+  align-items: center;
+  background-color: #062e79;
+  color: #fff;
+  display: flex;
+  font-weight: 600;
+  height: 60px;
+  left: 0;
+  right: 0;
+  top: 0;
+}
+
+.toolbar img {
+  margin: 0 16px;
+}

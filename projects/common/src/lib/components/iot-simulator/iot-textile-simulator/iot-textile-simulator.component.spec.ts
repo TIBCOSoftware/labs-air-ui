@@ -4,7 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AppConfigService } from '../../../services/config/app-config.service';
 import { EdgeService } from '../../../services/edge/edge.service';
-import { GraphService } from '../../../services/graph/graph.service';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { TextileSimulatorService } from '../../../services/simulator/textile-simulator.service';
 
 import { CommonIotTextileSimulatorComponent } from './iot-textile-simulator.component';

@@ -2,14 +2,14 @@ import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angula
 
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { GraphService } from '../../services/graph/graph.service';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { EdgeService } from '../../services/edge/edge.service';
 import { FlogoDeployService } from '../../services/deployment/flogo-deploy.service';
-import { Pipeline, Gateway, Device, Model, RestBroadcast } from '../../models/iot.model';
+import { Device } from '../../models/iot.model';
 
 import { PipelineFilteringComponent } from './pipeline-filtering/pipeline-filtering.component';
 import { PipelineInferencingComponent } from './pipeline-inferencing/pipeline-inferencing.component';
@@ -19,7 +19,6 @@ import { NodeEditor, Engine } from 'rete';
 import ConnectionPlugin from 'rete-connection-plugin';
 import { AngularRenderPlugin } from 'rete-angular-render-plugin';
 import ContextMenuPlugin from 'rete-context-menu-plugin';
-// import { zoomAt } from "rete-area-plugin";
 
 import { DataStoreComponent } from '../rete/components/data-store-component';
 import { DataSubscriberComponent } from '../rete/components/data-subscriber-component';
@@ -37,6 +36,8 @@ import { FlogoFlowComponent } from '../rete/components/flogo-flow-component';
 import { RestServiceComponent } from '../rete/components/rest-service-component';
 import { NodePrimaryComponent } from '../rete/nodes/node-primary/node-primary.component';
 import { RestBroadcastComponent } from '../rete/components/rest-broadcast.component'
+import { MQTTRequestReplyComponent } from '../rete/components/mqtt-request-reply.component'
+import { Gateway, Model, Pipeline } from '@TIBCOSoftware/labs-air-graph-client';
 
 @Component({
     selector: 'app-common-iot-pipeline',
@@ -71,6 +72,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
   flogoFlowConfig = false;
   restServiceConfig = false;
   restBroadcastConfig = false;
+  requestReplyConfig = false;
   xcor = 0;
   ycor = 0;
 
@@ -89,6 +91,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
   restServiceForm: FormGroup;
   dataOptionsForm: FormGroup;
   restBroadcastForm: FormGroup;
+  requestReplyForm: FormGroup;
 
   ruleTuplesDescriptor = [
       {
@@ -207,6 +210,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           new RuleExpressionComponent(),
           new RestServiceComponent(),
           new RestBroadcastComponent(),
+          new MQTTRequestReplyComponent(),
           new NotificationPublisherComponent(),
           new ImageResizeComponent(),
           new CustomPublisherComponent(),
@@ -494,6 +498,10 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           contextObj = this.buildNodeRestBroadcastServiceProperties();
           break;
       }
+      case 'MQTT Request Reply': {
+          contextObj = this.buildNodeMQTTRequestReplyProperties();
+          break;
+      }
       default: {
 
           break;
@@ -518,6 +526,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
       this.flogoFlowConfig = false;
       this.restServiceConfig = false;
       this.restBroadcastConfig = false;
+      this.requestReplyConfig = false;
 
       if (node != null || node != undefined) {
           console.log('Resetting context for node: ', node);
@@ -595,6 +604,11 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
               this.restBroadcastConfig = true;
               break;
           }
+          case 'MQTT Request Reply': {
+              this.updateMQTTRequestReplyComponent(contextObj);
+              this.requestReplyConfig = true;
+              break;
+          }
           default: {
               this.pipelineConfig = true;
               break;
@@ -619,12 +633,17 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           url: '',
           inputTemplate: '',
           logLevel: 'INFO',
+          method: 'PUT',
+          headers: new FormArray([]),
+          base64Encoded: false
       }, { emitEvent: false });
 
       this.restServiceForm.reset({
           description: '',
           url: '',
           logLevel: 'INFO',
+          method: 'PUT',
+          headers: new FormArray([])
       }, { emitEvent: false });
 
       this.protocolForm.patchValue({
@@ -654,6 +673,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           propsEnv: 'auto',
       }, { emitEvent: false });
 
+      this.requestReplyForm.reset();
   }
 
 
@@ -787,13 +807,17 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           inputType: ['', Validators.required],
           url: ['', Validators.required],
           inputTemplate: ['', Validators.required],
-          logLevel: ['INFO', Validators.required]
+          logLevel: ['INFO', Validators.required],
+          method: ['PUT', Validators.required],
+          headers: this.formBuilder.array([]),
+          base64Encoded: [false, Validators.required]
       });
 
       this.restServiceForm = this.formBuilder.group({
           description: ['', Validators.required],
           url: ['', Validators.required],
-          logLevel: ['INFO', Validators.required]
+          logLevel: ['INFO', Validators.required],
+          headers: this.formBuilder.array([])
       });
 
       this.ruleForm = this.formBuilder.group({
@@ -845,10 +869,34 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
       this.restBroadcastForm = this.formBuilder.group({
           logLevel: ['INFO', Validators.required],
           restTimeout: ['', Validators.required],
+          endpointNames: this.formBuilder.array([]),
           restURLs: this.formBuilder.array([]),
           restMethods: this.formBuilder.array([]),
-          restBodies: this.formBuilder.array([])
-      })
+          restBodies: this.formBuilder.array([]),
+          headers: this.formBuilder.array([])
+      });
+
+      this.requestReplyForm = this.formBuilder.group({
+          uid: ['', Validators.required],
+          gateway: [this.gatewayId, Validators.required],
+          protocolId: ['', Validators.required],
+          protocol: ['', Validators.required],
+          logLevel: ['INFO', Validators.required],
+          timeout: ['', Validators.required],
+          dataTemplate: ['', Validators.required],
+          mqtt: this.formBuilder.group({
+              hostname: ['changeme', Validators.required],
+              port: ['changeme', Validators.required],
+              username: ['changeme', Validators.required],
+              password: ['changeme', Validators.required],
+              encryptionMode: ['None', Validators.required],
+              caCertificate: [''],
+              clientCertificate: [''],
+              clientKey: [''],
+              topic: ['changeme', Validators.required],
+              maximumQOS: ['2', Validators.required]
+          }),
+       });
   }
 
   /**
@@ -886,7 +934,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
               'port': protocolForm.get('mqtt.port').value,
               'username': protocolForm.get('mqtt.username').value,
               'password': protocolForm.get('mqtt.password').value,
-              'encriptionMode': protocolForm.get('mqtt.encryptionMode').value,
+              'encryptionMode': protocolForm.get('mqtt.encryptionMode').value,
               'caCertificate': protocolForm.get('mqtt.caCertificate').value,
               'clientCertificate': protocolForm.get('mqtt.clientCertificate').value,
               'clientKey': protocolForm.get('mqtt.clientKey').value,
@@ -1066,6 +1114,9 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           'filters': this.inferenceComponent.getFilters(),
           'inputTemplate': this.modelForm.get('inputTemplate').value,
           'logLevel': this.modelForm.get('logLevel').value,
+          'method': this.modelForm.get('method').value,
+          'headers': this.modelForm.get('headers').value,
+          'base64Encoded': this.modelForm.get('base64Encoded').value
       };
 
       return inferenceObj;
@@ -1178,7 +1229,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           'description': this.restServiceForm.get('description').value,
           'url': this.restServiceForm.get('url').value,
           'filters': this.restComponent.getFilters(),
-          'logLevel': this.restServiceForm.get('logLevel').value
+          'logLevel': this.restServiceForm.get('logLevel').value,
+          'headers': this.restServiceForm.get('headers').value
       };
 
       console.log('REST Service context saved: ', restServiceObj);
@@ -1192,9 +1244,34 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
         'restTimeout': this.restBroadcastForm.get('restTimeout').value,
         'restURLs': this.restBroadcastForm.get('restURLs').value,
         'restMethods': this.restBroadcastForm.get('restMethods').value,
-        'restBodies': this.restBroadcastForm.get('restBodies').value
+        'restBodies': this.restBroadcastForm.get('restBodies').value,
+        'headers': this.restBroadcastForm.get('headers').value,
+        'endpointNames': this.restBroadcastForm.get('endpointNames').value
     }
     return restBroadcastObj;
+  }
+
+  buildNodeMQTTRequestReplyProperties(): any {
+    const mqttRequestReplyObj = {
+        'uid': this.requestReplyForm.get('uid').value,
+        'protocol': this.requestReplyForm.get('protocol').value,
+        'protocolId': this.requestReplyForm.get('protocolId').value,
+        'logLevel': this.requestReplyForm.get('logLevel').value,
+        'hostname': this.requestReplyForm.get('mqtt.hostname').value,
+        'port': this.requestReplyForm.get('mqtt.port').value,
+        'username': this.requestReplyForm.get('mqtt.username').value,
+        'password': this.requestReplyForm.get('mqtt.password').value,
+        'encryptionMode': this.requestReplyForm.get('mqtt.encryptionMode').value,
+        'caCertificate': this.requestReplyForm.get('mqtt.caCertificate').value,
+        'clientCertificate': this.requestReplyForm.get('mqtt.clientCertificate').value,
+        'clientKey': this.requestReplyForm.get('mqtt.clientKey').value,
+        'topic': this.requestReplyForm.get('mqtt.topic').value,
+        'maximumQOS': this.requestReplyForm.get('mqtt.maximumQOS').value,
+        'timeout': this.requestReplyForm.get('timeout').value,
+        'gateway': this.requestReplyForm.get('gateway').value,
+        'dataTemplate': this.requestReplyForm.get('dataTemplate').value
+    }
+    return mqttRequestReplyObj;
   }
 
   /**
@@ -1412,8 +1489,14 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
               description: context.modelDescription,
               url: context.modelUrl,
               inputTemplate: context.inputTemplate,
-              LogLevel: context.logLevel
+              LogLevel: context.logLevel,
+              method: context.method,
+              base64Encoded: context.base64Encoded
           });
+
+          const formGroups = context.headers.map(x => this.formBuilder.array(x.map(y => this.formBuilder.group(y)))) as [];
+          const headersArray = this.formBuilder.array(formGroups) as FormArray
+          this.modelForm.setControl('headers', headersArray);
 
       }
   }
@@ -1536,6 +1619,9 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
               logLevel: context.logLevel,
           });
 
+          const formGroups = context.headers.map(x => this.formBuilder.array(x.map(y => this.formBuilder.group(y)))) as [];
+          const headersArray = this.formBuilder.array(formGroups) as FormArray
+          this.restServiceForm.setControl('headers', headersArray);
       }
   }
 
@@ -1549,12 +1635,46 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                 logLevel: context.logLevel,
                 restTimeout: context.restTimeout,
             });
+            this.restBroadcastForm.setControl('endpointNames', this.formBuilder.array(context.endpointNames))
             this.restBroadcastForm.setControl('restURLs', this.formBuilder.array(context.restURLs));
             this.restBroadcastForm.setControl('restMethods', this.formBuilder.array(context.restMethods));
             this.restBroadcastForm.setControl('restBodies', this.formBuilder.array(context.restBodies));
+
+            const formGroups = context.headers.map(x => this.formBuilder.array(x.map(y => this.formBuilder.group(y)))) as [];
+            const headersArray = this.formBuilder.array(formGroups) as FormArray
+            this.restBroadcastForm.setControl('headers', headersArray);
         }
     }
 
+    /**
+   *
+   * @param context
+   */
+    updateMQTTRequestReplyComponent (context: any) {
+        if (context != null || context != undefined) {
+            this.requestReplyForm.patchValue({
+                uid: context.uid,
+                protocol: context.protocol,
+                protocolId: context.protocolId,
+                logLevel: context.logLevel,
+                timeout: context.timeout,
+                gateway: context.gateway,
+                dataTemplate: context.dataTemplate,
+                mqtt: {
+                    hostname: context.hostname,
+                    port: context.hostname,
+                    username: context.username,
+                    password: context.password,
+                    encryptionMode: context.encryptionMode,
+                    caCertificate: context.caCertificate,
+                    clientCertificate: context.clientCertificate,
+                    clientKey: context.clientKey,
+                    topic: context.topic,
+                    maximumQOS: context.maximumQOS,
+                }
+            })
+        }
+    }
   /**
    * Get Gateway, Pipelines and Devices information
    */
@@ -1799,7 +1919,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           console.log('Saved editor data: ', editorData);
 
           // Save pipeline
-          const pipeline = new Pipeline();
+          const pipeline = {} as  Pipeline;
           const tsms = Date.now();
           pipeline.created = tsms;
           pipeline.modified = tsms;
@@ -1813,7 +1933,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           pipeline.subscriptionTopic = this.getSubscriptionTopic();
 
           // Add pipeline to graph
-          this.graphService.addPipeline(this.gateway.uid, pipeline, '', '', null, null)
+          this.graphService.addPipeline(this.gateway.uid, pipeline)
               .subscribe(res => {
                   console.log('Added pipeline: ', res);
 
@@ -1838,7 +1958,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
       const editorData = this.editor.toJSON();
 
       // Update pipeline
-      const pipeline = new Pipeline();
+      const pipeline = {} as Pipeline;
       const tsms = Date.now();
       pipeline.modified = tsms;
       pipeline.name = this.pipelineForm.get('name').value;
@@ -1931,6 +2051,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
       this.flogoFlowConfig = false;
       this.restServiceConfig = false;
       this.restBroadcastConfig = false;
+      this.requestReplyConfig = false;
 
       this.pipelineForm.patchValue({
           uid: '',
@@ -2177,6 +2298,10 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                   case 'REST Broadcast': {
                       pipelineFlow.AirDescriptor.logic.push(this.buildRESTBroadcastDeployObj(flowNode.data.customdata));
                       break;
+                  }
+                  case 'MQTT Request Reply': {
+                    pipelineFlow.AirDescriptor.logic.push(this.buildMQTTRequestDeployObj(flowNode.data.customdata));
+                    break
                   }
                   }
                   pos++;
@@ -2690,7 +2815,9 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           { 'Name': 'REST.Producer', 'Value': contextObj.modelName},
           { 'Name': 'REST.InferenceData', 'Value': inferenceData },
           { 'Name': 'REST.Conditions', 'Value': JSON.stringify(contextObj.filters) },
-          { 'Name': 'REST.URLMapping', 'Value': JSON.stringify(urlMapping) }
+          { 'Name': 'REST.URLMapping', 'Value': JSON.stringify(urlMapping) },
+          { 'Name': 'REST.HTTPHeaders', 'Value': JSON.stringify(contextObj.headers)},
+          { 'Name': 'REST.Base64Encoded', 'Value': contextObj.base64Encoded}
       ];
 
       return inferenceObj;
@@ -2952,7 +3079,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           { 'Name': 'REST.Timeout', 'Value': '10000' },
           { 'Name': 'REST.InferenceData', 'Value': JSON.stringify(inferenceData) },
           { 'Name': 'REST.Conditions', 'Value': JSON.stringify(contextObj.filters) },
-          { 'Name': 'REST.URLMapping', 'Value': JSON.stringify(urlMapping) }
+          { 'Name': 'REST.URLMapping', 'Value': JSON.stringify(urlMapping) },
+          { 'Name': 'REST.HTTPHeaders', 'Value': JSON.stringify(contextObj.headers)}
       ];
 
       return propertiesObj;
@@ -3002,6 +3130,38 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
       return propertiesObj;
   }
 
+  buildMQTTRequestDeployObj(context): any {
+    const requestReplyObj = {
+        name: '',
+        properties: this.buildMQTTRequestReplyDeployProperties(context)
+    };
+
+    return requestReplyObj;     
+  }
+
+  buildMQTTRequestReplyDeployProperties(contextObj): any {
+    let mqttRequestReplyDeployProperties = null;
+
+    const encpass = 'SECRET:' + btoa(contextObj.password);
+
+    mqttRequestReplyDeployProperties = [
+          { 'Name': 'MQTTPub.Topic', 'Value': contextObj.topic },
+          { 'Name': 'MQTTPub.MaximumQOS', 'Value': contextObj.maximumQOS },
+          { 'Name': 'Mqtt.IoTMQTT.Broker_URL', 'Value': 'tcp://' + contextObj.hostname + ':' + contextObj.port },
+          { 'Name': 'Mqtt.IoTMQTT.Username', 'Value': contextObj.username },
+          { 'Name': 'Mqtt.IoTMQTT.Password', 'Value': encpass },
+          { 'Name': 'Mqtt.encryptionMode', 'Value': 'changeme' },
+          { 'Name': 'Mqtt.caCertificate', 'Value': 'changeme' },
+          { 'Name': 'Mqtt.clientCertificate', 'Value': 'changeme' },
+          { 'Name': 'Mqtt.clientKey', 'Value': 'changeme' },
+          { 'Name': 'Logging.LogLevel', 'Value': contextObj.logLevel },
+          { 'Name': 'timeout', 'Value': contextObj.timeout },
+          { 'Name': 'dataTemplate', 'Value': contextObj.dataTemplate }
+    ];
+     return mqttRequestReplyDeployProperties
+
+  }
+
   getSubscriptionTopic(): string {
 
     let subscriptionTopic = "";
@@ -3010,7 +3170,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
     const orderedFlow = this.reorderFlow(this.editor.toJSON());
 
     console.log('Ordered flow: ', orderedFlow);
-    
+
     orderedFlow.forEach(flowNode => {
         console.log('Inspecting from node: ', flowNode);
         console.log('Inspecting from node name: ', flowNode.name);
