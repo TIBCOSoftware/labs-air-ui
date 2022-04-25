@@ -9,6 +9,7 @@ import { CommonIotGatewayOverviewComponent } from '../iot-gateway-details-charts
 import { CommonIotGatewayMapComponent } from '../iot-gateway-details-charts/iot-gateway-map/iot-gateway-map.component';
 import { CommonIotGatewayDiscreteValueComponent } from '../iot-gateway-details-charts/iot-gateway-discrete-value/iot-gateway-discrete-value.component';
 import { CommonIotGatewayImageComponent } from '../iot-gateway-details-charts/iot-gateway-image/iot-gateway-image.component';
+import { CommonIotGatewayVideoStreamComponent } from '../iot-gateway-details-charts/iot-gateway-video-stream/iot-gateway-video-stream.component';
 import { CommonIotGatewayObjectComponent } from '../iot-gateway-details-charts/iot-gateway-object/iot-gateway-object.component';
 import { CommonIotGatewayTimeSeriesComponent } from '../iot-gateway-details-charts/iot-gateway-time-series/iot-gateway-time-series.component';
 import { CommonIotGatewayXyzValueComponent } from '../iot-gateway-details-charts/iot-gateway-xyz-value/iot-gateway-xyz-value.component';
@@ -128,6 +129,9 @@ export class CommonIotGatewayDetailsComponent implements OnInit {
               }
               else if (sensor.name == 'Location') {
                   return this.componentFactoryResolver.resolveComponentFactory(CommonIotGatewayMapComponent);
+              }
+              else if (sensor.attributes != undefined && sensor.attributes.Visualization != undefined && sensor.attributes.Visualization == 'VideoStream') {
+                return this.componentFactoryResolver.resolveComponentFactory(CommonIotGatewayVideoStreamComponent);
               }
               else if (sensor.attributes != undefined && sensor.attributes.Visualization != undefined && sensor.attributes.Visualization == 'XYZScatter') {
                   return this.componentFactoryResolver.resolveComponentFactory(CommonIotGatewayXyzValueComponent);

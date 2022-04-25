@@ -36,7 +36,8 @@
               "projects/on-prem/src/styles.css"
             ],
             "scripts": [
-              "projects/shared/assets/geoanalytics/GeoAnalytics.js"
+              "projects/shared/assets/geoanalytics/GeoAnalytics.js",
+              "projects/shared/assets/videostreaming/jsmpeg.min.js"
             ]
           },
           "configurations": {
@@ -155,7 +156,8 @@
               "projects/cloud/src/styles.css"
             ],
             "scripts": [
-              "projects/shared/assets/geoanalytics/GeoAnalytics.js"
+              "projects/shared/assets/geoanalytics/GeoAnalytics.js",
+              "projects/shared/assets/videostreaming/jsmpeg.min.js"
             ]
           },
           "configurations": {
