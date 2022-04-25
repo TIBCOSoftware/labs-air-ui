@@ -500,6 +500,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
       }
       case 'Python': {
           contextObj = this.buildPythonProperties();
+          break;
+      }
       case 'REST Broadcast': {
           contextObj = this.buildNodeRestBroadcastServiceProperties();
           break;
@@ -610,6 +612,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
               this.updatePythonComponent(contextObj);
               this.pythonConfig = true;
               break;
+          }
           case 'REST Broadcast': {
               this.updateRESTBroadcastComponent(contextObj);
               this.restBroadcastConfig = true;

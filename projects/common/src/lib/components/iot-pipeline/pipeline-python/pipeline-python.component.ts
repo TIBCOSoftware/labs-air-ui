@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { GraphService } from '../../../services/graph/graph.service';
-import { PythonResource } from '../../../models/iot.model';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
+import { PythonResource } from '@TIBCOSoftware/labs-air-graph-client';
 @Component({
   selector: 'app-pipeline-python',
   templateUrl: './pipeline-python.component.html',
