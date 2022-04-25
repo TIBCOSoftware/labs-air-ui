@@ -6,6 +6,7 @@ import { CommonIotGatewayTimeSeriesComponent } from './components/iot-gateway-de
 import { CommonIotGatewayLocationComponent } from './components/iot-gateway-details-charts/iot-gateway-location/iot-gateway-location.component';
 import { CommonIotGatewayXyzValueComponent } from './components/iot-gateway-details-charts/iot-gateway-xyz-value/iot-gateway-xyz-value.component';
 import { CommonIotGatewayImageComponent } from './components/iot-gateway-details-charts/iot-gateway-image/iot-gateway-image.component';
+import { CommonIotGatewayVideoStreamComponent } from './components/iot-gateway-details-charts/iot-gateway-video-stream/iot-gateway-video-stream.component';
 import { CommonIotGatewayObjectComponent } from './components/iot-gateway-details-charts/iot-gateway-object/iot-gateway-object.component';
 import { CommonIotGatewayMapComponent } from './components/iot-gateway-details-charts/iot-gateway-map/iot-gateway-map.component';
 import { CommonIotGatewayDiscreteValueComponent } from './components/iot-gateway-details-charts/iot-gateway-discrete-value/iot-gateway-discrete-value.component';
@@ -73,6 +74,7 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     CommonIotGatewayLocationComponent,
     CommonIotGatewayXyzValueComponent,
     CommonIotGatewayImageComponent,
+    CommonIotGatewayVideoStreamComponent,
     CommonIotGatewayObjectComponent,
     CommonIotGatewayMapComponent,
     CommonIotGatewayDiscreteValueComponent,
