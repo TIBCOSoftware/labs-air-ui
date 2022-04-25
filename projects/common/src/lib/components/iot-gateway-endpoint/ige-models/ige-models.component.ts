@@ -75,9 +75,6 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
 
   }
 
-  /**
-   *
-   */
   ngOnInit() {
 
       this.modelSelection.clear();
