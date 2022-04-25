@@ -93,9 +93,6 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
 
   }
 
-  /**
-   *
-   */
   ngAfterViewInit() {
       this.modelsDataSource.sort = this.sort;
   }
