@@ -2,8 +2,9 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { EdgeService } from '../../../services/edge/edge.service';
-import { GraphService } from '../../../services/graph/graph.service';
-import { Device, Resource } from '../../../models/iot.model';
+import { Device, Resource, TSCombinedReading } from '../../../models/iot.model';
+import { TSReading } from '@TIBCOSoftware/labs-air-graph-client';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 
 import { CommonIotGatewayVideoStreamComponent } from './iot-gateway-video-stream.component';
 
