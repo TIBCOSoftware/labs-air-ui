@@ -649,7 +649,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           logLevel: 'INFO',
           method: 'PUT',
           headers: new FormArray([]),
-          base64Encoded: false
+          base64Encoded: true
       }, { emitEvent: false });
 
       this.restServiceForm.reset({
@@ -832,7 +832,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           logLevel: ['INFO', Validators.required],
           method: ['PUT', Validators.required],
           headers: this.formBuilder.array([]),
-          base64Encoded: [false, Validators.required]
+          base64Encoded: [true, Validators.required]
       });
 
       this.restServiceForm = this.formBuilder.group({
@@ -2878,7 +2878,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           { 'Name': 'REST.Conditions', 'Value': JSON.stringify(contextObj.filters) },
           { 'Name': 'REST.URLMapping', 'Value': JSON.stringify(urlMapping) },
           { 'Name': 'REST.HTTPHeaders', 'Value': JSON.stringify(contextObj.headers)},
-          { 'Name': 'REST.Base64Encoded', 'Value': contextObj.base64Encoded}
+          { 'Name': 'REST.BinaryRequestBody', 'Value': contextObj.base64Encoded}
       ];
 
       return inferenceObj;

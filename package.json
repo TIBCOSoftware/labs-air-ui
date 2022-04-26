@@ -1,6 +1,6 @@
 {
   "name": "ProjectAir",
-  "version": "0.7.0-725",
+  "version": "0.7.0-812",
   "workspaces": [
     "projects/cloud",
     "projects/on-prem",

@@ -79,7 +79,7 @@ export class PipelineRestBroadcastComponent implements OnInit {
 
   setForm(model: Model, index: number) {
     this.restURLs.setControl(index, new FormControl(model.url));
-    this.restBodies.setControl(index, new FormControl(model.inputTemplate));
+    this.restBodies.setControl(index, new FormControl(atob(model.inputTemplate)));
     this.restMethods.setControl(index, new FormControl(model.method));
     this.endpointNames.setControl(index, new FormControl(model.name));
     const modelHeaderObjArray = JSON.parse(atob(model.headers)) as [];
