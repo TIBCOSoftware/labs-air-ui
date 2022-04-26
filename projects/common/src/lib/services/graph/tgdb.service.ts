@@ -13,6 +13,7 @@ import {
   Notification,
   Pipeline,
   Protocol,
+  PythonResource,
   TSReading
 } from '@TIBCOSoftware/labs-air-graph-client';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
