@@ -192,11 +192,12 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
   /**
    * Reset model form
    */
-  resetmodelForm() {
+  resetModelForm() {
       this.modelForm.reset({
       }, { emitEvent: false });
 
       this.modelForm.setControl('headers', new FormArray([]));
+      this.modelForm.setControl('base64Encoded', new FormControl(true));
       this.graphDeleteOpDisabled = true;
       this.graphAddOpDisabled = true;
       this.graphUpdateOpDisabled = true;
@@ -243,7 +244,7 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
                   console.log('Result from add model', res);
 
                   this.getModels(this.gatewayId);
-                  this.resetmodelForm();
+                  this.resetModelForm();
               });
       }
 
@@ -282,7 +283,7 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
               console.log('Result from update model', res);
 
               this.getModels(this.gatewayId);
-              this.resetmodelForm();
+              this.resetModelForm();
           });
   }
 
@@ -300,7 +301,7 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
               console.log('Result from delete model ', res);
 
               this.getModels(this.gatewayId);
-              this.resetmodelForm();
+              this.resetModelForm();
 
           });
   }
