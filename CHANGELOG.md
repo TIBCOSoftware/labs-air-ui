@@ -2,6 +2,50 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.7.0-812](https://github.com/TIBCOSoftware/labs-air-ui/compare/v0.7.0-725...v0.7.0-812) (2022-04-26)
+
+
+### Features
+
+* add a small command window for new controls ([9c845ad](https://github.com/TIBCOSoftware/labs-air-ui/commits/9c845ad0b7c53830b465cfb15dc564ca83ddab2b))
+* add base64 encoded field to inferencing ([b6b6d72](https://github.com/TIBCOSoftware/labs-air-ui/commits/b6b6d72140eaf63ff4edc8f79c34e3f29fff8097))
+* add headers and method to endpoints ([56586e8](https://github.com/TIBCOSoftware/labs-air-ui/commits/56586e8b9b2b8f40ff541bcde98c0dcac523c7f4))
+* add headers component ([e8faba3](https://github.com/TIBCOSoftware/labs-air-ui/commits/e8faba3bad5d96c3cd3d8427163f87c57ac65bcd))
+* add headers to inference and rest broadcast ([3fe76a0](https://github.com/TIBCOSoftware/labs-air-ui/commits/3fe76a0f2a8871fc79312fc8cc1bcd8a3fcd17f7))
+* add request reply activity to pipeline ([b20f581](https://github.com/TIBCOSoftware/labs-air-ui/commits/b20f5814777a846aee248859112d4beee87843c7))
+* add request reply deploy logic ([a1b8311](https://github.com/TIBCOSoftware/labs-air-ui/commits/a1b831114527e629b2025f264ad7157edd5b7d50))
+* add request reply template and logic ([2099e1e](https://github.com/TIBCOSoftware/labs-air-ui/commits/2099e1e1bdfb5ce4620996b34ed33b292787a72c))
+* **air-ui:** cloud authentication ([8d87fbe](https://github.com/TIBCOSoftware/labs-air-ui/commits/8d87fbe07fccff7aee02a9ce32098c12ca4c5126))
+* **air-ui:** optimizations to auth service and token service ([1f95cd1](https://github.com/TIBCOSoftware/labs-air-ui/commits/1f95cd12d24e6a0a251db0ae4bfbbb7595fd1217))
+* **api:** connect the cloud UI to the backend service ([b4e1b68](https://github.com/TIBCOSoftware/labs-air-ui/commits/b4e1b68cff588a613f68b82ddf8b19c503de1828))
+* change headers data type to array of array ([823e30b](https://github.com/TIBCOSoftware/labs-air-ui/commits/823e30bfd900f2b01b51f9443907e9b00692ee1a))
+* **cloud:** configure the libraries to use the oauth token ([df45c11](https://github.com/TIBCOSoftware/labs-air-ui/commits/df45c11b059d0c5adcfd4b00612ee9a566c5e058))
+* **cloud:** serve all from index.html ([51d79bd](https://github.com/TIBCOSoftware/labs-air-ui/commits/51d79bd5f77108fc7c4f86eb53c7376d61d4e04f))
+* **infra:** set the client ID from an environment variable ([4b7615a](https://github.com/TIBCOSoftware/labs-air-ui/commits/4b7615acbd3d70f5aa4689c5db715d7b45554563))
+* set a place holder where a client id would be specified ([efc00fc](https://github.com/TIBCOSoftware/labs-air-ui/commits/efc00fc166f3b50590328fcead4f576368521b57))
+* style and remove button logic for headers ([852d969](https://github.com/TIBCOSoftware/labs-air-ui/commits/852d969579eacb924b18ba5cd6453441dbe500af))
+* **ui:** different GraphService implementations for on-prem and cloud ([81d6b90](https://github.com/TIBCOSoftware/labs-air-ui/commits/81d6b903d478df8cc7141dd43efb01e0cd2e15b8))
+
+
+### Bugfixes
+
+* chart js display for timeseries ([b1e0d8b](https://github.com/TIBCOSoftware/labs-air-ui/commits/b1e0d8b86b7a1dfc4e50dc46dea8c48545eff3d4))
+* **cloud:** change redirect url ([98b3477](https://github.com/TIBCOSoftware/labs-air-ui/commits/98b3477ba322d7520876784222d5de58bca24fe6))
+* fix condensed time on charts ([0632573](https://github.com/TIBCOSoftware/labs-air-ui/commits/0632573842d4377fbff28c7295a7dd429ff6fa50))
+* fix eslint error ([6017ef6](https://github.com/TIBCOSoftware/labs-air-ui/commits/6017ef6a3f895efbc16b059ce9c41cdae097abda))
+* fix rest header test ([94dd2bb](https://github.com/TIBCOSoftware/labs-air-ui/commits/94dd2bb5ba5605ed42e89c0f7ff78862dea5a500))
+* fix time-series charts, update text fields, update endpoint style ([9a7b0fa](https://github.com/TIBCOSoftware/labs-air-ui/commits/9a7b0faedf58568958a76034b51c430311ba98c6))
+* flogo flow activity table adjustment ([f4e684b](https://github.com/TIBCOSoftware/labs-air-ui/commits/f4e684b95bac637fb838892cc7b0067082471ee2))
+* hide control form logic ([bd86fa0](https://github.com/TIBCOSoftware/labs-air-ui/commits/bd86fa0b782a916712c241f20e95217399f5388c))
+* **library:** updated version with better delete ([e20743c](https://github.com/TIBCOSoftware/labs-air-ui/commits/e20743c479104d730dcfe5f92133126009b73a4a))
+* **pipeline:** fix decode of broadcast body ([2277cf5](https://github.com/TIBCOSoftware/labs-air-ui/commits/2277cf5384774aa05ef1443646db9633ef3c0212))
+* remove circular dependency ([1446ace](https://github.com/TIBCOSoftware/labs-air-ui/commits/1446acef172133dd0568e14fd5e30a64b8874a37))
+* remove video stream component ([21778de](https://github.com/TIBCOSoftware/labs-air-ui/commits/21778de9cb811d0371b90d10ba4900e0978cd171))
+* restore command and library ([0271015](https://github.com/TIBCOSoftware/labs-air-ui/commits/027101544e8886b86f3f9b76a561cb862f1ced74))
+* restore library ([6899109](https://github.com/TIBCOSoftware/labs-air-ui/commits/68991093d7232542478e784d7a8e8b245ebd43c2))
+* **ui:** correct file replacements ([b0e0fef](https://github.com/TIBCOSoftware/labs-air-ui/commits/b0e0fefaedf58d9d68e170cc4fd1468fbcfd5617))
+* update old test references ([8ba267f](https://github.com/TIBCOSoftware/labs-air-ui/commits/8ba267f2dd0f7e52c8bcc098e6e6943512291ddc))
+
 ## [0.7.0-725](https://github.com/TIBCOSoftware/labs-air-ui/compare/v0.6.0-29...v0.7.0-725) (2022-04-01)
 
 
