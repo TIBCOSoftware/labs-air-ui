@@ -38,7 +38,7 @@ import { IgeDataStoresComponent } from './components/iot-gateway-endpoint/ige-da
 import { IgeModelsComponent } from './components/iot-gateway-endpoint/ige-models/ige-models.component'
 import { IgeProtocolsComponent } from './components/iot-gateway-endpoint/ige-protocols/ige-protocols.component'
 import { PipelinePythonComponent } from './components/iot-pipeline/pipeline-python/pipeline-python.component';
-
+import { IgeResourcesComponent } from './components/iot-gateway-endpoint/ige-resources/ige-resources.component';
 
 // modules
 import { RouterModule } from '@angular/router';
@@ -112,7 +112,8 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     IgeModelsComponent,
     IgeProtocolsComponent,
     PipelineRequestReplyComponent,
-    PipelinePythonComponent
+    PipelinePythonComponent,
+    IgeResourcesComponent
   ],
   imports: [
     MaterialModule,

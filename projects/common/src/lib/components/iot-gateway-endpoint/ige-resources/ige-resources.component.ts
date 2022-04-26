@@ -3,7 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
-import { PythonResource } from '../../../models/iot.model';
+import { PythonResource } from '@TIBCOSoftware/labs-air-graph-client';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 
 @Component({
@@ -61,7 +61,7 @@ export class IgeResourcesComponent implements OnInit {
 
   addResource() {
     const ts = Date.now();
-    const resource = new PythonResource();
+    const resource = {} as PythonResource;
 
     resource.scope = this.gatewayId;
 
@@ -88,7 +88,7 @@ export class IgeResourcesComponent implements OnInit {
 
   updateResource() {
     const ts = Date.now();
-    const resource = new PythonResource();
+    const resource = {} as PythonResource;
 
     resource.created = this.resourceForm.get('created').value;
     resource.modified = ts;
