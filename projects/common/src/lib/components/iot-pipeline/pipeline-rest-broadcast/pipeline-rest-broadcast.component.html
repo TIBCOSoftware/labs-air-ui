@@ -31,7 +31,7 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
-                <div>
+                <div *ngIf="index.value">
                     <h4>Endpoint Details</h4>
                     <div formArrayName="restURLs">
                         <mat-form-field appearance="outline">
