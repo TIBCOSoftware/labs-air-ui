@@ -3,7 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
-import { PythonResource } from '@TIBCOSoftware/labs-air-graph-client';
+import { PythonResource,  } from '@TIBCOSoftware/labs-air-graph-client';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 
 @Component({
@@ -40,7 +40,7 @@ export class IgeResourcesComponent implements OnInit {
   }
 
   getResources() {
-    this.graphService.getResources(this.gatewayId).subscribe(resp => {
+    this.graphService.getPythonResources(this.gatewayId).subscribe(resp => {
       this.resourcesDataSource.data = resp;
     });
   }
@@ -61,7 +61,7 @@ export class IgeResourcesComponent implements OnInit {
     const ts = Date.now();
     const resource = {} as PythonResource;
 
-    resource.scope = this.gatewayId;
+    resource.scope = this.gatewayId as PythonResource.ScopeEnum;
 
     resource.created = ts;
     resource.modified = ts;
@@ -75,7 +75,7 @@ export class IgeResourcesComponent implements OnInit {
         });
     }
     else {
-        this.graphService.addResource(resource)
+        this.graphService.addPythonResource(resource)
             .subscribe(res => {
                 this.getResources();
                 // this.resetmodelForm();
@@ -92,9 +92,9 @@ export class IgeResourcesComponent implements OnInit {
     resource.name = this.resourceForm.get('name').value;
     resource.uid = this.resourceForm.get('uid').value;
     resource.type = this.resourceForm.get('type').value; 
-    resource.scope = this.gatewayId;
+    resource.scope = this.gatewayId as PythonResource.ScopeEnum;
     resource.fileContent = encodeURIComponent(this.resourceForm.get('fileContent').value);
-    this.graphService.updateResource(resource).subscribe(
+    this.graphService.updatePythonResource(resource).subscribe(
       resp => {
         this.getResources();
       }
@@ -102,7 +102,7 @@ export class IgeResourcesComponent implements OnInit {
   }
   
   deleteResource() {
-    this.graphService.deleteResource(this.gatewayId, this.resourceForm.get('uid').value).subscribe(
+    this.graphService.deletePythonResource(this.gatewayId, this.resourceForm.get('uid').value).subscribe(
       resp => {
         this.getResources();
       }

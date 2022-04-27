@@ -18,6 +18,8 @@ export class PipelinePythonComponent implements OnInit {
   } = { processors: [], requirements: [], dockerfile: []}
   resourceContent: string;
   showResourceContentBoolean = false;
+  languages = ['python'];
+
 
   constructor(private graphService: GraphService) { }
 
@@ -26,7 +28,7 @@ export class PipelinePythonComponent implements OnInit {
   }
 
   getResources() {
-    this.graphService.getResources(this.gatewayId).subscribe(resp => {
+    this.graphService.getPythonResources(this.gatewayId).subscribe(resp => {
       this.splitResources(resp);
     })
   }

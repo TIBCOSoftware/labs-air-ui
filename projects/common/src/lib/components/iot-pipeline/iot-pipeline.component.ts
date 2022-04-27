@@ -2370,7 +2370,11 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                   }
                   case 'MQTT Request Reply': {
                     pipelineFlow.AirDescriptor.logic.push(this.buildMQTTRequestDeployObj(flowNode.data.customdata));
-                    break
+                    break;
+                  }
+                  case 'Python': {
+                    pipelineFlow.AirDescriptor.logic.push(this.buildPythonDeployObj(flowNode.data.customdata));
+                    break;
                   }
                   }
                   pos++;
@@ -3253,6 +3257,22 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
     return subscriptionTopic;
 
   }
+  buildPythonDeployObj(context): any {
+    const pythonDeployObj = {
+        name: 'Processor.PythonService',
+        properties: this.buildMQTTRequestReplyDeployProperties(context)
+    };
+
+    return pythonDeployObj;     
+  }
+
+  buildPythonDeployProperties(contextObj): any {
+    let pythonDeployProperties = null;
+
+    pythonDeployProperties = [
+
+    ];
+     return pythonDeployProperties
+
+  }
 }
-
-
