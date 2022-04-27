@@ -1,6 +1,6 @@
 # TIBCO LABS™ Project AIR™ UI
 
-Link to full documentation Site: https://tibcosoftware.github.io/labs-air/
+Link to full documentation Site: [https://tibcosoftware.github.io/labs-air/]
 
 ![Logo](https://tibcosoftware.github.io/TIBCO-LABS/about/tibcolabs-brand.png "Labs Logo")
 
@@ -38,7 +38,7 @@ export const environment = {
 ...
 ```
 
-Change the `dGraphUrl` value to the infrastructure endpoint.
+Change the `dgraphUrl` value to the infrastructure endpoint.
 
 ### Troubleshooting
 
