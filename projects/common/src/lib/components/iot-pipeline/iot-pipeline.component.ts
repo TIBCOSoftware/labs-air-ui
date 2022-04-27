@@ -693,7 +693,9 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           requirement: '',
           requirementContent: '',
           dockerfile: '',
-          dockerfileContent: ''
+          dockerfileContent: '',
+          volumeName: '',
+          volumePath: '',
     });
       this.requestReplyForm.reset();
   }
@@ -893,8 +895,10 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           processorContent: [''],
           requirement: ['', Validators.required],
           requirementContent: [''],
-          dockerfile: [''],
-          dockerfileContent: ['']
+          dockerfile: ['', Validators.required],
+          dockerfileContent: [''],
+          volumeName: ['', Validators.required],
+          volumePath: ['', Validators.required]
       });
 
       this.restBroadcastForm = this.formBuilder.group({
@@ -1277,7 +1281,9 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
         'requirement': this.pythonForm.get('requirement').value,
         'requirementContent': this.pythonForm.get('requirementContent').value,
         'dockerfile': this.pythonForm.get('dockerfile').value,
-        'dockerfileContent': this.pythonForm.get('dockerfileContent').value
+        'dockerfileContent': this.pythonForm.get('dockerfileContent').value,
+        'volumeName': this.pythonForm.get('volumeName').value,
+        'volumePath': this.pythonForm.get('volumePath').value
     };
 
     return pythonObj;
@@ -1681,7 +1687,9 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
             requirement: context.requirement,
             requirementContent: context.requirementContent,
             dockerfile: context.dockerfile,
-            dockerfileContent: context.dockerfileContent
+            dockerfileContent: context.dockerfileContent,
+            volumeName: context.volumeName,
+            volumePath: context.volumePath
         });
     }
   }

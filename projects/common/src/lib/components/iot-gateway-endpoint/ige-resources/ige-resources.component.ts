@@ -22,7 +22,6 @@ export class IgeResourcesComponent implements OnInit {
     name: new FormControl,
     type: new FormControl,
     fileContent: new FormControl,
-    uuid: new FormControl,
     uid: new FormControl,
     created: new FormControl,
     modified: new FormControl
@@ -51,7 +50,6 @@ export class IgeResourcesComponent implements OnInit {
       name: row.name,
       type: row.type,
       fileContent: decodeURIComponent(row.fileContent),
-      uuid: row.uuid,
       uid: row.uid,
       created: row.created,
       modified: row.modified,
@@ -67,12 +65,11 @@ export class IgeResourcesComponent implements OnInit {
 
     resource.created = ts;
     resource.modified = ts;
-    resource.uuid = this.resourceForm.get('name').value;
     resource.name = this.resourceForm.get('name').value;
     resource.type = this.resourceForm.get('type').value;
     resource.fileContent = encodeURIComponent(this.resourceForm.get('fileContent').value);
 
-    if (this.resourceExists(resource.uuid)) {
+    if (this.resourceExists(resource.name)) {
         this._snackBar.open('Resource name is not unique.', 'Cancel', {
             duration: 3000,
         });
@@ -93,7 +90,6 @@ export class IgeResourcesComponent implements OnInit {
     resource.created = this.resourceForm.get('created').value;
     resource.modified = ts;
     resource.name = this.resourceForm.get('name').value;
-    resource.uuid = this.resourceForm.get('name').value;
     resource.uid = this.resourceForm.get('uid').value;
     resource.type = this.resourceForm.get('type').value; 
     resource.scope = this.gatewayId;
@@ -113,11 +109,11 @@ export class IgeResourcesComponent implements OnInit {
     );
   }
 
-  resourceExists(uuid: string): boolean {
+  resourceExists(name: string): boolean {
     let found = false;
     this.resourcesDataSource.data.forEach(
         resource => {
-            if (resource.uuid == uuid) {
+            if (resource.name == name) {
                 found = true;
             }
         }

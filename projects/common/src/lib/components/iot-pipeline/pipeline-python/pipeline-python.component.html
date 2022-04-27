@@ -4,7 +4,7 @@
             <mat-label>Processor</mat-label>
             <mat-select #processor formControlName="processor" (selectionChange)="updateContent($event.value, 'processors')">
                 <mat-option *ngFor="let item of resources.processors; let i = index" [value]="item.uid">
-                    {{item.uuid}}
+                    {{item.name}}
                 </mat-option>
             </mat-select>
         </mat-form-field>
@@ -15,7 +15,7 @@
             <mat-label>Requirement</mat-label>
             <mat-select #requirement formControlName="requirement" (selectionChange)="updateContent($event.value, 'requirements')">
                 <mat-option *ngFor="let item of resources.requirements; let i = index" [value]="item.uid">
-                    {{item.uuid}}
+                    {{item.name}}
                 </mat-option>
             </mat-select>
         </mat-form-field>
@@ -26,17 +26,30 @@
             <mat-label>Dockerfile</mat-label>
             <mat-select #dockerfile formControlName="dockerfile" (selectionChange)="updateContent($event.value, 'dockerfile')">
                 <mat-option *ngFor="let item of resources.dockerfile; let i = index" [value]="item.uid">
-                    {{item.uuid}}
+                    {{item.name}}
                 </mat-option>
             </mat-select>
         </mat-form-field>
         <button (click)="showResourceContent(dockerfile.value, 'dockerfile')">Preview dockerfile</button>
     </div>
+    <div>
+        <mat-form-field appearance="outline">
+            <mat-label>Volume Name</mat-label>
+            <input matInput formControlName="volumeName">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Volume Path</mat-label>
+            <input matInput formControlName="volumePath">
+        </mat-form-field>
+    </div>
 </div>
+
 
 <div class="code-window" *ngIf="showResourceContentBoolean">
     <div class="code">
         <span class="close" (click)="showResourceContentBoolean = false">&times;</span>
-        <textarea>{{resourceContent}}</textarea>
+        <div>
+            <pre><code [highlight]="resourceContent" [lineNumbers]="true" [languages]="languages"></code></pre>
+        </div>
     </div>
 </div>
