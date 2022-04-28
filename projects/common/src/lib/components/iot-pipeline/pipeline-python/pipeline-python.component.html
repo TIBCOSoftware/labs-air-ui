@@ -11,7 +11,9 @@
                 </mat-option>
             </mat-select>
         </mat-form-field>
-        <button (click)="showResourceContent(processor.value, 'processors')">Preview Processor</button>
+        <button mat-icon-button (click)="showResourceContent(processor.value, 'processors')" matTooltip="Preview Processor">
+            <mat-icon>remove_red_eye</mat-icon>
+        </button>
     </div>
     <div>
         <mat-form-field appearance="outline">
@@ -22,7 +24,9 @@
                 </mat-option>
             </mat-select>
         </mat-form-field>
-        <button (click)="showResourceContent(requirement.value, 'requirements')">Preview Requirement</button>
+        <button mat-icon-button (click)="showResourceContent(requirement.value, 'requirements')" matTooltip="Preview Requirement">
+            <mat-icon>remove_red_eye</mat-icon>
+        </button>
     </div>
     <div>
         <mat-form-field appearance="outline">
@@ -33,7 +37,9 @@
                 </mat-option>
             </mat-select>
         </mat-form-field>
-        <button (click)="showResourceContent(dockerfile.value, 'dockerfile')">Preview dockerfile</button>
+        <button mat-icon-button (click)="showResourceContent(dockerfile.value, 'dockerfile')" matTooltip="Preview Dockerfile">
+            <mat-icon>remove_red_eye</mat-icon>
+        </button>
     </div>
     <div>
         <mat-form-field appearance="outline">

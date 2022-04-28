@@ -62,20 +62,15 @@
                 <mat-card-title>Resource Details</mat-card-title>
             </mat-card-header>
             <mat-card-content>
-                <form [formGroup]="resourceForm" class="model-form" fxLayout="row wrap" fxLayoutGap="15px">
-
+                <form [formGroup]="resourceForm" class="model-form" class="resource-form">
                     <div fxLayout="column" style="height: 100%; width: 100%">
-                        
-                        <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px">
+                        <div>
                             <mat-form-field fxFlex="1 1 15%" appearance="outline">
                                 <mat-label>Name</mat-label>
                                 <input matInput [readonly]=false formControlName="name" required>
                             </mat-form-field>
-                            <div>
-                                <pre><code [highlight]="resourceForm.controls.fileContent.value" [lineNumbers]="true" [languages]="languages"></code></pre>
-                            </div>
                         </div>
-                        <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px">
+                        <div>
                             <mat-form-field fxFlex="1 1 15%" appearance="outline">
                                 <mat-label>Type</mat-label>
                                 <mat-select formControlName="type">
@@ -85,8 +80,13 @@
                                 </mat-select>
                             </mat-form-field>
                         </div>
-                        <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px">
+                        <div>
                             <input type="file"(change)="onFileUpload($event)">
+                        </div>
+                    </div>
+                    <div fxLayout="column" style="height: 100%; width: 65%">
+                        <div>
+                            <pre><code [highlight]="resourceForm.controls.fileContent.value" [lineNumbers]="true" [languages]="languages"></code></pre>
                         </div>
                     </div>
                 </form>
