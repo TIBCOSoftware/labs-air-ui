@@ -895,7 +895,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           processorContent: [''],
           requirement: ['', Validators.required],
           requirementContent: [''],
-          dockerfile: ['', Validators.required],
+          dockerfile: [''],
           dockerfileContent: [''],
           volumeName: ['', Validators.required],
           volumePath: ['', Validators.required]
@@ -3256,7 +3256,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
   }
   buildPythonDeployObj(context): any {
     const pythonDeployObj = {
-        name: 'Processor.PythonService',
+        name: 'Artifacts',
         properties: this.buildMQTTRequestReplyDeployProperties(context)
     };
 
@@ -3267,9 +3267,13 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
     let pythonDeployProperties = null;
 
     pythonDeployProperties = [
-
+        {'Type': 'File', 'Name': contextObj.procesor + '.py', 'Value' :  contextObj.processorContent, 'Encoded': false},
+        {'Type': 'File', 'Name': contextObj.requirement + '.txt', 'Value' :  contextObj.requirementContent, 'Encoded': false},
+        {'Type': 'Folder', 'Name': contextObj.volumeName, 'Value': contextObj.volumePath}
     ];
-     return pythonDeployProperties
-
+    if (contextObj.dockerfile) {
+        pythonDeployProperties.push({'Type': 'File', 'Name': 'dockerfile', 'Value': contextObj.dockerfileContent, 'Encoded': false})
+    }
+    return pythonDeployProperties
   }
 }
