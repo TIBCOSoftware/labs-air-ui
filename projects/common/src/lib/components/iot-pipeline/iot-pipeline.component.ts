@@ -3219,7 +3219,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
 
     mqttRequestReplyDeployProperties = [
           { 'Name': 'MQTTCoupler.Topic', 'Value': contextObj.topic },
-          { 'Name': 'MQTTPub.MaximumQOS', 'Value': contextObj.maximumQOS },
+          { 'Name': 'MQTTCoupler.MaximumQOS', 'Value': contextObj.maximumQOS },
           { 'Name': 'MQTTCoupler.Producer', 'Value': 'MQTTCoupler'},
           { 'Name': 'Mqtt.IoTMQTT.Broker_URL', 'Value': 'tcp://' + contextObj.hostname + ':' + contextObj.port },
           { 'Name': 'Mqtt.IoTMQTT.Username', 'Value': contextObj.username },
