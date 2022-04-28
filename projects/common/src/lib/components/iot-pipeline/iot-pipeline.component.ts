@@ -38,6 +38,7 @@ import { NodePrimaryComponent } from '../rete/nodes/node-primary/node-primary.co
 import { RestBroadcastComponent } from '../rete/components/rest-broadcast.component'
 import { MQTTRequestReplyComponent } from '../rete/components/mqtt-request-reply.component'
 import { Gateway, Model, Pipeline } from '@TIBCOSoftware/labs-air-graph-client';
+import { PythonComponent } from '../rete/components/python-component';
 
 @Component({
     selector: 'app-common-iot-pipeline',
@@ -71,6 +72,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
   streamingConfig = false;
   flogoFlowConfig = false;
   restServiceConfig = false;
+  pythonConfig = false;
   restBroadcastConfig = false;
   requestReplyConfig = false;
   xcor = 0;
@@ -90,6 +92,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
   flogoFlowForm: FormGroup;
   restServiceForm: FormGroup;
   dataOptionsForm: FormGroup;
+  pythonForm: FormGroup;
   restBroadcastForm: FormGroup;
   requestReplyForm: FormGroup;
 
@@ -215,7 +218,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           new ImageResizeComponent(),
           new CustomPublisherComponent(),
           new FlogoFlowComponent(),
-          new ErrorHandlerComponent()
+          new ErrorHandlerComponent(),
+          new PythonComponent()
       ];
 
       this.editor = new NodeEditor('demo@0.2.0', container);
@@ -494,6 +498,10 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           contextObj = this.buildNodeDataRESTServiceProperties();
           break;
       }
+      case 'Python': {
+          contextObj = this.buildPythonProperties();
+          break;
+      }
       case 'REST Broadcast': {
           contextObj = this.buildNodeRestBroadcastServiceProperties();
           break;
@@ -525,6 +533,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
       this.streamingConfig = false;
       this.flogoFlowConfig = false;
       this.restServiceConfig = false;
+      this.pythonConfig = false;
       this.restBroadcastConfig = false;
       this.requestReplyConfig = false;
 
@@ -597,6 +606,11 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           case 'REST Service': {
               this.updateRESTServiceComponent(contextObj);
               this.restServiceConfig = true;
+              break;
+          }
+          case 'Python': {
+              this.updatePythonComponent(contextObj);
+              this.pythonConfig = true;
               break;
           }
           case 'REST Broadcast': {
@@ -673,6 +687,16 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           propsEnv: 'auto',
       }, { emitEvent: false });
 
+    this.pythonForm.reset({
+          processor: '',
+          processorContent: '',
+          requirement: '',
+          requirementContent: '',
+          dockerfile: '',
+          dockerfileContent: '',
+          volumeName: '',
+          volumePath: '',
+    });
       this.requestReplyForm.reset();
   }
 
@@ -864,6 +888,17 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           portMap2: [''],
           httpServicePort: [''],
           propsEnv: ['auto']
+      });
+
+      this.pythonForm = this.formBuilder.group({
+          processor: ['', Validators.required],
+          processorContent: [''],
+          requirement: ['', Validators.required],
+          requirementContent: [''],
+          dockerfile: [''],
+          dockerfileContent: [''],
+          volumeName: ['', Validators.required],
+          volumePath: ['', Validators.required]
       });
 
       this.restBroadcastForm = this.formBuilder.group({
@@ -1238,6 +1273,21 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
       return restServiceObj;
   }
 
+  buildPythonProperties(): any {
+
+    const pythonObj = {
+        'processor': this.pythonForm.get('processor').value,
+        'processorContent': this.pythonForm.get('processorContent').value,
+        'requirement': this.pythonForm.get('requirement').value,
+        'requirementContent': this.pythonForm.get('requirementContent').value,
+        'dockerfile': this.pythonForm.get('dockerfile').value,
+        'dockerfileContent': this.pythonForm.get('dockerfileContent').value,
+        'volumeName': this.pythonForm.get('volumeName').value,
+        'volumePath': this.pythonForm.get('volumePath').value
+    };
+
+    return pythonObj;
+}
   buildNodeRestBroadcastServiceProperties(): any {
     const restBroadcastObj = {
         'logLevel': this.restBroadcastForm.get('logLevel').value,
@@ -1623,6 +1673,25 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           const headersArray = this.formBuilder.array(formGroups) as FormArray
           this.restServiceForm.setControl('headers', headersArray);
       }
+  }
+
+  /**
+   * Update python component. Stores the UID of each field in dgraph
+   */
+  updatePythonComponent(context) {
+    if (context != null || context != undefined) {
+
+        this.pythonForm.patchValue({
+            processor: context.processor,
+            processorContent: context.processorContent,
+            requirement: context.requirement,
+            requirementContent: context.requirementContent,
+            dockerfile: context.dockerfile,
+            dockerfileContent: context.dockerfileContent,
+            volumeName: context.volumeName,
+            volumePath: context.volumePath
+        });
+    }
   }
 
    /**
@@ -2301,7 +2370,11 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                   }
                   case 'MQTT Request Reply': {
                     pipelineFlow.AirDescriptor.logic.push(this.buildMQTTRequestDeployObj(flowNode.data.customdata));
-                    break
+                    break;
+                  }
+                  case 'Python': {
+                    pipelineFlow.AirDescriptor.logic.push(this.buildPythonDeployObj(flowNode.data.customdata));
+                    break;
                   }
                   }
                   pos++;
@@ -3181,6 +3254,26 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
     return subscriptionTopic;
 
   }
+  buildPythonDeployObj(context): any {
+    const pythonDeployObj = {
+        name: 'Artifacts',
+        properties: this.buildMQTTRequestReplyDeployProperties(context)
+    };
+
+    return pythonDeployObj;     
+  }
+
+  buildPythonDeployProperties(contextObj): any {
+    let pythonDeployProperties = null;
+
+    pythonDeployProperties = [
+        {'Type': 'File', 'Name': contextObj.procesor + '.py', 'Value' :  contextObj.processorContent, 'Encoded': false},
+        {'Type': 'File', 'Name': contextObj.requirement + '.txt', 'Value' :  contextObj.requirementContent, 'Encoded': false},
+        {'Type': 'Folder', 'Name': contextObj.volumeName, 'Value': contextObj.volumePath}
+    ];
+    if (contextObj.dockerfile) {
+        pythonDeployProperties.push({'Type': 'File', 'Name': 'dockerfile', 'Value': contextObj.dockerfileContent, 'Encoded': false})
+    }
+    return pythonDeployProperties
+  }
 }
-
-

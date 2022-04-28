@@ -1,0 +1,44 @@
+.table-container {
+  height: 300px;
+  overflow: auto;
+}
+  
+table {
+  width: 100%;
+}
+  
+.mat-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+  
+.mat-row.selected {
+  background: #ddd;
+}
+  
+.mat-header-cell {
+  font-size: 18px;
+}
+  
+.device-header-image {
+  background-image: url('/assets/img/device.png');
+  background-size: cover;
+}
+  
+.box {
+  border-radius: 5px;
+  font-size: 150%;
+  padding: 20px;
+}
+  
+.mat-form-field {
+  display: inline-block;
+  font-size: 14px;
+  margin-right: 1%;
+  width: 40%;
+}
+
+.resource-form {
+  display: flex;
+  flex: 0 0 100%;
+}

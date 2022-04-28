@@ -13,6 +13,7 @@ import {
   Notification,
   Pipeline,
   Protocol,
+  PythonResource,
   TSReading
 } from '@TIBCOSoftware/labs-air-graph-client';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
@@ -1462,5 +1463,99 @@ export class TgdbService { // extends GraphService {
       };
   }
 
+  /**
+   * Get Python Resources.
+   * @param gatewayUid
+   */
+   getResources(gatewayName: string): Observable<PythonResource[]> {
+    const url = `${this.tgdbUrl}/query`;
+    const query = `
+    {
+      resp(func: type(PythonResource)) @filter(eq(scope, "${gatewayName}")) {
+        uid
+        uuid
+        created
+        modified
+        name
+        type
+        scope
+        fileContent
+      }
+    }`;
 
+    return this.http.post<any>(url, query, httpOptions)
+      .pipe(
+        map(response => response.data.resp as PythonResource[]),
+        catchError(this.handleError<PythonResource[]>('getResources', []))
+      );
+  }
+
+  /**
+   * Add Python Resource.
+   * @param PythonResource
+   */
+  addResource(resource: PythonResource): Observable<string> {
+    const url = `${this.tgdbUrl}/mutate?commitNow=true`;
+    const query = ` {
+      set {
+        _:PythonResource <dgraph.type> "PythonResource".
+        _:PythonResource <uuid> "${resource.uuid}" .
+        _:PythonResource <name> "${resource.name}" .
+        _:PythonResource <created> "${resource.created}" .
+        _:PythonResource <modified> "${resource.modified}" .
+        _:PythonResource <type> "${resource.type}" .
+        _:PythonResource <fileContent> "${resource.fileContent}" .
+        _:PythonResource <scope> "${resource.scope}" .
+      }}`;
+
+    return this.http.post<any>(url, query, httpMutateOptions)
+      .pipe(
+        map(response => response.data.resp),
+        catchError(this.handleError<string>('addResource'))
+      );
+  }
+
+  /**
+   * Update Python Resource.
+   * @param PythonResource
+   */
+  updateResource(resource: PythonResource): Observable<string> {
+    const url = `${this.tgdbUrl}/mutate?commitNow=true`;
+    const query = `{
+      set {
+        <${resource.uid}> <uuid> "${resource.uuid}" .
+        <${resource.uid}> <modified> "${resource.modified}" .
+        <${resource.uid}> <name> "${resource.name}" .
+        <${resource.uid}> <scope> "${resource.scope}" .
+        <${resource.uid}> <type> "${resource.type}" .
+        <${resource.uid}> <fileContent> "${resource.fileContent}" .
+      }
+    }`;
+
+    return this.http.post<any>(url, query, httpMutateOptions)
+      .pipe(
+        map(response => response.data.resp),
+        catchError(this.handleError<string>('updateResource'))
+      );
+  }
+
+  /**
+   * Delete Python Resource.
+   * @param gatewayUid
+   * @param PythonResource
+   */
+  deleteResource(gatewayUid: string, resourceUid: string): Observable<string> {
+    const url = `${this.tgdbUrl}/mutate?commitNow=true`;
+    const query = `{
+      delete {
+        <${resourceUid}> * * .
+      }
+    }`;
+
+    return this.http.post<any>(url, query, httpMutateOptions)
+      .pipe(
+        map(response => response.data.resp),
+        catchError(this.handleError<string>('deleteResource'))
+      );
+  }
 }

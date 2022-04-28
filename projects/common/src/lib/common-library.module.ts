@@ -37,6 +37,8 @@ import { CommonIotGatewayEndpointComponent } from './components/iot-gateway-endp
 import { IgeDataStoresComponent } from './components/iot-gateway-endpoint/ige-data-stores/ige-data-stores.component';
 import { IgeModelsComponent } from './components/iot-gateway-endpoint/ige-models/ige-models.component'
 import { IgeProtocolsComponent } from './components/iot-gateway-endpoint/ige-protocols/ige-protocols.component'
+import { PipelinePythonComponent } from './components/iot-pipeline/pipeline-python/pipeline-python.component';
+import { IgeResourcesComponent } from './components/iot-gateway-endpoint/ige-resources/ige-resources.component';
 
 // modules
 import { RouterModule } from '@angular/router';
@@ -49,6 +51,7 @@ import { NgChartsModule } from 'ng2-charts';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ReteEditorModule } from './components/rete/rete.module';
 import { NgxHeatmapModule } from 'ngx-heatmap'
+import { HighlightModule, HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
 
 //services
 import { AppConfigService } from './services/config/app-config.service';
@@ -108,7 +111,9 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     IgeDataStoresComponent,
     IgeModelsComponent,
     IgeProtocolsComponent,
-    PipelineRequestReplyComponent
+    PipelineRequestReplyComponent,
+    PipelinePythonComponent,
+    IgeResourcesComponent
   ],
   imports: [
     MaterialModule,
@@ -120,7 +125,8 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     NgChartsModule,
     ReactiveFormsModule,
     ReteEditorModule,
-    NgxHeatmapModule
+    NgxHeatmapModule,
+    HighlightModule
   ],
   exports: [
     CommonIotGatewayComponent,
@@ -139,6 +145,18 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     },
     EdgeService,
     DatastoreService,
+    DatePipe,
+    {
+      provide: HIGHLIGHT_OPTIONS,
+      useValue: {
+        coreLibraryLoader: () => import('highlight.js/lib/core'),
+        lineNumbersLoader: () => import('highlightjs-line-numbers.js'),
+        languages: {
+          python: () => import('highlight.js/lib/languages/python'),
+        },
+        // themePath: 'assets/highlight/default.css'
+      }
+    },
     DatePipe
   ]
 })
