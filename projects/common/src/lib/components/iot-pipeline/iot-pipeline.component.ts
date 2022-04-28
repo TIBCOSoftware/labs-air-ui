@@ -3205,7 +3205,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
 
   buildMQTTRequestDeployObj(context): any {
     const requestReplyObj = {
-        name: '',
+        name: 'Coupler.MQTT',
         properties: this.buildMQTTRequestReplyDeployProperties(context)
     };
 
@@ -3218,18 +3218,15 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
     const encpass = 'SECRET:' + btoa(contextObj.password);
 
     mqttRequestReplyDeployProperties = [
-          { 'Name': 'MQTTPub.Topic', 'Value': contextObj.topic },
+          { 'Name': 'MQTTCoupler.Topic', 'Value': contextObj.topic },
           { 'Name': 'MQTTPub.MaximumQOS', 'Value': contextObj.maximumQOS },
+          { 'Name': 'MQTTCoupler.Producer', 'Value': 'MQTTCoupler'},
           { 'Name': 'Mqtt.IoTMQTT.Broker_URL', 'Value': 'tcp://' + contextObj.hostname + ':' + contextObj.port },
           { 'Name': 'Mqtt.IoTMQTT.Username', 'Value': contextObj.username },
           { 'Name': 'Mqtt.IoTMQTT.Password', 'Value': encpass },
-          { 'Name': 'Mqtt.encryptionMode', 'Value': 'changeme' },
-          { 'Name': 'Mqtt.caCertificate', 'Value': 'changeme' },
-          { 'Name': 'Mqtt.clientCertificate', 'Value': 'changeme' },
-          { 'Name': 'Mqtt.clientKey', 'Value': 'changeme' },
           { 'Name': 'Logging.LogLevel', 'Value': contextObj.logLevel },
-          { 'Name': 'timeout', 'Value': contextObj.timeout },
-          { 'Name': 'dataTemplate', 'Value': contextObj.dataTemplate }
+          { 'Name': 'MQTTCoupler.ResponseTimeout', 'Value': contextObj.timeout },
+          { 'Name': 'MQTTCoupler.PublishData', 'Value': contextObj.dataTemplate }
     ];
      return mqttRequestReplyDeployProperties
 

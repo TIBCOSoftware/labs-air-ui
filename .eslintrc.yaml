@@ -8,9 +8,6 @@ overrides:
     - tsconfig.json
     - e2e/tsconfig.json
     createDefaultProgram: true
-  plugins: [
-    "@angular-eslint/directive-selector"
-  ]
   extends:
   - plugin:@angular-eslint/recommended
   - plugin:@angular-eslint/template/process-inline-templates
