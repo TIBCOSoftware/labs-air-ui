@@ -1473,7 +1473,6 @@ export class TgdbService { // extends GraphService {
     {
       resp(func: type(PythonResource)) @filter(eq(scope, "${gatewayName}")) {
         uid
-        uuid
         created
         modified
         name
@@ -1499,7 +1498,6 @@ export class TgdbService { // extends GraphService {
     const query = ` {
       set {
         _:PythonResource <dgraph.type> "PythonResource".
-        _:PythonResource <uuid> "${resource.uuid}" .
         _:PythonResource <name> "${resource.name}" .
         _:PythonResource <created> "${resource.created}" .
         _:PythonResource <modified> "${resource.modified}" .
@@ -1523,7 +1521,6 @@ export class TgdbService { // extends GraphService {
     const url = `${this.tgdbUrl}/mutate?commitNow=true`;
     const query = `{
       set {
-        <${resource.uid}> <uuid> "${resource.uuid}" .
         <${resource.uid}> <modified> "${resource.modified}" .
         <${resource.uid}> <name> "${resource.name}" .
         <${resource.uid}> <scope> "${resource.scope}" .

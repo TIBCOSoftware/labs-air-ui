@@ -34,7 +34,8 @@ export class PipelineRuleExpressionComponent implements OnInit {
       { value: '>', viewValue: '>' },
       { value: '>=', viewValue: '>=' },
       { value: '<', viewValue: '<' },
-      { value: '<=', viewValue: '<=' }
+      { value: '<=', viewValue: '<=' },
+      { value: 'contains', viewValue: 'contains'}
   ];
 
   constructor() { }
