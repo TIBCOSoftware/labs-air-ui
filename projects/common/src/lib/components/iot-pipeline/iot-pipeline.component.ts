@@ -2221,6 +2221,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
       let pipelineFlow = {
           'ComponentType': 'Service',
           'ServiceType': serviceType,
+          'Artifacts': [],
           'Image': image,
           'AirDescriptor': {
               'source': {},
@@ -2382,6 +2383,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                   }
                   case 'Python': {
                     pipelineFlow.AirDescriptor.logic.push(this.buildPythonDeployObj(flowNode.data.customdata));
+                    pipelineFlow.Artifacts = this.buildPythonDeployArtifactProperties(flowNode.data.customdata);
                     break;
                   }
                   }
@@ -3273,10 +3275,9 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
 
   buildPythonDeployArtifactProperties(contextObj): any {
     let pythonDeployProperties = null;
-
     pythonDeployProperties = [
-        {'Type': 'File', 'Name': contextObj.procesor + '.py', 'Value' :  contextObj.processorContent, 'Encoded': false},
-        {'Type': 'File', 'Name': contextObj.requirement + '.txt', 'Value' :  contextObj.requirementContent, 'Encoded': false},
+        {'Type': 'File', 'Name': contextObj.processor + '.py', 'Value' :  decodeURIComponent(contextObj.processorContent), 'Encoded': false},
+        {'Type': 'File', 'Name': contextObj.requirement + '.txt', 'Value' :  decodeURIComponent(contextObj.requirementContent), 'Encoded': false},
         {'Type': 'Folder', 'Name': contextObj.volumeName, 'Value': contextObj.volumePath}
     ];
     if (contextObj.dockerfile) {
@@ -3290,7 +3291,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
 
     pythonDeployProperties = [
         { 'Name': 'Logging.LogLevel', 'Value': 'INFO'},
-        { 'Name': 'Python.Processor', 'Value': contextObj.procesor + '.py'},
+        { 'Name': 'Python.Processor', 'Value': contextObj.processor + '.py'},
         { 'Name': 'Python.Producer', 'Value': contextObj.producer},
         { 'Name': 'Python.DataIn', 'Value': contextObj.dataInput}
     ];

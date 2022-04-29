@@ -12,10 +12,10 @@ import { IgeResourcesComponent } from './ige-resources.component';
 describe('IgeResourcesComponent', () => {
   let component: IgeResourcesComponent;
   let fixture: ComponentFixture<IgeResourcesComponent>;
-  const mockGraphService = jasmine.createSpyObj(['getResources']);
+  const mockGraphService = jasmine.createSpyObj(['getPythonResources']);
   const mockSnackBarService = jasmine.createSpyObj(['open']);
 
-  mockGraphService.getResources.and.returnValue({ subscribe: () => [] });
+  mockGraphService.getPythonResources.and.returnValue({ subscribe: () => [] });
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({

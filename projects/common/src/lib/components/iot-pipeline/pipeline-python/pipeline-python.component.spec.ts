@@ -1,13 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { GraphService } from '../../../services/graph/graph.service';
+import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 
 import { PipelinePythonComponent } from './pipeline-python.component';
 
 describe('PipelinePythonComponent', () => {
   let component: PipelinePythonComponent;
   let fixture: ComponentFixture<PipelinePythonComponent>;
-  const mockGraphService = jasmine.createSpyObj(['getResources']);
-  mockGraphService.getResources.and.returnValue({ subscribe: () => [] });
+  const mockGraphService = jasmine.createSpyObj(['getPythonResources']);
+  mockGraphService.getPythonResources.and.returnValue({ subscribe: () => [] });
 
 
   beforeEach(async () => {
