@@ -696,6 +696,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           dockerfileContent: '',
           volumeName: '',
           volumePath: '',
+          dataInput: '',
+          producer: ''
     });
       this.requestReplyForm.reset();
   }
@@ -898,7 +900,9 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           dockerfile: [''],
           dockerfileContent: [''],
           volumeName: ['', Validators.required],
-          volumePath: ['', Validators.required]
+          volumePath: ['', Validators.required],
+          dataInput: ['', Validators.required],
+          producer: ['', Validators.required]
       });
 
       this.restBroadcastForm = this.formBuilder.group({
@@ -1283,7 +1287,9 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
         'dockerfile': this.pythonForm.get('dockerfile').value,
         'dockerfileContent': this.pythonForm.get('dockerfileContent').value,
         'volumeName': this.pythonForm.get('volumeName').value,
-        'volumePath': this.pythonForm.get('volumePath').value
+        'volumePath': this.pythonForm.get('volumePath').value,
+        'dataInput': this.pythonForm.get('dataInput').value,
+        'producer': this.pythonForm.get('producer').value
     };
 
     return pythonObj;
@@ -1689,7 +1695,9 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
             dockerfile: context.dockerfile,
             dockerfileContent: context.dockerfileContent,
             volumeName: context.volumeName,
-            volumePath: context.volumePath
+            volumePath: context.volumePath,
+            dataInput: context.dataInput,
+            producer: context.producer,
         });
     }
   }
@@ -3256,14 +3264,14 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
   }
   buildPythonDeployObj(context): any {
     const pythonDeployObj = {
-        name: 'Artifacts',
-        properties: this.buildMQTTRequestReplyDeployProperties(context)
+        name: 'Processor.PythonService',
+        properties: this.buildPythonDeployProperties(context)
     };
 
     return pythonDeployObj;     
   }
 
-  buildPythonDeployProperties(contextObj): any {
+  buildPythonDeployArtifactProperties(contextObj): any {
     let pythonDeployProperties = null;
 
     pythonDeployProperties = [
@@ -3276,4 +3284,17 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
     }
     return pythonDeployProperties
   }
+
+  buildPythonDeployProperties(contextObj): any {
+    let pythonDeployProperties = null;
+
+    pythonDeployProperties = [
+        { 'Name': 'Logging.LogLevel', 'Value': 'INFO'},
+        { 'Name': 'Python.Processor', 'Value': contextObj.procesor + '.py'},
+        { 'Name': 'Python.Producer', 'Value': contextObj.producer},
+        { 'Name': 'Python.DataIn', 'Value': contextObj.dataInput}
+    ];
+    return pythonDeployProperties
+  }
+
 }
