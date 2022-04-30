@@ -899,8 +899,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           requirementContent: [''],
           dockerfile: [''],
           dockerfileContent: [''],
-          volumeName: ['', Validators.required],
-          volumePath: ['', Validators.required],
+          volumeName: [''],
+          volumePath: [''],
           dataInput: ['', Validators.required],
           producer: ['', Validators.required]
       });
@@ -3276,12 +3276,14 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
   buildPythonDeployArtifactProperties(contextObj): any {
     let pythonDeployProperties = null;
     pythonDeployProperties = [
-        {'Type': 'File', 'Name': contextObj.processor + '.py', 'Value' :  decodeURIComponent(contextObj.processorContent), 'Encoded': false},
-        {'Type': 'File', 'Name': contextObj.requirement + '.txt', 'Value' :  decodeURIComponent(contextObj.requirementContent), 'Encoded': false},
-        {'Type': 'Folder', 'Name': contextObj.volumeName, 'Value': contextObj.volumePath}
+        {'Type': 'file', 'Name': contextObj.processor + '.py', 'Value' :  decodeURIComponent(contextObj.processorContent), 'Encoded': false},
+        {'Type': 'file', 'Name': contextObj.requirement + '.txt', 'Value' :  decodeURIComponent(contextObj.requirementContent), 'Encoded': false},
     ];
     if (contextObj.dockerfile) {
-        pythonDeployProperties.push({'Type': 'File', 'Name': 'dockerfile', 'Value': contextObj.dockerfileContent, 'Encoded': false})
+        pythonDeployProperties.push({'Type': 'file', 'Name': 'dockerfile', 'Value': decodeURIComponent(contextObj.dockerfileContent), 'Encoded': false});
+    }
+    if (contextObj.volume) {
+        pythonDeployProperties.push({'Type': 'folder', 'Name': contextObj.volumeName, 'Value': contextObj.volumePath});
     }
     return pythonDeployProperties
   }
