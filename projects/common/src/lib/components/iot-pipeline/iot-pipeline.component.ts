@@ -899,8 +899,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           requirementContent: [''],
           dockerfile: [''],
           dockerfileContent: [''],
-          volumeName: ['', Validators.required],
-          volumePath: ['', Validators.required],
+          volumeName: [''],
+          volumePath: [''],
           dataInput: ['', Validators.required],
           producer: ['', Validators.required]
       });
@@ -3280,7 +3280,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
         {'Type': 'file', 'Name': contextObj.requirement + '.txt', 'Value' :  decodeURIComponent(contextObj.requirementContent), 'Encoded': false},
     ];
     if (contextObj.dockerfile) {
-        pythonDeployProperties.push({'Type': 'file', 'Name': 'dockerfile', 'Value': contextObj.dockerfileContent, 'Encoded': false});
+        pythonDeployProperties.push({'Type': 'file', 'Name': 'dockerfile', 'Value': decodeURIComponent(contextObj.dockerfileContent), 'Encoded': false});
     }
     if (contextObj.volume) {
         pythonDeployProperties.push({'Type': 'folder', 'Name': contextObj.volumeName, 'Value': contextObj.volumePath});
