@@ -104,7 +104,7 @@ export class IgeResourcesComponent implements OnInit {
   }
   
   deleteResource() {
-    this.graphService.deletePythonResource(this.gatewayId, this.resourceForm.get('uid').value).subscribe(
+    this.graphService.deletePythonResource(this.resourceForm.get('uid').value).subscribe(
       resp => {
         this.getResources();
       }
