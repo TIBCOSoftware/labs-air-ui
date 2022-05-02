@@ -3138,7 +3138,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
     const ruleMatchingExpression = [
         {
             type: contextObj.compareOp,
-            value111: contextObj.compareToValue,
+            value: contextObj.compareToValue,
         }
     ];
 
