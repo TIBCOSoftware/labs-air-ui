@@ -929,8 +929,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
       });
 
       this.restBroadcastForm = this.formBuilder.group({
-          logLevel: ['INFO', Validators.required],
-          restTimeout: ['', Validators.required],
+          logLevel: ['info', Validators.required],
+          restTimeout: ['60', Validators.required],
           endpointNames: this.formBuilder.array([]),
           restURLs: this.formBuilder.array([]),
           restMethods: this.formBuilder.array([]),
@@ -946,6 +946,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           logLevel: ['INFO', Validators.required],
           timeout: ['', Validators.required],
           dataTemplate: ['', Validators.required],
+          producer: ['', Validators.required],
           mqtt: this.formBuilder.group({
               hostname: ['changeme', Validators.required],
               port: ['changeme', Validators.required],
@@ -1368,7 +1369,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
         'maximumQOS': this.requestReplyForm.get('mqtt.maximumQOS').value,
         'timeout': this.requestReplyForm.get('timeout').value,
         'gateway': this.requestReplyForm.get('gateway').value,
-        'dataTemplate': this.requestReplyForm.get('dataTemplate').value
+        'dataTemplate': this.requestReplyForm.get('dataTemplate').value,
+        'producer': this.requestReplyForm.get('producer').value
     }
     return mqttRequestReplyObj;
   }
@@ -1802,6 +1804,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                 timeout: context.timeout,
                 gateway: context.gateway,
                 dataTemplate: context.dataTemplate,
+                producer: context.producer,
                 mqtt: {
                     hostname: context.hostname,
                     port: context.hostname,
@@ -3337,7 +3340,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
     mqttRequestReplyDeployProperties = [
           { 'Name': 'MQTTCoupler.Topic', 'Value': contextObj.topic },
           { 'Name': 'MQTTCoupler.MaximumQOS', 'Value': contextObj.maximumQOS },
-          { 'Name': 'MQTTCoupler.Producer', 'Value': 'MQTTCoupler'},
+          { 'Name': 'MQTTCoupler.Producer', 'Value': contextObj.producer},
           { 'Name': 'Mqtt.IoTMQTT.Broker_URL', 'Value': 'tcp://' + contextObj.hostname + ':' + contextObj.port },
           { 'Name': 'Mqtt.IoTMQTT.Username', 'Value': contextObj.username },
           { 'Name': 'Mqtt.IoTMQTT.Password', 'Value': encpass },

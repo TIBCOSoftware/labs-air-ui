@@ -29,7 +29,7 @@ export class CommonIotGatewayObjectComponent implements OnInit, OnDestroy, After
   resourceCombinedReadings: TSCombinedReading[] = []
   subscriptions: Subscription[] = [];
   streaming = false;
-  displayedColumns = ['created', 'inferredValue']
+  displayedColumns = ['created', 'value', 'inferredValue']
   dateFormat = 'yyyy-MM-dd HH:mm:ss'
   tableDataSource = new MatTableDataSource<TSCombinedReading>();
   combinedReadingSelection = new SelectionModel<TSCombinedReading>(false, []);

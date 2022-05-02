@@ -34,7 +34,7 @@ describe('PipelineRuleTextMatchingComponent', () => {
         component = fixture.componentInstance;
         component.ruleTextMatchingForm = new FormGroup({});
         component.ruleTextMatchingForm.addControl('device', new FormControl(''));
-        component.devices = [];
+        component.resources = [];
         fixture.detectChanges();
     });
 
