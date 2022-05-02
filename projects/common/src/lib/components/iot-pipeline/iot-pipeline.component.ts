@@ -929,8 +929,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
       });
 
       this.restBroadcastForm = this.formBuilder.group({
-          logLevel: ['INFO', Validators.required],
-          restTimeout: ['', Validators.required],
+          logLevel: ['info', Validators.required],
+          restTimeout: ['60', Validators.required],
           endpointNames: this.formBuilder.array([]),
           restURLs: this.formBuilder.array([]),
           restMethods: this.formBuilder.array([]),
