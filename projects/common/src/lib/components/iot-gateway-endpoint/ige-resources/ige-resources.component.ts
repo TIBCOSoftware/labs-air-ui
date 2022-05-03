@@ -36,6 +36,7 @@ export class IgeResourcesComponent implements OnInit {
   constructor(private graphService: GraphService, private _snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
+    this.resourceSelection.clear();
     this.getResources();
   }
 
@@ -55,6 +56,7 @@ export class IgeResourcesComponent implements OnInit {
       modified: row.modified,
       scope: row.scope
     })
+    this.resourceSelection.select(row);
   }
 
   addResource() {
@@ -75,11 +77,11 @@ export class IgeResourcesComponent implements OnInit {
         });
     }
     else {
-        this.graphService.addPythonResource(resource)
-            .subscribe(res => {
-                this.getResources();
-                // this.resetmodelForm();
-            });
+      this.graphService.addPythonResource(resource)
+        .subscribe(res => {
+          this.getResources();
+          this.resetResource();
+        });
     }
   }
 
@@ -124,20 +126,21 @@ export class IgeResourcesComponent implements OnInit {
   onFileUpload(input: Event) {
     const inputElement = input.target as HTMLInputElement;
     const file = inputElement.files.item(0);
-    if (file.type && file.type == 'text/x-python-script') {
-      this.resourceForm.patchValue({ type: 'processor' });
-      this.readFile(inputElement);
-    } else if (file.name.match('(?:^|\W)dockerfile(?:$|\W)')) {
-      this.resourceForm.patchValue({ type: 'dockerfile' });
-      this.readFile(inputElement);
-    } else if (file.name == "requirement.txt") {
-      this.resourceForm.patchValue({ type: 'requirement'});
-      this.readFile(inputElement);
-    } else {
-      this._snackBar.open('Resource file is not supported.', 'Cancel', {
-        duration: 3000,
-    });
-    }
+    // if (file.type && file.type == 'text/x-python-script') {
+    //   this.resourceForm.patchValue({ type: 'processor' });
+    //   this.readFile(inputElement);
+    // } else if (file.name.match('(?:^|\W)dockerfile(?:$|\W)')) {
+    //   this.resourceForm.patchValue({ type: 'dockerfile' });
+    //   this.readFile(inputElement);
+    // } else if (file.name == "requirement.txt") {
+    //   this.resourceForm.patchValue({ type: 'requirement'});
+    //   this.readFile(inputElement);
+    // } else {
+    //   this._snackBar.open('Resource file is not supported.', 'Cancel', {
+    //     duration: 3000,
+    // });
+    // }
+    this.readFile(inputElement);
   }
 
   readFile(inputEvent: HTMLInputElement) {
@@ -148,4 +151,9 @@ export class IgeResourcesComponent implements OnInit {
     fileReader.readAsText(inputEvent.files.item(0), 'utf-8');
   }
 
+  resetResource() {
+    this.resourceForm.reset();
+    this.resourceSelection.clear();
+  }
+ 
 }

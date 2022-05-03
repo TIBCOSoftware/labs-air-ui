@@ -56,6 +56,9 @@
             [devices]="devices" fxFlex>
         </app-common-pipeline-rule-expression>
 
+        <app-common-pipeline-rule-text-matching *ngIf="ruleTextMatchingConfig" [ruleTextMatchingForm]="ruleTextMatchingForm" fxFlex>
+        </app-common-pipeline-rule-text-matching>
+
         <app-common-pipeline-flogo-flow *ngIf="flogoFlowConfig" [flogoFlowForm]="flogoFlowForm" fxFlex>
         </app-common-pipeline-flogo-flow>
 

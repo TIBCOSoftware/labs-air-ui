@@ -6,8 +6,8 @@ import { PipelinePythonComponent } from './pipeline-python.component';
 describe('PipelinePythonComponent', () => {
   let component: PipelinePythonComponent;
   let fixture: ComponentFixture<PipelinePythonComponent>;
-  const mockGraphService = jasmine.createSpyObj(['getResources']);
-  mockGraphService.getResources.and.returnValue({ subscribe: () => [] });
+  const mockGraphService = jasmine.createSpyObj(['getPythonResources']);
+  mockGraphService.getPythonResources.and.returnValue({ subscribe: () => [] });
 
 
   beforeEach(async () => {

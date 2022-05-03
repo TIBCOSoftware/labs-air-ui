@@ -30,6 +30,7 @@ import { ImageResizeComponent } from '../rete/components/image-resize-component'
 import { InferencingComponent } from '../rete/components/inferencing-component';
 import { RulesComponent } from '../rete/components/rules-component';
 import { RuleExpressionComponent } from '../rete/components/rule-expression-component';
+import { RuleTextMatchingComponent } from '../rete/components/rule-text-matching-component';
 import { StreamingComponent } from '../rete/components/streaming-component';
 import { NotificationPublisherComponent } from '../rete/components/notification-publisher-component';
 import { FlogoFlowComponent } from '../rete/components/flogo-flow-component';
@@ -69,6 +70,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
   inferencingConfig = false;
   rulesConfig = false;
   ruleExpressionConfig = false;
+  ruleTextMatchingConfig = false;
   streamingConfig = false;
   flogoFlowConfig = false;
   restServiceConfig = false;
@@ -89,6 +91,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
   modelForm: FormGroup;
   ruleForm: FormGroup;
   ruleExpressionForm: FormGroup;
+  ruleTextMatchingForm: FormGroup;
   flogoFlowForm: FormGroup;
   restServiceForm: FormGroup;
   dataOptionsForm: FormGroup;
@@ -211,6 +214,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           new RulesComponent(),
           new StreamingComponent(),
           new RuleExpressionComponent(),
+          new RuleTextMatchingComponent(),
           new RestServiceComponent(),
           new RestBroadcastComponent(),
           new MQTTRequestReplyComponent(),
@@ -490,6 +494,10 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           contextObj = this.buildNodeRuleExpressionProperties();
           break;
       }
+      case 'Rule Text Matching': {
+          contextObj = this.buildNodeRuleTextMatchingProperties();
+          break;
+      }
       case 'Flogo Flow': {
           contextObj = this.buildNodeFlogoFlowProperties();
           break;
@@ -530,6 +538,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
       this.inferencingConfig = false;
       this.rulesConfig = false;
       this.ruleExpressionConfig = false;
+      this.ruleTextMatchingConfig = false;
       this.streamingConfig = false;
       this.flogoFlowConfig = false;
       this.restServiceConfig = false;
@@ -597,6 +606,11 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
               this.updateRuleExpressionComponent(contextObj);
               this.ruleExpressionConfig = true;
               break;
+          }
+          case 'Rule Text Matching': {
+            this.updateRuleTextMatchingComponent(contextObj);
+            this.ruleTextMatchingConfig = true;
+            break;
           }
           case 'Flogo Flow': {
               this.updateFlogoFlowComponent(contextObj);
@@ -880,6 +894,15 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           logLevel: ['INFO', Validators.required]
       });
 
+      this.ruleTextMatchingForm = this.formBuilder.group({
+        name: ['', Validators.required],
+        description: [''],
+        compareTarget: ['', Validators.required],
+        compareOp: ['', Validators.required],
+        compareToValue: ['', Validators.required],
+        logLevel: ['INFO', Validators.required]
+    });
+
       this.flogoFlowForm = this.formBuilder.group({
           flowFilename: ['', Validators.required],
           flowDefinition: ['', Validators.required],
@@ -899,15 +922,15 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           requirementContent: [''],
           dockerfile: [''],
           dockerfileContent: [''],
-          volumeName: ['', Validators.required],
-          volumePath: ['', Validators.required],
+          volumeName: [''],
+          volumePath: [''],
           dataInput: ['', Validators.required],
           producer: ['', Validators.required]
       });
 
       this.restBroadcastForm = this.formBuilder.group({
-          logLevel: ['INFO', Validators.required],
-          restTimeout: ['', Validators.required],
+          logLevel: ['info', Validators.required],
+          restTimeout: ['60', Validators.required],
           endpointNames: this.formBuilder.array([]),
           restURLs: this.formBuilder.array([]),
           restMethods: this.formBuilder.array([]),
@@ -923,6 +946,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           logLevel: ['INFO', Validators.required],
           timeout: ['', Validators.required],
           dataTemplate: ['', Validators.required],
+          producer: ['', Validators.required],
           mqtt: this.formBuilder.group({
               hostname: ['changeme', Validators.required],
               port: ['changeme', Validators.required],
@@ -1239,6 +1263,26 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
    *
    * @param form
    */
+   buildNodeRuleTextMatchingProperties(): any {
+
+    const ruleObj = {
+        'name': this.ruleTextMatchingForm.get('name').value,
+        'description': this.ruleTextMatchingForm.get('description').value,
+        'compareTarget': this.ruleTextMatchingForm.get('compareTarget').value,
+        'compareOp': this.ruleTextMatchingForm.get('compareOp').value,
+        'compareToValue': this.ruleTextMatchingForm.get('compareToValue').value,
+        'logLevel': this.ruleTextMatchingForm.get('logLevel').value
+    };
+
+    console.log('Rule TextMatching context saved: ', ruleObj);
+
+    return ruleObj;
+}
+
+  /**
+   *
+   * @param form
+   */
   buildNodeFlogoFlowProperties(): any {
 
       const flogoFlowObj = {
@@ -1325,7 +1369,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
         'maximumQOS': this.requestReplyForm.get('mqtt.maximumQOS').value,
         'timeout': this.requestReplyForm.get('timeout').value,
         'gateway': this.requestReplyForm.get('gateway').value,
-        'dataTemplate': this.requestReplyForm.get('dataTemplate').value
+        'dataTemplate': this.requestReplyForm.get('dataTemplate').value,
+        'producer': this.requestReplyForm.get('producer').value
     }
     return mqttRequestReplyObj;
   }
@@ -1635,6 +1680,28 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
 
       }
   }
+
+   /**
+   *
+   * @param context
+   */
+    updateRuleTextMatchingComponent(context) {
+
+        if (context != null || context != undefined) {
+            console.log('Updating rules component with context: ', context);
+  
+            this.ruleTextMatchingForm.patchValue({
+                name: context.name,
+                description: context.description,
+                compareTarget: context.compareTarget,
+                compareOp: context.compareOp,
+                compareToValue: context.compareToValue,
+                logLevel: context.logLevel,
+            });
+  
+        }
+    }
+
   /**
  * @param context
  */
@@ -1737,6 +1804,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                 timeout: context.timeout,
                 gateway: context.gateway,
                 dataTemplate: context.dataTemplate,
+                producer: context.producer,
                 mqtt: {
                     hostname: context.hostname,
                     port: context.hostname,
@@ -2124,6 +2192,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
       this.inferencingConfig = false;
       this.rulesConfig = false;
       this.ruleExpressionConfig = false;
+      this.ruleTextMatchingConfig = false;
       this.streamingConfig = false;
       this.flogoFlowConfig = false;
       this.restServiceConfig = false;
@@ -2221,6 +2290,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
       let pipelineFlow = {
           'ComponentType': 'Service',
           'ServiceType': serviceType,
+          'Artifacts': [],
           'Image': image,
           'AirDescriptor': {
               'source': {},
@@ -2347,6 +2417,12 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                       notificationSource = 'Rules';
                       break;
                   }
+                  case 'Rule Text Matching': {
+                    pipelineFlow.AirDescriptor.logic.push(this.buildRuleTextMatchingDeployObj(flowNode.data.customdata));
+                    notificationSourcePos = pos;
+                    notificationSource = 'Rules';
+                    break;
+                  }
                   case 'Flogo Flow': {
                       pipelineFlow.AirDescriptor.logic.push(this.buildFlogoFlowDeployObj(flowNode.data.customdata));
 
@@ -2382,6 +2458,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                   }
                   case 'Python': {
                     pipelineFlow.AirDescriptor.logic.push(this.buildPythonDeployObj(flowNode.data.customdata));
+                    pipelineFlow.Artifacts = this.buildPythonDeployArtifactProperties(flowNode.data.customdata);
                     break;
                   }
                   }
@@ -3042,6 +3119,41 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
       return ruleObj;
   }
 
+  buildRuleTextMatchingDeployObj(contextObj): any {
+
+    console.log('Rule Text Matching Context: ', contextObj);
+
+    const ruleType = 'Rule.TextMatching';
+    const ruleObj = {
+        name: ruleType,
+        properties: this.buildRuleTextMatchingDeployProperties(contextObj)
+    };
+
+    return ruleObj;
+
+}
+
+  /**
+   * @param contextObj
+   */
+  buildRuleTextMatchingDeployProperties(contextObj): any {
+   
+    const ruleMatchingExpression = [
+        {
+            type: contextObj.compareOp,
+            value: contextObj.compareToValue,
+        }
+    ];
+
+    const ruleObj = [
+        { 'Name': 'Logging.LogLevel', 'Value': contextObj.logLevel },
+        { 'Name': 'Rule.TargetField', 'Value': contextObj.compareTarget },
+        { 'Name': 'Rule.Matching', 'Value': JSON.stringify(ruleMatchingExpression) },
+    ];
+
+    return ruleObj;
+}
+
   buildFlogoFlowDeployObj(contextObj): any {
 
       console.log('Flogo Flow Context: ', contextObj);
@@ -3228,7 +3340,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
     mqttRequestReplyDeployProperties = [
           { 'Name': 'MQTTCoupler.Topic', 'Value': contextObj.topic },
           { 'Name': 'MQTTCoupler.MaximumQOS', 'Value': contextObj.maximumQOS },
-          { 'Name': 'MQTTCoupler.Producer', 'Value': 'MQTTCoupler'},
+          { 'Name': 'MQTTCoupler.Producer', 'Value': contextObj.producer},
           { 'Name': 'Mqtt.IoTMQTT.Broker_URL', 'Value': 'tcp://' + contextObj.hostname + ':' + contextObj.port },
           { 'Name': 'Mqtt.IoTMQTT.Username', 'Value': contextObj.username },
           { 'Name': 'Mqtt.IoTMQTT.Password', 'Value': encpass },
@@ -3273,14 +3385,15 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
 
   buildPythonDeployArtifactProperties(contextObj): any {
     let pythonDeployProperties = null;
-
     pythonDeployProperties = [
-        {'Type': 'File', 'Name': contextObj.procesor + '.py', 'Value' :  contextObj.processorContent, 'Encoded': false},
-        {'Type': 'File', 'Name': contextObj.requirement + '.txt', 'Value' :  contextObj.requirementContent, 'Encoded': false},
-        {'Type': 'Folder', 'Name': contextObj.volumeName, 'Value': contextObj.volumePath}
+        {'Type': 'file', 'Name': contextObj.processor + '.py', 'Value' :  decodeURIComponent(contextObj.processorContent), 'Encoded': false},
+        {'Type': 'file', 'Name': contextObj.requirement + '.txt', 'Value' :  decodeURIComponent(contextObj.requirementContent), 'Encoded': false},
     ];
     if (contextObj.dockerfile) {
-        pythonDeployProperties.push({'Type': 'File', 'Name': 'dockerfile', 'Value': contextObj.dockerfileContent, 'Encoded': false})
+        pythonDeployProperties.push({'Type': 'file', 'Name': 'dockerfile', 'Value': decodeURIComponent(contextObj.dockerfileContent), 'Encoded': false});
+    }
+    if (contextObj.volume) {
+        pythonDeployProperties.push({'Type': 'folder', 'Name': contextObj.volumeName, 'Value': contextObj.volumePath});
     }
     return pythonDeployProperties
   }
@@ -3290,7 +3403,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
 
     pythonDeployProperties = [
         { 'Name': 'Logging.LogLevel', 'Value': 'INFO'},
-        { 'Name': 'Python.Processor', 'Value': contextObj.procesor + '.py'},
+        { 'Name': 'Python.Processor', 'Value': contextObj.processor + '.py'},
         { 'Name': 'Python.Producer', 'Value': contextObj.producer},
         { 'Name': 'Python.DataIn', 'Value': contextObj.dataInput}
     ];

@@ -23,6 +23,7 @@ import { PipelineFlogoFlowComponent } from './components/iot-pipeline/pipeline-f
 import { PipelineInferencingComponent } from './components/iot-pipeline/pipeline-inferencing/pipeline-inferencing.component';
 import { PipelineRestServiceComponent } from './components/iot-pipeline/pipeline-rest-service/pipeline-rest-service.component';
 import { PipelineRuleExpressionComponent } from './components/iot-pipeline/pipeline-rule-expression/pipeline-rule-expression.component';
+import { PipelineRuleTextMatchingComponent } from './components/iot-pipeline/pipeline-rule-text-matching/pipeline-rule-text-matching.component';
 import { PipelineRulesComponent } from './components/iot-pipeline/pipeline-rules/pipeline-rules.component';
 import { PipelineStreamingComponent } from './components/iot-pipeline/pipeline-streaming/pipeline-streaming.component';
 import { SingleValueDialogComponent } from './components/iot-pipeline/pipeline-dialog/single-value-dialog.component';
@@ -96,6 +97,7 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     PipelineInferencingComponent,
     PipelineRestServiceComponent,
     PipelineRuleExpressionComponent,
+    PipelineRuleTextMatchingComponent,
     PipelineRulesComponent,
     PipelineStreamingComponent,
     SingleValueDialogComponent,

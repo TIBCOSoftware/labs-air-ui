@@ -40,14 +40,14 @@ export class PipelinePythonComponent implements OnInit {
   }
 
   updateContent(event: string, file: string) {
-    const fileContent = this.resources[file].find(resource => resource.uid == event).fileContent;
+    const fileContent = this.resources[file].find(resource => resource.name == event).fileContent;
     const fieldName = file === 'dockerfile' ? 'dockerfileContent' : file.slice(0, -1)+'Content';
     this.pythonForm.get(fieldName).setValue(fileContent);
   }
 
-  showResourceContent(uid: string, resourceType: string) {
-    if (uid){ 
-      this.resourceContent = decodeURIComponent(this.resources[resourceType].find(resource => resource.uid == uid).fileContent);
+  showResourceContent(name: string, resourceType: string) {
+    if (name){ 
+      this.resourceContent = decodeURIComponent(this.resources[resourceType].find(resource => resource.name == name).fileContent);
       this.showResourceContentBoolean = true;
     }
   }

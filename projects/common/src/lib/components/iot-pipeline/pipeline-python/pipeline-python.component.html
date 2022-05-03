@@ -6,7 +6,7 @@
         <mat-form-field appearance="outline">
             <mat-label>Processor</mat-label>
             <mat-select #processor formControlName="processor" (selectionChange)="updateContent($event.value, 'processors')">
-                <mat-option *ngFor="let item of resources.processors; let i = index" [value]="item.uid">
+                <mat-option *ngFor="let item of resources.processors; let i = index" [value]="item.name">
                     {{item.name}}
                 </mat-option>
             </mat-select>
@@ -19,7 +19,7 @@
         <mat-form-field appearance="outline">
             <mat-label>Requirement</mat-label>
             <mat-select #requirement formControlName="requirement" (selectionChange)="updateContent($event.value, 'requirements')">
-                <mat-option *ngFor="let item of resources.requirements; let i = index" [value]="item.uid">
+                <mat-option *ngFor="let item of resources.requirements; let i = index" [value]="item.name">
                     {{item.name}}
                 </mat-option>
             </mat-select>
@@ -32,7 +32,7 @@
         <mat-form-field appearance="outline">
             <mat-label>Dockerfile</mat-label>
             <mat-select #dockerfile formControlName="dockerfile" (selectionChange)="updateContent($event.value, 'dockerfile')">
-                <mat-option *ngFor="let item of resources.dockerfile; let i = index" [value]="item.uid">
+                <mat-option *ngFor="let item of resources.dockerfile; let i = index" [value]="item.name">
                     {{item.name}}
                 </mat-option>
             </mat-select>
