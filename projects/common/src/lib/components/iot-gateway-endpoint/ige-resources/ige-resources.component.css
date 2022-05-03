@@ -42,3 +42,8 @@ table {
   display: flex;
   flex: 0 0 100%;
 }
+
+.code-box {
+  max-height: 300px;
+  overflow: auto;
+}

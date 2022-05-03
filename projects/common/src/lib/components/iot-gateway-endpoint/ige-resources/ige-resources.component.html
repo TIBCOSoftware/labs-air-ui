@@ -85,7 +85,7 @@
                         </div>
                     </div>
                     <div fxLayout="column" style="height: 100%; width: 65%">
-                        <div *ngIf="resourceForm.controls.fileContent.value">
+                        <div class="code-box" *ngIf="resourceForm.controls.fileContent.value">
                             <pre><code [highlight]="resourceForm.controls.fileContent.value" [lineNumbers]="true" [languages]="languages"></code></pre>
                         </div>
                     </div>
