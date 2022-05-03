@@ -96,7 +96,7 @@ export class IgeResourcesComponent implements OnInit {
     resource.modified = ts;
     resource.name = this.resourceForm.get('name').value;
     resource.uid = this.resourceForm.get('uid').value;
-    resource.type = this.resourceForm.get('type').value; 
+    resource.type = this.resourceForm.get('type').value;
     resource.scope = this.gatewayId as PythonResource.ScopeEnum;
     resource.fileContent = encodeURIComponent(this.resourceForm.get('fileContent').value);
     this.graphService.updatePythonResource(resource).subscribe(
@@ -105,7 +105,7 @@ export class IgeResourcesComponent implements OnInit {
       }
     )
   }
-  
+
   deleteResource() {
     this.graphService.deletePythonResource(this.resourceForm.get('uid').value).subscribe(
       resp => {

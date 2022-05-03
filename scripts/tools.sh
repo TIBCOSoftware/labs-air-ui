@@ -50,3 +50,29 @@ function delete_local_image(){
     docker rmi -f "$(docker images -f "dangling=true" -q)"
     echo "Deleting image finished ..."
 }
+
+# check error code if error then exit
+function checkError {
+  if [ "${1}" -ne 0 ]; then
+    echo "### ${2} See output above. Exit code: ${1}"
+    printStack
+    exit "${1}"
+  fi
+  return 0
+}
+
+# Prints a stack trace with optional message ($1)
+# shellcheck disable=SC2120
+function printStack () {
+    echo "${1:-Stack trace}"
+
+    local depth
+          depth=${#FUNCNAME[@]}
+
+    for ((i=1; i<depth; i++)); do
+        local function="${FUNCNAME[$i]}"
+        local line="${BASH_LINENO[$((i-1))]}"
+        local file="${BASH_SOURCE[$((i-1))]}"
+        echo " $function(), $file, line $line"
+    done
+}
