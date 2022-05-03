@@ -33,7 +33,8 @@
             ],
             "styles": [
               "projects/shared/assets/geoanalytics/GeoAnalytics.css",
-              "projects/on-prem/src/styles.css"
+              "projects/on-prem/src/styles.css",
+              "projects/shared/assets/bootstrap/bootstrap.min.css"
             ],
             "scripts": [
               "projects/shared/assets/geoanalytics/GeoAnalytics.js",

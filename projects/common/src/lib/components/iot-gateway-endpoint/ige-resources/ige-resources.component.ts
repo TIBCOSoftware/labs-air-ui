@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
@@ -14,6 +14,7 @@ import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 export class IgeResourcesComponent implements OnInit {
 
   @Input() gatewayId: string;
+  @ViewChild('fileInput') fileInput: ElementRef;
   resourcesDataSource = new MatTableDataSource<PythonResource>();
   dateFormat = 'yyyy-MM-dd  HH:mm:ss'
   resourceDisplayedColumns = ['created', 'name', 'id', 'type']
@@ -81,6 +82,8 @@ export class IgeResourcesComponent implements OnInit {
         .subscribe(res => {
           this.getResources();
           this.resetResource();
+          console.log('fileInput', this.fileInput);
+          this.fileInput.nativeElement.value = '';
         });
     }
   }

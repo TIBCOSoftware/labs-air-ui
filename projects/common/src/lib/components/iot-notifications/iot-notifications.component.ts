@@ -15,8 +15,9 @@ export class CommonIotNotificationsComponent implements OnInit, AfterViewInit {
   dateFormat = 'yyyy-MM-dd  HH:mm:ss'
 
   notificationsDataSource = new MatTableDataSource<Notification>();
-  notificationDisplayedColumns: string[] = ['uuid', 'gateway', 'source', 'device', 'resource', 'value', 'level', 'description', 'created'];
+  notificationDisplayedColumns: string[] = ['uuid', 'gateway', 'source', 'device', 'resource', 'level', 'description', 'created'];
   notificationSelection = new SelectionModel<Notification>(false, []);
+  selectedNotification: Notification;
 
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
@@ -44,16 +45,30 @@ export class CommonIotNotificationsComponent implements OnInit, AfterViewInit {
           .subscribe(res => {
 
               // this.gatewayList = [];
-              this.notificationsDataSource.data = res as Notification[];
+
+              res.forEach(notification => {
+                  notification.value = this.decodeIfBase64(notification.value)
+              })
+
+              this.notificationsDataSource.data = res as Notification[]
 
               console.log('Notifications Received: ', this.notificationsDataSource.data);
           });
   }
 
   onNotificationClicked(row) {
-
       console.log('Row clicked: ', row);
+      this.notificationSelection.select(row);
+      this.selectedNotification = row;
+  }
 
+  decodeIfBase64(encodedString) {
+    const regexBase64 = /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/;
+    if (regexBase64.test(encodedString)) {
+        return atob(encodedString);
+    } else {
+        return encodedString;
+    }
   }
 
 }
