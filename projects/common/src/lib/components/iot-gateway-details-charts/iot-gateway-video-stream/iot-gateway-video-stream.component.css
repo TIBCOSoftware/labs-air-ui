@@ -1,0 +1,25 @@
+.table-container {
+  max-height: 450px;
+  overflow: auto;
+}
+
+.table-container table {
+  width: 100%;
+}
+
+/* stylelint-disable-next-line */
+.mat-column-inferredValue {
+  padding-left: 16px;
+}
+
+.mat-row.selected {
+  background: #ddd;
+}
+
+.query-row button {
+  margin: auto 10px;
+}
+
+.split-window {
+  display: flex;
+}
