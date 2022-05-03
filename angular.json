@@ -106,10 +106,9 @@
                 "input": "projects/shared/assets",
                 "ignore": ["/geoanalytics/"],
                 "output": "/assets/"
-              }            ],
-            "styles": [
-              "projects/on-prem/src/styles.css"
+              }
             ],
+            "styles": ["projects/on-prem/src/styles.css"],
             "scripts": []
           }
         },
@@ -150,7 +149,8 @@
                 "input": "projects/shared/assets",
                 "ignore": ["/geoanalytics/"],
                 "output": "/assets/"
-              }            ],
+              }
+            ],
             "styles": [
               "projects/shared/assets/geoanalytics/GeoAnalytics.css",
               "projects/cloud/src/styles.css"
@@ -232,10 +232,9 @@
                 "input": "projects/shared/assets",
                 "ignore": ["/geoanalytics/"],
                 "output": "/assets/"
-              }            ],
-            "styles": [
-              "projects/cloud/src/styles.css"
+              }
             ],
+            "styles": ["projects/cloud/src/styles.css"],
             "scripts": []
           }
         },
