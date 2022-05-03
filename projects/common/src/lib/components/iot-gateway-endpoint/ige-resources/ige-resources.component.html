@@ -81,7 +81,7 @@
                             </mat-form-field>
                         </div>
                         <div>
-                            <input type="file"(change)="onFileUpload($event)">
+                            <input #fileInput type="file"(change)="onFileUpload($event)">
                         </div>
                     </div>
                     <div fxLayout="column" style="height: 100%; width: 65%">
