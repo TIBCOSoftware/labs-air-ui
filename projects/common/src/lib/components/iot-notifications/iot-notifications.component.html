@@ -13,6 +13,7 @@
                 <mat-card-header>
                     <div mat-card-avatar class="notification-header-image"></div>
                     <mat-card-title>Notifications</mat-card-title>
+                    <button class="refresh-button" mat-raised-button color="primary" (click)="getNotifications()">Refresh</button>
                 </mat-card-header>
                 <mat-card-content>
                     <div class="table-container mat-elevation-z8">
@@ -49,10 +50,10 @@
                             </ng-container>
 
                             <!-- Value Column -->
-                            <ng-container matColumnDef="value">
+                            <!-- <ng-container matColumnDef="value">
                                 <th mat-header-cell *matHeaderCellDef> Value </th>
                                 <td mat-cell *matCellDef="let notification"> {{notification.value}} </td>
-                            </ng-container>
+                            </ng-container> -->
 
                             <!-- Level Column -->
                             <ng-container matColumnDef="level">
@@ -81,10 +82,11 @@
                         </table>
                     </div>
                 </mat-card-content>
-                <button class="refresh-button" mat-raised-button color="primary" (click)="getNotifications()">Refresh</button>
             </mat-card>
         </div>
-
     </div>
-
+    <div *ngIf="notificationSelection.hasValue()">
+        <h4>Notification Value</h4>
+        <p> {{selectedNotification?.value}} </p>
+    </div>
 </div>
