@@ -581,7 +581,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * Fucntion called when the form changes
+   * Function called when the form changes
    */
   onFormChanges(): void {
       this.protocolForm.valueChanges.subscribe(val => {
