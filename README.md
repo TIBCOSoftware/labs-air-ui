@@ -26,16 +26,16 @@ For setup instructions, please refer to the  [contributing](./CONTRIBUTING.md) d
 
 ### Connecting the Project AIR™ UI to Project AIR™ Infrastructure
 
-To connect an instance of the UI to a Project AIR™ Infrastructure instance, modify
-`/labs-air-ui/projects/common/src/lib/environments/environment.ts`
+To connect an instance of the UI to a dGraph instance modify
+`labs-air-ui/projects/on-prem/assets/data/appConfig.json` or `projects/cloud/assets/data/appConfig.json`
 
 ```javascript
 ...
-export const environment = {
-    production: false,
+{
     dgraphUrl: 'http://localhost:8080',
     dgraphBasicAuthEnabled: false,
 ...
+}
 ```
 
 Change the `dgraphUrl` value to the infrastructure endpoint.
