@@ -1,20 +1,23 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment';
-import * as _ from 'lodash';
-import { lastValueFrom } from 'rxjs';
+import { catchError, lastValueFrom, of } from 'rxjs';
 
 @Injectable()
 export class AppConfigService {
-    private appConfig = null;
+    private appConfig = {};
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient) {
+        this.loadAppConfig();
+    }
 
-    loadAppConfig() {
+    loadAppConfig(): any {
         return lastValueFrom(this.http.get('/assets/data/appConfig.json'))
             .then(data => {
                 console.log('the application config is', data)
                 this.appConfig = data;
+            }, err => {
+                console.log('Could not load the application configuration!', err);
+                return of({});
             });
     }
 
@@ -23,30 +26,12 @@ export class AppConfigService {
     }
 
     public getFromConfigOrEnv(path) {
-        let loadedFrom = 'config';
-        const value = this.getFromConfig(path);
+        const loadedFrom = 'config';
+        const value = this.appConfig[path];
         if (typeof value == 'undefined') {
-            loadedFrom = 'environment';
-            return this.getFromEnv(path);
+            throw new Error(`Required setting ${path} is undefined!`)
         }
         console.log(`loaded ${value} for property ${path} using the ${loadedFrom}`);
-        return value;
-    }
-
-
-    public getFromConfig(path) {
-        let value = null;
-        if (this.getConfig()) {
-            value = _.get(this.getConfig(), path);
-        }
-        return value;
-    }
-
-    public getFromEnv(path) {
-        let value = null;
-        if (environment) {
-            value = _.get(environment, path);
-        }
         return value;
     }
 }

@@ -1,4 +1,4 @@
-import { NgModule, APP_INITIALIZER } from '@angular/core';
+import { NgModule, APP_INITIALIZER, enableProdMode } from '@angular/core';
 import { AppConfigService } from 'common';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
@@ -24,9 +24,13 @@ import { IotDashboardComponent } from './components/iot-dashboard/iot-dashboard.
 import { CommonLibraryModule } from 'common';
 import { DGraphService } from './services/graph/dgraph.service';
 
-const appInitializerFn = (appConfig: AppConfigService) => {
+const appInitializerFn = (appConfigService: AppConfigService) => {
     return () => {
-        return appConfig.loadAppConfig();
+        let appConfig = appConfigService.loadAppConfig();
+        if (appConfig.production) {
+            enableProdMode();
+        }
+        return appConfig;
     };
 };
 
