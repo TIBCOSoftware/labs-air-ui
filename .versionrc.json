@@ -39,6 +39,10 @@
     {
       "filename": "package.json",
       "type": "json"
+    },
+    {
+      "filename": ".version",
+      "type": "plain-text"
     }
   ]
 }
