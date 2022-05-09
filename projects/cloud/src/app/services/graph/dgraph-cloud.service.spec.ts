@@ -69,7 +69,6 @@ describe('DgraphService', () => {
     });
 
     it('should be created', () => {
-        const service: GraphService = TestBed.inject(DGraphCloudService);
-        expect(service).toBeTruthy();
+        expect(dgraphService).toBeTruthy();
     });
 });

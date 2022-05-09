@@ -174,7 +174,7 @@ jobs:
           path: |
             ./node_modules
           key: |
-            ${{ runner.os }}-cicd-ui-${{ hashFiles('./package-lock.json') }}
+            ${{ runner.os }}-cicd-ui-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-cicd-ui-
 
@@ -193,6 +193,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
           npm config set fund false
+          rm -rf node_modules/@TIBCOSoftware/labs-air-graph-client
           npm install
 
       - name: Run the unit tests for ${{ matrix.project }}
