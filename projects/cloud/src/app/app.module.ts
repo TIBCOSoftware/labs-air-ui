@@ -1,4 +1,4 @@
-import { NgModule, APP_INITIALIZER } from '@angular/core';
+import { NgModule, APP_INITIALIZER, enableProdMode } from '@angular/core';
 import { AppConfigService } from 'common';
 import { HttpClientModule } from "@angular/common/http";
 import { BrowserModule } from '@angular/platform-browser';
@@ -24,7 +24,6 @@ import { IotDashboardComponent } from './components/iot-dashboard/iot-dashboard.
 import { CommonLibraryModule } from 'common';
 import { ApiModule as LabsAirGraphApiModule } from '@TIBCOSoftware/labs-air-graph-client';
 import { DGraphCloudService } from './services/graph/dgraph-cloud.service';
-import { environment } from '../../environments/environment';
 import { AuthorizationService } from './services/authorization.service';
 import { Requestor, FetchRequestor } from '@openid/appauth';
 import { CallbackComponent } from './routes/callback/callback.component';
@@ -32,13 +31,26 @@ import { TokenService } from './services/token.service';
 
 const appInitializerFn = (appConfigService: AppConfigService) => {
   return () => {
-    return appConfigService.loadAppConfig();
+    let appConfig = appConfigService.loadAppConfig();
+    if (appConfig.production) {
+      enableProdMode();
+    }
+    return appConfig;
   };
 };
 
 const configurationProviderPath = (appConfigService: AppConfigService) => {
   return appConfigService.getFromConfigOrEnv('dgraphUrl');
 };
+
+const loadAuthorizationConfig = (appConfigService: AppConfigService) => {
+  try {
+    return appConfigService.getConfig();
+  } catch (err) {
+    console.log('No configuration available. The authorization service will report an error');
+    return {}
+  }
+}
 
 @NgModule({
   declarations: [
@@ -92,7 +104,7 @@ const configurationProviderPath = (appConfigService: AppConfigService) => {
     { provide: GraphService, useClass: DGraphCloudService },
     { provide: LocationStrategy, useClass: PathLocationStrategy },
     { provide: Requestor, useValue: new FetchRequestor()},
-    { provide: 'AuthorizationConfig', useValue: environment}
+    { provide: 'AuthorizationConfig', deps: [AppConfigService], useFactory: loadAuthorizationConfig}
   ],
   bootstrap: [AppComponent]
 })
