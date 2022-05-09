@@ -40,11 +40,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: [identify-changes]
     # Build if the component changed or if in the main branch
-    if: |
-      (needs.identify-changes.outputs.commonChanged ||
-        needs.identify-changes.outputs.cloudChanged ||
-        needs.identify-changes.outputs.onPremChanged) ||
-      github.ref == 'refs/heads/main'
+    #if: |
+    #  (needs.identify-changes.outputs.commonChanged ||
+    #    needs.identify-changes.outputs.cloudChanged ||
+    #    needs.identify-changes.outputs.onPremChanged) ||
+    #  github.ref == 'refs/heads/main'
     strategy:
       matrix:
         node-version: [16.x]
@@ -97,11 +97,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: [identify-changes, test-common-library]
     # Build if the component changed or if in the main branch
-    if: |
-      (needs.identify-changes.outputs.commonChanged ||
-        needs.identify-changes.outputs.cloudChanged ||
-        needs.identify-changes.outputs.onPremChanged) ||
-      github.ref == 'refs/heads/main'
+    #if: |
+    #  (needs.identify-changes.outputs.commonChanged ||
+    #    needs.identify-changes.outputs.cloudChanged ||
+    #    needs.identify-changes.outputs.onPremChanged) ||
+    #  github.ref == 'refs/heads/main'
 
     strategy:
       matrix:
@@ -151,11 +151,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: [identify-changes, build-common-library]
     # Build if the component changed or if in the main branch
-    if: |
-      (needs.identify-changes.outputs.commonChanged ||
-        needs.identify-changes.outputs.cloudChanged ||
-        needs.identify-changes.outputs.onPremChanged) ||
-      github.ref == 'refs/heads/main'
+    #if: |
+    #  (needs.identify-changes.outputs.commonChanged ||
+    #    needs.identify-changes.outputs.cloudChanged ||
+    #    needs.identify-changes.outputs.onPremChanged) ||
+    #  github.ref == 'refs/heads/main'
     strategy:
       matrix:
         node-version: [16.x]
@@ -190,9 +190,10 @@ jobs:
           path: dist/common
 
       - name: Install dependencies for the ${{ matrix.project }}
-        if: steps.cache.outputs.cache-hit != 'true'
+        # if: steps.cache.outputs.cache-hit != 'true'
         run: |
           npm config set fund false
+          rm -rf node_modules/@TIBCOSoftware/labs-air-graph-client
           npm install
 
       - name: Run the unit tests for ${{ matrix.project }}
