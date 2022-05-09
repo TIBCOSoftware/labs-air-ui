@@ -1,3 +1,4 @@
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { IotGatewayDashboardComponent } from './iot-gateway-dashboard.component';
@@ -8,7 +9,8 @@ describe('IotGatewayDashboardComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [ IotGatewayDashboardComponent ]
+            declarations: [IotGatewayDashboardComponent],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA]
         })
             .compileComponents();
     }));

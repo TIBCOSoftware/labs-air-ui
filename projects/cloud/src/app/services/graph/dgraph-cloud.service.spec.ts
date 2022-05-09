@@ -9,6 +9,7 @@ import {
     NotificationService,
     PipelineService,
     ProtocolService,
+    PythonService,
     ReadingService,
     RouteService
 } from '@TIBCOSoftware/labs-air-graph-client';
@@ -39,6 +40,7 @@ describe('DgraphService', () => {
     const protocolService: Partial<ProtocolService> = jasmine.createSpyObj(['xxx']);
     const readingService: Partial<ReadingService> = jasmine.createSpyObj(['xxx']);
     const routeService: Partial<RouteService> = jasmine.createSpyObj(['xxx']);
+    const pythonService: Partial<PythonService> = jasmine.createSpyObj(['xxx']);
 
     beforeEach(() => {
 
@@ -57,6 +59,7 @@ describe('DgraphService', () => {
                 { provide: ProtocolService, useValue: protocolService },
                 { provide: ReadingService, useValue: readingService },
                 { provide: RouteService, useValue: routeService },
+                { provide: PythonService, useValue: pythonService },
                 { provide: HttpClient, useValue: httpClientSpy },
                 DGraphCloudService
             ]
