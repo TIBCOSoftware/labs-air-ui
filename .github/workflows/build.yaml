@@ -190,7 +190,7 @@ jobs:
           path: dist/common
 
       - name: Install dependencies for the ${{ matrix.project }}
-        if: steps.cache.outputs.cache-hit != 'true'
+        # if: steps.cache.outputs.cache-hit != 'true'
         run: |
           npm config set fund false
           npm install
