@@ -26,12 +26,11 @@ export class AppConfigService {
     }
 
     public getFromConfigOrEnv(path) {
-        const loadedFrom = 'config';
         const value = this.appConfig[path];
         if (typeof value == 'undefined') {
             throw new Error(`Required setting ${path} is undefined!`)
         }
-        console.log(`loaded ${value} for property ${path} using the ${loadedFrom}`);
+        console.log(`loaded ${value} for property ${path} using the config`);
         return value;
     }
 }
