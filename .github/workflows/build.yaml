@@ -252,9 +252,10 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
+        # if: steps.cache.outputs.cache-hit != 'true'
         run: |
           npm config set fund false
+          rm -rf node_modules/@TIBCOSoftware/labs-air-graph-client
           npm install
 
       - name: Restore the common library
