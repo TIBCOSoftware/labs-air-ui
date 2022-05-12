@@ -62,6 +62,7 @@ import { GraphService } from '@TIBCOSoftware/labs-air-graph-client'
 import { DatePipe } from '@angular/common';
 import { RestHeadersComponent } from './components/iot-pipeline/rest-headers/rest-headers.component';
 import { PipelineRequestReplyComponent } from './components/iot-pipeline/pipeline-request-reply/pipeline-request-reply.component';
+import { PipelinePythonPipeComponent } from './components/iot-pipeline/pipline-python-pipe/pipeline-python-pipe.component';
 
 const appInitializerFn = (appConfig: AppConfigService) => {
   return () => {
@@ -115,7 +116,8 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     IgeProtocolsComponent,
     PipelineRequestReplyComponent,
     PipelinePythonComponent,
-    IgeResourcesComponent
+    IgeResourcesComponent,
+    PipelinePythonPipeComponent
   ],
   imports: [
     MaterialModule,

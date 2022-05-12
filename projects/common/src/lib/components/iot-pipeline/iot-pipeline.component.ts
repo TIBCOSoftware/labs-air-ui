@@ -40,7 +40,7 @@ import { RestBroadcastComponent } from '../rete/components/rest-broadcast.compon
 import { MQTTRequestReplyComponent } from '../rete/components/mqtt-request-reply.component'
 import { Gateway, Model, Pipeline } from '@TIBCOSoftware/labs-air-graph-client';
 import { PythonComponent } from '../rete/components/python-component';
-
+import { PythonPipeComponent} from '../rete/components/python-pipe-component'
 @Component({
     selector: 'app-common-iot-pipeline',
     templateUrl: './iot-pipeline.component.html',
@@ -61,6 +61,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
   pipelinesDataSource = new MatTableDataSource<Pipeline>();
   pipelineDisplayedColumns: string[] = ['id', 'name', 'pipelineType', 'status', 'created', 'modified'];
   pipelineSelection = new SelectionModel<Pipeline>(false, []);
+  pythonInputs = [];
+  pythonOutputs = [];
 
   pipelineConfig = true;
   dataSubscriberConfig = false;
@@ -77,6 +79,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
   pythonConfig = false;
   restBroadcastConfig = false;
   requestReplyConfig = false;
+  pythonPipeConfig = false;
   xcor = 0;
   ycor = 0;
 
@@ -84,6 +87,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
 
   filters: any[] = [];
 
+  // should this be just one big form? 
   pipelineForm: FormGroup;
   protocolForm: FormGroup;
   dataStoreForm: FormGroup;
@@ -98,6 +102,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
   pythonForm: FormGroup;
   restBroadcastForm: FormGroup;
   requestReplyForm: FormGroup;
+  pythonPipeForm: FormGroup;
 
   ruleTuplesDescriptor = [
       {
@@ -223,7 +228,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           new CustomPublisherComponent(),
           new FlogoFlowComponent(),
           new ErrorHandlerComponent(),
-          new PythonComponent()
+          new PythonComponent(),
+          new PythonPipeComponent()
       ];
 
       this.editor = new NodeEditor('demo@0.2.0', container);
@@ -324,6 +330,10 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
               this.clearFormsAndFilters();
           }
 
+          if (node.name == 'Python Pipe') {
+              this.getPythonInputOutput(node);
+          }
+
           this.lastNodeSelected = node;
 
           this.resetNodeContext(node);
@@ -413,7 +423,6 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
       }
 
       function findNextNodes(node: any): any {
-
           const nodeOutputKeys = Object.keys(node.outputs);
 
           if (nodeOutputKeys.length > 0) {
@@ -447,6 +456,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
 
       const name = node.name;
       let contextObj = null;
+      console.log('unselected node saving', node);
 
       switch (name) {
       case 'Data Subscriber': {
@@ -518,6 +528,10 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           contextObj = this.buildNodeMQTTRequestReplyProperties();
           break;
       }
+      case 'Python Pipe': {
+          contextObj = this.buildPythonPipeProperties();
+          break;
+      }
       default: {
 
           break;
@@ -528,6 +542,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
 
   }
 
+  // shows the form for which node was selected
   resetNodeContext(node) {
 
       this.pipelineConfig = false;
@@ -545,6 +560,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
       this.pythonConfig = false;
       this.restBroadcastConfig = false;
       this.requestReplyConfig = false;
+      this.pythonPipeConfig = false;
 
       if (node != null || node != undefined) {
           console.log('Resetting context for node: ', node);
@@ -637,6 +653,11 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
               this.requestReplyConfig = true;
               break;
           }
+          case 'Python Pipe': {
+              this.updatePythonPipeComponent(contextObj);
+              this.pythonPipeConfig = true;
+              break;
+          }
           default: {
               this.pipelineConfig = true;
               break;
@@ -713,7 +734,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           dataInput: '',
           producer: ''
     });
-      this.requestReplyForm.reset();
+    this.requestReplyForm.reset();
+    this.pythonPipeForm.reset();
   }
 
 
@@ -960,6 +982,20 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
               maximumQOS: ['2', Validators.required]
           }),
        });
+
+     this.pythonPipeForm = this.formBuilder.group({
+         logLevel: ['INFO', Validators.required],
+         name: ['', Validators.required],
+         context: this.formBuilder.group({
+            name: ['', Validators.required],
+            data: this.formBuilder.group({
+                input: ['', Validators.required],
+                output: this.formBuilder.array([]),
+                dependsOn: ['']
+            })
+         }),
+         dataInput: ['', Validators.required]
+     })
   }
 
   /**
@@ -1373,6 +1409,18 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
         'producer': this.requestReplyForm.get('producer').value
     }
     return mqttRequestReplyObj;
+  }
+
+  buildPythonPipeProperties(): any {
+    const pythonPipeObj = {
+        'logLevel': this.pythonPipeForm.get('logLevel').value,
+        'name': this.pythonPipeForm.get('name').value,
+        // need to update context once that is done
+        // 'context': this.pythonForm.get('context').value,
+        'dataInput': this.pythonPipeForm.get('dataInput').value
+    }
+
+    return pythonPipeObj;
   }
 
   /**
@@ -1817,6 +1865,16 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                     topic: context.topic,
                     maximumQOS: context.maximumQOS,
                 }
+            })
+        }
+    }
+
+    updatePythonPipeComponent (context: any) {
+        if (context != null || context != undefined) {
+            this.pythonPipeForm.patchValue({
+                logLevel: context.logLevel,
+                dataInput: context.dataInput,
+                name: context.name
             })
         }
     }
@@ -2460,6 +2518,10 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                     pipelineFlow.AirDescriptor.logic.push(this.buildPythonDeployObj(flowNode.data.customdata));
                     pipelineFlow.Artifacts = this.buildPythonDeployArtifactProperties(flowNode.data.customdata);
                     break;
+                  }
+                  case 'Python Pipe': {
+                    pipelineFlow.AirDescriptor.logic.push(this.buildPythonPipeDeplyObj(flowNode.data.customdata));
+                    pipelineFlow.Artifacts = this.buildPythonDeployArtifactProperties(flowNode.data.customdata);
                   }
                   }
                   pos++;
@@ -3410,4 +3472,51 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
     return pythonDeployProperties
   }
 
+  buildPythonPipeDeplyObj(contextObj): any {
+      let pythonPipeDeployProperties = null;
+
+      pythonPipeDeployProperties = [
+
+      ]
+
+    return pythonPipeDeployProperties
+  }
+
+  getPythonInputOutput(node) {
+    // find all previous python resources connected
+    this.pythonInputs = [];
+    this.pythonOutputs = [];
+    this.findNextNodes(node, this.editor.toJSON());
+    console.log('PYTHON INPUTS', this.pythonInputs)
+    // find the next 
+    // need to get contextObj of each node
+  }
+
+  findPreviousNode(node: any, flow): any {
+    console.log('flow', flow)
+    const nodeOutputKeys = Object.keys(node.inputs);
+    console.log('TEH NODE', node)
+    console.log('NODE OUTPUTKES', nodeOutputKeys)
+    if (nodeOutputKeys.length > 0) {
+        const connections = node.inputs.event.connections;
+        console.log('CONNECTIONS', connections);
+        connections.reverse().forEach((connection, index) => {
+            if (flow.nodes[connection.node].name == 'Python Pipe') {
+                this.pythonInputs.push(flow.nodes[connection.node]);
+            }
+            this.findPreviousNode(flow.nodes[connection.node], flow);
+        });
+    }
+  }
+    findNextNodes(node: any, flow): any {
+        const nodeOutputKeys = Object.keys(node.outputs);
+    console.log('WTF M8', nodeOutputKeys)
+    if (nodeOutputKeys.length > 0) {
+        const connections = node.outputs.event.connections;
+
+        connections.forEach(connection => {
+            this.findNextNodes(flow.nodes[connection.node], flow);
+        });
+    }
+    }
 }

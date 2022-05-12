@@ -22,6 +22,7 @@ export class InferencingComponent extends Component {
     }
 
     worker(node, inputs, outputs) {
-        outputs['event'] = node.data.event;
+        // inputs['event'] = inputs['event'].length ? inputs['event'][0] : undefined;
+        outputs['event'] = node.data.event;    
     }
 }

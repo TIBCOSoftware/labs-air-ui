@@ -23,6 +23,7 @@ export class FiltersComponent extends Component {
     }
 
     worker(node, inputs, outputs) {
-        outputs['fe'] = node.data.fe;
+        // inputs['event'] = inputs['event'].length ? inputs['event'][0] : undefined;
+        outputs['event'] = node.data.event;
     }
 }

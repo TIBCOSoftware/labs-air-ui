@@ -1,0 +1,56 @@
+<div [formGroup]="pythonPipeForm">
+    <mat-form-field appearance="outline">
+        <mat-label>Log Level</mat-label>
+        <mat-select formControlName="logLevel">
+            <mat-option *ngFor="let item of logLevels;" [value]="item.value">
+                {{item.viewValue}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name">
+    </mat-form-field>
+    <button (click)="showResourceConfiguration = true">Resource Configuration</button>
+    <mat-form-field appearance="outline">
+        <mat-label>Data Input</mat-label>
+        <textarea matInput formControlName="dataInput"></textarea>
+    </mat-form-field>
+    <!-- <mat-form-field appearance="outline">
+        <mat-label>Processor</mat-label>
+        <mat-select #processor formControlName="processor">
+            <mat-option *ngFor="let item of resources; let i = index" [value]="item.name">
+                {{item.name}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field> -->
+</div>
+<div class="configuration-window" *ngIf="showResourceConfiguration" [formGroup]="pythonPipeForm">
+    <div class="configuration-content" formGroupName="context">
+        <span class="close" (click)="showResourceConfiguration = false">&times;</span>
+        <div formGroupName="data">
+            <mat-form-field appearance="outline">
+                <mat-label>Processor</mat-label>
+                <mat-select #processor formControlName="name">
+                    <mat-option *ngFor="let item of resources; let i = index" [value]="item">
+                        {{item.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>       
+        </div>
+        <div formGroupName="data">
+            <mat-label>Input</mat-label>
+            <mat-select formControlName="input">
+                <mat-option *ngFor="let item of pythonInputs;" [value]="item">
+                    {{item}}
+                </mat-option>
+            </mat-select>
+            <mat-label>Output</mat-label>
+            <mat-select formControlName="output">
+                <mat-option *ngFor="let item of pythonOutputs;" [value]="item">
+                    {{item}}
+                </mat-option>
+            </mat-select>
+        </div>
+    </div>
+</div>

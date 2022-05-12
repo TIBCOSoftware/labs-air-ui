@@ -22,6 +22,7 @@ export class RuleTextMatchingComponent extends Component {
     }
 
     worker(node, inputs, outputs) {
+        // inputs['event'] = inputs['event'].length ? inputs['event'][0] : undefined;
         outputs['event'] = node.data.event;
     }
 
