@@ -178,7 +178,7 @@ export class IgeResourcesComponent implements OnInit {
   resetResource() {
     this.resourceForm.reset();
     this.resourceForm.setControl('inputs', new FormArray([]));
-    this.resourceForm.setControl('outputs', new FormArray([]))
+    this.resourceForm.setControl('outputs', new FormArray([]));
     this.resourceSelection.clear();
   }
 
