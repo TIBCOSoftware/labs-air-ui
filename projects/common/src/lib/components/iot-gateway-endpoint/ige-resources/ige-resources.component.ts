@@ -1,6 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { PythonResource,  } from '@TIBCOSoftware/labs-air-graph-client';
@@ -25,7 +25,9 @@ export class IgeResourcesComponent implements OnInit {
     fileContent: new FormControl,
     uid: new FormControl,
     created: new FormControl,
-    modified: new FormControl
+    modified: new FormControl,
+    inputs: new FormArray([]),
+    outputs: new FormArray([])
   });
   types = [
     { value: 'requirement', viewValue: 'Requirement' },
@@ -60,6 +62,22 @@ export class IgeResourcesComponent implements OnInit {
     this.resourceSelection.select(row);
   }
 
+  get inputs (): FormArray {
+   return this.resourceForm.get('inputs') as FormArray;
+  }
+
+  get inputArray(): [FormControl] {
+    return this.inputs.controls as [FormControl];
+  }
+
+  get outputs (): FormArray {
+    return this.resourceForm.get('outputs') as FormArray;
+  }
+
+  get outputArray(): [FormControl] {
+    return this.outputs.controls as [FormControl]
+  }
+
   addResource() {
     const ts = Date.now();
     const resource = {} as PythonResource;
@@ -71,7 +89,8 @@ export class IgeResourcesComponent implements OnInit {
     resource.name = this.resourceForm.get('name').value;
     resource.type = this.resourceForm.get('type').value;
     resource.fileContent = encodeURIComponent(this.resourceForm.get('fileContent').value);
-
+    resource.inputs = this.inputs.getRawValue();
+    resource.outputs = this.outputs.getRawValue();
     if (this.resourceExists(resource.name)) {
         this._snackBar.open('Resource name is not unique.', 'Cancel', {
             duration: 3000,
@@ -99,6 +118,8 @@ export class IgeResourcesComponent implements OnInit {
     resource.type = this.resourceForm.get('type').value;
     resource.scope = this.gatewayId as PythonResource.ScopeEnum;
     resource.fileContent = encodeURIComponent(this.resourceForm.get('fileContent').value);
+    resource.inputs = this.inputs.getRawValue();
+    resource.outputs = this.outputs.getRawValue();
     this.graphService.updatePythonResource(resource).subscribe(
       resp => {
         this.getResources();
@@ -156,7 +177,17 @@ export class IgeResourcesComponent implements OnInit {
 
   resetResource() {
     this.resourceForm.reset();
+    this.resourceForm.setControl('inputs', new FormArray([]));
+    this.resourceForm.setControl('outputs', new FormArray([]))
     this.resourceSelection.clear();
+  }
+
+  addIO(io: string): void {
+    io == 'inputs' ? this.inputs.push(new FormControl ('')) : this.outputs.push(new FormControl(''));
+  }
+
+  removeIO(io: string, index: number): void {
+    io == 'inputs' ? this.inputs.removeAt(index) : this.outputs.removeAt(index);
   }
  
 }

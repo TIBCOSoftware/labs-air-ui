@@ -254,7 +254,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
               'connectionremoved'
 
           ],
-          (async () => {
+          (async (data) => {
               if (engine.silent) return;
               console.log('Editor action executed');
               await engine.abort();
@@ -3484,39 +3484,29 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
 
   getPythonInputOutput(node) {
     // find all previous python resources connected
+    // Rete passes the output of the previous node as the input of the current node
     this.pythonInputs = [];
     this.pythonOutputs = [];
-    this.findNextNodes(node, this.editor.toJSON());
-    console.log('PYTHON INPUTS', this.pythonInputs)
+    this.findPreviousNodes(node);
     // find the next 
     // need to get contextObj of each node
   }
 
-  findPreviousNode(node: any, flow): any {
-    console.log('flow', flow)
-    const nodeOutputKeys = Object.keys(node.inputs);
-    console.log('TEH NODE', node)
-    console.log('NODE OUTPUTKES', nodeOutputKeys)
-    if (nodeOutputKeys.length > 0) {
-        const connections = node.inputs.event.connections;
-        console.log('CONNECTIONS', connections);
-        connections.reverse().forEach((connection, index) => {
-            if (flow.nodes[connection.node].name == 'Python Pipe') {
-                this.pythonInputs.push(flow.nodes[connection.node]);
-            }
-            this.findPreviousNode(flow.nodes[connection.node], flow);
-        });
+  findPreviousNodes(node: any): any {
+    // assumes only one connection, but currently is only setup to do one connection.
+    const previousNode =  node.inputs.size > 0 ? node.inputs.get('event').connections[0].output.node : undefined
+    if (previousNode) {
+        if (previousNode.name == 'Python Pipe') {
+             this.pythonInputs.push(previousNode);
+        }
+        this.findPreviousNodes(previousNode);
+    };
+  }
+
+  findNextNode(node: any): any {
+    const nextNode = node.outputs.size > 0 ? node.inputs.get('event').connections[0].output.node : undefined;
+    if (nextNode.length > 0) {
+        return nextNode
     }
   }
-    findNextNodes(node: any, flow): any {
-        const nodeOutputKeys = Object.keys(node.outputs);
-    console.log('WTF M8', nodeOutputKeys)
-    if (nodeOutputKeys.length > 0) {
-        const connections = node.outputs.event.connections;
-
-        connections.forEach(connection => {
-            this.findNextNodes(flow.nodes[connection.node], flow);
-        });
-    }
-    }
 }

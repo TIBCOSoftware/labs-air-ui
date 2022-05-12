@@ -85,6 +85,29 @@
                         </div>
                     </div>
                     <div fxLayout="column" style="height: 100%; width: 65%">
+                        <div class="io-form">
+                            <div class="inputs">
+                                <button (click)="addIO('inputs')">add input</button>
+                               <div *ngFor="let input of inputArray">
+                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                    <mat-label>Input</mat-label>
+                                    <input matInput [readonly]=false [formControl]="input">
+                                </mat-form-field>
+                               </div> 
+                            </div>
+                            <div class="outputs">
+                                <button (click)="addIO('outputs')">add output</button>
+                                <div *ngFor="let output of outputArray">
+                                    <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                        <mat-label>Output</mat-label>
+                                        <input matInput [readonly]=false [formControl]="output">
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div fxLayout="column" style="height: 100%; width: 65%">
                         <div class="code-box" *ngIf="resourceForm.controls.fileContent.value">
                             <pre><code [highlight]="resourceForm.controls.fileContent.value" [lineNumbers]="true" [languages]="languages"></code></pre>
                         </div>
