@@ -57,8 +57,18 @@ export class IgeResourcesComponent implements OnInit {
       uid: row.uid,
       created: row.created,
       modified: row.modified,
-      scope: row.scope
-    })
+      scope: row.scope,
+    });
+    if (row.inputs) {
+      const decodedInputs = JSON.parse(atob(row.inputs))
+      const inputs = new FormArray(decodedInputs.map(x => new FormControl(x)));
+      this.resourceForm.setControl('inputs', inputs);
+    }
+    if (row.outputs) {
+      const decodedOutputs = JSON.parse(atob(row.outputs))
+      const outputs = new FormArray(decodedOutputs.map(x => new FormControl(x)));
+      this.resourceForm.setControl('outputs', outputs)
+    }
     this.resourceSelection.select(row);
   }
 
@@ -89,8 +99,8 @@ export class IgeResourcesComponent implements OnInit {
     resource.name = this.resourceForm.get('name').value;
     resource.type = this.resourceForm.get('type').value;
     resource.fileContent = encodeURIComponent(this.resourceForm.get('fileContent').value);
-    resource.inputs = this.inputs.getRawValue();
-    resource.outputs = this.outputs.getRawValue();
+    resource.inputs = btoa(JSON.stringify(this.inputs.getRawValue()));
+    resource.outputs = btoa(JSON.stringify(this.outputs.getRawValue()));
     if (this.resourceExists(resource.name)) {
         this._snackBar.open('Resource name is not unique.', 'Cancel', {
             duration: 3000,
@@ -118,11 +128,12 @@ export class IgeResourcesComponent implements OnInit {
     resource.type = this.resourceForm.get('type').value;
     resource.scope = this.gatewayId as PythonResource.ScopeEnum;
     resource.fileContent = encodeURIComponent(this.resourceForm.get('fileContent').value);
-    resource.inputs = this.inputs.getRawValue();
-    resource.outputs = this.outputs.getRawValue();
+    resource.inputs = btoa(JSON.stringify(this.inputs.getRawValue()));
+    resource.outputs = btoa(JSON.stringify(this.outputs.getRawValue()));
     this.graphService.updatePythonResource(resource).subscribe(
       resp => {
         this.getResources();
+        this.resetResource();
       }
     )
   }
@@ -131,6 +142,7 @@ export class IgeResourcesComponent implements OnInit {
     this.graphService.deletePythonResource(this.resourceForm.get('uid').value).subscribe(
       resp => {
         this.getResources();
+        this.resetResource();
       }
     );
   }

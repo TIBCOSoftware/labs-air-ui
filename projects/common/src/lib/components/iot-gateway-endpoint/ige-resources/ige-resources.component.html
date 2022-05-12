@@ -88,20 +88,22 @@
                         <div class="io-form">
                             <div class="inputs">
                                 <button (click)="addIO('inputs')">add input</button>
-                               <div *ngFor="let input of inputArray">
+                               <div *ngFor="let input of inputArray; let i = index">
                                 <mat-form-field fxFlex="1 1 15%" appearance="outline">
                                     <mat-label>Input</mat-label>
                                     <input matInput [readonly]=false [formControl]="input">
                                 </mat-form-field>
+                                <mat-icon  class="click" (click)="removeIO('inputs', i)">delete_outline</mat-icon>
                                </div> 
                             </div>
                             <div class="outputs">
                                 <button (click)="addIO('outputs')">add output</button>
-                                <div *ngFor="let output of outputArray">
+                                <div *ngFor="let output of outputArray; let i = index">
                                     <mat-form-field fxFlex="1 1 15%" appearance="outline">
                                         <mat-label>Output</mat-label>
                                         <input matInput [readonly]=false [formControl]="output">
                                     </mat-form-field>
+                                    <mat-icon  class="click" (click)="removeIO('outputs', i)">delete_outline</mat-icon>
                                 </div>
 
                             </div>
