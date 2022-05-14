@@ -24,7 +24,6 @@ export class NodePrimaryComponent extends NodeComponent implements OnInit {
   }
 
   Inputs() {
-      console.log(this.node.inputs)
       return Array.from(this.node.inputs.values());
   }
 
