@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angula
 
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -333,7 +333,6 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           if (node.name == 'Python Pipe') {
               this.getPythonInputOutput(node);
           }
-
           this.lastNodeSelected = node;
 
           this.resetNodeContext(node);
@@ -735,7 +734,21 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
           producer: ''
     });
     this.requestReplyForm.reset();
-    this.pythonPipeForm.reset();
+    this.pythonPipeForm.patchValue({
+        logLevel: 'INFO',
+        fileContent: '',
+        dataInput: '',
+        name: '',
+        context: {
+            name: '',
+            data: {
+                dependsOn: ''
+            }
+        }
+    });
+    // resetting a formg roup and form array require explicit calls or they don't reset.
+    (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('input', new FormGroup({}));
+    (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('output', new FormArray([]));
   }
 
 
@@ -989,12 +1002,13 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
          context: this.formBuilder.group({
             name: ['', Validators.required],
             data: this.formBuilder.group({
-                input: ['', Validators.required],
+                input: this.formBuilder.group({}),
                 output: this.formBuilder.array([]),
                 dependsOn: ['']
             })
          }),
-         dataInput: ['', Validators.required]
+         dataInput: ['', Validators.required],
+         fileContent: ['']
      })
   }
 
@@ -1416,10 +1430,13 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
         'logLevel': this.pythonPipeForm.get('logLevel').value,
         'name': this.pythonPipeForm.get('name').value,
         // need to update context once that is done
-        // 'context': this.pythonForm.get('context').value,
-        'dataInput': this.pythonPipeForm.get('dataInput').value
+        'processorName': this.pythonPipeForm.get('context.name').value,
+        'input': this.pythonPipeForm.get('context').get('data').get('input').value,
+        'output': this.pythonPipeForm.get('context').get('data').get('output').value,
+        'dependsOn': this.pythonPipeForm.get('context').get('data').get('dependsOn').value,
+        'dataInput': this.pythonPipeForm.get('dataInput').value,
+        'fileContent': this.pythonPipeForm.get('fileContent').value
     }
-
     return pythonPipeObj;
   }
 
@@ -1874,8 +1891,18 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
             this.pythonPipeForm.patchValue({
                 logLevel: context.logLevel,
                 dataInput: context.dataInput,
-                name: context.name
+                fileContent: context.fileContent,
+                name: context.name,
+                context: {
+                    name: context.processorName,
+                    data: {
+                        input: this.formBuilder.group(context.input),
+                        dependsOn: context.dependsOn
+                    }
+                }
             })
+            const outputs = context.output.map(x => this.formBuilder.control(x));
+            (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('output', new FormArray(outputs))
         }
     }
   /**
@@ -3486,15 +3513,12 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
     // find all previous python resources connected
     // Rete passes the output of the previous node as the input of the current node
     this.pythonInputs = [];
-    this.pythonOutputs = [];
     this.findPreviousNodes(node);
-    // find the next 
-    // need to get contextObj of each node
   }
 
   findPreviousNodes(node: any): any {
     // assumes only one connection, but currently is only setup to do one connection.
-    const previousNode =  node.inputs.size > 0 ? node.inputs.get('event').connections[0].output.node : undefined
+    const previousNode =  node.inputs.size > 0 &&  node?.inputs?.get('event').connections?.length > 0 ? node.inputs.get('event').connections[0].output.node : undefined
     if (previousNode) {
         if (previousNode.name == 'Python Pipe') {
              this.pythonInputs.push(previousNode);

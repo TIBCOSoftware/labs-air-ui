@@ -1,0 +1,59 @@
+<div [formGroup]="pythonPipeForm">
+    <mat-form-field appearance="outline">
+        <mat-label>Log Level</mat-label>
+        <mat-select formControlName="logLevel">
+            <mat-option *ngFor="let item of logLevels;" [value]="item.value">
+                {{item.viewValue}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <div *ngIf="pipeContextName === null" formGroupName="context">
+        <mat-form-field appearance="outline">
+            <mat-label>Processor</mat-label>
+            <mat-select formControlName="name" (selectionChange)="updateFormOnChange($event.value)">
+                <mat-option *ngFor="let item of resources; let i = index" [value]="item.name">
+                    {{item.name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div>
+        <mat-form-field appearance="outline">
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name">
+        </mat-form-field>
+        <button (click)="showResourceConfiguration = true">Resource Configuration</button>
+        <mat-form-field appearance="outline">
+            <mat-label>Data Input</mat-label>
+            <textarea matInput formControlName="dataInput"></textarea>
+        </mat-form-field>
+    </div>
+    <div class="configuration-window" *ngIf="showResourceConfiguration">
+        <div class="configuration-content" formGroupName="context">
+            <span class="close" (click)="showResourceConfiguration = false">&times;</span>
+            <div>
+                <mat-form-field appearance="outline">
+                    <mat-label>Processor Name</mat-label>
+                    <mat-select formControlName="name" (selectionChange)="updateFormOnChange($event.value)">
+                        <mat-option *ngFor="let item of resources; let i = index" [value]="item.name">
+                            {{item.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <span>Input Config</span>
+            <div class="input-selection" formGroupName="data">
+                <div formGroupName="input" *ngFor="let pipe of pipeInputs.controls | keyvalue; let i = index">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Input value for {{pipe.key}}</mat-label>
+                        <mat-select [formControlName]="pipe.key">
+                            <mat-option *ngFor="let item of inputSelections[i]" [value]="item">
+                                {{item}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
