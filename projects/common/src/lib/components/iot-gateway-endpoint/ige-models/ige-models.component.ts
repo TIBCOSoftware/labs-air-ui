@@ -315,7 +315,9 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
           if (this.modelForm.dirty) {
 
               this.graphDeleteOpDisabled = true;
-              this.graphAddOpDisabled = false;
+
+              if (!this.modelSelection.hasValue())
+                this.graphAddOpDisabled = false;
 
               if (this.modelSelection.hasValue()) {
                   this.graphUpdateOpDisabled = false;
