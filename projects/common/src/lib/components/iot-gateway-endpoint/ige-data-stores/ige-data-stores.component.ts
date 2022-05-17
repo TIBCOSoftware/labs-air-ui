@@ -628,7 +628,10 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
           if (this.dataStoreForm.dirty) {
 
               this.graphDeleteOpDisabled = true;
-              this.graphAddOpDisabled = false;
+
+              if (!this.dataStoreSelection.hasValue()) {
+                  this.graphAddOpDisabled = false;
+              }
 
               if (this.dataStoreSelection.hasValue()) {
                   this.graphUpdateOpDisabled = false;
