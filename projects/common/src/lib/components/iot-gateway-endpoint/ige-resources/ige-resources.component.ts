@@ -129,21 +129,21 @@ export class IgeResourcesComponent implements OnInit {
   onFileUpload(input: Event) {
     const inputElement = input.target as HTMLInputElement;
     const file = inputElement.files.item(0);
-    // if (file.type && file.type == 'text/x-python-script') {
-    //   this.resourceForm.patchValue({ type: 'processor' });
-    //   this.readFile(inputElement);
-    // } else if (file.name.match('(?:^|\W)dockerfile(?:$|\W)')) {
-    //   this.resourceForm.patchValue({ type: 'dockerfile' });
-    //   this.readFile(inputElement);
-    // } else if (file.name == "requirement.txt") {
-    //   this.resourceForm.patchValue({ type: 'requirement'});
-    //   this.readFile(inputElement);
-    // } else {
-    //   this._snackBar.open('Resource file is not supported.', 'Cancel', {
-    //     duration: 3000,
-    // });
-    // }
-    this.readFile(inputElement);
+    if (file.type && file.type == ('text/x-python-script') || ('text/x-python')) {
+      this.resourceForm.patchValue({ type: 'processor' });
+      this.readFile(inputElement);
+    } else if (file.name.match('(?:^|\W)dockerfile(?:$|\W)')) {
+      this.resourceForm.patchValue({ type: 'dockerfile' });
+      this.readFile(inputElement);
+    } else if (file.name == "requirement.txt") {
+      this.resourceForm.patchValue({ type: 'requirement'});
+      this.readFile(inputElement);
+    } else {
+      this.readFile(inputElement);
+      this._snackBar.open('Resource file may not be supported.', 'Cancel', {
+        duration: 3000,
+    });
+    }
   }
 
   readFile(inputEvent: HTMLInputElement) {
