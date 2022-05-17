@@ -3,7 +3,7 @@
     "production": false,
     "dgraphUrl": "http://localhost:8080",
     "dgraphBasicAuthEnabled": false,
-    "dgraphBasicAuth": "Basic CHANGEME=",
+    "dgraphBasicAuth": "Basic WW91IGZvdW5kIG1lLCBidXQgSSdtIG5vdCB0aGUgcmVhbCBwYXNzd29yZC4=",
     "f1EndpointUrl": "http://localhost:5408",
     "airEndpointUrl": "http://afcffd879f5dc46239e1284afe8bc4a1-1911133281.us-west-2.elb.amazonaws.com",
     "lightcraneEndpointUrl": "http://localhost:5408",

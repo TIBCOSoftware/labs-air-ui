@@ -201,7 +201,7 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
       this.graphDeleteOpDisabled = true;
       this.graphAddOpDisabled = true;
       this.graphUpdateOpDisabled = true;
-
+      this.modelForm.reset();
       this.modelSelection.clear();
   }
 
@@ -254,7 +254,7 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
    * Updates the model on the graph data store
    */
   updateModel() {
-      
+
       const ts = Date.now();
       const model = {} as Model;
 
@@ -307,7 +307,7 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * Fucntion called when the form changes
+   * Function called when the form changes
    */
   onFormChanges(): void {
       this.modelForm.valueChanges.subscribe(val => {
@@ -315,7 +315,9 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
           if (this.modelForm.dirty) {
 
               this.graphDeleteOpDisabled = true;
-              this.graphAddOpDisabled = false;
+
+              if (!this.modelSelection.hasValue())
+                this.graphAddOpDisabled = false;
 
               if (this.modelSelection.hasValue()) {
                   this.graphUpdateOpDisabled = false;
