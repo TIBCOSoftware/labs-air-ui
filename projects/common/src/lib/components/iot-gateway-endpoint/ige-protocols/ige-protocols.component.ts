@@ -127,7 +127,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
   createForm() {
       this.protocolForm = this.formBuilder.group({
           uid: ['changeme', Validators.required],
-          protocolType: ['', Validators.required],
+          protocolType: ['', Validators.nullValidator],
           scope: ['GLOBAL', Validators.required],
           mqtt: this.formBuilder.group({
               uuid: ['changeme', Validators.required],
@@ -322,9 +322,9 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
   /**
    * Reset protocol form
    */
-  resetProtocolForm() {
-      this.protocolForm.reset({
-      }, { emitEvent: false });
+    resetProtocolForm() {
+
+
 
       this.graphDeleteOpDisabled = true;
       this.graphAddOpDisabled = true;
@@ -336,6 +336,9 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
       this.httpProtocol = false;
 
       this.protocolSelection.clear();
+      this.protocolForm.reset();
+      this.createForm();
+
   }
 
   /**
@@ -589,7 +592,10 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
           if (this.protocolForm.dirty) {
 
               this.graphDeleteOpDisabled = true;
-              this.graphAddOpDisabled = false;
+
+              if(!this.protocolSelection.hasValue()) {
+                this.graphAddOpDisabled = false;
+              }
 
               if (this.protocolSelection.hasValue()) {
                   this.graphUpdateOpDisabled = false;
@@ -613,6 +619,8 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
       this.kafkaProtocol = false;
       this.amqpProtocol = false;
       this.httpProtocol = false;
+
+      this.protocolForm.controls['protocolType'].setValidators(Validators.required);
 
       if (event.value == 'MQTT') {
 

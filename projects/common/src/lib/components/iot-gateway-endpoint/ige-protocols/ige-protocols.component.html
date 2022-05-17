@@ -130,7 +130,7 @@
 
                                 <mat-form-field fxFlex="1 1 15%" appearance="outline">
                                     <mat-label>Maximum QOS</mat-label>
-                                    <input matInput type="number" [readonly]=false formControlName="maximumQOS" required min="0" max="4"> 
+                                    <input matInput type="number" [readonly]=false formControlName="maximumQOS" required min="0" max="4">
                                     <mat-error *ngIf="protocolForm.get('mqtt.maximumQOS').invalid">must be between 0 and 4</mat-error>
 
                                 </mat-form-field>
@@ -188,9 +188,8 @@
                                     <mat-error *ngIf="protocolForm.get('mqtt.caCertificate').invalid">This field is required</mat-error>
                                 </mat-form-field>
                                 <mat-card-actions>
-                                    <button mat-raised-button [disabled]="protocolForm.get('mqtt').invalid" (click)="addProtocol()"
-                                        color="primary">Add
-                                        Protocol</button>
+                                    <button mat-raised-button [disabled]="graphAddOpDisabled || protocolForm.get('mqtt').invalid" (click)="addProtocol()"
+                                        color="primary">Add Protocol</button>
                                     <button mat-raised-button [disabled]="graphUpdateOpDisabled" (click)="updateProtocol()"
                                         color="primary">Update Protocol</button>
                                     <button mat-raised-button [disabled]="graphDeleteOpDisabled" (click)="deleteProtocol()"
@@ -351,9 +350,8 @@
                                     <mat-error *ngIf="protocolForm.get('kafka.serverCertificate').invalid">This field is required</mat-error>
                                 </mat-form-field>
                                 <mat-card-actions>
-                                    <button mat-raised-button [disabled]="protocolForm.get('kafka').invalid" (click)="addProtocol()"
-                                        color="primary">Add
-                                        Protocol</button>
+                                    <button mat-raised-button [disabled]="graphAddOpDisabled || protocolForm.get('kafka').invalid" (click)="addProtocol()"
+                                        color="primary">Add Protocol</button>
                                     <button mat-raised-button [disabled]="graphUpdateOpDisabled" (click)="updateProtocol()"
                                         color="primary">Update Protocol</button>
                                     <button mat-raised-button [disabled]="graphDeleteOpDisabled" (click)="deleteProtocol()"
@@ -374,7 +372,7 @@
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
-                            
+
                             <div fxLayout="row" fxFlex="100%" fxLayoutGap="15px" style="width: 100%;" formGroupName="amqp">
                                 <mat-form-field fxFlex="1 1 15%" appearance="outline">
                                     <mat-label>Name</mat-label>
@@ -438,9 +436,8 @@
                                     <input matInput [readonly]=false formControlName="exchangeName" required>
                                 </mat-form-field>
                                 <mat-card-actions>
-                                    <button mat-raised-button [disabled]="protocolForm.get('amqp').invalid" (click)="addProtocol()"
-                                        color="primary">Add
-                                        Protocol</button>
+                                    <button mat-raised-button [disabled]="graphAddOpDisabled || protocolForm.get('amqp').invalid" (click)="addProtocol()"
+                                        color="primary">Add Protocol</button>
                                     <button mat-raised-button [disabled]="graphUpdateOpDisabled" (click)="updateProtocol()"
                                         color="primary">Update Protocol</button>
                                     <button mat-raised-button [disabled]="graphDeleteOpDisabled" (click)="deleteProtocol()"
