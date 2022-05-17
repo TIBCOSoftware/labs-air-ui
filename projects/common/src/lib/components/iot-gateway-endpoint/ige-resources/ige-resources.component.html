@@ -81,21 +81,22 @@
                             </mat-form-field>
                         </div>
                         <div>
-                            <input #fileInput type="file"(change)="onFileUpload($event)">
+                            <input #fileInput type="file" (change)="onFileUpload($event)">
                         </div>
                     </div>
                     <div fxLayout="column" style="height: 100%; width: 65%">
-                        <div  *ngIf="resourceForm.get('type').value === 'processor'" >
+                        <div *ngIf="resourceForm.get('type').value === 'processor'">
                             <div class="io-form">
                                 <div class="inputs">
                                     <button (click)="addIO('inputs')">add input</button>
-                                   <div *ngFor="let input of inputArray; let i = index">
-                                    <mat-form-field fxFlex="1 1 15%" appearance="outline">
-                                        <mat-label>Input</mat-label>
-                                        <input matInput [readonly]=false [formControl]="input">
-                                    </mat-form-field>
-                                    <mat-icon  class="click" (click)="removeIO('inputs', i)">delete_outline</mat-icon>
-                                   </div> 
+                                    <div *ngFor="let input of inputArray; let i = index">
+                                        <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                            <mat-label>Input</mat-label>
+                                            <input matInput [readonly]=false [formControl]="input">
+                                        </mat-form-field>
+                                        <mat-icon class="click" (click)="removeIO('inputs', i)">delete_outline
+                                        </mat-icon>
+                                    </div>
                                 </div>
                                 <div class="outputs">
                                     <button (click)="addIO('outputs')">add output</button>
@@ -104,7 +105,8 @@
                                             <mat-label>Output</mat-label>
                                             <input matInput [readonly]=false [formControl]="output">
                                         </mat-form-field>
-                                        <mat-icon  class="click" (click)="removeIO('outputs', i)">delete_outline</mat-icon>
+                                        <mat-icon class="click" (click)="removeIO('outputs', i)">delete_outline
+                                        </mat-icon>
                                     </div>
                                 </div>
                             </div>
@@ -120,7 +122,7 @@
                         </div>
                     </div>
                     <div fxLayout="column" style="height: 100%; width: 65%">
-                        <div class="code-box" *ngIf="resourceForm.controls.fileContent.value">
+                        <div class="code-box" *ngIf="resourceForm.controls.fileContent.value && resourceForm.controls.fileContent.value !== 'null'">
                             <pre><code [highlight]="resourceForm.controls.fileContent.value" [lineNumbers]="true" [languages]="languages"></code></pre>
                         </div>
                     </div>

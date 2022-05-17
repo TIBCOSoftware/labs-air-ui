@@ -103,6 +103,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
     restBroadcastForm: FormGroup;
     requestReplyForm: FormGroup;
     pythonPipeForm: FormGroup;
+    artifacts = [];
 
     ruleTuplesDescriptor = [
         {
@@ -378,6 +379,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
         // zoomAt(this.editor);
         this.zoomAt(0.7);
 
+        this.buildPythonPipeArtifacts();
     }
 
     zoomAt(k) {
@@ -2547,8 +2549,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                             break;
                         }
                         case 'Python Pipe': {
-                            pipelineFlow.AirDescriptor.logic.push(this.buildPythonPipeDeplyObj(flowNode.data.customdata));
-                            pipelineFlow.Artifacts = this.buildPythonPipeArtifacts(flowNode.data.customdata);
+                            pipelineFlow.AirDescriptor.logic.push(this.buildPythonPipeDeployObj(flowNode.data.customdata));
+                            pipelineFlow.Artifacts = this.artifacts
                         }
                     }
                     pos++;
@@ -3475,8 +3477,18 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
     buildPythonDeployArtifactProperties(contextObj): any {
         let pythonDeployProperties = null;
         pythonDeployProperties = [
-            { 'Type': 'file', 'Name': contextObj.processor + '.py', 'Value': decodeURIComponent(contextObj.processorContent), 'Encoded': false },
-            { 'Type': 'file', 'Name': contextObj.requirement + '.txt', 'Value': decodeURIComponent(contextObj.requirementContent), 'Encoded': false },
+            {   
+                'Type': 'file', 
+                'Name': contextObj.processor + contextObj.processor.includes('.py') ? '' : '.py', 
+                'Value': decodeURIComponent(contextObj.processorContent), 
+                'Encoded': false 
+            },
+            {   
+                'Type': 'file', 
+                'Name': contextObj.requirement + contextObj.processor.includes('.txt') ? '' : '.txt', 
+                'Value': decodeURIComponent(contextObj.requirementContent), 
+                'Encoded': false 
+            },
         ];
         if (contextObj.dockerfile) {
             pythonDeployProperties.push({ 'Type': 'file', 'Name': 'dockerfile', 'Value': decodeURIComponent(contextObj.dockerfileContent), 'Encoded': false });
@@ -3499,7 +3511,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
         return pythonDeployProperties;
     }
 
-    buildPythonPipeDeplyObj(contextObj): any {
+    buildPythonPipeDeployObj(contextObj): any {
         let pythonPipeDeloyObj = null
         pythonPipeDeloyObj = {
             name:'Processor.PythonPipe',
@@ -3565,30 +3577,48 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
         }
     }
 
-    buildPythonPipeArtifacts(nodeData: any) {
-        // let pythonDeployProperties = null;
-        // pythonDeployProperties = [
-        //     { 'Type': 'file', 'Name': contextObj.processor + '.py', 'Value': decodeURIComponent(contextObj.processorContent), 'Encoded': false },
-        //     { 'Type': 'file', 'Name': contextObj.requirement + '.txt', 'Value': decodeURIComponent(contextObj.requirementContent), 'Encoded': false },
-        // ];
-        // if (contextObj.dockerfile) {
-        //     pythonDeployProperties.push({ 'Type': 'file', 'Name': 'dockerfile', 'Value': decodeURIComponent(contextObj.dockerfileContent), 'Encoded': false });
-        // }
-        // if (contextObj.volume) {
-        //     pythonDeployProperties.push({ 'Type': 'folder', 'Name': contextObj.volumeName, 'Value': contextObj.volumePath });
-        // }
-        // return pythonDeployProperties
-        let pythonPipeProperties = []
+    buildPythonPipeArtifacts() {
         this.graphService.getPythonResources(this.gatewayId).subscribe(resp => {
+            let pythonPipeProperties = []
             resp.forEach(resource => {
                 if (resource.type == 'folder') {
-                    // do something
+                    if (resource.fileContent !== 'null') {
+                        pythonPipeProperties.push({ 
+                            'Type': 'folder', 
+                            'Name': resource.name + resource.name.includes('.zip') ? '' : '.zip',
+                            'Value': resource.filePath,
+                            'Encoded': true
+                        });
+                    } else {
+                        pythonPipeProperties.push({ 
+                            'Type': 'folder', 
+                            'Name': resource.name,
+                            'Value': decodeURIComponent(resource.filePath),
+                            'Encoded': false
+                        });                
+                    }
                 } else {
-                    
+                    let resourceToPush = {
+                        'Type': 'file',
+                        'Name': resource.name,
+                        'Value': decodeURIComponent(resource.fileContent),
+                        'Encoded': false
+                    }
+                    switch(resource.type) {
+                        case 'processor': {
+                            resourceToPush.Name + resourceToPush.Name.includes('.py') ? '' : '.py'
+                            break
+                        }
+                        case 'requirement': {
+                            resourceToPush.Name + resourceToPush.Name.includes('.txt') ? '' : '.txt'
+                            break
+                        }
+                    }
+                    pythonPipeProperties.push(resourceToPush);
                 }
             })
-        })
+            this.artifacts = pythonPipeProperties
 
-        return pythonPipeProperties
+        })
     }
 }
