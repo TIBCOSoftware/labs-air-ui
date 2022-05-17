@@ -73,7 +73,7 @@
                         <div>
                             <mat-form-field fxFlex="1 1 15%" appearance="outline">
                                 <mat-label>Type</mat-label>
-                                <mat-select formControlName="type">
+                                <mat-select formControlName="type" (selectionChange)="onTypeChange($event.value)">
                                     <mat-option *ngFor="let item of types" [value]="item.value">
                                         {{item.viewValue}}
                                     </mat-option>
@@ -84,29 +84,39 @@
                             <input #fileInput type="file"(change)="onFileUpload($event)">
                         </div>
                     </div>
-                    <div *ngIf="resourceForm.get('type').value === 'processor'" fxLayout="column" style="height: 100%; width: 65%">
-                        <div class="io-form">
-                            <div class="inputs">
-                                <button (click)="addIO('inputs')">add input</button>
-                               <div *ngFor="let input of inputArray; let i = index">
-                                <mat-form-field fxFlex="1 1 15%" appearance="outline">
-                                    <mat-label>Input</mat-label>
-                                    <input matInput [readonly]=false [formControl]="input">
-                                </mat-form-field>
-                                <mat-icon  class="click" (click)="removeIO('inputs', i)">delete_outline</mat-icon>
-                               </div> 
-                            </div>
-                            <div class="outputs">
-                                <button (click)="addIO('outputs')">add output</button>
-                                <div *ngFor="let output of outputArray; let i = index">
+                    <div fxLayout="column" style="height: 100%; width: 65%">
+                        <div  *ngIf="resourceForm.get('type').value === 'processor'" >
+                            <div class="io-form">
+                                <div class="inputs">
+                                    <button (click)="addIO('inputs')">add input</button>
+                                   <div *ngFor="let input of inputArray; let i = index">
                                     <mat-form-field fxFlex="1 1 15%" appearance="outline">
-                                        <mat-label>Output</mat-label>
-                                        <input matInput [readonly]=false [formControl]="output">
+                                        <mat-label>Input</mat-label>
+                                        <input matInput [readonly]=false [formControl]="input">
                                     </mat-form-field>
-                                    <mat-icon  class="click" (click)="removeIO('outputs', i)">delete_outline</mat-icon>
+                                    <mat-icon  class="click" (click)="removeIO('inputs', i)">delete_outline</mat-icon>
+                                   </div> 
                                 </div>
-
+                                <div class="outputs">
+                                    <button (click)="addIO('outputs')">add output</button>
+                                    <div *ngFor="let output of outputArray; let i = index">
+                                        <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                            <mat-label>Output</mat-label>
+                                            <input matInput [readonly]=false [formControl]="output">
+                                        </mat-form-field>
+                                        <mat-icon  class="click" (click)="removeIO('outputs', i)">delete_outline</mat-icon>
+                                    </div>
+                                </div>
                             </div>
+                        </div>
+                        <div *ngIf="resourceForm.get('type').value === 'folder' && showFileUpload">
+                            <mat-form-field>
+                                <mat-label>Folder Path</mat-label>
+                                <input matInput [readonly]=false formControlName="filePath" required>
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="resourceForm.get('type').value === 'file'">
+                            If uploading a ZIP folder, please switch the resource type to Folder
                         </div>
                     </div>
                     <div fxLayout="column" style="height: 100%; width: 65%">

@@ -2547,9 +2547,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                             break;
                         }
                         case 'Python Pipe': {
-                            console.log('YES THIS IS BUILT?')
                             pipelineFlow.AirDescriptor.logic.push(this.buildPythonPipeDeplyObj(flowNode.data.customdata));
-                            // pipelineFlow.Artifacts = this.buildPythonDeployArtifactProperties(flowNode.data.customdata);
+                            pipelineFlow.Artifacts = this.buildPythonPipeArtifacts(flowNode.data.customdata);
                         }
                     }
                     pos++;
@@ -3564,5 +3563,32 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
         } else {
             return null
         }
+    }
+
+    buildPythonPipeArtifacts(nodeData: any) {
+        // let pythonDeployProperties = null;
+        // pythonDeployProperties = [
+        //     { 'Type': 'file', 'Name': contextObj.processor + '.py', 'Value': decodeURIComponent(contextObj.processorContent), 'Encoded': false },
+        //     { 'Type': 'file', 'Name': contextObj.requirement + '.txt', 'Value': decodeURIComponent(contextObj.requirementContent), 'Encoded': false },
+        // ];
+        // if (contextObj.dockerfile) {
+        //     pythonDeployProperties.push({ 'Type': 'file', 'Name': 'dockerfile', 'Value': decodeURIComponent(contextObj.dockerfileContent), 'Encoded': false });
+        // }
+        // if (contextObj.volume) {
+        //     pythonDeployProperties.push({ 'Type': 'folder', 'Name': contextObj.volumeName, 'Value': contextObj.volumePath });
+        // }
+        // return pythonDeployProperties
+        let pythonPipeProperties = []
+        this.graphService.getPythonResources(this.gatewayId).subscribe(resp => {
+            resp.forEach(resource => {
+                if (resource.type == 'folder') {
+                    // do something
+                } else {
+                    
+                }
+            })
+        })
+
+        return pythonPipeProperties
     }
 }

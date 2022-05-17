@@ -27,14 +27,18 @@ export class IgeResourcesComponent implements OnInit {
     created: new FormControl,
     modified: new FormControl,
     inputs: new FormArray([]),
-    outputs: new FormArray([])
+    outputs: new FormArray([]),
+    filePath: new FormControl()
   });
   types = [
     { value: 'requirement', viewValue: 'Requirement' },
     { value: 'processor', viewValue: 'Processor' },
-    { value: 'dockerfile', viewValue: 'Dockerfile'}
+    { value: 'dockerfile', viewValue: 'Dockerfile'},
+    { value: 'file', viewValue: 'File'},
+    { value: 'folder', viewValue: 'Folder'}
   ];
   languages = ['python'];
+  showFileUpload = true;
 
   constructor(private graphService: GraphService, private _snackBar: MatSnackBar) { }
 
@@ -58,6 +62,7 @@ export class IgeResourcesComponent implements OnInit {
       created: row.created,
       modified: row.modified,
       scope: row.scope,
+      filePath: row.filePath
     });
     if (row.inputs) {
       const decodedInputs = JSON.parse(atob(row.inputs))
@@ -101,6 +106,7 @@ export class IgeResourcesComponent implements OnInit {
     resource.fileContent = encodeURIComponent(this.resourceForm.get('fileContent').value);
     resource.inputs = btoa(JSON.stringify(this.inputs.getRawValue()));
     resource.outputs = btoa(JSON.stringify(this.outputs.getRawValue()));
+    resource.filePath = this.resourceForm.get('filePath').value;
     if (this.resourceExists(resource.name)) {
         this._snackBar.open('Resource name is not unique.', 'Cancel', {
             duration: 3000,
@@ -111,10 +117,10 @@ export class IgeResourcesComponent implements OnInit {
         .subscribe(res => {
           this.getResources();
           this.resetResource();
-          console.log('fileInput', this.fileInput);
           this.fileInput.nativeElement.value = '';
         });
     }
+    this.showFileUpload = true;
   }
 
   updateResource() {
@@ -130,6 +136,7 @@ export class IgeResourcesComponent implements OnInit {
     resource.fileContent = encodeURIComponent(this.resourceForm.get('fileContent').value);
     resource.inputs = btoa(JSON.stringify(this.inputs.getRawValue()));
     resource.outputs = btoa(JSON.stringify(this.outputs.getRawValue()));
+    resource.filePath = this.resourceForm.get('filePath').value;
     this.graphService.updatePythonResource(resource).subscribe(
       resp => {
         this.getResources();
@@ -162,6 +169,7 @@ export class IgeResourcesComponent implements OnInit {
   onFileUpload(input: Event) {
     const inputElement = input.target as HTMLInputElement;
     const file = inputElement.files.item(0);
+    this.showFileUpload = false;
     // if (file.type && file.type == 'text/x-python-script') {
     //   this.resourceForm.patchValue({ type: 'processor' });
     //   this.readFile(inputElement);
@@ -200,6 +208,12 @@ export class IgeResourcesComponent implements OnInit {
 
   removeIO(io: string, index: number): void {
     io == 'inputs' ? this.inputs.removeAt(index) : this.outputs.removeAt(index);
+  }
+
+  onTypeChange(type: string) {
+    if (type = 'Folder') {
+      this.showFileUpload = true;
+    }
   }
  
 }
