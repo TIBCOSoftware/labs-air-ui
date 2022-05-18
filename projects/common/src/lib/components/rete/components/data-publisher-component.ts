@@ -9,7 +9,7 @@ export class DataPublisherComponent extends Component {
     }
 
     builder(node) {
-        const inp1 = new Input('evt1', 'Event', eventSocket);
+        const inp1 = new Input('event', 'Event', eventSocket);
         const out = new Output('event', 'Event', eventSocket);
         // const err = new Output("error", "Error", errorSocket);
         const control = new ImageControl(this.editor, 'event', 'Icon_Pipeline.svg');

@@ -73,7 +73,7 @@
                         <div>
                             <mat-form-field fxFlex="1 1 15%" appearance="outline">
                                 <mat-label>Type</mat-label>
-                                <mat-select formControlName="type">
+                                <mat-select formControlName="type" (selectionChange)="onTypeChange($event.value)">
                                     <mat-option *ngFor="let item of types" [value]="item.value">
                                         {{item.viewValue}}
                                     </mat-option>
@@ -81,11 +81,52 @@
                             </mat-form-field>
                         </div>
                         <div>
-                            <input #fileInput type="file"(change)="onFileUpload($event)">
+                            <input #fileInput type="file" (change)="onFileUpload($event)">
                         </div>
                     </div>
                     <div fxLayout="column" style="height: 100%; width: 65%">
-                        <div class="code-box" *ngIf="resourceForm.controls.fileContent.value">
+                        <div *ngIf="resourceForm.get('type').value === 'processor'">
+                            <div class="io-form">
+                                <div class="io-form-actions">
+                                    <button mat-raised-button color="primary" (click)="addIO('inputs')">Add Input</button>
+                                    <button mat-raised-button color="primary" (click)="addIO('outputs')">Add Output</button>
+                                </div>
+                                <div class="io-form-content">
+                                    <div class="inputs">
+                                        <div *ngFor="let input of inputArray; let i = index">
+                                            <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                                <mat-label>Input</mat-label>
+                                                <input matInput  [readonly]=false [formControl]="input">
+                                            </mat-form-field>
+                                            <mat-icon class="click" (click)="removeIO('inputs', i)">delete_outline
+                                            </mat-icon>
+                                        </div>
+                                    </div>
+                                    <div class="outputs">
+                                        <div *ngFor="let output of outputArray; let i = index">
+                                            <mat-form-field fxFlex="1 1 15%" appearance="outline">
+                                                <mat-label>Output</mat-label>
+                                                <input matInput [readonly]=false [formControl]="output">
+                                            </mat-form-field>
+                                            <mat-icon class="click" (click)="removeIO('outputs', i)">delete_outline
+                                            </mat-icon>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="resourceForm.get('type').value === 'folder' && showFileUpload">
+                            <mat-form-field>
+                                <mat-label>Folder Path</mat-label>
+                                <input matInput [readonly]=false formControlName="filePath" required>
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="resourceForm.get('type').value === 'file'">
+                            If uploading a ZIP folder, please switch the resource type to Folder
+                        </div>
+                    </div>
+                    <div fxLayout="column" style="height: 100%; width: 65%">
+                        <div class="code-box" *ngIf="resourceForm.controls.fileContent.value && resourceForm.controls.fileContent.value !== 'null'">
                             <pre><code [highlight]="resourceForm.controls.fileContent.value" [lineNumbers]="true" [languages]="languages"></code></pre>
                         </div>
                     </div>
