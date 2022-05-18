@@ -5,7 +5,7 @@ import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { debounceTime } from 'rxjs';
 
 @Component({
-  selector: 'app-common-pipeline-python-pipe',
+  selector: 'app-pipeline-python-pipe',
   templateUrl: './pipeline-python-pipe.component.html',
   styleUrls: ['./pipeline-python-pipe.component.css']
 })

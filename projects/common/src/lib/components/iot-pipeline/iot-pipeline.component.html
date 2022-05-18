@@ -70,9 +70,9 @@
         </app-pipeline-rest-broadcast>
         <app-pipeline-request-reply *ngIf="requestReplyConfig" [requestReplyForm]="requestReplyForm">
         </app-pipeline-request-reply>
-        <app-common-pipeline-python-pipe [pythonPipeForm]="pythonPipeForm" [gatewayId]="gatewayId" *ngIf="pythonPipeConfig" 
+        <app-pipeline-python-pipe [pythonPipeForm]="pythonPipeForm" [gatewayId]="gatewayId" *ngIf="pythonPipeConfig" 
             [pythonInputs]="pythonInputs">
-        </app-common-pipeline-python-pipe>
+        </app-pipeline-python-pipe>
     </div>
 
 </div>
