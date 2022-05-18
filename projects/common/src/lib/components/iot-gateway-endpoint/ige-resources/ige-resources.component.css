@@ -49,8 +49,18 @@ table {
 }
 
 .io-form {
-  display: flex;
-  flex: 0 0 100%;
   max-height: 400px;
   overflow: auto;
+}
+
+.io-form-actions {
+  margin-bottom: 10px;
+}
+
+.io-form-actions button:first-child {
+  margin-right: 10px;
+}
+
+.io-form-content {
+  display: flex;
 }

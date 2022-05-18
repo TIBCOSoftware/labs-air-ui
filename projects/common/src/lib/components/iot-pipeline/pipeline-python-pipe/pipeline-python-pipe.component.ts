@@ -1,14 +1,15 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { PythonResource } from '@TIBCOSoftware/labs-air-graph-client';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
+import { debounceTime } from 'rxjs';
 
 @Component({
   selector: 'app-common-pipeline-python-pipe',
   templateUrl: './pipeline-python-pipe.component.html',
   styleUrls: ['./pipeline-python-pipe.component.css']
 })
-export class PipelinePythonPipeComponent implements OnInit {
+export class PipelinePythonPipeComponent implements OnInit{
 
   @Input() pythonPipeForm: FormGroup;
   @Input() gatewayId: string;
@@ -40,6 +41,10 @@ export class PipelinePythonPipeComponent implements OnInit {
     this.getPythonResources();
     this.checkConnectedNode();
     this.getInputSelection();
+    this.pythonPipeForm.controls['name'].valueChanges.pipe(debounceTime(1000)).subscribe(() =>{
+      this.checkConnectedNode();
+      this.getInputSelection();
+    });
   }
 
   getPythonResources() {
@@ -80,18 +85,4 @@ export class PipelinePythonPipeComponent implements OnInit {
       });
     }
   }
-
-  //   this.pythonPipeForm = this.formBuilder.group({
-  //     logLevel: ['INFO', Validators.required],
-  //     name: ['', Validators.required],
-  //     context: this.formBuilder.group({
-  //        name: ['', Validators.required],
-  //        data: this.formBuilder.group({
-  //            input: ['', Validators.required],
-  //            output: this.formBuilder.array([]),
-  //            dependsOn: ['']
-  //        })
-  //     }),
-  //     dataInput: ['', Validators.required]
-  // })
 }

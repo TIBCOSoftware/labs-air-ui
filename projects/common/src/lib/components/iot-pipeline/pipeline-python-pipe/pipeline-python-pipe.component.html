@@ -1,5 +1,7 @@
-<div [formGroup]="pythonPipeForm">
-    <mat-form-field appearance="outline">
+<div [formGroup]="pythonPipeForm" class="python-pipe">
+    <mat-card-header>
+        <mat-card-title>Python Pipe Configuration</mat-card-title>
+    </mat-card-header>    <mat-form-field appearance="outline">
         <mat-label>Log Level</mat-label>
         <mat-select formControlName="logLevel">
             <mat-option *ngFor="let item of logLevels;" [value]="item.value">
@@ -7,7 +9,7 @@
             </mat-option>
         </mat-select>
     </mat-form-field>
-    <div *ngIf="pipeContextName === null" formGroupName="context">
+    <div *ngIf="pipeContextName === ''" formGroupName="context">
         <mat-form-field appearance="outline">
             <mat-label>Processor</mat-label>
             <mat-select formControlName="name" (selectionChange)="updateFormOnChange($event.value)">
@@ -17,16 +19,16 @@
             </mat-select>
         </mat-form-field>
     </div>
-    <div>
+    <div *ngIf="pipeContextName !== ''">
         <mat-form-field appearance="outline">
             <mat-label>Name</mat-label>
             <input matInput formControlName="name">
         </mat-form-field>
-        <button (click)="showResourceConfiguration = true">Resource Configuration</button>
         <mat-form-field appearance="outline">
             <mat-label>Data Input</mat-label>
             <textarea matInput formControlName="dataInput"></textarea>
         </mat-form-field>
+        <button mat-raised-button color="primary" (click)="showResourceConfiguration = true">Resource Configuration</button>
     </div>
     <div class="configuration-window" *ngIf="showResourceConfiguration">
         <div class="configuration-content" formGroupName="context">

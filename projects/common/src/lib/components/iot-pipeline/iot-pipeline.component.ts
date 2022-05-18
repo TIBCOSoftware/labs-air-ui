@@ -62,7 +62,6 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
     pipelineDisplayedColumns: string[] = ['id', 'name', 'pipelineType', 'status', 'created', 'modified'];
     pipelineSelection = new SelectionModel<Pipeline>(false, []);
     pythonInputs = [];
-    pythonOutputs = [];
 
     pipelineConfig = true;
     dataSubscriberConfig = false;
@@ -423,6 +422,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
             return node;
         }
 
+        // this function does not properly find the next nodes.
         function findNextNodes(node: any): any {
             const nodeOutputKeys = Object.keys(node.outputs);
 
@@ -565,7 +565,6 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
 
         if (node != null || node != undefined) {
             console.log('Resetting context for node: ', node);
-            console.log('Resetting context for node name: ', node.name);
 
             const contextObj = node.data['customdata'];
 
@@ -748,7 +747,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                 }
             }
         });
-        // resetting a formg roup and form array require explicit calls or they don't reset.
+        // resetting a form group and form array require explicit calls or they don't reset.
         (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('input', new FormGroup({}));
         (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('output', new FormArray([]));
     }
@@ -1898,11 +1897,12 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                 context: {
                     name: context.processorName,
                     data: {
-                        input: this.formBuilder.group(context.input),
                         dependsOn: context.dependsOn
                     }
                 }
-            })
+            });
+
+            (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('input', this.formBuilder.group(context.input))
             const outputs = context.output.map(x => this.formBuilder.control(x));
             (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('output', new FormArray(outputs))
         }
@@ -2008,9 +2008,6 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
         this.edgeService.getDevices(gateway)
             .subscribe(res => {
                 this.devices = res as Device[];
-
-                console.log('Got devices: ', this.devices);
-
             });
     }
 
