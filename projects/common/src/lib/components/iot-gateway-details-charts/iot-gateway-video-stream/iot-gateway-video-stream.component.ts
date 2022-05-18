@@ -52,7 +52,7 @@ export class CommonIotGatewayVideoStreamComponent implements OnInit, OnDestroy, 
   }
 
   ngAfterViewInit(): void {
-    var urlString = 'ws://:9999';
+    var urlString = 'ws://localhost:9999';
 
     var player = new JSMpeg.Player(urlString, 
       {canvas: this.canvas.nativeElement, autoplay: true, audio: false, loop: true });
