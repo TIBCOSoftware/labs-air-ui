@@ -33,19 +33,26 @@
     <div class="configuration-window" *ngIf="showResourceConfiguration">
         <div class="configuration-content" formGroupName="context">
             <span class="close" (click)="showResourceConfiguration = false">&times;</span>
-            <div>
-                <mat-form-field appearance="outline">
-                    <mat-label>Processor Name</mat-label>
-                    <mat-select formControlName="name" (selectionChange)="updateFormOnChange($event.value)">
-                        <mat-option *ngFor="let item of resources; let i = index" [value]="item.name">
-                            {{item.name}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
+            <div class="processor-gpu">
+                <div class="processor">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Processor Name</mat-label>
+                        <mat-select formControlName="name" (selectionChange)="updateFormOnChange($event.value)">
+                            <mat-option *ngFor="let item of resources; let i = index" [value]="item.name">
+                                {{item.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="gpu">
+                    <mat-checkbox [checked]="useGPU" color="primary" (change)="checkGPU($event.checked)">
+                        Use GPU
+                    </mat-checkbox>
+                </div>
             </div>
-            <span>Input Config</span>
+            <h4 class="input-heading">Input Config</h4>
             <div class="input-selection" formGroupName="data">
-                <div formGroupName="input" *ngFor="let pipe of pipeInputs.controls | keyvalue; let i = index">
+                <div class="input" formGroupName="input" *ngFor="let pipe of pipeInputs.controls | keyvalue; let i = index">
                     <mat-form-field appearance="outline">
                         <mat-label>Input value for {{pipe.key}}</mat-label>
                         <mat-select [formControlName]="pipe.key">
@@ -54,6 +61,23 @@
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
+                </div>
+            </div>
+            <h4>Extra Configuration</h4>
+            <button (click)="addConfig()">Add config</button>
+            <div formGroupName="data">
+                <div class="input" formArrayName="config" *ngFor="let config of configs.controls; let i = index">
+                    <div [formGroupName]="i">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Key</mat-label>
+                            <input matInput formControlName="key">
+                        </mat-form-field>
+                        <mat-form-field appearance="outline">
+                            <mat-label>Value</mat-label>
+                            <input matInput formControlName="value">
+                        </mat-form-field>
+                        <mat-icon  class="click" (click)="deleteConfig(i)">delete_outline</mat-icon>
+                    </div>
                 </div>
             </div>
         </div>

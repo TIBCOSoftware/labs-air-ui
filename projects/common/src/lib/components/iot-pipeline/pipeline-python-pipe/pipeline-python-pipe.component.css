@@ -21,3 +21,25 @@
   padding: 20px;
   width: 80%;
 }
+
+.input-heading {
+  padding: 0 20px;
+}
+
+.input-selection {
+  padding: 10px 20px;
+  display: flex;
+}
+
+.processor-gpu{
+  display: flex;
+}
+
+.processor, .gpu {
+  flex: 50%;
+  padding: 20px;
+}
+
+.input {
+  padding-right: 10px;
+}

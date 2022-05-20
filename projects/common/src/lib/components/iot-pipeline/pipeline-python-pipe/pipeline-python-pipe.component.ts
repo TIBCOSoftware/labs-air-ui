@@ -28,12 +28,25 @@ export class PipelinePythonPipeComponent implements OnInit{
 
   resources: PythonResource[] = [];
 
+  useGPUForm = new FormGroup({
+    key: new FormControl('use_gpu'),
+    value: new FormControl(true)
+  })
+
   get pipeContextName(): string {
     return this.pythonPipeForm.get('context').get('name').value;
   }
 
   get pipeInputs(): FormGroup {
     return this.pythonPipeForm.get('context').get('data').get('input') as FormGroup;
+  }
+
+  get configs(): FormArray {
+    return this.pythonPipeForm.get('context').get('data').get('config') as FormArray
+  }
+
+  get useGPU(): boolean{
+    return this.configs.value.findIndex(keys => keys.key == 'use_gpu') > 0;
   }
 
   ngOnInit(): void {
@@ -85,4 +98,24 @@ export class PipelinePythonPipeComponent implements OnInit{
       });
     }
   }
+
+  addConfig() {
+    this.configs.push(new FormGroup({
+      key: new FormControl(),
+      value: new FormControl()
+    }))
+  }
+
+  deleteConfig(index: number) {
+    this.configs.removeAt(index);
+  }
+
+  checkGPU(value) {
+    if (value) {
+      this.configs.push(this.useGPUForm);
+    } else {
+      this.configs.removeAt(this.configs.value.findIndex(keys => keys.key == 'use_gpu'))
+    }
+  }
+
 }
