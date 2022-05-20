@@ -1,0 +1,45 @@
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { Device, Resource } from '../../../models/iot.model';
+import { Subscription } from 'rxjs';
+
+export interface SelectItem {
+  value: string;
+  viewValue: string;
+}
+
+@Component({
+    selector: 'app-common-pipeline-error-handler',
+    templateUrl: './pipeline-error-handler.component.html',
+    styleUrls: ['./pipeline-error-handler.component.css']
+})
+export class PipelineErrorHandlerComponent implements OnInit, OnDestroy {
+
+  @Input() errorHandlerForm: FormGroup;
+
+  logLevels: SelectItem[] = [
+      { value: 'INFO', viewValue: 'INFO' },
+      { value: 'WARN', viewValue: 'WARN' },
+      { value: 'ERROR', viewValue: 'ERROR' },
+      { value: 'DEBUG', viewValue: 'DEBUG' }
+  ];
+
+
+  constructor() {
+      console.log('constructor streaming component config');
+  }
+
+  ngOnInit(): void {
+
+      this.onFormChanges();
+  }
+
+  ngOnDestroy(): void {
+
+  }
+
+  onFormChanges(): void {
+
+  }
+
+}
