@@ -19,9 +19,9 @@ describe('PipelineErrorHandlerComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(PipelineErrorHandlerComponent);
         component = fixture.componentInstance;
-        component.streamingForm = new FormGroup({});
-        component.streamingForm.addControl('deviceName', new FormControl(''));
-        component.devices = [];
+        // component.streamingForm = new FormGroup({});
+        // component.streamingForm.addControl('deviceName', new FormControl(''));
+        // component.devices = [];
         fixture.detectChanges();
     });
 

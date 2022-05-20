@@ -814,13 +814,14 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
             context: {
                 name: '',
                 data: {
-                    dependsOn: ''
+                    dependsOn: '',
                 }
             }
         });
         // resetting a form group and form array require explicit calls or they don't reset.
         (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('input', new FormGroup({}));
         (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('output', new FormArray([]));
+        (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('config', new FormArray([]));
     }
 
 
@@ -1076,7 +1077,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                 data: this.formBuilder.group({
                     input: this.formBuilder.group({}),
                     output: this.formBuilder.array([]),
-                    dependsOn: ['']
+                    dependsOn: [''],
+                    config: this.formBuilder.array([])
                 })
             }),
             dataInput: ['', Validators.required],
@@ -1510,6 +1512,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
             'input': this.pythonPipeForm.get('context').get('data').get('input').value,
             'output': this.pythonPipeForm.get('context').get('data').get('output').value,
             'dependsOn': this.pythonPipeForm.get('context').get('data').get('dependsOn').value,
+            'config': this.pythonPipeForm.get('context').get('data').get('config').value,
             'dataInput': this.pythonPipeForm.get('dataInput').value,
             'fileContent': this.pythonPipeForm.get('fileContent').value
         }
@@ -1985,14 +1988,18 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                 context: {
                     name: context.processorName,
                     data: {
-                        dependsOn: context.dependsOn
+                        dependsOn: context.dependsOn,
                     }
                 }
             });
 
-            (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('input', this.formBuilder.group(context.input))
+            (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('input', this.formBuilder.group(context.input));
             const outputs = context.output.map(x => this.formBuilder.control(x));
-            (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('output', new FormArray(outputs))
+            (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('output', new FormArray(outputs));
+            const formGroups = context.config.map(x => this.formBuilder.group(x)) as [];
+            const configArray = this.formBuilder.array(formGroups) as FormArray
+            (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('config', configArray);
+
         }
     }
 
@@ -2509,6 +2516,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
             let isFlogoApp = false;
             let flogoAppVolPath = '';
             let lastInferenceProducer = '';
+            let useGPU = false;
             console.log('Building from: ', flow);
 
             orderedFlow.forEach(flowNode => {
@@ -2659,6 +2667,10 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                         }
                         case 'Python Pipe': {
                             pipelineFlow.AirDescriptor.logic.push(this.buildPythonPipeDeployObj(flowNode.data.customdata));
+                            let foundGPUs = flowNode.data.customdata.config.filter(x => (x.key == 'use_gpu' && x.value == true))
+                            if (foundGPUs.length > 0) {
+                                useGPU = true;
+                            }
                             pipelineFlow.Artifacts = this.artifacts
                         }
                     }
@@ -2668,6 +2680,9 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
 
             });
 
+            if (useGPU) {
+                extra.push({ "Name":"services.$Name$.deploy.resources.reservations.devices[0].capabilities[0]", "Value":"gpu"});
+            }
             errorFlow.forEach(flowNode => {
 
                 console.log('Building from : ', flowNode);
@@ -3661,7 +3676,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
     }
 
     buildPythonPipedeployProperties(contextObj): any {
-
+        const config = contextObj.config.reduce(
+            (obj, item) => Object.assign(obj, {[item.key]: item.value }), {});
         const pythonPipeDeployProperties = [
             { 'Name': 'Logging.LogLevel', 'Value': contextObj.logLevel },
             { 'Name': 'Python.Producer', 'Value': contextObj.name },
@@ -3670,7 +3686,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                 'data': {
                     'input': this.parsePythonInput(contextObj.input),
                     'output': contextObj.output,
-                    'depends_on': contextObj.dependsOn
+                    'depends_on': contextObj.dependsOn,
+                    'config': config
                 }
             }},
             { 'Name': 'Python.DataIn', 'Value': contextObj.dataInput}
