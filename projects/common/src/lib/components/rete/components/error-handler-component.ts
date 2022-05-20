@@ -1,5 +1,5 @@
 import { Component, Input, Output } from 'rete';
-import { errorSocket } from '../sockets';
+import { errorSocket, eventSocket } from '../sockets';
 import { ImageControl } from '../controls/image-control';
 
 export class ErrorHandlerComponent extends Component {
@@ -10,14 +10,14 @@ export class ErrorHandlerComponent extends Component {
     }
 
     builder(node) {
-        const inp1 = new Input('err', 'Error', errorSocket);
+        const out = new Output('event', 'Event', eventSocket);
         const control = new ImageControl(this.editor, 'event', 'Icon_Error_Handler.svg');
 
         return node.addControl(control)
-            .addInput(inp1);
+            .addOutput(out);
     }
 
     worker(node, inputs, outputs) {
-        
+        outputs['event'] = node.data.event;
     }
 }
