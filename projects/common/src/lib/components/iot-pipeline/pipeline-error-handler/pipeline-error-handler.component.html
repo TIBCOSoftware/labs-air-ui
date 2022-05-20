@@ -1,0 +1,23 @@
+<mat-card fxFlex style="height: 100%; box-shadow:none;" [formGroup]="errorHandlerForm">
+
+    <mat-card-header>
+        <mat-card-title>Error Handler Configuration</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+
+        <div fxLayout="column" fxLayoutAlign="center start" style="height: 100%;">
+
+            <mat-form-field fxFlex="1 1 18%" appearance="outline">
+                <mat-label>Log Level</mat-label>
+                <mat-select formControlName="logLevel">
+                    <mat-option *ngFor="let item of logLevels;" [value]="item.value">
+                        {{item.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+                        
+        </div>
+
+    </mat-card-content>
+</mat-card>
