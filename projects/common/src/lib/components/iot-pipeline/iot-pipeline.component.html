@@ -73,6 +73,8 @@
         <app-pipeline-python-pipe [pythonPipeForm]="pythonPipeForm" [gatewayId]="gatewayId" *ngIf="pythonPipeConfig" 
             [pythonInputs]="pythonInputs">
         </app-pipeline-python-pipe>
+        <app-common-pipeline-error-handler *ngIf="errorHandlerConfig" [errorHandlerForm]="errorHandlerForm" fxFlex>
+        </app-common-pipeline-error-handler>
     </div>
 
 </div>

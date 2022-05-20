@@ -79,6 +79,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
     restBroadcastConfig = false;
     requestReplyConfig = false;
     pythonPipeConfig = false;
+    errorHandlerConfig = false;
     xcor = 0;
     ycor = 0;
 
@@ -102,6 +103,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
     restBroadcastForm: FormGroup;
     requestReplyForm: FormGroup;
     pythonPipeForm: FormGroup;
+    errorHandlerForm: FormGroup;
     artifacts = [];
 
     ruleTuplesDescriptor = [
@@ -413,7 +415,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                 console.log('Inputs for current node: ', currentNode.inputs);
                 console.log('Inputs keys for current node: ', nodeInputKeys);
                 // if (currentNode.name == "Data Subscriber") {
-                if (nodeInputKeys.length == 0) {
+                if (nodeInputKeys.length == 0 && currentNode.name == "Data Subscriber") {
                     node = flow.nodes[keys[i]];
                     break;
                 }
@@ -450,6 +452,65 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
         console.log('Ordered flow after getting next: ', orderedFlow);
 
         return orderedFlow;
+
+    }
+
+    reorderErrorFlow(flow: any): any {
+        console.log('Reordering  Error flow');
+        const errorFlow = [];
+
+        function findErrorHandlerNode(): any {
+
+            let node = null;
+
+            const keys = Object.keys(flow.nodes);
+
+            for (let i = 0; i < keys.length; i++) {
+                console.log('This is key :', keys[i]);
+
+                const currentNode = flow.nodes[keys[i]];
+                const nodeInputKeys = Object.keys(currentNode.inputs);
+
+                console.log('Inputs for current node: ', currentNode.inputs);
+                console.log('Inputs keys for current node: ', nodeInputKeys);
+                
+                if (nodeInputKeys.length == 0 && currentNode.name == "Error Handler") {
+                    node = flow.nodes[keys[i]];
+                    break;
+                }
+            }
+
+            return node;
+        }
+
+        // this function does not properly find the next nodes.
+        function findNextNodes(node: any): any {
+            const nodeOutputKeys = Object.keys(node.outputs);
+
+            if (nodeOutputKeys.length > 0) {
+                const connections = node.outputs.event.connections;
+
+                connections.forEach(connection => {
+                    errorFlow.push(flow.nodes[connection.node]);
+
+                    findNextNodes(flow.nodes[connection.node]);
+                });
+            }
+
+        }
+
+        const errorHandlerNode = findErrorHandlerNode();
+
+        errorFlow.push(errorHandlerNode);
+
+        console.log('Error flow after getting start: ', errorFlow);
+
+
+        findNextNodes(errorHandlerNode);
+
+        console.log('Error flow after getting next: ', errorFlow);
+
+        return errorFlow;
 
     }
 
@@ -533,6 +594,10 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                 contextObj = this.buildPythonPipeProperties();
                 break;
             }
+            case 'Error Handler': {
+                contextObj = this.buildNodeErrorHandlerProperties();
+                break;
+            }
             default: {
 
                 break;
@@ -562,6 +627,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
         this.restBroadcastConfig = false;
         this.requestReplyConfig = false;
         this.pythonPipeConfig = false;
+        this.errorHandlerConfig = false;
 
         if (node != null || node != undefined) {
             console.log('Resetting context for node: ', node);
@@ -656,6 +722,11 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                 case 'Python Pipe': {
                     this.updatePythonPipeComponent(contextObj);
                     this.pythonPipeConfig = true;
+                    break;
+                }
+                case 'Error Handler': {
+                    this.updateErrorHandlerComponent(contextObj);
+                    this.errorHandlerConfig = true;
                     break;
                 }
                 default: {
@@ -1010,7 +1081,11 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
             }),
             dataInput: ['', Validators.required],
             fileContent: ['']
-        })
+        });
+
+        this.errorHandlerForm = this.formBuilder.group({
+            logLevel: ['INFO', Validators.required]
+        });
     }
 
     /**
@@ -1439,6 +1514,19 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
             'fileContent': this.pythonPipeForm.get('fileContent').value
         }
         return pythonPipeObj;
+    }
+
+    /**
+     *
+     * @param form
+     */
+     buildNodeErrorHandlerProperties(): any {
+
+        const errorHandlerObj = {
+            'logLevel': this.errorHandlerForm.get('logLevel').value
+        };
+
+        return errorHandlerObj;
     }
 
     /**
@@ -1907,6 +1995,24 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
             (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('output', new FormArray(outputs))
         }
     }
+
+    /**
+     *
+     * @param context
+     */
+     updateErrorHandlerComponent(context) {
+
+        if (context != null || context != undefined) {
+            console.log('Updating error handler component with context: ', context);
+
+            this.errorHandlerForm.patchValue({
+                logLevel: context.logLevel,
+            });
+
+        }
+    }
+
+
     /**
      * Get Gateway, Pipelines and Devices information
      */
@@ -2282,6 +2388,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
         this.restServiceConfig = false;
         this.restBroadcastConfig = false;
         this.requestReplyConfig = false;
+        this.errorHandlerConfig = false;
 
         this.pipelineForm.patchValue({
             uid: '',
@@ -2303,6 +2410,10 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
         const orderedFlow = this.reorderFlow(flowData);
 
         console.log('Ordered pipeline flow: ', orderedFlow);
+
+        const errorFlow = this.reorderErrorFlow(flowData);
+
+        console.log('Error pipeline flow: ', errorFlow);
     }
 
     buildPipelineRequest(pipelineId: string): any {
@@ -2388,6 +2499,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
 
             const flow = this.editor.toJSON();
             const orderedFlow = this.reorderFlow(this.editor.toJSON());
+            const errorFlow = this.reorderErrorFlow(this.editor.toJSON());
 
             console.log('Ordered flow: ', orderedFlow);
 
@@ -2556,6 +2668,26 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
 
             });
 
+            errorFlow.forEach(flowNode => {
+
+                console.log('Building from : ', flowNode);
+                console.log('Building: ', flowNode.name);
+
+                // Add logic nodes
+                switch (flowNode.name) {
+                    case 'Error Handler': {
+                            
+                        pipelineFlow.AirDescriptor.logic.push(this.buildErrorHandlerDeployObj(flowNode.data.customdata));
+
+                        break;
+                    }
+                    case 'REST Broadcast': {
+                        pipelineFlow.AirDescriptor.logic.push(this.buildRESTBroadcastDeployObj(flowNode.data.customdata));
+                        break;
+                    }
+                }
+            });
+
             if (isFlogoApp) {
                 if (deployType == 'Edge') {
 
@@ -2586,17 +2718,6 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                     pipelineFlow.ScriptSystemEnv = systemEnv;
                 }
             }
-            else {
-                pipelineFlow.AirDescriptor.logic.push(
-                    {
-                        'name': 'Filter.Dummy',
-                        'properties': [
-                            { 'Name': 'Logging.LogLevel', 'Value': 'INFO' }
-                        ]
-                    }
-                );
-            }
-
 
             console.log('Pipeline flow to be build: ', pipelineFlow);
             console.log('Pipeline flow to be build string: ', JSON.stringify(pipelineFlow));
@@ -3438,6 +3559,27 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
         ];
         return mqttRequestReplyDeployProperties
 
+    }
+
+    buildErrorHandlerDeployObj(contextObj): any {
+
+        let sourceType = 'Error.Default';
+        
+        const sourceObj = {
+            name: sourceType,
+            properties: this.buildErrorHandlerDeployProperties()
+        };
+
+        return sourceObj;
+    }
+
+    buildErrorHandlerDeployProperties(): any {
+
+        const propertiesObj = [
+            { 'Name': 'Logging.LogLevel', 'Value': 'INFO' }
+        ];
+
+        return propertiesObj;
     }
 
     getSubscriptionTopic(): string {
