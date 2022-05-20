@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Device, Resource } from '../../../models/iot.model';
 import { Subscription } from 'rxjs';
@@ -13,7 +13,7 @@ export interface SelectItem {
     templateUrl: './pipeline-error-handler.component.html',
     styleUrls: ['./pipeline-error-handler.component.css']
 })
-export class PipelineErrorHandlerComponent implements OnInit, OnDestroy {
+export class PipelineErrorHandlerComponent implements OnInit {
 
   @Input() errorHandlerForm: FormGroup;
 
@@ -32,10 +32,6 @@ export class PipelineErrorHandlerComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
 
       this.onFormChanges();
-  }
-
-  ngOnDestroy(): void {
-
   }
 
   onFormChanges(): void {

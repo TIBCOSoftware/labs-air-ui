@@ -27,15 +27,16 @@
 }
 
 .input-selection {
+  display: flex;
   padding: 10px 20px;
+}
+
+.processor-gpu {
   display: flex;
 }
 
-.processor-gpu{
-  display: flex;
-}
-
-.processor, .gpu {
+.processor,
+.gpu {
   flex: 50%;
   padding: 20px;
 }
