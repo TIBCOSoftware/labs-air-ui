@@ -1992,7 +1992,6 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                     }
                 }
             });
-
             (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('input', this.formBuilder.group(context.input));
             const outputs = context.output.map(x => this.formBuilder.control(x));
             (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('output', new FormArray(outputs));
@@ -3684,7 +3683,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
             { 'Name': 'Python.Context', 'Value': {
                 'name': contextObj.processorName,
                 'data': {
-                    'input': this.parsePythonInput(contextObj.input),
+                    'input': contextObj.input,
                     'output': contextObj.output,
                     'depends_on': contextObj.dependsOn,
                     'config': config
@@ -3718,18 +3717,6 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
         const nextNode = node.outputs.size > 0 ? node.inputs.get('event').connections[0].output.node : undefined;
         if (nextNode.length > 0) {
             return nextNode
-        }
-    }
-
-    parsePythonInput(obj: Object) {
-        if (obj) {
-            let ret = {};
-            for(let key in obj){
-              ret[obj[key]] = key + '.' + obj[key];
-            }
-            return ret; 
-        } else {
-            return null
         }
     }
 

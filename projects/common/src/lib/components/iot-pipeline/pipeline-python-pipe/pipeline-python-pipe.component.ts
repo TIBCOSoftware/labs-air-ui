@@ -67,7 +67,6 @@ export class PipelinePythonPipeComponent implements OnInit{
   updateFormOnChange(processorName: string) {
     const processor = this.resources.find(x => x.name === processorName)
     this.pythonPipeForm.patchValue({
-      name: processor.name,
       fileContent: processor.fileContent,
       context: {
         name: processor.name,
@@ -75,15 +74,16 @@ export class PipelinePythonPipeComponent implements OnInit{
     })
     const pythonRawOutputs = JSON.parse(atob(processor.outputs));
     const outputControls = pythonRawOutputs.map(x => new FormControl(x));
-    (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('output', new FormArray(outputControls))
+    (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('output', new FormArray(outputControls));
+    const pythonInputs = JSON.parse(atob(processor.inputs));
+    (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('input', this.parsePythonInputs(pythonInputs));
   }
 
   getInputSelection() {
+    this.inputSelections = [];
     this.pythonInputs.forEach(node => {
-      this.pipeInputs.addControl(node.data.customdata.name, new FormControl(''));
-      this.inputSelections.push(node.data.customdata.output);
-    })
-    this.inputSelections.reverse();
+      node.data.customdata.output.forEach(output => this.inputSelections.push(node.name + '.' + output));
+    });
   }
 
   // checks if the depends is updated to the latest node
@@ -116,6 +116,14 @@ export class PipelinePythonPipeComponent implements OnInit{
     } else {
       this.configs.removeAt(this.configs.value.findIndex(keys => keys.key == 'use_gpu'))
     }
+  }
+
+  parsePythonInputs(pythonInputs: [string]): FormGroup {
+    const inputFormGroup = new FormGroup({});
+    pythonInputs.forEach(x => {
+      inputFormGroup.addControl(x, new FormControl('Engine.' + x))
+    })
+    return inputFormGroup
   }
 
 }
