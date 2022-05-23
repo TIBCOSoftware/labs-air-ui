@@ -22,16 +22,19 @@
   width: 80%;
 }
 
-.input-heading, .input-body {
+.input-heading,
+.input-body {
   padding: 0 20px;
 }
 
 .input-selection {
   display: flex;
+  flex-wrap: wrap;
   padding: 10px 20px;
 }
 
-.processor-gpu, .extra-config {
+.processor-gpu,
+.extra-config {
   display: flex;
 }
 
@@ -41,6 +44,7 @@
   padding: 20px;
 }
 
-.input, .input mat-form-field {
+.input,
+.input mat-form-field {
   padding-right: 10px;
 }
