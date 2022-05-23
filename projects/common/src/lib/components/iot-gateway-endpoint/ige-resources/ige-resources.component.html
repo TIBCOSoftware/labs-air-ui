@@ -118,7 +118,7 @@
                         <div *ngIf="resourceForm.get('type').value === 'folder' && showFileUpload">
                             <mat-form-field>
                                 <mat-label>Folder Path</mat-label>
-                                <input matInput [readonly]=false formControlName="filePath" required>
+                                <input matInput [readonly]=false formControlName="filePath">
                             </mat-form-field>
                         </div>
                         <div *ngIf="resourceForm.get('type').value === 'file'">
