@@ -16,7 +16,7 @@
                 <div class="input-control" *ngIf="input.showControl()" [rete-control]="input.control"></div>
             </div>
         </div>
-        <div class='card-body-text' *ngIf='node.data.customdata'>
+        <div class='card-body-text' *ngIf='$any(node.data.customdata).protocol'>
             <div>
                 Protocol: <b>{{$any(node.data.customdata).protocol}}</b>
             </div>
@@ -25,6 +25,11 @@
             </div>
             <div>
                 topic: <b>{{$any(node.data.customdata).topic }}</b>
+            </div>
+        </div>
+        <div class='card-body-text' *ngIf="node.name === 'Python Pipe'">
+            <div>
+                Name: <b>{{$any(node.data.customdata).name}}</b>
             </div>
         </div>
         <div>
