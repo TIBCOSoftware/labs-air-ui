@@ -1,7 +1,8 @@
 <div [formGroup]="pythonPipeForm" class="python-pipe">
     <mat-card-header>
         <mat-card-title>Python Pipe Configuration</mat-card-title>
-    </mat-card-header>    <mat-form-field appearance="outline">
+    </mat-card-header>   
+     <mat-form-field appearance="outline">
         <mat-label>Log Level</mat-label>
         <mat-select formControlName="logLevel">
             <mat-option *ngFor="let item of logLevels;" [value]="item.value">
@@ -9,21 +10,19 @@
             </mat-option>
         </mat-select>
     </mat-form-field>
-    <div *ngIf="pipeContextName === ''" formGroupName="context">
-        <mat-form-field appearance="outline">
-            <mat-label>Processor</mat-label>
-            <mat-select formControlName="name" (selectionChange)="updateFormOnChange($event.value)">
-                <mat-option *ngFor="let item of resources; let i = index" [value]="item.name">
-                    {{item.name}}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-    </div>
+    <mat-form-field appearance="outline">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Processor</mat-label>
+        <mat-select formControlName="name" (selectionChange)="updateFormOnChange($event.value)">
+            <mat-option *ngFor="let item of resources; let i = index" [value]="item.name">
+                {{item.name}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
     <div *ngIf="pipeContextName !== ''">
-        <mat-form-field appearance="outline">
-            <mat-label>Name</mat-label>
-            <input matInput formControlName="name">
-        </mat-form-field>
         <mat-form-field appearance="outline">
             <mat-label>Data Input</mat-label>
             <textarea matInput formControlName="dataInput"></textarea>
@@ -34,16 +33,6 @@
         <div class="configuration-content" formGroupName="context">
             <span class="close" (click)="showResourceConfiguration = false">&times;</span>
             <div class="processor-gpu">
-                <div class="processor">
-                    <mat-form-field appearance="outline">
-                        <mat-label>Processor Name</mat-label>
-                        <mat-select formControlName="name" (selectionChange)="updateFormOnChange($event.value)">
-                            <mat-option *ngFor="let item of resources; let i = index" [value]="item.name">
-                                {{item.name}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
                 <div class="gpu">
                     <mat-checkbox [checked]="useGPU" color="primary" (change)="checkGPU($event.checked)">
                         Use GPU
@@ -56,15 +45,15 @@
                     <mat-form-field appearance="outline">
                         <mat-label>Input value for {{pipe.key}}</mat-label>
                         <mat-select [formControlName]="pipe.key">
-                            <mat-option *ngFor="let item of inputSelections[i]" [value]="item">
+                            <mat-option *ngFor="let item of inputSelections" [value]="item">
                                 {{item}}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>
             </div>
-            <h4>Extra Configuration</h4>
-            <button (click)="addConfig()">Add config</button>
+            <h4 class="input-heading">Extra Configuration</h4>
+            <button class="input-heading" mat-raised-button color="primary" (click)="addConfig()">Add config</button>
             <div formGroupName="data">
                 <div class="input" formArrayName="config" *ngFor="let config of configs.controls; let i = index">
                     <div [formGroupName]="i">
