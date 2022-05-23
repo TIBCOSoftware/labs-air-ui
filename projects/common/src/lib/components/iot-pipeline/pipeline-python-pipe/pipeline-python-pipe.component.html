@@ -52,9 +52,11 @@
                     </mat-form-field>
                 </div>
             </div>
-            <h4 class="input-heading">Extra Configuration</h4>
-            <button class="input-heading" mat-raised-button color="primary" (click)="addConfig()">Add config</button>
-            <div formGroupName="data">
+            <div class="extra-config">
+                <h4 class="input-heading">Extra Configuration</h4>
+                <button class="input-heading" mat-raised-button color="primary" (click)="addConfig()">Add config</button>
+            </div>
+            <div formGroupName="data" class="input-body">
                 <div class="input" formArrayName="config" *ngFor="let config of configs.controls; let i = index">
                     <div [formGroupName]="i">
                         <mat-form-field appearance="outline">
