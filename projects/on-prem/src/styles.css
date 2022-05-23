@@ -18,3 +18,7 @@ body {
   padding: 0;
 
 }
+
+.mat-select-panel{
+  max-width: unset !important;
+}
