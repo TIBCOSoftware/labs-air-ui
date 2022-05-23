@@ -82,7 +82,7 @@ export class PipelinePythonPipeComponent implements OnInit{
   getInputSelection() {
     this.inputSelections = [];
     this.pythonInputs.forEach(node => {
-      node.data.customdata.output.forEach(output => this.inputSelections.push(node.name + '.' + output));
+      node.data.customdata.output.forEach(output => this.inputSelections.push(node.data.customdata.name + '.' + output));
     });
   }
 
