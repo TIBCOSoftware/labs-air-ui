@@ -26,6 +26,7 @@ describe('NodePrimaryComponent', () => {
         fixture = TestBed.createComponent(NodePrimaryComponent);
         component = fixture.componentInstance;
         component.node = new Node('test');
+        component.node.data.customdata = {protocol: ''}
         const container: HTMLElement = document.createElement('div');
         component.editor = new NodeEditor('testing@0.1.0', container);
         fixture.detectChanges();
