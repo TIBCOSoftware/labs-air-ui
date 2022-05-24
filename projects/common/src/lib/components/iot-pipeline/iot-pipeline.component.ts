@@ -3728,11 +3728,12 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
             let pythonPipeProperties = []
             resp.forEach(resource => {
                 if (resource.type == 'folder') {
+                    console.log('FILE CONTENT', resource.fileContent)
                     if (resource.fileContent !== 'null') {
                         pythonPipeProperties.push({ 
                             'Type': 'folder', 
-                            'Name': resource.name + resource.name.includes('.zip') ? '' : '.zip',
-                            'Value': resource.filePath,
+                            'Name': resource.name + (resource.name.includes('.zip') ? '' : '.zip'),
+                            'Value': resource.fileContent,
                             'Encoded': true
                         });
                     } else {
@@ -3752,11 +3753,11 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                     }
                     switch(resource.type) {
                         case 'processor': {
-                            resourceToPush.Name + resourceToPush.Name.includes('.py') ? '' : '.py'
+                            resourceToPush.Name + (resourceToPush.Name.includes('.py') ? '' : '.py');
                             break
                         }
                         case 'requirement': {
-                            resourceToPush.Name + resourceToPush.Name.includes('.txt') ? '' : '.txt'
+                            resourceToPush.Name + (resourceToPush.Name.includes('.txt') ? '' : '.txt');
                             break
                         }
                     }
