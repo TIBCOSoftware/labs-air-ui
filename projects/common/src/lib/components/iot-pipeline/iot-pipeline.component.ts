@@ -3764,8 +3764,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
 
      castItemValue(value: string) {
          // number case
-         if (value.match('/^\d*\.?\d*$/')) {
-            return Number(value)
+         if (parseInt(value)) {
+            return parseFloat(value);
           // any other parsable code
          } else if (this.isJsonString(value)) {
             return JSON.parse(value);
