@@ -10,7 +10,6 @@ import { AppConfigService } from '../config/app-config.service';
 })
 export class FlogoDeployService {
   private lightcraneEndpointUrl = this.appConfigService.getFromConfigOrEnv('lightcraneEndpointUrl');
-  private airEndpointUrl = this.appConfigService.getFromConfigOrEnv('airEndpointUrl');
 
   httpOptions = {
       headers: new HttpHeaders({
@@ -25,17 +24,6 @@ export class FlogoDeployService {
       basicAuthHeaders.forEach((value, key) => { 
           this.httpOptions.headers = this.httpOptions.headers.append(key, value);
       } );
-  }
-
-  deploy(request: any): Observable<string> {
-
-      const url = `${this.airEndpointUrl}/app-manager/releases`;
-
-      return this.http.post<string>(url, request, this.httpOptions)
-          .pipe(
-              tap(_ => console.info('Deployed New Pipeline')),
-              catchError(this.handleError<string>('deploy'))
-          );
   }
 
   validateF1(pipelineId: string, request: any): Observable<any> {
