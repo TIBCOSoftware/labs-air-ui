@@ -12,12 +12,12 @@ describe('PipelinePythonPipeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PipelinePythonPipeComponent ],
+      declarations: [PipelinePythonPipeComponent],
       providers: [
         { provide: GraphService, useValue: mockGraphService }
       ],
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {
@@ -30,16 +30,14 @@ describe('PipelinePythonPipeComponent', () => {
       fileContent: new FormControl(''),
       context: new FormGroup({
         name: new FormControl(''),
-        context: new FormGroup({
-          name: new FormControl(''),
-          data: new FormGroup({
-            input: new FormGroup({}),
-            output: new FormArray([]),
-            dependsOn: new FormControl([])
-          })
-        })
+        data: new FormGroup({
+          input: new FormGroup({}),
+          output: new FormArray([]),
+          dependsOn: new FormArray([]),
+        }),
       })
     })
+    component.subscription = component.pythonPipeForm.controls['name'].valueChanges.subscribe();
     fixture.detectChanges();
   });
 
