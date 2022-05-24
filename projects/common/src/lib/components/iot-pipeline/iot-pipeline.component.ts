@@ -3728,7 +3728,6 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
             let pythonPipeProperties = []
             resp.forEach(resource => {
                 if (resource.type == 'folder') {
-                    console.log('FILE CONTENT', resource.fileContent)
                     if (resource.fileContent !== 'null') {
                         pythonPipeProperties.push({ 
                             'Type': 'folder', 
