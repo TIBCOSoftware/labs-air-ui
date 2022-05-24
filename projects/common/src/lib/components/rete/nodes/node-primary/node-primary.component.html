@@ -27,7 +27,7 @@
                 topic: <b>{{$any(node.data.customdata).topic }}</b>
             </div>
         </div>
-        <div class='card-body-text' *ngIf="node.name === 'Python Pipe'">
+        <div class='card-body-text' *ngIf="node.name === 'Python Pipe' && $any(node.data.customdata)">
             <div>
                 Name: <b>{{$any(node.data.customdata).name}}</b>
             </div>
