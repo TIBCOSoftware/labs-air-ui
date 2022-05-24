@@ -57,7 +57,7 @@ export class IgeResourcesComponent implements OnInit {
     this.resourceForm.patchValue({
       name: row.name,
       type: row.type,
-      fileContent: atob(row.fileContent),
+      fileContent: decodeURIComponent(row.fileContent),
       uid: row.uid,
       created: row.created,
       modified: row.modified,
@@ -103,7 +103,7 @@ export class IgeResourcesComponent implements OnInit {
     resource.modified = ts;
     resource.name = this.resourceForm.get('name').value;
     resource.type = this.resourceForm.get('type').value;
-    resource.fileContent = btoa(this.resourceForm.get('fileContent').value);
+    resource.fileContent = encodeURIComponent(this.resourceForm.get('fileContent').value);
     resource.inputs = btoa(JSON.stringify(this.inputs.getRawValue()));
     resource.outputs = btoa(JSON.stringify(this.outputs.getRawValue()));
     resource.filePath = this.resourceForm.get('filePath').value;
@@ -133,7 +133,7 @@ export class IgeResourcesComponent implements OnInit {
     resource.uid = this.resourceForm.get('uid').value;
     resource.type = this.resourceForm.get('type').value;
     resource.scope = this.gatewayId as PythonResource.ScopeEnum;
-    resource.fileContent = btoa(this.resourceForm.get('fileContent').value);
+    resource.fileContent = encodeURIComponent(this.resourceForm.get('fileContent').value);
     resource.inputs = btoa(JSON.stringify(this.inputs.getRawValue()));
     resource.outputs = btoa(JSON.stringify(this.outputs.getRawValue()));
     resource.filePath = this.resourceForm.get('filePath').value;
@@ -189,10 +189,11 @@ export class IgeResourcesComponent implements OnInit {
 
   readFile(inputEvent: HTMLInputElement) {
     const fileReader = new FileReader();
-    fileReader.onload = () => { this.resourceForm.patchValue({
-      fileContent: btoa(fileReader.result.toString())
+    fileReader.onload = () => { 
+      this.resourceForm.patchValue({
+      fileContent: fileReader.result.toString()
     })};
-    fileReader.readAsText(inputEvent.files.item(0), 'utf-8');
+    fileReader.readAsDataURL(inputEvent.files.item(0));
   }
 
   resetResource() {
