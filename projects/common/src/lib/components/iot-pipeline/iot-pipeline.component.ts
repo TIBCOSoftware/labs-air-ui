@@ -3764,14 +3764,22 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
 
      castItemValue(value: string) {
          // number case
-         if (value.match('/^\d+$/;')) {
+         if (value.match('/^\d*\.?\d*$/')) {
             return Number(value)
-         // any other parsable code
-         } else if (JSON.parse(value.toLowerCase())) {
-            return JSON.parse(value.toLowerCase());
+          // any other parsable code
+         } else if (this.isJsonString(value)) {
+            return JSON.parse(value);
          }  else {
             return value
          }
-
      }
+
+    isJsonString(str: string) {
+        try {
+            JSON.parse(str);
+        } catch (e) {
+            return false;
+        }
+        return true;
+    }
 }
