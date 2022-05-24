@@ -3674,10 +3674,10 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
     buildPythonPipedeployProperties(contextObj): any {
         const config = contextObj.config.reduce(
             (obj, item) => Object.assign(obj, {[item.key]: this.castItemValue(item.value) }), {});
-        const pythonPipeDeployProperties = [
+        let pythonPipeDeployProperties = [
             { 'Name': 'Logging.LogLevel', 'Value': contextObj.logLevel },
             { 'Name': 'Python.Producer', 'Value': contextObj.name },
-            { 'Name': 'Python.Context', 'Value': JSON.stringify({
+            { 'Name': 'Python.Context', 'Value': {
                 'name': contextObj.processorName,
                 'data': {
                     'input': contextObj.input,
@@ -3685,9 +3685,15 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                     'depends_on': contextObj.dependsOn,
                 },
                 'config': config
-            })},
+            }},
             { 'Name': 'Python.DataIn', 'Value': contextObj.dataInput}
         ]
+
+        if (contextObj.dependsOn.length === 0) {
+            delete pythonPipeDeployProperties[2].Value.data.depends_on
+        }
+
+        pythonPipeDeployProperties[2].Value = JSON.stringify(pythonPipeDeployProperties[2].Value)
 
         return pythonPipeDeployProperties;
     }
