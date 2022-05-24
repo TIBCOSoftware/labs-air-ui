@@ -3732,7 +3732,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                         pythonPipeProperties.push({ 
                             'Type': 'folder', 
                             'Name': resource.name + (resource.name.includes('.zip') ? '' : '.zip'),
-                            'Value': resource.fileContent,
+                            'Value': decodeURIComponent(resource.fileContent),
                             'Encoded': true
                         });
                     } else {
