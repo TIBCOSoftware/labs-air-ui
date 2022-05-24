@@ -813,15 +813,14 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
             name: '',
             context: {
                 name: '',
-                data: {
-                    dependsOn: '',
-                }
+                data: { }
             }
         });
         // resetting a form group and form array require explicit calls or they don't reset.
         (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('input', new FormGroup({}));
         (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('output', new FormArray([]));
         (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('config', new FormArray([]));
+        (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('dependsOn', new FormArray([]));
     }
 
 
@@ -1077,7 +1076,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                 data: this.formBuilder.group({
                     input: this.formBuilder.group({}),
                     output: this.formBuilder.array([]),
-                    dependsOn: [''],
+                    dependsOn: this.formBuilder.array([]),
                     config: this.formBuilder.array([])
                 })
             }),
@@ -1986,10 +1985,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                 fileContent: context.fileContent,
                 name: context.name,
                 context: {
-                    name: context.processorName,
-                    data: {
-                        dependsOn: context.dependsOn,
-                    }
+                    name: context.processorName
                 }
             });
             (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('input', this.formBuilder.group(context.input));
@@ -1998,7 +1994,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
             const formGroups = context.config.map(x => this.formBuilder.group(x)) as [];
             const configArray = this.formBuilder.array(formGroups) as FormArray
             (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('config', configArray);
-
+            const dependsOnArray = context.dependsOn.map(x => this.formBuilder.control(x));
+            (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('dependsOn', this.formBuilder.array(dependsOnArray));
         }
     }
 
@@ -3677,10 +3674,11 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
     buildPythonPipedeployProperties(contextObj): any {
         const config = contextObj.config.reduce(
             (obj, item) => Object.assign(obj, {[item.key]: item.value }), {});
+        console.log('BUILD DEPENDS-ON', contextObj.dependsOn)
         const pythonPipeDeployProperties = [
             { 'Name': 'Logging.LogLevel', 'Value': contextObj.logLevel },
             { 'Name': 'Python.Producer', 'Value': contextObj.name },
-            { 'Name': 'Python.Context', 'Value': {
+            { 'Name': 'Python.Context', 'Value': JSON.stringify({
                 'name': contextObj.processorName,
                 'data': {
                     'input': contextObj.input,
@@ -3688,7 +3686,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                     'depends_on': contextObj.dependsOn,
                     'config': config
                 }
-            }},
+            })},
             { 'Name': 'Python.DataIn', 'Value': contextObj.dataInput}
         ]
 

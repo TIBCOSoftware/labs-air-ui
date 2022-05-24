@@ -2,20 +2,21 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { PythonResource } from '@TIBCOSoftware/labs-air-graph-client';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
-import { debounceTime } from 'rxjs';
+import { debounceTime, Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-pipeline-python-pipe',
   templateUrl: './pipeline-python-pipe.component.html',
   styleUrls: ['./pipeline-python-pipe.component.css']
 })
-export class PipelinePythonPipeComponent implements OnInit{
+export class PipelinePythonPipeComponent implements OnInit, OnDestroy{
 
   @Input() pythonPipeForm: FormGroup;
   @Input() gatewayId: string;
   @Input() pythonInputs: any[];
   showResourceConfiguration = false;
   inputSelections = [];
+  subscription: Subscription;
 
   constructor(private graphService: GraphService) { }
 
@@ -54,10 +55,14 @@ export class PipelinePythonPipeComponent implements OnInit{
     this.getPythonResources();
     this.checkConnectedNode();
     this.getInputSelection();
-    this.pythonPipeForm.controls['name'].valueChanges.pipe(debounceTime(1000)).subscribe(() =>{
+    this.subscription = this.pythonPipeForm.controls['name'].valueChanges.pipe(debounceTime(500)).subscribe(() =>{
       this.checkConnectedNode();
       this.getInputSelection();
     });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   getPythonResources() {
@@ -88,14 +93,12 @@ export class PipelinePythonPipeComponent implements OnInit{
 
   // checks if the depends is updated to the latest node
   checkConnectedNode() {
-    if (this.pythonInputs.length > 0 && this.pythonPipeForm.get('context').get('data').get('dependsOn').value !== this.pythonInputs[0].data.customdata.name) {
-      this.pythonPipeForm.patchValue({
-        context: {
-          data: {
-            dependsOn: this.pythonInputs[0].data.customdata.name
-          }
-        }
-      });
+    (this.pythonPipeForm.get('context').get('data').get('dependsOn') as FormArray).clear();
+    if ((this.pythonInputs.length > 0) && (this.pythonPipeForm.get('context').get('data').get('dependsOn').value[0] !== this.pythonInputs[0].data.customdata.name)) {
+      (this.pythonPipeForm.get('context').get('data').get('dependsOn') as FormArray)
+        .push(new FormControl(this.pythonInputs[0].data.customdata.name))
+    } else if ((this.pythonInputs.length > 0) && (this.pythonPipeForm.get('context').get('data').get('dependsOn').value[0] === this.pythonInputs[0].data.customdata.name)) {
+      this.pythonPipeForm.get('context').get('data').get('dependsOn').value[0] = this.pythonInputs[0].data.customdata.name
     }
   }
 
