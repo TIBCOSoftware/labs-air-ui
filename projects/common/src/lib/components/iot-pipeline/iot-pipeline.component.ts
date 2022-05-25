@@ -809,7 +809,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
         this.pythonPipeForm.patchValue({
             logLevel: 'INFO',
             fileContent: '',
-            dataInput: '',
+            dataInput: '{\"command\":\"process\", \"data\":{}}',
             name: '',
             context: {
                 name: '',
@@ -1080,7 +1080,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                     config: this.formBuilder.array([])
                 })
             }),
-            dataInput: ['', Validators.required],
+            dataInput: ['{\"command\":\"process\", \"data\":{}}'],
             fileContent: ['']
         });
 
