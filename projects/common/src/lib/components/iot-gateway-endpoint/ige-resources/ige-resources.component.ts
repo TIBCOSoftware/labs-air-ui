@@ -136,7 +136,7 @@ export class IgeResourcesComponent implements OnInit {
     resource.uid = this.resourceForm.get('uid').value;
     resource.type = this.resourceForm.get('type').value;
     resource.scope = this.gatewayId as PythonResource.ScopeEnum;
-    resource.fileContent = encodeURIComponent(this.resourceForm.get('fileContent').value);
+    resource.fileContent = this.resourceForm.get('fileContent').value;
     resource.inputs = btoa(JSON.stringify(this.inputs.getRawValue()));
     resource.outputs = btoa(JSON.stringify(this.outputs.getRawValue()));
     resource.filePath = this.resourceForm.get('filePath').value;
