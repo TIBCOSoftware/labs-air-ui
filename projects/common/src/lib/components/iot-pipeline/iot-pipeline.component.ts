@@ -2542,8 +2542,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                                 const targetField = { 'Name': 'Datastore.TargetField', 'Value': 'Inference.REST..Inferred' };
                                 if (producerName != '') {
                                     const targetField = { 'Name': 'Datastore.TargetField', 'Value': producerName+'..Inferred' }
-                                    pipelineFlow.AirDescriptor.logic.push(this.buildDataStoreDeployObj(flowNode.data.customdata, targetField));
                                 }
+                                pipelineFlow.AirDescriptor.logic.push(this.buildDataStoreDeployObj(flowNode.data.customdata, targetField));
                             }
 
                             break;
