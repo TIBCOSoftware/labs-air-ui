@@ -2513,6 +2513,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
             let flogoAppVolPath = '';
             let lastInferenceProducer = '';
             let useGPU = false;
+            let producerName = '';
             console.log('Building from: ', flow);
 
             orderedFlow.forEach(flowNode => {
@@ -2537,8 +2538,13 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                             }
 
                             if (useEnrichedReading) {
+                                // check to use producer name instead of Inference.REST..Inferred
                                 const targetField = { 'Name': 'Datastore.TargetField', 'Value': 'Inference.REST..Inferred' };
-                                pipelineFlow.AirDescriptor.logic.push(this.buildDataStoreDeployObj(flowNode.data.customdata, targetField));
+                                if (producerName != '') {
+                                    pipelineFlow.AirDescriptor.logic.push(this.buildDataStoreDeployObj(flowNode.data.customdata, targetField, producerName));
+                                } else {
+                                    pipelineFlow.AirDescriptor.logic.push(this.buildDataStoreDeployObj(flowNode.data.customdata, targetField));
+                                }
                             }
 
                             break;
@@ -2599,6 +2605,9 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                         case 'Inferencing': {
                             lastInferenceProducer = flowNode.data.customdata.modelName + "..Inferred";
                             pipelineFlow.AirDescriptor.logic.push(this.buildInferencingDeployObj(flowNode.data.customdata));
+                            if (flowNode.data.customdata.modelName) {
+                                producerName = flowNode.data.customdata.modelName;
+                            }
                             break;
                         }
                         case 'Streaming': {
@@ -3052,7 +3061,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
 
     }
 
-    buildDataStoreDeployObj(contextObj, targetField): any {
+    buildDataStoreDeployObj(contextObj, targetField, producerName?: string): any {
         const dataStoreType = 'DataStore.' + contextObj.dataStore;
         const sourceObj = {
             name: dataStoreType,
@@ -3062,6 +3071,13 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
         // Add custom target field to properties if provided
         if (targetField != null) {
             sourceObj.properties.push(targetField);
+        }
+
+        if (producerName) {
+            sourceObj.properties.push({
+                "Name": "REST.Producer",
+                "Value": producerName
+            })
         }
 
         return sourceObj;
