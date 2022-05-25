@@ -3690,8 +3690,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                 'data': {
                     'input': contextObj.input,
                     'output': contextObj.output,
-                    'depends_on': contextObj.dependsOn,
                 },
+                'depends_on': contextObj.dependsOn,
                 'config': config
             }},
             { 'Name': 'Python.DataIn', 'Value': contextObj.dataInput}
