@@ -191,7 +191,7 @@ export class IgeResourcesComponent implements OnInit {
     const fileReader = new FileReader();
     fileReader.onload = () => { 
       this.resourceForm.patchValue({
-      fileContent: fileReader.result.toString()
+      fileContent: fileReader.result.toString().split(',')[1]
     })};
     fileReader.readAsDataURL(inputEvent.files.item(0));
   }
