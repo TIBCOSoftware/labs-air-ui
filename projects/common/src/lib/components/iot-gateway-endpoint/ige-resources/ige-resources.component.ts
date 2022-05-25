@@ -39,6 +39,7 @@ export class IgeResourcesComponent implements OnInit {
   ];
   languages = ['python'];
   showFileUpload = true;
+  code = ''
 
   constructor(private graphService: GraphService, private _snackBar: MatSnackBar) { }
 
@@ -57,7 +58,7 @@ export class IgeResourcesComponent implements OnInit {
     this.resourceForm.patchValue({
       name: row.name,
       type: row.type,
-      fileContent: decodeURIComponent(row.fileContent),
+      fileContent: row.fileContent,
       uid: row.uid,
       created: row.created,
       modified: row.modified,
@@ -65,7 +66,7 @@ export class IgeResourcesComponent implements OnInit {
       filePath: row.filePath
     });
     if (row.inputs) {
-      const decodedInputs = JSON.parse(atob(row.inputs))
+      const decodedInputs = JSON.parse(atob(row.inputs));
       const inputs = new FormArray(decodedInputs.map(x => new FormControl(x)));
       this.resourceForm.setControl('inputs', inputs);
     }
@@ -74,6 +75,7 @@ export class IgeResourcesComponent implements OnInit {
       const outputs = new FormArray(decodedOutputs.map(x => new FormControl(x)));
       this.resourceForm.setControl('outputs', outputs)
     }
+    this.code = atob(row.fileContent);
     this.resourceSelection.select(row);
   }
 
@@ -103,7 +105,7 @@ export class IgeResourcesComponent implements OnInit {
     resource.modified = ts;
     resource.name = this.resourceForm.get('name').value;
     resource.type = this.resourceForm.get('type').value;
-    resource.fileContent = encodeURIComponent(this.resourceForm.get('fileContent').value);
+    resource.fileContent = this.resourceForm.get('fileContent').value;
     resource.inputs = btoa(JSON.stringify(this.inputs.getRawValue()));
     resource.outputs = btoa(JSON.stringify(this.outputs.getRawValue()));
     resource.filePath = this.resourceForm.get('filePath').value;
@@ -120,6 +122,7 @@ export class IgeResourcesComponent implements OnInit {
           this.fileInput.nativeElement.value = '';
         });
     }
+    this.code = '';
     this.showFileUpload = true;
   }
 
@@ -147,7 +150,7 @@ export class IgeResourcesComponent implements OnInit {
 
   deleteResource() {
     this.graphService.deletePythonResource(this.resourceForm.get('uid').value).subscribe(
-      resp => {
+      () => {
         this.getResources();
         this.resetResource();
       }
@@ -191,8 +194,10 @@ export class IgeResourcesComponent implements OnInit {
     const fileReader = new FileReader();
     fileReader.onload = () => { 
       this.resourceForm.patchValue({
-      fileContent: fileReader.result.toString().split(',')[1]
-    })};
+        fileContent: fileReader.result.toString().split(',')[1]
+      })
+      this.code = atob(fileReader.result.toString().split(',')[1]);
+    };
     fileReader.readAsDataURL(inputEvent.files.item(0));
   }
 

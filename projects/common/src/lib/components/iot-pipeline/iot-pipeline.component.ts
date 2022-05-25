@@ -3740,14 +3740,14 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                         pythonPipeProperties.push({ 
                             'Type': 'folder', 
                             'Name': resource.name + (resource.name.includes('.zip') ? '' : '.zip'),
-                            'Value': decodeURIComponent(resource.fileContent),
+                            'Value': this.isBase64(resource.fileContent) ? atob(resource.fileContent) : decodeURIComponent(resource.fileContent),
                             'Encoded': true
                         });
                     } else {
                         pythonPipeProperties.push({ 
                             'Type': 'folder', 
                             'Name': resource.name,
-                            'Value': decodeURIComponent(resource.filePath),
+                            'Value': this.isBase64(resource.filePath) ? atob(resource.filePath) : decodeURIComponent(resource.filePath),
                             'Encoded': false
                         });                
                     }
@@ -3755,16 +3755,16 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                     let resourceToPush = {
                         'Type': 'file',
                         'Name': resource.name,
-                        'Value': decodeURIComponent(resource.fileContent),
+                        'Value': this.isBase64(resource.fileContent) ? atob(resource.fileContent) : decodeURIComponent(resource.fileContent),
                         'Encoded': false
                     }
                     switch(resource.type) {
                         case 'processor': {
-                            resourceToPush.Name + (resourceToPush.Name.includes('.py') ? '' : '.py');
+                            resourceToPush.Name = resourceToPush.Name + (resourceToPush.Name.includes('.py') ? '' : '.py');
                             break
                         }
                         case 'requirement': {
-                            resourceToPush.Name + (resourceToPush.Name.includes('.txt') ? '' : '.txt');
+                            resourceToPush.Name = resourceToPush.Name + (resourceToPush.Name.includes('.txt') ? '' : '.txt');
                             break
                         }
                     }
@@ -3795,5 +3795,10 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
             return false;
         }
         return true;
+    }
+
+    isBase64(encodedString) {
+        const regexBase64 = /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/;
+        return regexBase64.test(encodedString);   // return TRUE if its base64 string.
     }
 }
