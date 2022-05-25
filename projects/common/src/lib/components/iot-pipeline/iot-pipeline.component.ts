@@ -2541,8 +2541,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                                 // check to use producer name instead of Inference.REST..Inferred
                                 const targetField = { 'Name': 'Datastore.TargetField', 'Value': 'Inference.REST..Inferred' };
                                 if (producerName != '') {
-                                    pipelineFlow.AirDescriptor.logic.push(this.buildDataStoreDeployObj(flowNode.data.customdata, targetField, producerName));
-                                } else {
+                                    const targetField = { 'Name': 'Datastore.TargetField', 'Value': producerName+'..Inferred' }
                                     pipelineFlow.AirDescriptor.logic.push(this.buildDataStoreDeployObj(flowNode.data.customdata, targetField));
                                 }
                             }
@@ -3071,13 +3070,6 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
         // Add custom target field to properties if provided
         if (targetField != null) {
             sourceObj.properties.push(targetField);
-        }
-
-        if (producerName) {
-            sourceObj.properties.push({
-                "Name": "REST.Producer",
-                "Value": producerName
-            })
         }
 
         return sourceObj;
