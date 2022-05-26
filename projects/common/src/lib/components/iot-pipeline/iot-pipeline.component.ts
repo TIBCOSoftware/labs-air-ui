@@ -808,6 +808,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
         this.requestReplyForm.reset();
         this.pythonPipeForm.patchValue({
             logLevel: 'INFO',
+            timeout: '600',
             fileContent: '',
             dataInput: '{\"command\":\"process\", \"data\":{}}',
             name: '',
@@ -1070,6 +1071,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
 
         this.pythonPipeForm = this.formBuilder.group({
             logLevel: ['INFO', Validators.required],
+            timeout: ['600', Validators.required],
             name: ['', Validators.required],
             context: this.formBuilder.group({
                 name: ['', Validators.required],
@@ -1505,6 +1507,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
     buildPythonPipeProperties(): any {
         const pythonPipeObj = {
             'logLevel': this.pythonPipeForm.get('logLevel').value,
+            'timeout': this.pythonPipeForm.get('timeout').value,
             'name': this.pythonPipeForm.get('name').value,
             // need to update context once that is done
             'processorName': this.pythonPipeForm.get('context.name').value,
@@ -1981,6 +1984,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
         if (context != null || context != undefined) {
             this.pythonPipeForm.patchValue({
                 logLevel: context.logLevel,
+                timeout: context.timeout,
                 dataInput: context.dataInput,
                 fileContent: context.fileContent,
                 name: context.name,
@@ -3673,17 +3677,18 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
         let pythonPipeDeloyObj = null
         pythonPipeDeloyObj = {
             name:'Processor.PythonPipe',
-            properties: this.buildPythonPipedeployProperties(contextObj)
+            properties: this.buildPythonPipeDeployProperties(contextObj)
         }
 
         return pythonPipeDeloyObj;
     }
 
-    buildPythonPipedeployProperties(contextObj): any {
+    buildPythonPipeDeployProperties(contextObj): any {
         const config = contextObj.config.reduce(
             (obj, item) => Object.assign(obj, {[item.key]: this.castItemValue(item.value) }), {});
         let pythonPipeDeployProperties = [
             { 'Name': 'Logging.LogLevel', 'Value': contextObj.logLevel },
+            { 'Name': 'Python.Timeout', 'Value': contextObj.timeout},
             { 'Name': 'Python.Producer', 'Value': contextObj.name },
             { 'Name': 'Python.Context', 'Value': {
                 'name': contextObj.processorName,
@@ -3698,7 +3703,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
         ]
 
         if (contextObj.dependsOn.length === 0) {
-            delete pythonPipeDeployProperties[2].Value.data.depends_on
+            delete pythonPipeDeployProperties[3].Value.data.depends_on
         }
 
         pythonPipeDeployProperties[2].Value = JSON.stringify(pythonPipeDeployProperties[2].Value)
