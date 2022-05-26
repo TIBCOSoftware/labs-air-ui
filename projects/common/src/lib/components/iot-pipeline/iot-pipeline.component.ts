@@ -3706,7 +3706,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
             delete pythonPipeDeployProperties[3].Value.data.depends_on
         }
 
-        pythonPipeDeployProperties[2].Value = JSON.stringify(pythonPipeDeployProperties[2].Value)
+        pythonPipeDeployProperties[3].Value = JSON.stringify(pythonPipeDeployProperties[3].Value)
 
         return pythonPipeDeployProperties;
     }
