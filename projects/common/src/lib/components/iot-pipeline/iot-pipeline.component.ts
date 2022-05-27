@@ -3518,7 +3518,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
             { 'Name': 'REST.Timeout', 'Value': contextObj.restTimeout },
             { 'Name': 'REST.URLs', 'Value': JSON.stringify(contextObj.restURLs) },
             { 'Name': 'REST.Methods', 'Value': JSON.stringify(contextObj.restMethods) },
-            { 'Name': 'REST.Bodies', 'Value': JSON.stringify(contextObj.restBodies) }
+            { 'Name': 'REST.Bodies', 'Value': JSON.stringify(contextObj.restBodies) },
+            { 'Name': 'REST.HTTPHeaders', 'Value': JSON.stringify(contextObj.headers) }
         ];
 
         return propertiesObj
