@@ -396,11 +396,11 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
         area.zoom(k, 0, 0);
     }
 
-    reorderFlow(flow: any): any {
-        console.log('Reordering flow');
+    reorderFlow(startNodeName: string, flow: any): any {
+        console.log('Reordering flow starting at: ', startNodeName);
         const orderedFlow = [];
 
-        function findStartFlowNode(): any {
+        function findStartFlowNode(startNodeName: string): any {
 
             let node = null;
 
@@ -415,7 +415,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                 console.log('Inputs for current node: ', currentNode.inputs);
                 console.log('Inputs keys for current node: ', nodeInputKeys);
                 // if (currentNode.name == "Data Subscriber") {
-                if (nodeInputKeys.length == 0 && currentNode.name == "Data Subscriber") {
+                if (nodeInputKeys.length == 0 && currentNode.name == startNodeName) {
                     node = flow.nodes[keys[i]];
                     break;
                 }
@@ -440,77 +440,21 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
 
         }
 
-        const startFlowNode = findStartFlowNode();
+        const startFlowNode = findStartFlowNode(startNodeName);
 
-        orderedFlow.push(startFlowNode);
+        // Check to see if starter activity was found
+        if (startFlowNode != null) {
+            orderedFlow.push(startFlowNode);
 
-        console.log('Ordered flow after getting start: ', orderedFlow);
+            console.log('Ordered flow after getting start: ', orderedFlow);
 
 
-        findNextNodes(startFlowNode);
+            findNextNodes(startFlowNode);
 
-        console.log('Ordered flow after getting next: ', orderedFlow);
+            console.log('Ordered flow after getting next: ', orderedFlow);
+        }
 
         return orderedFlow;
-
-    }
-
-    reorderErrorFlow(flow: any): any {
-        console.log('Reordering  Error flow');
-        const errorFlow = [];
-
-        function findErrorHandlerNode(): any {
-
-            let node = null;
-
-            const keys = Object.keys(flow.nodes);
-
-            for (let i = 0; i < keys.length; i++) {
-                console.log('This is key :', keys[i]);
-
-                const currentNode = flow.nodes[keys[i]];
-                const nodeInputKeys = Object.keys(currentNode.inputs);
-
-                console.log('Inputs for current node: ', currentNode.inputs);
-                console.log('Inputs keys for current node: ', nodeInputKeys);
-                
-                if (nodeInputKeys.length == 0 && currentNode.name == "Error Handler") {
-                    node = flow.nodes[keys[i]];
-                    break;
-                }
-            }
-
-            return node;
-        }
-
-        // this function does not properly find the next nodes.
-        function findNextNodes(node: any): any {
-            const nodeOutputKeys = Object.keys(node.outputs);
-
-            if (nodeOutputKeys.length > 0) {
-                const connections = node.outputs.event.connections;
-
-                connections.forEach(connection => {
-                    errorFlow.push(flow.nodes[connection.node]);
-
-                    findNextNodes(flow.nodes[connection.node]);
-                });
-            }
-
-        }
-
-        const errorHandlerNode = findErrorHandlerNode();
-
-        errorFlow.push(errorHandlerNode);
-
-        console.log('Error flow after getting start: ', errorFlow);
-
-
-        findNextNodes(errorHandlerNode);
-
-        console.log('Error flow after getting next: ', errorFlow);
-
-        return errorFlow;
 
     }
 
@@ -2414,11 +2358,11 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
 
         console.log('Editor Flow Data: ', flowData);
 
-        const orderedFlow = this.reorderFlow(flowData);
+        const orderedFlow = this.reorderFlow("Data Subscriber", flowData);
 
         console.log('Ordered pipeline flow: ', orderedFlow);
 
-        const errorFlow = this.reorderErrorFlow(flowData);
+        const errorFlow = this.reorderFlow("Error Handler", flowData);
 
         console.log('Error pipeline flow: ', errorFlow);
     }
@@ -2505,8 +2449,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
         try {
 
             const flow = this.editor.toJSON();
-            const orderedFlow = this.reorderFlow(this.editor.toJSON());
-            const errorFlow = this.reorderErrorFlow(this.editor.toJSON());
+            const orderedFlow = this.reorderFlow("Data Subscriber", this.editor.toJSON());
+            const errorFlow = this.reorderFlow("Error Hanler", this.editor.toJSON());
 
             console.log('Ordered flow: ', orderedFlow);
 
@@ -3611,7 +3555,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
         let subscriptionTopic = "";
 
         const flow = this.editor.toJSON();
-        const orderedFlow = this.reorderFlow(this.editor.toJSON());
+        const orderedFlow = this.reorderFlow("Data Subscriber", this.editor.toJSON());
 
         console.log('Ordered flow: ', orderedFlow);
 
