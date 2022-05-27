@@ -442,14 +442,17 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
 
         const startFlowNode = findStartFlowNode();
 
-        orderedFlow.push(startFlowNode);
+        // Check to see if starter activity was found
+        if (startFlowNode != null) {
+            orderedFlow.push(startFlowNode);
 
-        console.log('Ordered flow after getting start: ', orderedFlow);
+            console.log('Ordered flow after getting start: ', orderedFlow);
 
 
-        findNextNodes(startFlowNode);
+            findNextNodes(startFlowNode);
 
-        console.log('Ordered flow after getting next: ', orderedFlow);
+            console.log('Ordered flow after getting next: ', orderedFlow);
+        }
 
         return orderedFlow;
 
@@ -499,16 +502,20 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
 
         }
 
+        // Find ErrorHandler node
         const errorHandlerNode = findErrorHandlerNode();
 
-        errorFlow.push(errorHandlerNode);
+        // Check to see if ErrorHandler activity was found
+        if (errorHandlerNode != null) {
+            errorFlow.push(errorHandlerNode);
 
-        console.log('Error flow after getting start: ', errorFlow);
+            console.log('Error flow after getting start: ', errorFlow);
 
 
-        findNextNodes(errorHandlerNode);
+            findNextNodes(errorHandlerNode);
 
-        console.log('Error flow after getting next: ', errorFlow);
+            console.log('Error flow after getting next: ', errorFlow);
+        }
 
         return errorFlow;
 
