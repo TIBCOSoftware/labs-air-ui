@@ -451,7 +451,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
 
             findNextNodes(startFlowNode);
 
-            console.log('Ordered flow after getting next: ', orderedFlow);
+            console.log('Final Ordered flow: ', orderedFlow);
         }
 
         return orderedFlow;
@@ -2450,7 +2450,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
 
             const flow = this.editor.toJSON();
             const orderedFlow = this.reorderFlow("Data Subscriber", this.editor.toJSON());
-            const errorFlow = this.reorderFlow("Error Hanler", this.editor.toJSON());
+            const errorFlow = this.reorderFlow("Error Handler", this.editor.toJSON());
 
             console.log('Ordered flow: ', orderedFlow);
 
