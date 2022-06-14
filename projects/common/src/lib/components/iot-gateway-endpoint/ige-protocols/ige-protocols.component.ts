@@ -427,7 +427,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
           });
       }
       else {
-          this.graphService.addProtocol(0, protocol)
+          this.graphService.addProtocol('0', protocol)
               .subscribe(res => {
                   console.log('Result from add protocol', res);
 
@@ -569,7 +569,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
                   this.resetProtocolForm();
               }
               else {
-                  this.graphService.deleteProtocol(0, this.protocolForm.get('uid').value)
+                  this.graphService.deleteProtocol('0', this.protocolForm.get('uid').value)
                       .subscribe(res => {
                           console.log('Result from delete protocol ', res);
 

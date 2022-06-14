@@ -354,27 +354,6 @@ export class DGraphCloudService extends GraphService {
 
   /**
    *
-   * @param modelConfig
-   */
-  updateModelConfig(modelConfig: ModelConfig): Observable<ModelConfig> {
-    return this.modelConfigService.updateModelConfig(modelConfig).pipe(
-      catchError(this.handleError<ModelConfig>('updateModelConfig'))
-    );
-  }
-
-  /**
-   *
-   * @param gatewayUid
-   * @param modelConfigUid
-   */
-  deleteModelConfig(gatewayUid: number, modelConfigUid: number): Observable<string> {
-    return this.modelConfigService.deleteModelConfig(gatewayUid, modelConfigUid).pipe(
-      catchError(this.handleError<string>('deleteModelConfig'))
-    );
-  }
-
-  /**
-   *
    * @param gatewayName
    */
   getFiltersConfig(gatewayName: any): Observable<GatewayFiltersConfig[]> {
