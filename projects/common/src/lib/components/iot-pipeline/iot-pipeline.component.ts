@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
 
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -42,20 +42,20 @@ import { MQTTRequestReplyComponent } from '../rete/components/mqtt-request-reply
 import { Gateway, Model, Pipeline } from '@TIBCOSoftware/labs-air-graph-client';
 import { PythonComponent } from '../rete/components/python-component';
 import { PythonPipeComponent } from '../rete/components/python-pipe-component'
+import { Observable, Subscriber, Subscription } from 'rxjs';
 @Component({
     selector: 'app-common-iot-pipeline',
     templateUrl: './iot-pipeline.component.html',
     styleUrls: ['./iot-pipeline.component.css']
 })
-export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
+export class CommonIotPipelineComponent implements OnInit, OnDestroy ,AfterViewInit {
 
     gatewayId = '';
     gateway = null as Gateway;
     devices: Device[] = [];
     models: Model[] = [];
-    pipelineSelected = this.pipelineService.pipelineSelected;  // Used to control the display of buttons
-    deployDisabled = true;
-    undeployDisabled = true;
+    // pipelineSelected = this.pipelineService.pipelineSelected;  // Used to control the display of buttons
+
     dateFormat = 'yyyy-MM-dd  HH:mm:ss';
     translated = false;
 
@@ -87,7 +87,6 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
 
     filters: any[] = [];
 
-    // should this be just one big form? 
     pipelineForm: FormGroup;
     protocolForm: FormGroup;
     dataStoreForm: FormGroup;
@@ -105,6 +104,8 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
     pythonPipeForm: FormGroup;
     errorHandlerForm: FormGroup;
     artifacts = [];
+
+    pipelineObserver: Subscription;
 
     ruleTuplesDescriptor = [
         {
@@ -198,11 +199,20 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
         // Get gateway id from route
         this.gatewayId = this.route.snapshot.paramMap.get('gatewayId');
         this.pipelineService.gatewayId = this.gatewayId;
-
+        
+        this.pipelineObserver = this.pipelineService.pipelineChange.subscribe( value => {
+            if (value == 'clearForm') {
+                this.clearPipeline();
+            }
+        })
         // this.getGatewayDetails(this.gatewayId);
         this.pipelineService.getGatewayDetails(this.gatewayId);
 
         this.createForms();
+    }
+
+    ngOnDestroy(): void {
+        this.pipelineObserver.unsubscribe();
     }
 
     get pipelinesDataSource (): MatTableDataSource<Pipeline>{
@@ -211,6 +221,18 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
 
     get pipelineSelection (): SelectionModel<Pipeline> {
         return this.pipelineService.pipelineSelection;
+    }
+
+    get deployDisabled (): boolean {
+        return this.pipelineService.deployDisabled;
+    }
+
+    get undeployDisabled (): boolean {
+        return this.pipelineService.undeployDisabled;
+    }
+
+    get pipelineSelected (): boolean {
+        return this.pipelineService.pipelineSelected;
     }
 
     async ngAfterViewInit() {
@@ -1916,84 +1938,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
      * Handles selection of pipeline on table
      */
     onPipelineClicked(row, updateEditor: boolean) {
-
-        console.log('Row clicked: ', row);
-        let currentPipelineSelected = null;
-
-        console.log('On pipeline clicked - row clicked  selected: ', this.pipelineSelection.isSelected(row));
-
-        if (this.pipelineSelection.hasValue()) {
-            console.log('pipelineSelection has value');
-
-            if (this.pipelineSelection.selected[0].uid == row.uid &&
-                this.pipelineSelection.selected[0] != row) {
-                this.pipelineSelection.select(row);
-                this.pipelineSelected = true;
-
-            }
-
-            currentPipelineSelected = this.pipelineSelection.selected[0];
-        }
-
-        // Skip if same row is selected
-        if (currentPipelineSelected == null || currentPipelineSelected.uid != row.uid) {
-            console.log('Not Skipping as same row is not selected row uid', row.uid);
-
-
-
-            // Clear previous selection and editor
-            if (currentPipelineSelected != null) {
-                console.log('Not Skipping as same row is not selected currentselection uid', currentPipelineSelected.uid);
-                this.pipelineSelection.clear();
-                this.clearPipeline();
-            }
-
-            this.pipelineSelection.select(row);
-            this.pipelineSelected = true;
-
-            // Update Pipeline Form
-            this.pipelineForm.reset({
-                uid: row.uid,
-                name: row.name,
-                pipelineType: row.pipelineType,
-                deployerType: row.deployerType,
-                description: row.description,
-                status: row.status,
-                flowConfiguration: row.flowConfiguration,
-                logLevel: row.logLevel
-            }, { emitEvent: false });
-
-            if (updateEditor) {
-                // Reset the editor
-                const decodedData = decodeURIComponent(row.flowConfiguration);
-                const jsonData = JSON.parse(decodedData);
-                this.editor.fromJSON(jsonData);
-            }
-
-            // Reset command buttons
-            console.log('Resetting buttons for status: ', row.status);
-
-            if (row.status == 'Saved') {
-                this.deployDisabled = false;
-                this.undeployDisabled = true;
-
-            }
-            else if (row.status == 'Deployed') {
-                this.deployDisabled = true;
-                this.undeployDisabled = false;
-            }
-            else {
-                this.deployDisabled = true;
-                this.undeployDisabled = true;
-            }
-
-        }
-        else {
-            console.log('skipping as same row is selected');
-
-        }
-
-
+        this.pipelineService.onPipelineClicked(row, updateEditor);
     }
 
     newPipeline() {
@@ -2001,7 +1946,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
 
         if (this.pipelineSelection.hasValue()) {
 
-            this.pipelineSelected = false;
+            this.pipelineService.pipelineSelected = false;
 
             const pipeline = this.pipelineSelection.selected[0];
 

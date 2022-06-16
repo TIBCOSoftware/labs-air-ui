@@ -12,6 +12,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { Device } from '../../models/iot.model';
 import { SelectionModel } from '@angular/cdk/collections';
+import { Subject } from 'rxjs';
 
 
 @Injectable({
@@ -38,6 +39,8 @@ export class PipelineService {
   devices: Device[] = [];
   models: Model[] = [];
   pipelineSelection = new SelectionModel<Pipeline>(false, []);
+
+  pipelineChange = new Subject<string>();
 
   pipelinesDataSource = new MatTableDataSource<Pipeline>();
 
@@ -567,7 +570,7 @@ export class PipelineService {
       .subscribe(res => {
         console.log('Received response for graphService.getGatewayAndPipelines: ', res);
         this.gateway = res[0] as Gateway;
-        if (res[0].pipelines != undefined) {
+        if (res[0]?.pipelines != undefined) {
 
           console.log('Setting pipelineDataSource.data fo incoming pipeline');
 
@@ -575,13 +578,13 @@ export class PipelineService {
           this.pipelinesDataSource.data = res[0].pipelines as Pipeline[];
 
           // Select last selectedPipeline
-          // if (selectedPipeline != null) {
-          //   for (let i = 0; i < this.pipelinesDataSource.data.length; i++) {
-          //     if (this.pipelinesDataSource.data[i].name == selectedPipeline.name) {
-          //       this.onPipelineClicked(this.pipelinesDataSource.data[i], updateEditor);
-          //     }
-          //   }
-          // }
+          if (selectedPipeline != null) {
+            for (let i = 0; i < this.pipelinesDataSource.data.length; i++) {
+              if (this.pipelinesDataSource.data[i].name == selectedPipeline.name) {
+                this.onPipelineClicked(this.pipelinesDataSource.data[i], updateEditor);
+              }
+            }
+          }
 
         }
         else {
@@ -597,7 +600,7 @@ export class PipelineService {
   /**
    * Get Gateway, Pipelines and Devices information
    */
-  public getGatewayDetails(gatewayId: string) {
+  getGatewayDetails(gatewayId: string) {
     console.log('Getting gateway and pipelines for: ', gatewayId);
 
     this.graphService.getGatewayAndPipelines(gatewayId)
@@ -731,7 +734,7 @@ export class PipelineService {
         .subscribe(res => {
           console.log('Added pipeline: ', res);
 
-          this.getGatewayAndPipelines(this.gateway.uid.toString(), pipeline, false);
+          this.getGatewayAndPipelines(this.gatewayId, pipeline, false);
 
           let message = 'Success';
           if (res == undefined) {
@@ -770,12 +773,13 @@ export class PipelineService {
         .subscribe(res => {
           console.log('Result from delete pipeline', res);
 
-          this.getGatewayAndPipelines(this.gateway.uid.toString(), null, true);
+          this.getGatewayAndPipelines(this.gatewayId, null, true);
 
           // Clear the editor
-          // this.clearPipeline();
+          this.pipelineChange.next('clearForm');
 
           // this.resetPipelineForm();
+          this.editor.clear();
         });
     }
     else {
@@ -854,6 +858,77 @@ export class PipelineService {
     console.log('Ordered pipeline flow: ', this.reorderFlow("Data Subscriber", flowData));
 
     console.log('Error pipeline flow: ', this.reorderFlow("Error Handler", flowData));
+  }
+
+  /**
+   * Handles selection of pipeline on table
+   */
+  onPipelineClicked(row, updateEditor: boolean) {
+
+    console.log('Row clicked: ', row);
+    let currentPipelineSelected = null;
+
+    console.log('On pipeline clicked - row clicked  selected: ', this.pipelineSelection.isSelected(row));
+
+    if (this.pipelineSelection.hasValue()) {
+      console.log('pipelineSelection has value');
+
+      if (this.pipelineSelection.selected[0].uid == row.uid &&
+        this.pipelineSelection.selected[0] != row) {
+        this.pipelineSelection.select(row);
+        this.pipelineSelected = true;
+
+      }
+
+      currentPipelineSelected = this.pipelineSelection.selected[0];
+    }
+
+    // Skip if same row is selected
+    if (currentPipelineSelected == null || currentPipelineSelected.uid != row.uid) {
+      console.log('Not Skipping as same row is not selected row uid', row.uid);
+      this.pipelineData = row;
+      console.log('pipe data', this.pipelineData);
+
+      // Clear previous selection and editor
+      if (currentPipelineSelected != null) {
+        console.log('Not Skipping as same row is not selected currentselection uid', currentPipelineSelected.uid);
+        this.pipelineSelection.clear();
+        this.pipelineChange.next('clearForm')
+        this.editor.clear();
+      }
+
+      this.pipelineSelection.select(row);
+      this.pipelineSelected = true;
+
+      if (updateEditor) {
+        // Reset the editor
+        const decodedData = decodeURIComponent(row.flowConfiguration);
+        const jsonData = JSON.parse(decodedData);
+        this.editor.fromJSON(jsonData);
+      }
+
+      // Reset command buttons
+      console.log('Resetting buttons for status: ', row.status);
+
+      if (row.status == 'Saved') {
+        this.deployDisabled = false;
+        this.undeployDisabled = true;
+
+      }
+      else if (row.status == 'Deployed') {
+        this.deployDisabled = true;
+        this.undeployDisabled = false;
+      }
+      else {
+        this.deployDisabled = true;
+        this.undeployDisabled = true;
+      }
+
+    }
+    else {
+      console.log('skipping as same row is selected');
+
+    }
   }
 
 }
