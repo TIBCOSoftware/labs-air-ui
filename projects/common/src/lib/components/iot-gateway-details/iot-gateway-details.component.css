@@ -152,7 +152,6 @@
 
 .card-details-metrics-header .card-details-metrics-tabs {
   display: flex;
-  width: fit-content;
 }
 
 .card-details-metrics-tabs .icon {
@@ -173,6 +172,7 @@
   letter-spacing: 0;
   line-height: 24px;
   padding-right: 36px;
+  white-space: nowrap;
 }
 
 .card-details-metrics-header .card-details-metrics-tabs .active {
