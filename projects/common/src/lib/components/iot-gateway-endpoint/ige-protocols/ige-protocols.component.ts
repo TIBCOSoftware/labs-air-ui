@@ -37,7 +37,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
   protocolsDataSource = new MatTableDataSource<Protocol>();
   protocolDisplayedColumns: string[] = ['id', 'name', 'protocol', 'scope', 'created', 'modified'];
   protocolSelection = new SelectionModel<Protocol>(false, []);
-
+  initialForm: FormGroup;
 
 
   protocols: SelectItem[] = [
@@ -94,6 +94,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
 
       this.createForm();
 
+      this.initialForm = this.protocolForm.value;
 
       this.onFormChanges();
 
@@ -336,8 +337,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
       this.httpProtocol = false;
 
       this.protocolSelection.clear();
-      this.protocolForm.reset();
-      this.createForm();
+      this.protocolForm.reset(this.initialForm);
 
   }
 
@@ -588,7 +588,6 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
    */
   onFormChanges(): void {
       this.protocolForm.valueChanges.subscribe(val => {
-
           if (this.protocolForm.dirty) {
 
               this.graphDeleteOpDisabled = true;
