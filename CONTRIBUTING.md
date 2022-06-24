@@ -58,6 +58,20 @@ formatted, these will appear directly in the changelog.
 ### Source Modifications
 
 Modifications are primarily in `projects/common` project. This is a common library that is shared between the deployment
-environments. The on-prem project is the default deployment environment and does not require any external modification to run.
+environments. The on-prem project is the default deployment environment and does not require any external modification
+to run.
 
-If running the cloud deployment environment, a TIBCO Cloud Account will be needed to access UI.
+If running the cloud deployment environment, a TIBCO Cloud Account will be needed to access the UI.
+
+### Adding New Components or Schematics to the Common Library
+
+Components or schematics need to be added using `ng generate <schematic> <name> --project <project> --module <module>` in
+the root of the project. An example of creating a new common component would be:
+`ng generate component components/newComponent --project common --module common-library`.
+
+A created schematic then needs to be exported from from `projects/common/src/public-api.ts`. If creating a complex
+multi-component schematic, then adding the new schematics to `projects/common/src/lib/common-library.module.ts`
+may be necessary for the exported component to properly work.
+
+Not all new schematics need to be added to the common library. Only new schematics that are shared between the
+environments needs to be placed in the common library.
