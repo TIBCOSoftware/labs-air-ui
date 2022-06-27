@@ -4,11 +4,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
-import { EdgeService } from '../../services/edge/edge.service';
-import { FlogoDeployService } from '../../services/deployment/flogo-deploy.service';
 import { PipelineService } from '../../services/pipeline/pipeline.service';
 import { Device } from '../../models/iot.model';
 
@@ -104,6 +101,8 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
     pythonPipeForm: FormGroup;
     errorHandlerForm: FormGroup;
     artifacts = [];
+
+    selectedNode: any;
 
     pipelineObserver: Subscription;
 
@@ -307,7 +306,6 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
             console.log('Node data: ', node.data);
 
             if (this.lastNodeSelected != null) {
-                this.saveNodeContext(this.lastNodeSelected);
 
                 // Clean shared variables
                 this.clearFormsAndFilters();
@@ -328,8 +326,6 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
             console.log('Editor selected');
 
             if (this.lastNodeSelected != null) {
-
-                this.saveNodeContext(this.lastNodeSelected);
 
                 // Clean shared variables
                 this.clearFormsAndFilters();
@@ -376,100 +372,6 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
         area.zoom(k, 0, 0);
     }
 
-    saveNodeContext(node) {
-
-        const name = node.name;
-        let contextObj = null;
-        console.log('unselected node saving', node);
-
-        switch (name) {
-            case 'Data Subscriber': {
-
-                contextObj = this.buildNodeProtocolProperties(this.protocolForm, null);
-                break;
-            }
-            case 'Data Store': {
-
-                contextObj = this.buildNodeDataStoreProperties(this.dataStoreForm, this.dataOptionsForm);
-                break;
-            }
-            case 'Data Publisher': {
-
-                contextObj = this.buildNodeProtocolProperties(this.protocolForm, this.dataOptionsForm);
-                break;
-            }
-            case 'Custom Publisher': {
-
-                contextObj = this.buildNodeProtocolProperties(this.protocolForm, this.dataOptionsForm);
-                break;
-            }
-            case 'Notification Publisher': {
-
-                contextObj = this.buildNodeProtocolProperties(this.protocolForm, this.dataOptionsForm);
-                break;
-            }
-            case 'Filters': {
-                contextObj = this.buildNodeDataFilteringProperties();
-                break;
-            }
-            case 'Inferencing': {
-                contextObj = this.buildNodeDataInferencingProperties();
-                break;
-            }
-            case 'Streaming': {
-                contextObj = this.buildNodeDataStreamingProperties();
-                break;
-            }
-            case 'Rules': {
-                contextObj = this.buildNodeRuleProperties();
-                break;
-            }
-            case 'Rule Expression': {
-                contextObj = this.buildNodeRuleExpressionProperties();
-                break;
-            }
-            case 'Rule Text Matching': {
-                contextObj = this.buildNodeRuleTextMatchingProperties();
-                break;
-            }
-            case 'Flogo Flow': {
-                contextObj = this.buildNodeFlogoFlowProperties();
-                break;
-            }
-            case 'REST Service': {
-                contextObj = this.buildNodeDataRESTServiceProperties();
-                break;
-            }
-            case 'Python': {
-                contextObj = this.buildPythonProperties();
-                break;
-            }
-            case 'REST Broadcast': {
-                contextObj = this.buildNodeRestBroadcastServiceProperties();
-                break;
-            }
-            case 'MQTT Request Reply': {
-                contextObj = this.buildNodeMQTTRequestReplyProperties();
-                break;
-            }
-            case 'Python Pipe': {
-                contextObj = this.buildPythonPipeProperties();
-                break;
-            }
-            case 'Error Handler': {
-                contextObj = this.buildNodeErrorHandlerProperties();
-                break;
-            }
-            default: {
-
-                break;
-            }
-        }
-
-        node.data['customdata'] = contextObj;
-
-    }
-
     // shows the form for which node was selected
     resetNodeContext(node) {
 
@@ -493,8 +395,8 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
 
         if (node != null || node != undefined) {
             console.log('Resetting context for node: ', node);
-
             const contextObj = node.data['customdata'];
+            this.selectedNode = node;
 
             switch (node.name) {
                 case 'Data Subscriber': {
@@ -951,108 +853,6 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
         this.errorHandlerForm = this.formBuilder.group({
             logLevel: ['INFO', Validators.required]
         });
-    }
-
-    /**
-     *
-     * @param protocolForm
-     * @param dataOptionsForm
-     */
-    buildNodeProtocolProperties(protocolForm: FormGroup, dataOptionsForm: FormGroup): any {
-        const protocol = protocolForm.get('protocol').value;
-        let useReading = true;
-        let encodeReadingValue = false;
-        let useEnrichedReading = false;
-        let encodeEnrichedReadingValue = false;
-
-        if (dataOptionsForm != null) {
-            useReading = dataOptionsForm.get('useReading').value;
-            encodeReadingValue = dataOptionsForm.get('encodeReadingValue').value;
-            useEnrichedReading = dataOptionsForm.get('useEnrichedReading').value;
-            encodeEnrichedReadingValue = dataOptionsForm.get('encodeEnrichedReadingValue').value;
-        }
-
-        let protocolObj = null;
-
-        if (protocol == 'MQTT') {
-
-            protocolObj = {
-                'useReading': useReading,
-                'encodeReadingValue': encodeReadingValue,
-                'useEnrichedReading': useEnrichedReading,
-                'encodeEnrichedReadingValue': encodeEnrichedReadingValue,
-                'protocol': protocolForm.get('protocol').value,
-                'protocolId': protocolForm.get('protocolId').value,
-                'logLevel': protocolForm.get('logLevel').value,
-                'hostname': protocolForm.get('mqtt.hostname').value,
-                'port': protocolForm.get('mqtt.port').value,
-                'username': protocolForm.get('mqtt.username').value,
-                'password': protocolForm.get('mqtt.password').value,
-                'encryptionMode': protocolForm.get('mqtt.encryptionMode').value,
-                'caCertificate': protocolForm.get('mqtt.caCertificate').value,
-                'clientCertificate': protocolForm.get('mqtt.clientCertificate').value,
-                'clientKey': protocolForm.get('mqtt.clientKey').value,
-                'topic': protocolForm.get('mqtt.topic').value,
-                'maximumQOS': protocolForm.get('mqtt.maximumQOS').value,
-            };
-
-        }
-        else if (protocol == 'Kafka') {
-
-            protocolObj = {
-                'useReading': useReading,
-                'encodeReadingValue': encodeReadingValue,
-                'useEnrichedReading': useEnrichedReading,
-                'encodeEnrichedReadingValue': encodeEnrichedReadingValue,
-                'protocol': protocolForm.get('protocol').value,
-                'protocolId': protocolForm.get('protocolId').value,
-                'logLevel': protocolForm.get('logLevel').value,
-                'hostname': protocolForm.get('kafka.hostname').value,
-                'port': protocolForm.get('kafka.port').value,
-                'authMode': protocolForm.get('kafka.authMode').value,
-                'username': protocolForm.get('kafka.username').value,
-                'password': protocolForm.get('kafka.password').value,
-                'clientCertificate': protocolForm.get('kafka.clientCertificate').value,
-                'clientKey': protocolForm.get('kafka.clientKey').value,
-                'serverCertificate': protocolForm.get('kafka.serverCertificate').value,
-                'connectionTimeout': protocolForm.get('kafka.connectionTimeout').value,
-                'retryBackoff': protocolForm.get('kafka.retryBackoff').value,
-                'topic': protocolForm.get('kafka.topic').value,
-                'consumerGroupId': protocolForm.get('kafka.consumerGroupId').value,
-                'commitInterval': protocolForm.get('kafka.commitInterval').value,
-                'initialOffset': protocolForm.get('kafka.initialOffset').value,
-                'fetchMinBytes': protocolForm.get('kafka.fetchMinBytes').value,
-                'fetchMaxWait': protocolForm.get('kafka.fetchMaxWait').value,
-                'heartbeatInterval': protocolForm.get('kafka.heartbeatInterval').value,
-                'sessionTimeout': protocolForm.get('kafka.sessionTimeout').value,
-            };
-
-        }
-        else if (protocol == 'AMQP') {
-
-            protocolObj = {
-                'useReading': useReading,
-                'encodeReadingValue': encodeReadingValue,
-                'useEnrichedReading': useEnrichedReading,
-                'encodeEnrichedReadingValue': encodeEnrichedReadingValue,
-                'protocol': protocolForm.get('protocol').value,
-                'protocolId': protocolForm.get('protocolId').value,
-                'logLevel': protocolForm.get('logLevel').value,
-                'hostname': protocolForm.get('amqp.hostname').value,
-                'port': protocolForm.get('amqp.port').value,
-                'username': protocolForm.get('amqp.username').value,
-                'password': protocolForm.get('amqp.password').value,
-                'exchangeName': protocolForm.get('amqp.exchangeName').value,
-                'exchangeType': protocolForm.get('amqp.exchangeType').value,
-                'routingKey': protocolForm.get('amqp.routingKey').value,
-                'reliable': protocolForm.get('amqp.reliable').value
-            };
-
-        }
-
-
-        return protocolObj;
-
     }
 
     /**
@@ -1999,5 +1799,10 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
             flowConfiguration: pipeline.flowConfiguration,
             logLevel: pipeline.logLevel
         });
+    }
+    
+    saveToCanvas(eventData: any) {
+        const node = this.editor.nodes.find(node => node.id === this.selectedNode.id)
+        node.data['customdata'] = eventData;
     }
 }

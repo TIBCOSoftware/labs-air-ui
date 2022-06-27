@@ -38,12 +38,12 @@
         <app-common-pipeline-inferencing *ngIf="inferencingConfig" #inferenceComponent [devices]="devices" [models]="models"
             [modelForm]="modelForm" [filters]="filters" fxFlex></app-common-pipeline-inferencing>
 
-        <app-common-pipeline-data-store *ngIf="dataStoreConfig" [dataStoreForm]="dataStoreForm"
-            [dataOptionsForm]="dataOptionsForm" fxFlex>
+        <app-common-pipeline-data-store *ngIf="dataStoreConfig" [gatewayId]="gatewayId" [dataStore]="selectedNode" 
+            (formUpdatedEvent)="saveToCanvas($event)" fxFlex>
         </app-common-pipeline-data-store>
 
-        <app-common-pipeline-data-publisher *ngIf="dataPublisherConfig" [dataPublisherForm]="protocolForm"
-            [dataOptionsForm]="dataOptionsForm" fxFlex>
+        <app-common-pipeline-data-publisher *ngIf="dataPublisherConfig" [protocol]="selectedNode" (formUpdatedEvent)="saveToCanvas($event)" 
+            [gatewayId]="gatewayId" fxFlex>
         </app-common-pipeline-data-publisher>
 
         <app-common-pipeline-streaming *ngIf="streamingConfig" [streamingForm]="streamingForm" [devices]="devices" fxFlex>

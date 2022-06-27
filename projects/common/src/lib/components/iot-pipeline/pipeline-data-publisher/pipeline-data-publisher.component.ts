@@ -1,11 +1,12 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { Component, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { Protocol } from '@TIBCOSoftware/labs-air-graph-client';
+import { debounceTime, Subscription, distinctUntilChanged } from 'rxjs';
 
 export interface SelectItem {
-  value: string;
-  viewValue: string;
+    value: string;
+    viewValue: string;
 }
 
 @Component({
@@ -13,314 +14,474 @@ export interface SelectItem {
     templateUrl: './pipeline-data-publisher.component.html',
     styleUrls: ['./pipeline-data-publisher.component.css']
 })
-export class PipelineDataPublisherComponent implements OnInit {
+export class PipelineDataPublisherComponent implements OnInit, OnDestroy {
 
-  @Input() dataPublisherForm: FormGroup;
-  @Input() dataOptionsForm: FormGroup;
+    @Input() gatewayId: string;
+    @Input() protocol: any;
+    @Output() formUpdatedEvent = new EventEmitter<Protocol>();
 
-  logLevels: SelectItem[] = [
-      { value: 'INFO', viewValue: 'INFO' },
-      { value: 'WARN', viewValue: 'WARN' },
-      { value: 'ERROR', viewValue: 'ERROR' },
-      { value: 'DEBUG', viewValue: 'DEBUG' }
-  ];
+    logLevels: SelectItem[] = [
+        { value: 'INFO', viewValue: 'INFO' },
+        { value: 'WARN', viewValue: 'WARN' },
+        { value: 'ERROR', viewValue: 'ERROR' },
+        { value: 'DEBUG', viewValue: 'DEBUG' }
+    ];
 
-  hidePassword = true;
+    hidePassword = true;
 
-  mqttProtocol = false;
-  kafkaProtocol = false;
-  amqpProtocol = false;
-  httpProtocol = false;
+    mqttProtocol = false;
+    kafkaProtocol = false;
+    amqpProtocol = false;
+    httpProtocol = false;
 
-  protocols: Protocol[];
-  kafkaInitialOffsets: SelectItem[] = [
-      { value: 'Oldest', viewValue: 'Oldest' },
-      { value: 'Newest', viewValue: 'Newest' }
-  ];
-  kafkaAuthModes: SelectItem[] = [
-      { value: 'None', viewValue: 'None' },
-      { value: 'SASL/Plain', viewValue: 'SASL/Plain' },
-      { value: 'SSL', viewValue: 'SSL' }
-  ];
-  onKafkaAuthModeSelected(event) {
-  }
+    protocols: Protocol[];
+    kafkaInitialOffsets: SelectItem[] = [
+        { value: 'Oldest', viewValue: 'Oldest' },
+        { value: 'Newest', viewValue: 'Newest' }
+    ];
+    kafkaAuthModes: SelectItem[] = [
+        { value: 'None', viewValue: 'None' },
+        { value: 'SASL/Plain', viewValue: 'SASL/Plain' },
+        { value: 'SSL', viewValue: 'SSL' }
+    ];
 
-  constructor(private graphService: GraphService) {
+    dataPublisherForm: FormGroup;
+    dataOptionsForm: FormGroup;
+    formChangeSubscription: Subscription;
 
-  }
+    onKafkaAuthModeSelected(event) {
+    }
 
-  ngOnInit() {
-      this.getProtocols(this.dataPublisherForm.get('gateway').value);
+    constructor(private graphService: GraphService, private formBuilder: FormBuilder) {
 
-      this.onFormChanges();
-  }
+    }
 
-  public getProtocols(gatewayId: string) {
+    ngOnInit() {
+        this.getProtocols(this.gatewayId);
+        this.initForms();
+        this.onFormChanges();
+        if (this.protocol) {
+            this.updateProtocolForm(this.protocol.data['customdata'])
+        }
+    }
 
-      this.graphService.getProtocols(gatewayId)
-          .subscribe(res => {
-              this.protocols = res as Protocol[];
+    ngOnDestroy(): void {
+        this.formChangeSubscription.unsubscribe()
+    }
 
-              const currentProtocol = this.dataPublisherForm.get('protocolId').value;
+    getProtocols(gatewayId: string) {
 
-              if (currentProtocol == '') {
-                  this.mqttProtocol = false;
-                  this.kafkaProtocol = false;
-                  this.amqpProtocol = false;
-                  this.httpProtocol = false;
-              }
-              else {
+        this.graphService.getProtocols(gatewayId)
+            .subscribe(res => {
+                this.protocols = res as Protocol[];
 
-                  const protocol = this.getProtocolById(currentProtocol);
+                const currentProtocol = this.dataPublisherForm.get('protocolId').value;
 
-                  this.setForm(protocol);
+                if (currentProtocol == '') {
+                    this.mqttProtocol = false;
+                    this.kafkaProtocol = false;
+                    this.amqpProtocol = false;
+                    this.httpProtocol = false;
+                }
+                else {
 
-              }
+                    const protocol = this.getProtocolById(currentProtocol);
 
-          });
-  }
+                    this.setForm(protocol);
 
-  onProtocolSelected(event) {
+                }
 
-      // let protocol = this.protocols[event.value];
-      const protocol = this.getProtocolById(event.value);
+            });
+    }
 
-      this.setForm(protocol);
-  }
+    onProtocolSelected(event) {
 
-  getProtocolById(id) {
-      let protocol = null;
+        // let protocol = this.protocols[event.value];
+        const protocol = this.getProtocolById(event.value);
 
-      for (let i = 0; i < this.protocols.length; i++) {
-          if (this.protocols[i].uuid == id) {
-              protocol = this.protocols[i];
-              break;
-          }
-      }
+        this.setForm(protocol);
+    }
 
-      return protocol;
+    getProtocolById(id) {
+        let protocol = null;
 
-  }
+        for (let i = 0; i < this.protocols.length; i++) {
+            if (this.protocols[i].uuid == id) {
+                protocol = this.protocols[i];
+                break;
+            }
+        }
 
-  setForm(protocol) {
+        return protocol;
 
-      console.log('setForm protocol: ', protocol);
-      console.log('Selected protocol: ', protocol.protocolType);
+    }
 
-      this.mqttProtocol = false;
-      this.kafkaProtocol = false;
-      this.amqpProtocol = false;
-      this.httpProtocol = false;
+    setForm(protocol) {
 
-      if (protocol.protocolType == 'MQTT') {
-          const delimInd = protocol.brokerURL.lastIndexOf(':');
-          const hostname = protocol.brokerURL.substring(6, delimInd);
-          const port = protocol.brokerURL.substring(delimInd + 1);
+        console.log('setForm protocol: ', protocol);
+        console.log('Selected protocol: ', protocol.protocolType);
 
-          // Update transport Form
-          this.dataPublisherForm.patchValue(
-              {
-                  uid: protocol.uid,
-                  protocol: protocol.protocolType,
-                  mqtt: {
-                      hostname: hostname,
-                      port: port,
-                      username: protocol.username,
-                      password: protocol.password,
-                      encryptionMode: protocol.encryptionMode,
-                      caCertificate: protocol.caCerticate,
-                      clientCertificate: protocol.clientCertificate,
-                      clientKey: protocol.clientKey,
-                      topic: protocol.topic,
-                      maximumQOS: protocol.maximumQOS
-                  },
-                  kafka: {
-                      hostname: 'changeme',
-                      port: 'changeme',
-                      authMode: 'changeme',
-                      username: 'changeme',
-                      password: 'changeme',
-                      clientCertificate: 'changeme',
-                      clientKey: 'changeme',
-                      serverCertificate: 'changeme',
-                      connectionTimeout: 'changeme',
-                      retryBackoff: 'changeme',
-                      topic: 'changeme',
-                      consumerGroupId: 'changeme',
-                      commitInterval: 'changeme',
-                      initialOffset: 'changeme',
-                      fetchMinBytes: 'changeme',
-                      fetchMaxWait: 'changeme',
-                      heartbeatInterval: 'changeme',
-                      sessionTimeout: 'changeme'
-                  },
-                  amqp: {
-                      hostname: 'changeme',
-                      port: 'changeme',
-                      username: 'changeme',
-                      password: 'changeme',
-                      exchangeName: 'changeme',
-                      exchangeType: 'changeme',
-                      routingKey: 'changeme',
-                      reliable: 'changeme'
-                  }
-              },
-              { emitEvent: false }
-          );
+        this.mqttProtocol = false;
+        this.kafkaProtocol = false;
+        this.amqpProtocol = false;
+        this.httpProtocol = false;
 
-          this.mqttProtocol = true;
-      }
-      else if (protocol.protocolType == 'Kafka') {
-          const delimInd = protocol.brokerURL.lastIndexOf(':');
-          const hostname = protocol.brokerURL.substring(0, delimInd);
-          const port = protocol.brokerURL.substring(delimInd + 1);
+        if (protocol.protocolType == 'MQTT') {
+            const delimInd = protocol.brokerURL.lastIndexOf(':');
+            const hostname = protocol.brokerURL.substring(6, delimInd);
+            const port = protocol.brokerURL.substring(delimInd + 1);
 
-          // Update transport Form
-          this.dataPublisherForm.patchValue(
-              {
-                  uid: protocol.uid,
-                  protocol: protocol.protocolType,
-                  mqtt: {
-                      hostname: 'changeme',
-                      port: 'changeme',
-                      username: 'changeme',
-                      password: 'changeme',
-                      encryptionMode: 'None',
-                      caCerticate: 'changeme',
-                      clientCertificate: 'changeme',
-                      clientKey: 'changeme',
-                      topic: 'changeme',
-                      maximumQOS: '2'
-                  },
-                  kafka: {
-                      hostname: hostname,
-                      port: port,
-                      authMode: protocol.authMode,
-                      username: protocol.username,
-                      password: protocol.password,
-                      clientCertificate: protocol.clientCertificate,
-                      clientKey: protocol.clientKey,
-                      serverCertificate: protocol.serverCertificate,
-                      connectionTimeout: protocol.connectionTimeout,
-                      retryBackoff: protocol.retryBackoff,
-                      topic: protocol.topic,
-                      consumerGroupId: protocol.consumerGroupId,
-                      commitInterval: protocol.commitInterval,
-                      initialOffset: protocol.initialOffset,
-                      fetchMinBytes: protocol.fetchMinBytes,
-                      fetchMaxWait: protocol.fetchMaxWait,
-                      heartbeatInterval: protocol.heartbeatInterval,
-                      sessionTimeout: protocol.sessionTimeout,
-                  },
-                  amqp: {
-                      hostname: 'changeme',
-                      port: 'changeme',
-                      username: 'changeme',
-                      password: 'changeme',
-                      exchangeName: 'changeme',
-                      exchangeType: 'changeme',
-                      routingKey: 'changeme',
-                      reliable: 'changeme'
-                  }
-              },
-              { emitEvent: false }
-          );
+            // Update transport Form
+            this.dataPublisherForm.patchValue(
+                {
+                    uid: protocol.uid,
+                    protocol: protocol.protocolType,
+                    mqtt: {
+                        hostname: hostname,
+                        port: port,
+                        username: protocol.username,
+                        password: protocol.password,
+                        encryptionMode: protocol.encryptionMode,
+                        caCertificate: protocol.caCerticate,
+                        clientCertificate: protocol.clientCertificate,
+                        clientKey: protocol.clientKey,
+                        topic: protocol.topic,
+                        maximumQOS: protocol.maximumQOS
+                    },
+                    kafka: {
+                        hostname: 'changeme',
+                        port: 'changeme',
+                        authMode: 'changeme',
+                        username: 'changeme',
+                        password: 'changeme',
+                        clientCertificate: 'changeme',
+                        clientKey: 'changeme',
+                        serverCertificate: 'changeme',
+                        connectionTimeout: 'changeme',
+                        retryBackoff: 'changeme',
+                        topic: 'changeme',
+                        consumerGroupId: 'changeme',
+                        commitInterval: 'changeme',
+                        initialOffset: 'changeme',
+                        fetchMinBytes: 'changeme',
+                        fetchMaxWait: 'changeme',
+                        heartbeatInterval: 'changeme',
+                        sessionTimeout: 'changeme'
+                    },
+                    amqp: {
+                        hostname: 'changeme',
+                        port: 'changeme',
+                        username: 'changeme',
+                        password: 'changeme',
+                        exchangeName: 'changeme',
+                        exchangeType: 'changeme',
+                        routingKey: 'changeme',
+                        reliable: 'changeme'
+                    }
+                },
+                { emitEvent: false }
+            );
 
-          this.kafkaProtocol = true;
-      }
-      else if (protocol.protocolType == 'AMQP') {
-          const delimInd = protocol.brokerURL.lastIndexOf(':');
-          const hostname = protocol.brokerURL.substring(0, delimInd);
-          const port = protocol.brokerURL.substring(delimInd + 1);
+            this.mqttProtocol = true;
+        }
+        else if (protocol.protocolType == 'Kafka') {
+            const delimInd = protocol.brokerURL.lastIndexOf(':');
+            const hostname = protocol.brokerURL.substring(0, delimInd);
+            const port = protocol.brokerURL.substring(delimInd + 1);
 
-          // Update transport Form
-          this.dataPublisherForm.patchValue(
-              {
-                  uid: protocol.uid,
-                  protocol: protocol.protocolType,
-                  mqtt: {
-                      hostname: 'changeme',
-                      port: 'changeme',
-                      username: 'changeme',
-                      password: 'changeme',
-                      encryptionMode: 'None',
-                      caCerticate: 'changeme',
-                      clientCertificate: 'changeme',
-                      clientKey: 'changeme',
-                      topic: 'changeme',
-                      maximumQOS: '2'
-                  },
-                  kafka: {
-                      hostname: 'changeme',
-                      port: 'changeme',
-                      authMode: 'changeme',
-                      username: 'changeme',
-                      password: 'changeme',
-                      clientCertificate: 'changeme',
-                      clientKey: 'changeme',
-                      serverCertificate: 'changeme',
-                      connectionTimeout: 'changeme',
-                      retryBackoff: 'changeme',
-                      topic: 'changeme',
-                      consumerGroupId: 'changeme',
-                      commitInterval: 'changeme',
-                      initialOffset: 'changeme',
-                      fetchMinBytes: 'changeme',
-                      fetchMaxWait: 'changeme',
-                      heartbeatInterval: 'changeme',
-                      sessionTimeout: 'changeme'
-                  },
-                  amqp: {
-                      hostname: hostname,
-                      port: port,
-                      username: protocol.username,
-                      password: protocol.password,
-                      exchangeName: protocol.topic,
-                      exchangeType: 'topic',
-                      routingKey: 'air',
-                      reliable: 'true'
-                  }
-              },
-              { emitEvent: false }
-          );
+            // Update transport Form
+            this.dataPublisherForm.patchValue(
+                {
+                    uid: protocol.uid,
+                    protocol: protocol.protocolType,
+                    mqtt: {
+                        hostname: 'changeme',
+                        port: 'changeme',
+                        username: 'changeme',
+                        password: 'changeme',
+                        encryptionMode: 'None',
+                        caCerticate: 'changeme',
+                        clientCertificate: 'changeme',
+                        clientKey: 'changeme',
+                        topic: 'changeme',
+                        maximumQOS: '2'
+                    },
+                    kafka: {
+                        hostname: hostname,
+                        port: port,
+                        authMode: protocol.authMode,
+                        username: protocol.username,
+                        password: protocol.password,
+                        clientCertificate: protocol.clientCertificate,
+                        clientKey: protocol.clientKey,
+                        serverCertificate: protocol.serverCertificate,
+                        connectionTimeout: protocol.connectionTimeout,
+                        retryBackoff: protocol.retryBackoff,
+                        topic: protocol.topic,
+                        consumerGroupId: protocol.consumerGroupId,
+                        commitInterval: protocol.commitInterval,
+                        initialOffset: protocol.initialOffset,
+                        fetchMinBytes: protocol.fetchMinBytes,
+                        fetchMaxWait: protocol.fetchMaxWait,
+                        heartbeatInterval: protocol.heartbeatInterval,
+                        sessionTimeout: protocol.sessionTimeout,
+                    },
+                    amqp: {
+                        hostname: 'changeme',
+                        port: 'changeme',
+                        username: 'changeme',
+                        password: 'changeme',
+                        exchangeName: 'changeme',
+                        exchangeType: 'changeme',
+                        routingKey: 'changeme',
+                        reliable: 'changeme'
+                    }
+                },
+                { emitEvent: false }
+            );
 
-          this.amqpProtocol = true;
-      }
-      else if (protocol.protocolType == 'HTTP') {
-          this.httpProtocol = true;
-      }
+            this.kafkaProtocol = true;
+        }
+        else if (protocol.protocolType == 'AMQP') {
+            const delimInd = protocol.brokerURL.lastIndexOf(':');
+            const hostname = protocol.brokerURL.substring(0, delimInd);
+            const port = protocol.brokerURL.substring(delimInd + 1);
 
-  }
+            // Update transport Form
+            this.dataPublisherForm.patchValue(
+                {
+                    uid: protocol.uid,
+                    protocol: protocol.protocolType,
+                    mqtt: {
+                        hostname: 'changeme',
+                        port: 'changeme',
+                        username: 'changeme',
+                        password: 'changeme',
+                        encryptionMode: 'None',
+                        caCerticate: 'changeme',
+                        clientCertificate: 'changeme',
+                        clientKey: 'changeme',
+                        topic: 'changeme',
+                        maximumQOS: '2'
+                    },
+                    kafka: {
+                        hostname: 'changeme',
+                        port: 'changeme',
+                        authMode: 'changeme',
+                        username: 'changeme',
+                        password: 'changeme',
+                        clientCertificate: 'changeme',
+                        clientKey: 'changeme',
+                        serverCertificate: 'changeme',
+                        connectionTimeout: 'changeme',
+                        retryBackoff: 'changeme',
+                        topic: 'changeme',
+                        consumerGroupId: 'changeme',
+                        commitInterval: 'changeme',
+                        initialOffset: 'changeme',
+                        fetchMinBytes: 'changeme',
+                        fetchMaxWait: 'changeme',
+                        heartbeatInterval: 'changeme',
+                        sessionTimeout: 'changeme'
+                    },
+                    amqp: {
+                        hostname: hostname,
+                        port: port,
+                        username: protocol.username,
+                        password: protocol.password,
+                        exchangeName: protocol.topic,
+                        exchangeType: 'topic',
+                        routingKey: 'air',
+                        reliable: 'true'
+                    }
+                },
+                { emitEvent: false }
+            );
 
-  onFormChanges(): void {
-      this.dataPublisherForm.valueChanges.subscribe(val => {
+            this.amqpProtocol = true;
+        }
+        else if (protocol.protocolType == 'HTTP') {
+            this.httpProtocol = true;
+        }
 
-          console.log('OnFormChanges: ', val);
+    }
 
-          const protocol = this.dataPublisherForm.get('protocol').value;
+    onFormChanges(): void {
+        this.formChangeSubscription = this.dataPublisherForm.valueChanges
+        .pipe(
+            debounceTime(500),
+            distinctUntilChanged()
+        )
+        .subscribe(val => {
 
-          this.mqttProtocol = false;
-          this.kafkaProtocol = false;
-          this.amqpProtocol = false;
-          this.httpProtocol = false;
+            console.log('OnFormChanges: ', val);
 
-          if (protocol != '') {
+            const protocol = this.dataPublisherForm.get('protocol').value;
 
-              if (protocol == 'MQTT') {
-                  this.mqttProtocol = true;
-              }
-              else if (protocol == 'Kafka') {
-                  this.kafkaProtocol = true;
-              }
-              else if (protocol == 'AMQP') {
-                  this.amqpProtocol = true;
-              }
-              else if (protocol == 'HTTP') {
-                  this.httpProtocol = true;
-              }
+            this.mqttProtocol = false;
+            this.kafkaProtocol = false;
+            this.amqpProtocol = false;
+            this.httpProtocol = false;
 
-          }
+            if (protocol != '') {
 
-      });
-  }
+                if (protocol == 'MQTT') {
+                    this.mqttProtocol = true;
+                }
+                else if (protocol == 'Kafka') {
+                    this.kafkaProtocol = true;
+                }
+                else if (protocol == 'AMQP') {
+                    this.amqpProtocol = true;
+                }
+                else if (protocol == 'HTTP') {
+                    this.httpProtocol = true;
+                }
+
+            }
+
+            this.formUpdatedEvent.emit(this.dataPublisherForm.value);
+        });
+    }
+
+    initForms() {
+        this.dataPublisherForm = this.formBuilder.group({
+            uid: ['changeme', Validators.required],
+            gateway: [this.gatewayId, Validators.required],
+            protocolId: ['', Validators.required],
+            protocol: ['', Validators.required],
+            logLevel: ['INFO', Validators.required],
+            mqtt: this.formBuilder.group({
+                hostname: ['changeme', Validators.required],
+                port: ['changeme', Validators.required],
+                username: ['changeme', Validators.required],
+                password: ['changeme', Validators.required],
+                encryptionMode: ['None', Validators.required],
+                caCertificate: [''],
+                clientCertificate: [''],
+                clientKey: [''],
+                topic: ['changeme', Validators.required],
+                maximumQOS: ['2', Validators.required]
+            }),
+            kafka: this.formBuilder.group({
+                hostname: ['changeme', Validators.required],
+                port: ['changeme', Validators.required],
+                authMode: ['None', Validators.required],
+                username: ['changeme', Validators.required],
+                password: ['changeme', Validators.required],
+                clientCertificate: [''],
+                clientKey: [''],
+                serverCertificate: [''],
+                connectionTimeout: ['30', Validators.required],
+                retryBackoff: ['3', Validators.required],
+                topic: ['changeme', Validators.required],
+                consumerGroupId: ['changeme', Validators.required],
+                commitInterval: ['500', Validators.required],
+                initialOffset: ['Oldest', Validators.required],
+                fetchMinBytes: ['1', Validators.required],
+                fetchMaxWait: ['500', Validators.required],
+                heartbeatInterval: ['3000', Validators.required],
+                sessionTimeout: ['30000', Validators.required]
+            }),
+            amqp: this.formBuilder.group({
+                hostname: ['changeme', Validators.required],
+                port: ['changeme', Validators.required],
+                username: ['changeme', Validators.required],
+                password: ['changeme', Validators.required],
+                exchangeName: ['changeme', Validators.required],
+                exchangeType: ['topic', Validators.required],
+                routingKey: ['air', Validators.required],
+                reliable: ['true', Validators.required],
+            })
+        });
+    
+        this.dataOptionsForm = this.formBuilder.group({
+            useReading: [true],
+            encodeReadingValue: [false],
+            useEnrichedReading: [false],
+            encodeEnrichedReadingValue: [false]
+        });
+    }
+
+    updateProtocolForm(context) {
+
+        if (context != null || context != undefined) {
+            console.log('Updating protocolform with context: ', context);
+
+            const protocolId = context.protocolId;
+            const protocol = context.protocol;
+
+            // Update protocol form
+            console.log('Setting transportviewform protocol to: ', protocol);
+
+            if (protocol == 'MQTT') {
+
+                this.dataPublisherForm.patchValue({
+                    protocol: protocol,
+                    protocolId: protocolId,
+                    logLevel: context.logLevel,
+                    mqtt: {
+                        hostname: context.hostname,
+                        port: context.port,
+                        username: context.username,
+                        password: context.password,
+                        encryptionMode: context.encryptionMode,
+                        caCertificate: context.caCertificate,
+                        clientCertificate: context.clientCertificate,
+                        clientKey: context.clientKey,
+                        topic: context.topic,
+                        maximumQOS: context.maximumQOS
+                    }
+                });
+
+            }
+            else if (protocol == 'Kafka') {
+
+                this.dataPublisherForm.patchValue({
+                    protocol: protocol,
+                    protocolId: protocolId,
+                    logLevel: context.logLevel,
+                    kafka: {
+                        hostname: context.hostname,
+                        port: context.port,
+                        authMode: context.authMode,
+                        username: context.username,
+                        password: context.password,
+                        clientCertificate: context.clientCertificate,
+                        clientKey: context.clientKey,
+                        serverCertificate: context.serverCertificate,
+                        connectionTimeout: context.connectionTimeout,
+                        retryBackoff: context.retryBackoff,
+                        topic: context.topic,
+                        consumerGroupId: context.consumerGroupId,
+                        commitInterval: context.commitInterval,
+                        initialOffset: context.initialOffset,
+                        fetchMinBytes: context.fetchMinBytes,
+                        fetchMaxWait: context.fetchMaxWait,
+                        heartbeatInterval: context.heartbeatInterval,
+                        sessionTimeout: context.sessionTimeout
+                    }
+                });
+            }
+            else if (protocol == 'AMQP') {
+
+                this.dataPublisherForm.patchValue({
+                    protocol: protocol,
+                    protocolId: protocolId,
+                    logLevel: context.logLevel,
+                    amqp: {
+                        hostname: context.hostname,
+                        port: context.port,
+                        username: context.username,
+                        password: context.password,
+                        exchangeName: context.exchangeName,
+                        exchangeType: context.exchangeType,
+                        routingKey: context.routingKey,
+                        reliable: context.reliable
+                    }
+                });
+            }
+
+        }
+    }
 }
