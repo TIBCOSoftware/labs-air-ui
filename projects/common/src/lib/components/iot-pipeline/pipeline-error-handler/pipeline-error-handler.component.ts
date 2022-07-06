@@ -1,7 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { Device, Resource } from '../../../models/iot.model';
-import { Subscription } from 'rxjs';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from "@angular/core";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { debounceTime, Subscription, distinctUntilChanged, Observable } from "rxjs";
 
 export interface SelectItem {
   value: string;
@@ -9,33 +8,69 @@ export interface SelectItem {
 }
 
 @Component({
-    selector: 'app-common-pipeline-error-handler',
-    templateUrl: './pipeline-error-handler.component.html',
-    styleUrls: ['./pipeline-error-handler.component.css']
+  selector: "app-common-pipeline-error-handler",
+  templateUrl: "./pipeline-error-handler.component.html",
+  styleUrls: ["./pipeline-error-handler.component.css"],
 })
-export class PipelineErrorHandlerComponent implements OnInit {
-
-  @Input() errorHandlerForm: FormGroup;
+export class PipelineErrorHandlerComponent implements OnInit, OnDestroy {
+  @Input() errorHandler;
+  @Output() formUpdatedEvent = new EventEmitter<any>();
+  formChangeSubscription: Subscription;
+  errorHandlerForm: FormGroup;
+  @Input() nodeChangeEvent: Observable<any>;
+  nodeChangeSubscription: Subscription;
 
   logLevels: SelectItem[] = [
-      { value: 'INFO', viewValue: 'INFO' },
-      { value: 'WARN', viewValue: 'WARN' },
-      { value: 'ERROR', viewValue: 'ERROR' },
-      { value: 'DEBUG', viewValue: 'DEBUG' }
+    { value: "INFO", viewValue: "INFO" },
+    { value: "WARN", viewValue: "WARN" },
+    { value: "ERROR", viewValue: "ERROR" },
+    { value: "DEBUG", viewValue: "DEBUG" },
   ];
 
-
-  constructor() {
-      console.log('constructor streaming component config');
+  constructor(private formBuilder: FormBuilder) {
+    console.log("constructor streaming component config");
   }
 
   ngOnInit(): void {
+    this.initForm();
+    this.onFormChanges();
+    if (this.errorHandler) {
+      this.updateErrorHandlerForm(this.errorHandler.data['customdata'])
+    }
+  }
 
-      this.onFormChanges();
+  ngOnDestroy(): void {
+      this.formChangeSubscription.unsubscribe();
+      this.nodeChangeSubscription.unsubscribe();
   }
 
   onFormChanges(): void {
+    this.nodeChangeSubscription = this.nodeChangeEvent.subscribe( node => {
+      this.updateErrorHandlerForm(node.data['customdata']);
+    });
 
+    this.formChangeSubscription = this.errorHandlerForm.valueChanges.pipe(
+      debounceTime(200),
+      distinctUntilChanged()
+    ).subscribe(() => {
+      this.formUpdatedEvent.emit(this.errorHandlerForm.value);
+    });
+  }
+
+  initForm() {
+    this.errorHandlerForm = this.formBuilder.group({
+      logLevel: ['INFO', Validators.required]
+    });
+  }
+
+  updateErrorHandlerForm(context) {
+    if (context != null || context != undefined) {
+      console.log("Updating error handler component with context: ", context);
+
+      this.errorHandlerForm.patchValue({
+        logLevel: context.logLevel,
+      });
+    }
   }
 
 }

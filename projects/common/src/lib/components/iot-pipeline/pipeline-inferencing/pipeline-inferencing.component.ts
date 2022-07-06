@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnInit, Input, SimpleChanges } from '@angular/core';
+import { Component, OnChanges, OnInit, Input, SimpleChanges, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 
 import { NestedTreeControl } from '@angular/cdk/tree';
@@ -6,19 +6,20 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { EdgeService } from '../../../services/edge/edge.service';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 
-import { Device, FiltersConfig } from '../../../models/iot.model';
-import { FormArray, FormGroup, FormBuilder } from '@angular/forms';
+import { Device, FiltersConfig, ModelConfig } from '../../../models/iot.model';
+import { FormArray, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Model } from '@TIBCOSoftware/labs-air-graph-client';
+import { debounceTime, distinctUntilChanged, Observable, Subscription } from 'rxjs';
 
 export interface SelectItem {
-  value: string;
-  viewValue: string;
+    value: string;
+    viewValue: string;
 }
 
 interface DeviceNode {
-  name: string;
-  parent: string;
-  deviceResources?: DeviceNode[];
+    name: string;
+    parent: string;
+    deviceResources?: DeviceNode[];
 }
 
 @Component({
@@ -26,307 +27,355 @@ interface DeviceNode {
     templateUrl: './pipeline-inferencing.component.html',
     styleUrls: ['./pipeline-inferencing.component.css']
 })
-export class PipelineInferencingComponent implements OnInit, OnChanges  {
+export class PipelineInferencingComponent implements OnInit, OnChanges, OnDestroy {
+
 
+    @Input() devices: Device[];
+    @Input() models: Model[];
+    @Input() filters: any[];
+    @Input() model: any;
+    @Output() formUpdatedEvent = new EventEmitter<Model>();
+    formChangeSubscription: Subscription;
+    modelForm: FormGroup;
+    @Input() nodeChangeEvent: Observable<any>;
+    nodeChangeSubscription: Subscription;
 
-  @Input() devices: Device[];
-  @Input() models: Model[];
-  @Input() modelForm: FormGroup;
-  @Input() filters: any[];
+    // Added to prevent compile error in oss version
+    activeNode: Node;
 
-  // Added to prevent compile error in oss version
-  activeNode: Node;
+    logLevels: SelectItem[] = [
+        { value: 'INFO', viewValue: 'INFO' },
+        { value: 'WARN', viewValue: 'WARN' },
+        { value: 'ERROR', viewValue: 'ERROR' },
+        { value: 'DEBUG', viewValue: 'DEBUG' }
+    ];
 
-  logLevels: SelectItem[] = [
-      { value: 'INFO', viewValue: 'INFO' },
-      { value: 'WARN', viewValue: 'WARN' },
-      { value: 'ERROR', viewValue: 'ERROR' },
-      { value: 'DEBUG', viewValue: 'DEBUG' }
-  ];
+    deviceNodeList: DeviceNode[] = [];
 
-  deviceNodeList: DeviceNode[] = [];
+    filtersConfig: FiltersConfig[] = [];
 
-  filtersConfig: FiltersConfig[] = [];
+    treeControl = new NestedTreeControl<DeviceNode>(node => node.deviceResources);
+    devicesDataSource = new MatTreeNestedDataSource<DeviceNode>();
 
-  treeControl = new NestedTreeControl<DeviceNode>(node => node.deviceResources);
-  devicesDataSource = new MatTreeNestedDataSource<DeviceNode>();
+    /** The selection for checklist */
+    checklistSelection = new SelectionModel<DeviceNode>(true /* multiple */);
 
-  /** The selection for checklist */
-  checklistSelection = new SelectionModel<DeviceNode>(true /* multiple */);
+    constructor(private edgeService: EdgeService,
+        private graphService: GraphService,
+        private formBuilder: FormBuilder) {
 
-  constructor(private edgeService: EdgeService,
-    private graphService: GraphService,
-    private formBuilder: FormBuilder) {
+    }
 
-  }
+    ngOnInit(): void {
+        // this.devicesDataSource.data = TREE_DATA;
+        this.initForm();
+        this.initializeDataSource();
+        console.log('PipelineInferencing - ngOnInit - devices: ', this.devices);
+        this.onFormChanges();
+        if (this.model) {
+            this.updateInferencingForm(this.model.data['customdata']);
+        }
+    }
 
-  ngOnInit(): void {
-      // this.devicesDataSource.data = TREE_DATA;
-      this.initializeDataSource();
+    ngOnDestroy(): void {
+        this.formChangeSubscription.unsubscribe();
+        this.nodeChangeSubscription.unsubscribe();
+    }
 
-      console.log('PipelineInferencing - ngOnInit - devices: ', this.devices);
+    ngOnChanges(changes: SimpleChanges) {
+        console.log('PipelineInferencing - ngOnChanges - devices: ', this.devices);
+        this.initializeDataSource();
+    }
 
-      this.onFormChanges();
-  }
+    hasChild = (_: number, node: DeviceNode) => !!node.deviceResources && node.deviceResources.length > 0;
 
-  ngOnChanges(changes: SimpleChanges) {
+    initializeDataSource() {
 
-      this.initializeDataSource();
+        console.log('Devices used in initialize: ', this.devices);
 
-      console.log('PipelineInferencing - ngOnChanges - devices: ', this.devices);
+        // Clear deviceNodeList
+        this.deviceNodeList = [];
 
-  }
+        // Add device to device node list
+        this.devices.forEach((dev, index) => {
 
-  hasChild = (_: number, node: DeviceNode) => !!node.deviceResources && node.deviceResources.length > 0;
+            const resources = [];
+            dev.profile.deviceResources.forEach((dr) => {
 
-  initializeDataSource() {
+                resources.push({
+                    name: dr.name,
+                    parent: dev.name
+                });
+            });
 
-      console.log('Devices used in initialize: ', this.devices);
+            // Add resources
+            this.deviceNodeList.push({
+                name: dev.name,
+                parent: 'ROOT',
+                deviceResources: resources
+            });
+        });
 
-      // Clear deviceNodeList
-      this.deviceNodeList = [];
+        console.log('updated device node list: ', this.deviceNodeList);
 
-      // Add device to device node list
-      this.devices.forEach((dev, index) => {
+        // this.devicesDataSource.data = null;
+        this.devicesDataSource.data = this.deviceNodeList;
 
-          const resources = [];
-          dev.profile.deviceResources.forEach((dr) => {
+        // Get filters config when devices available
+        if (this.devices.length > 0)
+            this.setupFilters();
+    }
 
-              resources.push({
-                  name: dr.name,
-                  parent: dev.name
-              });
-          });
+    /** Toggle a leaf to-do item selection. Check all the parents to see if they changed */
+    leafItemSelectionToggle(node: DeviceNode): void {
 
-          // Add resources
-          this.deviceNodeList.push({
-              name: dev.name,
-              parent: 'ROOT',
-              deviceResources: resources
-          });
-      });
+        this.checklistSelection.toggle(node);
 
-      console.log('updated device node list: ', this.deviceNodeList);
+    }
 
-      // this.devicesDataSource.data = null;
-      this.devicesDataSource.data = this.deviceNodeList;
+    /** Toggle the to-do item selection. Select/deselect all the descendants node */
+    itemSelectionToggle(node: DeviceNode): void {
 
-      // Get filters config when devices available
-      if (this.devices.length > 0)
-          this.setupFilters();
-  }
+        this.checklistSelection.toggle(node);
+        const descendants = this.treeControl.getDescendants(node);
+        this.checklistSelection.isSelected(node)
+            ? this.checklistSelection.select(...descendants)
+            : this.checklistSelection.deselect(...descendants);
 
-  /** Toggle a leaf to-do item selection. Check all the parents to see if they changed */
-  leafItemSelectionToggle(node: DeviceNode): void {
+        // Force update for the parent
+        descendants.forEach(child => this.checklistSelection.isSelected(child));
 
-      this.checklistSelection.toggle(node);
+    }
 
-  }
 
-  /** Toggle the to-do item selection. Select/deselect all the descendants node */
-  itemSelectionToggle(node: DeviceNode): void {
+    /** Whether all the descendants of the node are selected. */
+    descendantsAllSelected(node: DeviceNode): boolean {
 
-      this.checklistSelection.toggle(node);
-      const descendants = this.treeControl.getDescendants(node);
-      this.checklistSelection.isSelected(node)
-          ? this.checklistSelection.select(...descendants)
-          : this.checklistSelection.deselect(...descendants);
+        const descendants = this.treeControl.getDescendants(node);
+        const descAllSelected = descendants.length > 0 && descendants.every(child => {
+            return this.checklistSelection.isSelected(child);
+        });
+        return descAllSelected;
+    }
 
-      // Force update for the parent
-      descendants.forEach(child => this.checklistSelection.isSelected(child));
+    /** Whether part of the descendants are selected */
+    descendantsPartiallySelected(node: DeviceNode): boolean {
 
-  }
+        const descendants = this.treeControl.getDescendants(node);
+        const result = descendants.some(child => this.checklistSelection.isSelected(child));
+        return result && !this.descendantsAllSelected(node);
+    }
 
+    selectNode(parent: string, name: string) {
 
-  /** Whether all the descendants of the node are selected. */
-  descendantsAllSelected(node: DeviceNode): boolean {
+        console.log('selectNode: ', parent, ' ', name);
+        console.log('deviceDataSource.data: ', this.devicesDataSource.data);
+        console.log('deviceDataSource.data length: ', this.devicesDataSource.data.length);
+        console.log('deviceDataSource.data[0]: ', this.devicesDataSource.data[0]);
 
-      const descendants = this.treeControl.getDescendants(node);
-      const descAllSelected = descendants.length > 0 && descendants.every(child => {
-          return this.checklistSelection.isSelected(child);
-      });
-      return descAllSelected;
-  }
+        console.log('deviceNodeList length: ', this.deviceNodeList.length);
+        console.log('deviceNodeList[0]: ', this.deviceNodeList[0]);
 
-  /** Whether part of the descendants are selected */
-  descendantsPartiallySelected(node: DeviceNode): boolean {
+        for (const parentNode of this.devicesDataSource.data) {
 
-      const descendants = this.treeControl.getDescendants(node);
-      const result = descendants.some(child => this.checklistSelection.isSelected(child));
-      return result && !this.descendantsAllSelected(node);
-  }
+            console.log('comparing to parentNode: ', parentNode.name, ' ', parent);
+            if (parentNode.name == parent) {
 
-  selectNode(parent: string, name: string) {
+                for (const node of parentNode.deviceResources) {
 
-      console.log('selectNode: ', parent, ' ', name);
-      console.log('deviceDataSource.data: ', this.devicesDataSource.data);
-      console.log('deviceDataSource.data length: ', this.devicesDataSource.data.length);
-      console.log('deviceDataSource.data[0]: ', this.devicesDataSource.data[0]);
+                    console.log('comparing to node: ', node);
 
-      console.log('deviceNodeList length: ', this.deviceNodeList.length);
-      console.log('deviceNodeList[0]: ', this.deviceNodeList[0]);
+                    if (node.parent == parent && node.name == name) {
 
-      for(const parentNode of this.devicesDataSource.data) {
+                        console.log('found node and updating if not selected');
 
-          console.log('comparing to parentNode: ', parentNode.name, ' ', parent);
-          if (parentNode.name == parent) {
 
-              for (const node of parentNode.deviceResources) {
+                        if (!this.checklistSelection.isSelected(node)) {
+                            console.log('selecting node: ', node);
 
-                  console.log('comparing to node: ', node);
+                            this.checklistSelection.toggle(node);
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+    }
 
-                  if (node.parent == parent && node.name == name) {
+    unselectAll() {
 
-                      console.log('found node and updating if not selected');
+        this.devicesDataSource.data.forEach((node) => {
 
+            if (this.checklistSelection.isSelected(node)) {
+                this.checklistSelection.toggle(node);
+            }
 
-                      if (!this.checklistSelection.isSelected(node)) {
-                          console.log('selecting node: ', node);
+            const descendants = this.treeControl.getDescendants(node);
+            this.checklistSelection.deselect(...descendants);
 
-                          this.checklistSelection.toggle(node);
-                      }
-                      break;
-                  }
-              }
-          }
-      }
-  }
+            // Force update for the parent
+            descendants.forEach(child => this.checklistSelection.isSelected(child));
 
-  unselectAll() {
+            this.treeControl.expand(node);
 
-      this.devicesDataSource.data.forEach((node) => {
+        });
 
-          if (this.checklistSelection.isSelected(node)) {
-              this.checklistSelection.toggle(node);
-          }
+        // for (let i = 0; i < this.treeControl.dataNodes.length; i++) {
+        //   if (this.checklistSelection.isSelected(this.treeControl.dataNodes[i]))
+        //     this.checklistSelection.deselect(this.treeControl.dataNodes[i]);
 
-          const descendants = this.treeControl.getDescendants(node);
-          this.checklistSelection.deselect(...descendants);
+        //   this.treeControl.expand(this.treeControl.dataNodes[i])
+        // }
+    }
 
-          // Force update for the parent
-          descendants.forEach(child => this.checklistSelection.isSelected(child));
+    selectAll() {
 
-          this.treeControl.expand(node);
+        this.devicesDataSource.data.forEach((node) => {
 
-      });
+            if (!this.checklistSelection.isSelected(node)) {
+                this.checklistSelection.toggle(node);
+            }
 
-      // for (let i = 0; i < this.treeControl.dataNodes.length; i++) {
-      //   if (this.checklistSelection.isSelected(this.treeControl.dataNodes[i]))
-      //     this.checklistSelection.deselect(this.treeControl.dataNodes[i]);
+            const descendants = this.treeControl.getDescendants(node);
+            this.checklistSelection.select(...descendants);
 
-      //   this.treeControl.expand(this.treeControl.dataNodes[i])
-      // }
-  }
+            // Force update for the parent
+            descendants.forEach(child => this.checklistSelection.isSelected(child));
 
-  selectAll() {
+            this.treeControl.expand(node);
 
-      this.devicesDataSource.data.forEach((node) => {
+        });
 
-          if (!this.checklistSelection.isSelected(node)) {
-              this.checklistSelection.toggle(node);
-          }
+        // for (let i = 0; i < this.treeControl.dataNodes.length; i++) {
+        //   if(!this.checklistSelection.isSelected(this.treeControl.dataNodes[i]))
+        //     this.checklistSelection.toggle(this.treeControl.dataNodes[i]);
+        //   this.treeControl.expand(this.treeControl.dataNodes[i])
+        // }
 
-          const descendants = this.treeControl.getDescendants(node);
-          this.checklistSelection.select(...descendants);
+    }
 
-          // Force update for the parent
-          descendants.forEach(child => this.checklistSelection.isSelected(child));
+    onModelSelected(event) {
+        const model = this.getModelById(event.value);
+        this.setForm(model);
+    }
 
-          this.treeControl.expand(node);
+    getModelById(id) {
+        let model = null;
 
-      });
+        for (let i = 0; i < this.models.length; i++) {
+            if (this.models[i].name == id) {
+                model = this.models[i];
+                break;
+            }
+        }
 
-      // for (let i = 0; i < this.treeControl.dataNodes.length; i++) {
-      //   if(!this.checklistSelection.isSelected(this.treeControl.dataNodes[i]))
-      //     this.checklistSelection.toggle(this.treeControl.dataNodes[i]);
-      //   this.treeControl.expand(this.treeControl.dataNodes[i])
-      // }
+        return model;
 
-  }
+    }
 
-  onModelSelected(event) {
-      const model = this.getModelById(event.value);
+    setForm(model) {
+        console.log('Selected model: ', model.name);
+        // Update model Form
+        this.modelForm.patchValue(
+            {
+                name: model.name,
+                description: model.description,
+                inputType: model.inputType,
+                url: model.url,
+                inputTemplate: model.inputTemplate,
+                method: model.method,
+                base64Encoded: model.base64Encoded
+            },
+            { emitEvent: false }
+        );
+        const modelHeaderObjArray = JSON.parse(atob(model.headers))
+        const formGroups = modelHeaderObjArray.map(y => this.formBuilder.group(y)) as [];
+        const formGroupsArray = this.formBuilder.array(formGroups) as FormArray;
+        const headers = new FormArray([]);
+        headers.push(formGroupsArray);
+        this.modelForm.setControl('headers', headers);
+    }
 
-      this.setForm(model);
-  }
+    onFormChanges(): void {
+        this.nodeChangeSubscription = this.nodeChangeEvent.subscribe(node => {
+            this.updateInferencingForm(node.data['customdata']);
+        });
 
-  getModelById(id) {
-      let model = null;
+        this.formChangeSubscription = this.modelForm.valueChanges.pipe(
+            debounceTime(200),
+            distinctUntilChanged()
+        )
+        .subscribe( () => {
+            console.log('Emitting', this.modelForm.value);
+            this.formUpdatedEvent.emit(this.modelForm.value)
+        });
+    }
 
-      for (let i = 0; i < this.models.length; i++) {
-          if (this.models[i].name == id) {
-              model = this.models[i];
-              break;
-          }
-      }
+    getFilters(): any {
+        console.log('PipelineInferencing-Getting filters');
 
-      return model;
+        const filters = [];
 
-  }
+        for (const item of this.checklistSelection.selected) {
+            console.log('Filtered item: ', item.name, item.parent);
 
-  setForm(model) {
-      console.log('Selected model: ', model.name);
-      // Update model Form
-      this.modelForm.patchValue(
-          {
-              name: model.name,
-              description: model.description,
-              inputType: model.inputType,
-              url: model.url,
-              inputTemplate: model.inputTemplate,
-              method: model.method,
-              base64Encoded: model.base64Encoded
-          },
-          { emitEvent: false }
-      );
-      const modelHeaderObjArray = JSON.parse(atob(model.headers))
-      const formGroups = modelHeaderObjArray.map(y => this.formBuilder.group(y)) as [];
-      const formGroupsArray = this.formBuilder.array(formGroups) as FormArray;
-      const headers = new FormArray([]);
-      headers.push(formGroupsArray);
-      this.modelForm.setControl('headers', headers);
-  }
+            if (item.parent != 'ROOT') {
+                const filter = {
+                    'deviceName': item.parent,
+                    'resourceName': item.name
+                };
+                filters.push(filter);
+            }
+        }
 
-  onFormChanges(): void {
-      this.modelForm.valueChanges.subscribe(val => {
-          console.log('modelForm has changed for: ', val);
+        return filters;
 
-          if (this.modelForm.get('name').value == '') {
+    }
 
+    setupFilters() {
+        console.log('PipelineInferencing-setupFilters:', this.filters);
 
-          }
 
-      });
-  }
+        this.filters.forEach(element => {
+            this.selectNode(element.deviceName, element.resourceName);
+        });
+    }
 
-  getFilters(): any {
-      console.log('PipelineInferencing-Getting filters');
+    initForm() {
+        this.modelForm = this.formBuilder.group({
+            name: ['', Validators.required],
+            description: ['', Validators.required],
+            inputType: ['', Validators.required],
+            url: ['', Validators.required],
+            inputTemplate: ['', Validators.required],
+            logLevel: ['INFO', Validators.required],
+            method: ['PUT', Validators.required],
+            headers: this.formBuilder.array([]),
+            base64Encoded: [true, Validators.required]
+        });
+    }
 
-      const filters = [];
+    updateInferencingForm(context) {
 
-      for (const item of this.checklistSelection.selected) {
-          console.log('Filtered item: ', item.name, item.parent);
+        if (context != null || context != undefined) {
+            console.log('Updating inferencing component with context: ', context);
 
-          if (item.parent != 'ROOT') {
-              const filter = {
-                  'deviceName': item.parent,
-                  'resourceName': item.name
-              };
-              filters.push(filter);
-          }
-      }
+            // this.filters = context.filters;
 
-      return filters;
+            this.modelForm.patchValue({
+                name: context.name,
+                description: context.description,
+                url: context.url,
+                inputTemplate: context.inputTemplate,
+                LogLevel: context.logLevel,
+                method: context.method,
+                base64Encoded: context.base64Encoded
+            });
 
-  }
+            const formGroups = context.headers.map(x => this.formBuilder.array(x.map(y => this.formBuilder.group(y)))) as [];
+            const headersArray = this.formBuilder.array(formGroups) as FormArray
+            this.modelForm.setControl('headers', headersArray);
 
-  setupFilters() {
-      console.log('PipelineInferencing-setupFilters:', this.filters);
-
-
-      this.filters.forEach(element => {
-          this.selectNode(element.deviceName, element.resourceName);
-      });
-  }
-
+        }
+    }
 }

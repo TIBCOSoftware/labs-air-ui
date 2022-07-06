@@ -2,7 +2,7 @@ import { Component, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angu
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { Protocol } from '@TIBCOSoftware/labs-air-graph-client';
-import { debounceTime, Subscription, distinctUntilChanged } from 'rxjs';
+import { debounceTime, Subscription, distinctUntilChanged, Observable } from 'rxjs';
 
 export interface SelectItem {
     value: string;
@@ -18,6 +18,8 @@ export class PipelineDataPublisherComponent implements OnInit, OnDestroy {
 
     @Input() gatewayId: string;
     @Input() protocol: any;
+    @Input() nodeChangeEvent: Observable<any>;
+    nodeChangeSubscription: Subscription;
     @Output() formUpdatedEvent = new EventEmitter<Protocol>();
 
     logLevels: SelectItem[] = [
@@ -60,13 +62,11 @@ export class PipelineDataPublisherComponent implements OnInit, OnDestroy {
         this.getProtocols(this.gatewayId);
         this.initForms();
         this.onFormChanges();
-        if (this.protocol) {
-            this.updateProtocolForm(this.protocol.data['customdata'])
-        }
     }
 
     ngOnDestroy(): void {
-        this.formChangeSubscription.unsubscribe()
+        this.formChangeSubscription.unsubscribe();
+        this.nodeChangeSubscription.unsubscribe();
     }
 
     getProtocols(gatewayId: string) {
@@ -307,9 +307,13 @@ export class PipelineDataPublisherComponent implements OnInit, OnDestroy {
     }
 
     onFormChanges(): void {
+        this.nodeChangeSubscription = this.nodeChangeEvent.subscribe( node => {
+            this.updateProtocolForm(node.data['customdata']);
+        });
+
         this.formChangeSubscription = this.dataPublisherForm.valueChanges
         .pipe(
-            debounceTime(500),
+            debounceTime(200),
             distinctUntilChanged()
         )
         .subscribe(val => {

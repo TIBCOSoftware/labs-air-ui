@@ -2,7 +2,7 @@ import { Component, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angu
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DataStore } from '@TIBCOSoftware/labs-air-graph-client';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
-import { debounceTime, Subscription, distinctUntilChanged } from 'rxjs';
+import { debounceTime, Subscription, distinctUntilChanged, Observable } from 'rxjs';
 
 export interface SelectItem {
     value: string;
@@ -22,6 +22,8 @@ export class PipelineDataStoreComponent implements OnInit, OnDestroy {
     @Input() dataStore: any;
     @Input() gatewayId: string;
     @Output() formUpdatedEvent = new EventEmitter<DataStore>();
+    @Input() nodeChangeEvent: Observable<any>;
+    nodeChangeSubscription: Subscription;
 
     logLevels: SelectItem[] = [
         { value: 'INFO', viewValue: 'INFO' },
@@ -55,7 +57,8 @@ export class PipelineDataStoreComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.formChangeSubscription.unsubscribe()
+        this.formChangeSubscription.unsubscribe();
+        this.nodeChangeSubscription.unsubscribe();
     }
 
     public getDataStores(gatewayId: string) {
@@ -286,9 +289,13 @@ export class PipelineDataStoreComponent implements OnInit, OnDestroy {
     }
 
     onFormChanges(): void {
+        this.nodeChangeSubscription = this.nodeChangeEvent.subscribe( node => {
+            this.updateDataStoreForm(node.data['customdata']);
+        });
+
         this.formChangeSubscription = this.dataStoreForm.valueChanges
         .pipe(
-            debounceTime(500),
+            debounceTime(200),
             distinctUntilChanged()
         )
         .subscribe(val => {

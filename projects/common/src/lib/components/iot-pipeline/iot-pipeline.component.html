@@ -29,14 +29,17 @@
         <!-- Configuration Panel Components -->
         <app-common-pipeline-config *ngIf="pipelineConfig" [pipelineForm]="pipelineForm" fxFlex></app-common-pipeline-config>
 
-        <app-common-pipeline-data-subscriber *ngIf="dataSubscriberConfig" [dataSubscriberForm]="protocolForm" fxFlex>
+        <app-common-pipeline-data-subscriber *ngIf="dataSubscriberConfig" [dataSubscriber]="selectedNode"
+            (formUpdatedEvent)="saveToCanvas($event)" [nodeChangeEvent]="nodeChangeEvent.asObservable()" fxFlex>
         </app-common-pipeline-data-subscriber>
 
         <app-common-pipeline-filtering *ngIf="filteringConfig" #filterComponent [devices]="devices" [filters]="filters" fxFlex>
         </app-common-pipeline-filtering>
 
         <app-common-pipeline-inferencing *ngIf="inferencingConfig" #inferenceComponent [devices]="devices" [models]="models"
-            [modelForm]="modelForm" [filters]="filters" fxFlex></app-common-pipeline-inferencing>
+            [model]="selectedNode" [filters]="filters" (formUpdatedEvent)="saveToCanvas($event)" [nodeChangeEvent]="nodeChangeEvent.asObservable()"
+            fxFlex>
+        </app-common-pipeline-inferencing>
 
         <app-common-pipeline-data-store *ngIf="dataStoreConfig" [gatewayId]="gatewayId" [dataStore]="selectedNode" 
             (formUpdatedEvent)="saveToCanvas($event)" fxFlex>
@@ -59,21 +62,24 @@
         <app-common-pipeline-rule-text-matching *ngIf="ruleTextMatchingConfig" [ruleTextMatchingForm]="ruleTextMatchingForm" fxFlex>
         </app-common-pipeline-rule-text-matching>
 
-        <app-common-pipeline-flogo-flow *ngIf="flogoFlowConfig" [flogoFlowForm]="flogoFlowForm" fxFlex>
+        <app-common-pipeline-flogo-flow *ngIf="flogoFlowConfig" [flogoFlow]="selectedNode" (formUpdatedEvent)="saveToCanvas($event)" 
+            [nodeChangeEvent]="nodeChangeEvent.asObservable()" fxFlex>
         </app-common-pipeline-flogo-flow>
 
         <app-common-pipeline-rest-service *ngIf="restServiceConfig" #restComponent [devices]="devices"
-            [restForm]="restServiceForm" [filters]="filters" fxFlex>
+            [restService]="selectedNode" (formUpdatedEvent)="saveToCanvas($event)" [nodeChangeEvent]="nodeChangeEvent.asObservable()" [filters]="filters" fxFlex>
         </app-common-pipeline-rest-service>
-        <app-pipeline-python *ngIf="pythonConfig" [pythonForm]="pythonForm" [gatewayId]="gatewayId"> </app-pipeline-python>
-        <app-pipeline-rest-broadcast *ngIf="restBroadcastConfig" [restBroadcastForm]="restBroadcastForm" [models]="models">
+        <app-pipeline-python *ngIf="pythonConfig" [python]="selectedNode" [gatewayId]="gatewayId" 
+            (formUpdatedEvent)="saveToCanvas($event)">
+        </app-pipeline-python>
+        <app-pipeline-rest-broadcast *ngIf="restBroadcastConfig" [restBroadcast]="selectedNode" [models]="models" (formUpdatedEvent)="saveToCanvas($event)" [nodeChangeEvent]="nodeChangeEvent.asObservable()">
         </app-pipeline-rest-broadcast>
-        <app-pipeline-request-reply *ngIf="requestReplyConfig" [requestReplyForm]="requestReplyForm">
+        <app-pipeline-request-reply *ngIf="requestReplyConfig" [requestReply]="selectedNode" (formUpdatedEvent)="saveToCanvas($event)" [nodeChangeEvent]="nodeChangeEvent.asObservable()">
         </app-pipeline-request-reply>
-        <app-pipeline-python-pipe [pythonPipeForm]="pythonPipeForm" [gatewayId]="gatewayId" *ngIf="pythonPipeConfig" 
-            [pythonInputs]="pythonInputs">
+        <app-pipeline-python-pipe [pythonPipe]="selectedNode" [gatewayId]="gatewayId" *ngIf="pythonPipeConfig" 
+            [pythonInputs]="pythonInputs" (formUpdatedEvent)="saveToCanvas($event)" [nodeChangeEvent]="nodeChangeEvent.asObservable()">
         </app-pipeline-python-pipe>
-        <app-common-pipeline-error-handler *ngIf="errorHandlerConfig" [errorHandlerForm]="errorHandlerForm" fxFlex>
+        <app-common-pipeline-error-handler *ngIf="errorHandlerConfig" [errorHandler]="selectedNode" (formUpdatedEvent)="saveToCanvas($event)" fxFlex>
         </app-common-pipeline-error-handler>
     </div>
 

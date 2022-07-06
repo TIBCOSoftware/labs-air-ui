@@ -39,7 +39,7 @@ import { MQTTRequestReplyComponent } from '../rete/components/mqtt-request-reply
 import { Gateway, Model, Pipeline } from '@TIBCOSoftware/labs-air-graph-client';
 import { PythonComponent } from '../rete/components/python-component';
 import { PythonPipeComponent } from '../rete/components/python-pipe-component'
-import { Observable, Subscriber, Subscription } from 'rxjs';
+import { Observable, Subject, Subscriber, Subscription } from 'rxjs';
 @Component({
     selector: 'app-common-iot-pipeline',
     templateUrl: './iot-pipeline.component.html',
@@ -50,7 +50,6 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
     gatewayId = '';
     gateway = null as Gateway;
     devices: Device[] = [];
-    models: Model[] = [];
     // pipelineSelected = this.pipelineService.pipelineSelected;  // Used to control the display of buttons
 
     dateFormat = 'yyyy-MM-dd  HH:mm:ss';
@@ -105,6 +104,7 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
     selectedNode: any;
 
     pipelineObserver: Subscription;
+    nodeChangeEvent: Subject<any> = new Subject<any>();
 
     private filterComponent: PipelineFilteringComponent;
 
@@ -178,6 +178,10 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
 
     get pipelineSelected(): boolean {
         return this.pipelineService.pipelineSelected;
+    }
+
+    get models(): Model[] {
+        return this.pipelineService.models;
     }
 
     async ngAfterViewInit() {
@@ -300,10 +304,14 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
 
         // Handle node selected events
         this.editor.on('nodeselected', node => {
-
             console.log('Editor node selected', node);
-
             console.log('Node data: ', node.data);
+
+            this.nodeChangeEvent.next(node);
+
+            if (node.name == 'Python Pipe') {
+                this.getPythonInputOutput(node);
+            }
 
             if (this.lastNodeSelected != null) {
 
@@ -311,9 +319,6 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
                 this.clearFormsAndFilters();
             }
 
-            if (node.name == 'Python Pipe') {
-                this.getPythonInputOutput(node);
-            }
             this.lastNodeSelected = node;
 
             this.resetNodeContext(node);
@@ -434,7 +439,7 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
                     break;
                 }
                 case 'Inferencing': {
-                    this.updateInferencingComponent(contextObj);
+                    // this.updateInferencingComponent(contextObj);
                     this.inferencingConfig = true;
                     break;
                 }
@@ -469,7 +474,7 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
                     break;
                 }
                 case 'Python': {
-                    this.updatePythonComponent(contextObj);
+                    // this.updatePythonComponent(contextObj);
                     this.pythonConfig = true;
                     break;
                 }
@@ -484,7 +489,7 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
                     break;
                 }
                 case 'Python Pipe': {
-                    this.updatePythonPipeComponent(contextObj);
+                    // this.updatePythonPipeComponent(contextObj);
                     this.pythonPipeConfig = true;
                     break;
                 }
@@ -1763,31 +1768,6 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
         this.pipelineService.validatePipeline();
     }
 
-    getPythonInputOutput(node) {
-        // find all previous python resources connected
-        // Rete passes the output of the previous node as the input of the current node
-        this.pythonInputs = [];
-        this.findPreviousNodes(node);
-      }
-    
-      findPreviousNodes(node: any): any {
-        // assumes only one connection, but currently is only setup to do one connection.
-        const previousNode = node.inputs.size > 0 && node?.inputs?.get('event').connections?.length > 0 ? node.inputs.get('event').connections[0].output.node : undefined
-        if (previousNode) {
-          if (previousNode.name == 'Python Pipe') {
-            this.pythonInputs.push(previousNode);
-          }
-          this.findPreviousNodes(previousNode);
-        };
-      }
-    
-      findNextNode(node: any): any {
-        const nextNode = node.outputs.size > 0 ? node.inputs.get('event').connections[0].output.node : undefined;
-        if (nextNode.length > 0) {
-          return nextNode
-        }
-      }
-
     setPipelineForm(pipeline: Pipeline) {
         this.pipelineForm.patchValue({
             uid: pipeline.uid,
@@ -1800,9 +1780,36 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
             logLevel: pipeline.logLevel
         });
     }
-    
+
     saveToCanvas(eventData: any) {
         const node = this.editor.nodes.find(node => node.id === this.selectedNode.id)
         node.data['customdata'] = eventData;
+        console.log(' saving nodes', this.editor.nodes);
     }
+
+    getPythonInputOutput(node) {
+        // find all previous python resources connected
+        // Rete passes the output of the previous node as the input of the current node
+        this.pythonInputs = [];
+        this.findPreviousNodes(node);
+    }
+
+    findPreviousNodes(node: any): any {
+        // assumes only one connection, but currently is only setup to do one connection.
+        const previousNode = node.inputs.size > 0 && node?.inputs?.get('event').connections?.length > 0 ? node.inputs.get('event').connections[0].output.node : undefined
+        if (previousNode) {
+            if (previousNode.name == 'Python Pipe') {
+                this.pythonInputs.push(previousNode);
+            }
+            this.findPreviousNodes(previousNode);
+        };
+    }
+
+    findNextNode(node: any): any {
+        const nextNode = node.outputs.size > 0 ? node.inputs.get('event').connections[0].output.node : undefined;
+        if (nextNode.length > 0) {
+            return nextNode
+        }
+    }
+
 }
