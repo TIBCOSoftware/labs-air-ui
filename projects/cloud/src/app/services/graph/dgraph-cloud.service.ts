@@ -3,13 +3,9 @@ import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import {
   DataStore,
   DataStoreService,
-  FilterConfigService,
   Gateway,
-  GatewayFiltersConfig,
   GatewayService,
   Model,
-  ModelConfig,
-  ModelConfigService,
   ModelService,
   Notification,
   NotificationService,
@@ -18,9 +14,8 @@ import {
   Protocol,
   ProtocolService,
   PythonResource,
-  PythonService,
+  PythonResourceService,
   ReadingService,
-  RouteService,
   TSReading
 } from '@TIBCOSoftware/labs-air-graph-client';
 import { catchError, Observable, of } from 'rxjs';
@@ -40,16 +35,13 @@ export class DGraphCloudService extends GraphService {
     http: HttpClient,
     private appConfigService: AppConfigService,
     private dataStoreService: DataStoreService,
-    private filterConfigService: FilterConfigService,
     private gatewayService: GatewayService,
     private modelService: ModelService,
-    private modelConfigService: ModelConfigService,
     private notificationService: NotificationService,
     private pipelineService: PipelineService,
     private protocolService: ProtocolService,
     private readingService: ReadingService,
-    private routeService: RouteService,
-    private pythonService: PythonService) {
+    private pythonResourceService: PythonResourceService) {
     super(http, appConfigService.getFromConfigOrEnv('dgraphUrl'), false);
     console.log(`Constructor dGraphCloud service with url ${appConfigService.getFromConfigOrEnv('dgraphUrl')}`);
 
@@ -103,10 +95,10 @@ export class DGraphCloudService extends GraphService {
 
   /**
    *
-   * @param gatewayUid
+   * @param gatewayUuid
    */
-  deleteGateway(gatewayUid: number): Observable<string> {
-    return this.gatewayService.deleteGateway(gatewayUid).pipe(
+  deleteGateway(gatewayUuid: string, account?: string): Observable<string> {
+    return this.gatewayService.deleteGateway(parseInt(gatewayUuid)).pipe(
       catchError(this.handleError<string>('deleteGateway'))
     );
   }
@@ -123,11 +115,11 @@ export class DGraphCloudService extends GraphService {
 
   /**
    *
-   * @param gatewayUid
+   * @param gatewayUuid
    * @param dataStore
    */
-  addDataStore(gatewayUid: number, dataStore: DataStore): Observable<DataStore> {
-    return this.dataStoreService.addDataStore(dataStore, gatewayUid).pipe(
+  addDataStore(gatewayUuid: string, dataStore: DataStore): Observable<DataStore> {
+    return this.dataStoreService.addDataStore(dataStore, gatewayUuid).pipe(
       catchError(this.handleError<DataStore>('addDataStores'))
     );
   }
@@ -147,8 +139,8 @@ export class DGraphCloudService extends GraphService {
    * @param gatewayUid
    * @param dataStoreUid
    */
-  deleteDataStore(gatewayUid: number, dataStoreUid: number): Observable<string> {
-    return this.dataStoreService.deleteDataStore(gatewayUid, dataStoreUid).pipe(
+  deleteDataStore(gatewayUuid: string, dataStoreUid: string): Observable<string> {
+    return this.dataStoreService.deleteDataStore(parseInt(gatewayUuid), parseInt(dataStoreUid)).pipe(
       catchError(this.handleError<string>('deleteDataStore'))
     );
   }
@@ -177,11 +169,11 @@ export class DGraphCloudService extends GraphService {
 
   /**
    *
-   * @param gatewayUid
+   * @param gatewayUuid
    * @param protocol
    */
-  addProtocol(gatewayUid: number, protocol: Protocol): Observable<Protocol> {
-    return this.protocolService.addProtocol(protocol, gatewayUid).pipe(
+  addProtocol(gatewayUuid: string, protocol: Protocol): Observable<Protocol> {
+    return this.protocolService.addProtocol(protocol, parseInt(gatewayUuid)).pipe(
       catchError(this.handleError<Protocol>('addProtocols'))
     );
   }
@@ -198,11 +190,11 @@ export class DGraphCloudService extends GraphService {
 
   /**
    *
-   * @param gatewayUid
+   * @param gatewayUuid
    * @param protocolUid
    */
-  deleteProtocol(gatewayUid: number, protocolUid: number): Observable<string> {
-    return this.protocolService.deleteProtocol(gatewayUid, protocolUid).pipe(
+  deleteProtocol(gatewayUuid: string, protocolUid: string): Observable<string> {
+    return this.protocolService.deleteProtocol(parseInt(gatewayUuid), parseInt(protocolUid)).pipe(
       catchError(this.handleError<string>('deleteProtocol'))
     );
   }
@@ -229,11 +221,11 @@ export class DGraphCloudService extends GraphService {
 
   /**
    *
-   * @param gatewayUid
+   * @param gatewayUuid
    * @param model
    */
-  addModel(gatewayUid: number, model: Model): Observable<Model> {
-    return this.modelService.addModel(model, gatewayUid).pipe(
+  addModel(gatewayUuid: string, model: Model): Observable<Model> {
+    return this.modelService.addModel(model, gatewayUuid).pipe(
       catchError(this.handleError<Model>('addModels'))
     );
   }
@@ -250,11 +242,11 @@ export class DGraphCloudService extends GraphService {
 
   /**
    *
-   * @param gatewayUid
-   * @param modelUid
+   * @param gatewayUuid
+   * @param modelUuid
    */
-  deleteModel(gatewayUid: number, modelUid: number): Observable<string> {
-    return this.modelService.deleteModel(gatewayUid, modelUid).pipe(
+  deleteModel(gatewayUuid: string, modelUuid: string): Observable<string> {
+    return this.modelService.deleteModel(gatewayUuid, modelUuid).pipe(
       catchError(this.handleError<string>('deleteModel'))
     );
   }
@@ -284,8 +276,8 @@ export class DGraphCloudService extends GraphService {
    * @param gatewayUid
    * @param pipeline
    */
-  addPipeline(gatewayUid: number, pipeline: Pipeline): Observable<Pipeline> {
-    return this.pipelineService.addPipeline(pipeline, gatewayUid).pipe(
+  addPipeline(gatewayUuid: string, pipeline: Pipeline): Observable<Pipeline> {
+    return this.pipelineService.addPipeline(pipeline, parseInt(gatewayUuid)).pipe(
       catchError(this.handleError<Pipeline>('addPipelines'))
     );
   }
@@ -302,114 +294,21 @@ export class DGraphCloudService extends GraphService {
 
   /**
    *
-   * @param gatewayUid
+   * @param gatewayUuid
    * @param pipeline
    */
-  deletePipeline(gatewayUid: number, pipeline: Pipeline): Observable<string> {
-    return this.pipelineService.deletePipeline(pipeline, gatewayUid).pipe(
+  deletePipeline(gatewayUuid: string, pipelineId: string): Observable<string> {
+    return this.pipelineService.deletePipeline(parseInt(gatewayUuid), parseInt(pipelineId)).pipe(
       catchError(this.handleError<string>('deletePipeline'))
     );
   }
 
   /**
-   * Get ids of all the pipelines associated with the specified protocol
-   * @param protocolUid - the uid of the protocol
-   */
-  getPipelineIdsFromProtocolUid(protocolUid: any): Observable<Pipeline[]> {
-    return this.pipelineService.getPipelineIdsFromProtocolUid(protocolUid).pipe(
-      catchError(this.handleError<Pipeline[]>('getPipelineIdsFromProtocolUid', []))
-    );
-  }
-
-  /**
-   * Get ids of all the pipelines associated with the specified data store
-   * @param dataStoreUid - the uid of the data store
-   */
-  getPipelineIdsFromDataStoreUid(dataStoreUid: any): Observable<Pipeline[]> {
-    return this.pipelineService.getPipelineIdsFromDataStoreUid(dataStoreUid).pipe(
-      catchError(this.handleError<Pipeline[]>('getPipelineIdsFromDataStoreUid', []))
-    );
-  }
-
-  /**
-   *
-   * @param gatewayName
-   */
-  getModelConfigs(gatewayName: any): Observable<ModelConfig[]> {
-    return this.modelConfigService.getModelConfigs(gatewayName).pipe(
-      catchError(this.handleError<ModelConfig[]>('getModelConfigs', []))
-    );
-  }
-
-  /**
-   *
-   * @param gatewayUid
-   * @param modelConfig
-   */
-  addModelConfig(gatewayUid: number, modelConfig: ModelConfig): Observable<ModelConfig> {
-    return this.modelConfigService.addModelConfig(modelConfig, gatewayUid).pipe(
-      catchError(this.handleError<ModelConfig>('addModelConfig'))
-    );
-  }
-
-  /**
-   *
-   * @param modelConfig
-   */
-  updateModelConfig(modelConfig: ModelConfig): Observable<ModelConfig> {
-    return this.modelConfigService.updateModelConfig(modelConfig).pipe(
-      catchError(this.handleError<ModelConfig>('updateModelConfig'))
-    );
-  }
-
-  /**
-   *
-   * @param gatewayUid
-   * @param modelConfigUid
-   */
-  deleteModelConfig(gatewayUid: number, modelConfigUid: number): Observable<string> {
-    return this.modelConfigService.deleteModelConfig(gatewayUid, modelConfigUid).pipe(
-      catchError(this.handleError<string>('deleteModelConfig'))
-    );
-  }
-
-  /**
-   *
-   * @param gatewayName
-   */
-  getFiltersConfig(gatewayName: any): Observable<GatewayFiltersConfig[]> {
-    return this.filterConfigService.getFiltersConfig(gatewayName).pipe(
-      catchError(this.handleError<GatewayFiltersConfig[]>('getFiltersConfigs', []))
-    );
-  }
-
-  /**
-   *
-   * @param gatewayUid
-   * @param filtersConfig
-   */
-  addFiltersConfig(gatewayUid: number, filtersConfig: GatewayFiltersConfig): Observable<GatewayFiltersConfig> {
-    return this.filterConfigService.addFiltersConfig(filtersConfig, gatewayUid).pipe(
-      catchError(this.handleError<GatewayFiltersConfig>('addFiltersConfig'))
-    );
-  }
-
-  /**
-   *
-   * @param filtersConfig
-   */
-  updateFiltersConfig(filtersConfig: GatewayFiltersConfig): Observable<GatewayFiltersConfig> {
-    return this.filterConfigService.updateFiltersConfig(filtersConfig).pipe(
-      catchError(this.handleError<GatewayFiltersConfig>('updateFiltersConfig'))
-    );
-  }
-
-  /**
      * Get Python Resources.
-     * @param gatewayUid
+     * @param gatewayUuid
      */
   getPythonResources(gatewayName: string, account?: string): Observable<PythonResource[]> {
-    return this.pythonService.getPythonResources(gatewayName).pipe(
+    return this.pythonResourceService.getPythonResources(gatewayName).pipe(
       catchError(this.handleError<PythonResource[]>('getPythonResources', []))
     );
   }
@@ -418,7 +317,7 @@ export class DGraphCloudService extends GraphService {
    * @param PythonResource
    */
   updatePythonResource(pythonResource: PythonResource, account?: string): Observable<PythonResource>{
-    return this.pythonService.updatePythonResource(pythonResource).pipe(
+    return this.pythonResourceService.updatePythonResource(pythonResource).pipe(
       catchError(this.handleError<PythonResource>('updatePythonResource'))
     );
   }
@@ -426,17 +325,17 @@ export class DGraphCloudService extends GraphService {
    * Add Python Resource.
    * @param PythonResource
    */
-  addPythonResource(pythonResource: PythonResource, account?: string): Observable<PythonResource>{
-    return this.pythonService.addPythonResource(pythonResource).pipe(
+  addPythonResource(gatewayId: string, pythonResource: PythonResource, account?: string): Observable<PythonResource>{
+    return this.pythonResourceService.addPythonResource(pythonResource, gatewayId).pipe(
       catchError(this.handleError<PythonResource>('addPythonResource'))
     );
   }
   /**
    * Delete Python Resource.
-   * @param resourceUid
+   * @param resourceUuid
    */
-  deletePythonResource(pythonResourceUid: number, account?: string): Observable<string>{
-    return this.pythonService.deletePythonResource(pythonResourceUid).pipe(
+  deletePythonResource(pythonResourceUuid: string, account?: string): Observable<string>{
+    return this.pythonResourceService.deletePythonResource(pythonResourceUuid).pipe(
       catchError(this.handleError<string>('deletePythonResource'))
     );
   }
@@ -507,22 +406,6 @@ export class DGraphCloudService extends GraphService {
     return this.notificationService.getNotifications().pipe(
       catchError(this.handleError<Notification[]>('getNotifications', []))
     );
-  }
-
-  /**
-   *
-   * @param deviceName
-   */
-  getRoute(deviceName: string): any {
-    return this.routeService.getRoute(deviceName);
-  }
-
-  /**
-   *
-   * @param deviceName
-   */
-  getRouteCenter(deviceName: string): any {
-    return this.routeService.getRouteCenter(deviceName);
   }
 
   /**

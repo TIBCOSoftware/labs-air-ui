@@ -7,9 +7,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 import {
   DataStore,
   Gateway,
-  GatewayFiltersConfig,
   Model,
-  ModelConfig,
   Notification,
   Pipeline,
   Protocol,
@@ -1011,139 +1009,6 @@ export class TgdbService { // extends GraphService {
               map(response => response.data.resp as Pipeline[]),
               tap(_ => console.info('fetched pipeline ids')),
               catchError(this.handleError<Pipeline[]>('getPipelineIdsFromDataStoreUid', []))
-          );
-
-  }
-
-  /**
-   *
-   * @param gatewayName
-   */
-  getModelConfigs(gatewayName: any, account: string): Observable<ModelConfig[]> {
-      const url = `${this.tgdbUrl}/query`;
-      const query = `{
-      var(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
-        modelConfigs as gateway_modelconfig {
-        }
-      }
-      resp(func: uid(modelConfigs)) {
-        uid
-        name
-        uuid
-        description
-        device
-        resource
-        model
-        created
-        modified
-      }
-    }`;
-
-      console.log('getModelConfigs service query: ', query);
-
-      return this.http.post<any>(url, query, httpOptions)
-          .pipe(
-              map(response => response.data.resp as ModelConfig[]),
-              tap(_ => console.info('fetched modelConfigs')),
-              catchError(this.handleError<ModelConfig[]>('getModelConfigs', []))
-          );
-
-  }
-
-  /**
-   *
-   * @param gatewayUid
-   * @param modelConfigUid
-   */
-  deleteModelConfig(gatewayUid: number, modelConfigUid: number, account: string): Observable<string> {
-      const url = `${this.tgdbUrl}/mutate?commitNow=true`;
-      const query = `{
-      delete {
-        <${modelConfigUid}> * * .
-        <${gatewayUid}> <gateway_modelconfig> <${modelConfigUid}> .
-      }
-    }`;
-      console.log('Delete ModelConfig Mutate statement: ', query);
-
-      return this.http.post<any>(url, query, httpMutateOptions)
-          .pipe(
-              tap(_ => console.info('deleted modelConfig')),
-              catchError(this.handleError<string>('deleteModelConfig'))
-          );
-  }
-
-  /**
-   *
-   * @param gatewayName
-   */
-  getFiltersConfig(gatewayName: any, account: string): Observable<GatewayFiltersConfig[]> {
-      const url = `${this.tgdbUrl}/query`;
-      const query = `{
-      var(func: has(gateway)) @filter(eq(uuid, "${gatewayName}")) {
-        filtersConfig as gateway_filter {
-        }
-      }
-      resp(func: uid(filtersConfig)) {
-        uid
-        deviceNames
-      }
-    }`;
-
-      console.log('getFiltersConfig service query: ', query);
-
-      return this.http.post<any>(url, query, httpOptions)
-          .pipe(
-              map(response => response.data.resp as GatewayFiltersConfig[]),
-              tap(_ => console.info('fetched filtersConfig')),
-              catchError(this.handleError<GatewayFiltersConfig[]>('getFiltersConfigs', []))
-          );
-
-  }
-
-  /**
-   *
-   * @param gatewayUid
-   * @param filtersConfig
-   */
-  addFiltersConfig(gatewayUid: number, filtersConfig: GatewayFiltersConfig, account: string): Observable<GatewayFiltersConfig> {
-      const url = `${this.tgdbUrl}/mutate?commitNow=true`;
-
-      const query = `{
-      set {
-        _:Filter <dgraph.type> "filter" .
-        _:Filter <type> "filter" .
-        _:Filter <filter> "" .
-        _:Filter <deviceNames> "${filtersConfig.deviceNames}" .
-        <${gatewayUid}> <gateway_filter> _:Filter .
-      }
-    }`;
-      console.log('Mutate statement: ', query);
-
-      return this.http.post<any>(url, query, httpMutateOptions)
-          .pipe(
-              tap(_ => console.info('add filtersConfig')),
-            catchError(this.handleError<GatewayFiltersConfig>('addFiltersConfig'))
-          );
-
-  }
-
-  /**
-   *
-   * @param filtersConfig
-   */
-  updateFiltersConfig(filtersConfig: GatewayFiltersConfig, account: string): Observable<GatewayFiltersConfig> {
-      const url = `${this.tgdbUrl}/mutate?commitNow=true`;
-      const query = `{
-      set {
-        <${filtersConfig.uid}> <deviceNames> "${filtersConfig.deviceNames}" .
-      }
-    }`;
-      console.log('Mutate statement: ', query);
-
-      return this.http.post<any>(url, query, httpMutateOptions)
-          .pipe(
-              tap(_ => console.info('updated filtersConfig')),
-            catchError(this.handleError<GatewayFiltersConfig>('updateFiltersConfig'))
           );
 
   }
