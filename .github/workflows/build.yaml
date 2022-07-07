@@ -16,6 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       all: ${{ steps.changes.outputs.all }}
+      dependenciesChanged: ${{ steps.changes.outputs.depsChanged }}
       cloudChanged: ${{ steps.changes.outputs.cloudChanged }}
       commonChanged: ${{ steps.changes.outputs.commonChanged }}
       onPremChanged: ${{ steps.changes.outputs.onPremChanged }}
@@ -29,6 +30,7 @@ jobs:
         run: |
           PREVIOUS_SHA=$(git rev-parse HEAD^1 2>&1)
           echo "::set-output name=all::$(git diff --name-only --diff-filter=ACMRT "${PREVIOUS_SHA}" ${{ github.sha }} | xargs)"
+          echo "::set-output name=dependenciesChanged::$(git diff --name-only --diff-filter=ACMRT "${PREVIOUS_SHA}" ${{ github.sha }} | grep -E 'package.*.json' | xargs)"
           echo "::set-output name=cloudChanged::$(git diff --name-only --diff-filter=ACMRT "${PREVIOUS_SHA}" ${{ github.sha }} | grep -E 'projects/cloud' | xargs)"
           echo "::set-output name=commonChanged::$(git diff --name-only --diff-filter=ACMRT "${PREVIOUS_SHA}" ${{ github.sha }} | grep -E 'projects/common' | xargs)"
           echo "::set-output name=onPremChanged::$(git diff --name-only --diff-filter=ACMRT "${PREVIOUS_SHA}" ${{ github.sha }} | grep -E 'projects/on-prem' | xargs)"
@@ -43,7 +45,8 @@ jobs:
     if: |
       (needs.identify-changes.outputs.commonChanged ||
         needs.identify-changes.outputs.cloudChanged ||
-        needs.identify-changes.outputs.onPremChanged) ||
+        needs.identify-changes.outputs.onPremChanged ||
+        needs.identify-changes.outputs.dependenciesChanged) ||
       github.ref == 'refs/heads/main'
     strategy:
       matrix:
@@ -62,7 +65,7 @@ jobs:
           path: |
             ./node_modules
           key: |
-            ${{ runner.os }}-cicd-ui-${{ hashFiles('./package-lock.json') }}
+            ${{ runner.os }}-cicd-ui-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-cicd-ui-
 
@@ -100,7 +103,8 @@ jobs:
     if: |
       (needs.identify-changes.outputs.commonChanged ||
         needs.identify-changes.outputs.cloudChanged ||
-        needs.identify-changes.outputs.onPremChanged) ||
+        needs.identify-changes.outputs.onPremChanged
+        needs.identify-changes.outputs.dependenciesChanged) ||
       github.ref == 'refs/heads/main'
 
     strategy:
@@ -120,7 +124,7 @@ jobs:
           path: |
             ./node_modules
           key: |
-            ${{ runner.os }}-cicd-ui-${{ hashFiles('./package-lock.json') }}
+            ${{ runner.os }}-cicd-ui-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-cicd-ui-
 
@@ -154,7 +158,8 @@ jobs:
     if: |
       (needs.identify-changes.outputs.commonChanged ||
         needs.identify-changes.outputs.cloudChanged ||
-        needs.identify-changes.outputs.onPremChanged) ||
+        needs.identify-changes.outputs.onPremChanged ||
+        needs.identify-changes.outputs.dependenciesChanged) ||
       github.ref == 'refs/heads/main'
     strategy:
       matrix:
@@ -221,7 +226,8 @@ jobs:
     if: |
       (needs.identify-changes.outputs.commonChanged ||
         needs.identify-changes.outputs.cloudChanged ||
-        needs.identify-changes.outputs.onPremChanged) ||
+        needs.identify-changes.outputs.onPremChanged ||
+        needs.identify-changes.outputs.dependenciesChanged) ||
       github.ref == 'refs/heads/main'
 
     strategy:
@@ -242,7 +248,7 @@ jobs:
           path: |
             ./node_modules
           key: |
-            ${{ runner.os }}-cicd-ui-${{ hashFiles('./package-lock.json') }}
+            ${{ runner.os }}-cicd-ui-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-cicd-ui-
 
