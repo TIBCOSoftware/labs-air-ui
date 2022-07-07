@@ -103,7 +103,7 @@ jobs:
     if: |
       (needs.identify-changes.outputs.commonChanged ||
         needs.identify-changes.outputs.cloudChanged ||
-        needs.identify-changes.outputs.onPremChanged
+        needs.identify-changes.outputs.onPremChanged ||
         needs.identify-changes.outputs.dependenciesChanged) ||
       github.ref == 'refs/heads/main'
 
