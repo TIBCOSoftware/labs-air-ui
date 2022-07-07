@@ -1053,66 +1053,6 @@ export class TgdbService { // extends GraphService {
   /**
    *
    * @param gatewayUid
-   * @param modelConfig
-   */
-  addModelConfig(gatewayUid: number, modelConfig: ModelConfig, account: string): Observable<ModelConfig> {
-      const url = `${this.tgdbUrl}/mutate?commitNow=true`;
-      const query = `{
-      set {
-        _:ModelConfig <dgraph.type> "ModelConfig" .
-        _:ModelConfig <name> "${modelConfig.name}" .
-        _:ModelConfig <uuid> "${modelConfig.name}" .
-        _:ModelConfig <type> "modelConfig" .
-        _:ModelConfig <rule> "" .
-        _:ModelConfig <description> "${modelConfig.description}" .
-        _:ModelConfig <device> "${modelConfig.device}" .
-        _:ModelConfig <resource> "${modelConfig.resource}" .
-        _:ModelConfig <model> "${modelConfig.model}" .
-        _:ModelConfig <created> "${modelConfig.created}" .
-        _:ModelConfig <modified> "${modelConfig.modified}" .
-        <${gatewayUid}> <gateway_modelconfig> _:ModelConfig .
-      }
-    }`;
-      console.log('Mutate statement: ', query);
-
-      return this.http.post<any>(url, query, httpMutateOptions)
-          .pipe(
-              tap(_ => console.info('add modelConfig')),
-            catchError(this.handleError<ModelConfig>('addModelConfig'))
-          );
-
-  }
-
-  /**
-   *
-   * @param modelConfig
-   */
-  updateModelConfig(modelConfig: ModelConfig, account: string): Observable<ModelConfig> {
-      const url = `${this.tgdbUrl}/mutate?commitNow=true`;
-      const query = `{
-      set {
-        <${modelConfig.uid}> <name> "${modelConfig.name}" .
-        <${modelConfig.uid}> <uuid> "${modelConfig.uuid}" .
-        <${modelConfig.uid}> <description> "${modelConfig.description}" .
-        <${modelConfig.uid}> <condDevice> "${modelConfig.device}" .
-        <${modelConfig.uid}> <condResource> "${modelConfig.resource}" .
-        <${modelConfig.uid}> <model> "${modelConfig.model}" .
-        <${modelConfig.uid}> <modified> "${modelConfig.modified}" .
-      }
-    }`;
-      console.log('Mutate statement: ', query);
-
-      return this.http.post<any>(url, query, httpMutateOptions)
-          .pipe(
-              tap(_ => console.info('updated modelConfig')),
-            catchError(this.handleError<ModelConfig>('updateModelConfig'))
-          );
-
-  }
-
-  /**
-   *
-   * @param gatewayUid
    * @param modelConfigUid
    */
   deleteModelConfig(gatewayUid: number, modelConfigUid: number, account: string): Observable<string> {

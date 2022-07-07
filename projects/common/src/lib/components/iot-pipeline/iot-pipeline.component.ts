@@ -2292,14 +2292,14 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
             this.deployDisabled = true;
             this.undeployDisabled = true;
 
-            const pipeline = this.pipelineSelection.selected[0];
+            const pipeline = this.pipelineSelection.selected[0] as Pipeline;
 
             // if (pipeline.status != "Undeployed") {
             //   this.undeploySelectedDataPipeline();
             // }
             this.pipelineSelection.clear();
 
-            this.graphService.deletePipeline(this.gateway.uid, pipeline)
+            this.graphService.deletePipeline(this.gateway.uid, pipeline.uid)
                 .subscribe(res => {
                     console.log('Result from delete pipeline', res);
 

@@ -428,7 +428,8 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
           });
       }
       else {
-          this.graphService.addDataStore(0, dataStore)
+          // datastore adds 
+          this.graphService.addDataStore('0', dataStore)
               .subscribe(res => {
                   console.log('Result from add dataStore', res);
 
@@ -450,7 +451,7 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
       dataStore.uid = this.dataStoreForm.get('uid').value;
 
       // First Check if there are pipelines associated with the data store
-      this.graphService.getPipelineIdsFromDataStoreUid(dataStore.uid)
+      this.graphService.getPipelines(this.gatewayId)
           .subscribe(res => {
               console.log('Received response for graphService.getPipelineIdsFromDataStoreUid: ', res);
 
@@ -593,7 +594,7 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
       console.log('deleting dataStore: ', dataStoreUid);
 
       // First Check if there are pipelines associated with the data store
-      this.graphService.getPipelineIdsFromDataStoreUid(dataStoreUid)
+      this.graphService.getPipelines(this.gatewayId)
           .subscribe(res => {
               console.log('Received response for graphService.getPipelineIdsFromDataStoreUid: ', res);
 
@@ -607,7 +608,7 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
               }
               else {
 
-                  this.graphService.deleteDataStore(0, this.dataStoreForm.get('uid').value)
+                  this.graphService.deleteDataStore('0', this.dataStoreForm.get('uid').value)
                       .subscribe(res => {
                           console.log('Result from delete dataStore ', res);
 

@@ -427,7 +427,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
           });
       }
       else {
-          this.graphService.addProtocol(0, protocol)
+          this.graphService.addProtocol('0', protocol)
               .subscribe(res => {
                   console.log('Result from add protocol', res);
 
@@ -451,7 +451,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
 
 
       // First Check if there are pipelines associated with the protocol
-      this.graphService.getPipelineIdsFromProtocolUid(protocol.uid)
+      this.graphService.getPipelines(protocol.uid)
           .subscribe(res => {
               console.log('Received response for graphService.getPipelineIdsFromProtocolUid: ', res);
 
@@ -556,7 +556,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
       console.log('deleting protocol: ', protocolUid);
 
       // First Check if there are pipelines associated with the protocol
-      this.graphService.getPipelineIdsFromProtocolUid(protocolUid)
+      this.graphService.getPipelines(protocolUid)
           .subscribe(res => {
               console.log('Received response for graphService.getPipelineIdsFromProtocolUid: ', res);
 
@@ -569,7 +569,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
                   this.resetProtocolForm();
               }
               else {
-                  this.graphService.deleteProtocol(0, this.protocolForm.get('uid').value)
+                  this.graphService.deleteProtocol('0', this.protocolForm.get('uid').value)
                       .subscribe(res => {
                           console.log('Result from delete protocol ', res);
 

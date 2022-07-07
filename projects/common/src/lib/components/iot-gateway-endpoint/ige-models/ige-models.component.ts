@@ -239,7 +239,7 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
           });
       }
       else {
-          this.graphService.addModel(0, model)
+          this.graphService.addModel('0', model)
               .subscribe(res => {
                   console.log('Result from add model', res);
 
@@ -296,7 +296,7 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
       console.log('deleting model: ', modelUid);
 
 
-      this.graphService.deleteModel(0, this.modelForm.get('uid').value)
+      this.graphService.deleteModel('0', this.modelForm.get('uid').value)
           .subscribe(res => {
               console.log('Result from delete model ', res);
 

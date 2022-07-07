@@ -115,7 +115,7 @@ export class IgeResourcesComponent implements OnInit {
         });
     }
     else {
-      this.graphService.addPythonResource(resource)
+      this.graphService.addPythonResource(this.gatewayId, resource)
         .subscribe(res => {
           this.getResources();
           this.resetResource();
