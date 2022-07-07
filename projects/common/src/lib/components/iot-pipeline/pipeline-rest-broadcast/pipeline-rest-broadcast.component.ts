@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { FormArray, FormControl, FormGroup, FormBuilder } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
 import { MatTabGroup } from '@angular/material/tabs'
 import { Model } from '@TIBCOSoftware/labs-air-graph-client';
 import { RestHeadersComponent } from '../rest-headers/rest-headers.component';
@@ -10,7 +10,7 @@ import { RestHeadersComponent } from '../rest-headers/rest-headers.component';
 })
 export class PipelineRestBroadcastComponent implements OnInit {
 
-  @Input() restBroadcastForm: FormGroup;
+  @Input() restBroadcastForm: UntypedFormGroup;
   @Input() models: Model[];
   @ViewChild('tabs') tabGroup: MatTabGroup;
   @ViewChild('restHeaders') restHeaders!: RestHeadersComponent;
@@ -18,7 +18,7 @@ export class PipelineRestBroadcastComponent implements OnInit {
   logLevels = ['info', 'warn', 'error', 'debug'];
   methods = ['PUT', 'POST'];
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private formBuilder: UntypedFormBuilder) { }
 
   ngOnInit(): void {
     if (this.restBroadcastForm.get('restURLs').value.length < 1) {
@@ -26,31 +26,31 @@ export class PipelineRestBroadcastComponent implements OnInit {
     }
   }
 
-  get restURLs (): FormArray {
-    return this.restBroadcastForm.get('restURLs') as FormArray;
+  get restURLs (): UntypedFormArray {
+    return this.restBroadcastForm.get('restURLs') as UntypedFormArray;
   }
 
-  get restMethods(): FormArray {
-    return this.restBroadcastForm.get('restMethods') as FormArray;
+  get restMethods(): UntypedFormArray {
+    return this.restBroadcastForm.get('restMethods') as UntypedFormArray;
   }
 
-  get restBodies(): FormArray {
-    return this.restBroadcastForm.get('restBodies') as FormArray;
+  get restBodies(): UntypedFormArray {
+    return this.restBroadcastForm.get('restBodies') as UntypedFormArray;
   }
 
-  get endpointNames(): FormArray {
-    return this.restBroadcastForm.get('endpointNames') as FormArray;
+  get endpointNames(): UntypedFormArray {
+    return this.restBroadcastForm.get('endpointNames') as UntypedFormArray;
   }
 
-  get headers(): FormArray {
-    return this.restBroadcastForm.get('headers') as FormArray;
+  get headers(): UntypedFormArray {
+    return this.restBroadcastForm.get('headers') as UntypedFormArray;
   }
 
   addNewEndpoint(): void {
-    this.restURLs.push(new FormControl(''));
-    this.restMethods.push(new FormControl(''));
-    this.restBodies.push(new FormControl(''));
-    this.endpointNames.push(new FormControl(''));
+    this.restURLs.push(new UntypedFormControl(''));
+    this.restMethods.push(new UntypedFormControl(''));
+    this.restBodies.push(new UntypedFormControl(''));
+    this.endpointNames.push(new UntypedFormControl(''));
   }
 
   deleteEndpoint(): void {
@@ -78,13 +78,13 @@ export class PipelineRestBroadcastComponent implements OnInit {
   }
 
   setForm(model: Model, index: number) {
-    this.restURLs.setControl(index, new FormControl(model.url));
-    this.restBodies.setControl(index, new FormControl(atob(model.inputTemplate)));
-    this.restMethods.setControl(index, new FormControl(model.method));
-    this.endpointNames.setControl(index, new FormControl(model.name));
+    this.restURLs.setControl(index, new UntypedFormControl(model.url));
+    this.restBodies.setControl(index, new UntypedFormControl(atob(model.inputTemplate)));
+    this.restMethods.setControl(index, new UntypedFormControl(model.method));
+    this.endpointNames.setControl(index, new UntypedFormControl(model.name));
     const modelHeaderObjArray = JSON.parse(atob(model.headers)) as [];
     const formGroups = modelHeaderObjArray.map(x => this.formBuilder.group(x));
-    const formGroupsArray = new FormArray(formGroups) as FormArray;
+    const formGroupsArray = new UntypedFormArray(formGroups) as UntypedFormArray;
     this.headers.setControl(index, formGroupsArray);
   }
 

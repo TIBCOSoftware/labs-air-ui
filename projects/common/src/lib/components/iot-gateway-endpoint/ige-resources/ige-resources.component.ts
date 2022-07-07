@@ -1,6 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { PythonResource,  } from '@TIBCOSoftware/labs-air-graph-client';
@@ -19,16 +19,16 @@ export class IgeResourcesComponent implements OnInit {
   dateFormat = 'yyyy-MM-dd  HH:mm:ss'
   resourceDisplayedColumns = ['created', 'name', 'id', 'type']
   resourceSelection = new SelectionModel<PythonResource>(false, []);
-  resourceForm: FormGroup = new FormGroup({
-    name: new FormControl,
-    type: new FormControl,
-    fileContent: new FormControl,
-    uid: new FormControl,
-    created: new FormControl,
-    modified: new FormControl,
-    inputs: new FormArray([]),
-    outputs: new FormArray([]),
-    filePath: new FormControl()
+  resourceForm: UntypedFormGroup = new UntypedFormGroup({
+    name: new UntypedFormControl,
+    type: new UntypedFormControl,
+    fileContent: new UntypedFormControl,
+    uid: new UntypedFormControl,
+    created: new UntypedFormControl,
+    modified: new UntypedFormControl,
+    inputs: new UntypedFormArray([]),
+    outputs: new UntypedFormArray([]),
+    filePath: new UntypedFormControl()
   });
   types = [
     { value: 'requirement', viewValue: 'Requirement' },
@@ -67,32 +67,32 @@ export class IgeResourcesComponent implements OnInit {
     });
     if (row.inputs) {
       const decodedInputs = JSON.parse(atob(row.inputs));
-      const inputs = new FormArray(decodedInputs.map(x => new FormControl(x)));
+      const inputs = new UntypedFormArray(decodedInputs.map(x => new UntypedFormControl(x)));
       this.resourceForm.setControl('inputs', inputs);
     }
     if (row.outputs) {
       const decodedOutputs = JSON.parse(atob(row.outputs))
-      const outputs = new FormArray(decodedOutputs.map(x => new FormControl(x)));
+      const outputs = new UntypedFormArray(decodedOutputs.map(x => new UntypedFormControl(x)));
       this.resourceForm.setControl('outputs', outputs)
     }
     this.code = atob(row.fileContent);
     this.resourceSelection.select(row);
   }
 
-  get inputs (): FormArray {
-   return this.resourceForm.get('inputs') as FormArray;
+  get inputs (): UntypedFormArray {
+   return this.resourceForm.get('inputs') as UntypedFormArray;
   }
 
-  get inputArray(): [FormControl] {
-    return this.inputs.controls as [FormControl];
+  get inputArray(): [UntypedFormControl] {
+    return this.inputs.controls as [UntypedFormControl];
   }
 
-  get outputs (): FormArray {
-    return this.resourceForm.get('outputs') as FormArray;
+  get outputs (): UntypedFormArray {
+    return this.resourceForm.get('outputs') as UntypedFormArray;
   }
 
-  get outputArray(): [FormControl] {
-    return this.outputs.controls as [FormControl]
+  get outputArray(): [UntypedFormControl] {
+    return this.outputs.controls as [UntypedFormControl]
   }
 
   addResource() {
@@ -203,13 +203,13 @@ export class IgeResourcesComponent implements OnInit {
 
   resetResource() {
     this.resourceForm.reset();
-    this.resourceForm.setControl('inputs', new FormArray([]));
-    this.resourceForm.setControl('outputs', new FormArray([]));
+    this.resourceForm.setControl('inputs', new UntypedFormArray([]));
+    this.resourceForm.setControl('outputs', new UntypedFormArray([]));
     this.resourceSelection.clear();
   }
 
   addIO(io: string): void {
-    io == 'inputs' ? this.inputs.push(new FormControl ('')) : this.outputs.push(new FormControl(''));
+    io == 'inputs' ? this.inputs.push(new UntypedFormControl ('')) : this.outputs.push(new UntypedFormControl(''));
   }
 
   removeIO(io: string, index: number): void {

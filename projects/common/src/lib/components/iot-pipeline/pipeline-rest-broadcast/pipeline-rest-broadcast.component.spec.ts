@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, UntypedFormControl, UntypedFormArray } from '@angular/forms';
 
 import { PipelineRestBroadcastComponent } from './pipeline-rest-broadcast.component';
 
@@ -10,7 +10,7 @@ describe('PipelineRestBroadcastComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ PipelineRestBroadcastComponent ],
-      providers: [ FormBuilder]
+      providers: [ UntypedFormBuilder]
     })
     .compileComponents();
   });
@@ -18,13 +18,13 @@ describe('PipelineRestBroadcastComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(PipelineRestBroadcastComponent);
     component = fixture.componentInstance;
-    component.restBroadcastForm = new FormGroup({
-      logLevel: new FormControl(''),
-      restTimeout: new FormControl(1),
-      restURLs: new FormArray([]),
-      restMethods: new FormArray([]),
-      restBodies: new FormArray([]),
-      endpointNames: new FormArray([])
+    component.restBroadcastForm = new UntypedFormGroup({
+      logLevel: new UntypedFormControl(''),
+      restTimeout: new UntypedFormControl(1),
+      restURLs: new UntypedFormArray([]),
+      restMethods: new UntypedFormArray([]),
+      restBodies: new UntypedFormArray([]),
+      endpointNames: new UntypedFormArray([])
     })
     component.models = [];
     fixture.detectChanges();

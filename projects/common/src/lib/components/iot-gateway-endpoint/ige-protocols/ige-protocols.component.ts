@@ -2,7 +2,7 @@ import { Component, OnInit, Input, AfterViewInit, ViewChild } from '@angular/cor
 import { SelectionModel } from '@angular/cdk/collections';
 import { Protocol } from '@TIBCOSoftware/labs-air-graph-client';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -23,7 +23,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
   dateFormat = 'yyyy-MM-dd  HH:mm:ss'
 
   // Form variables
-  protocolForm: FormGroup;
+  protocolForm: UntypedFormGroup;
 
   mqttProtocol = false;
   kafkaProtocol = false;
@@ -37,7 +37,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
   protocolsDataSource = new MatTableDataSource<Protocol>();
   protocolDisplayedColumns: string[] = ['id', 'name', 'protocol', 'scope', 'created', 'modified'];
   protocolSelection = new SelectionModel<Protocol>(false, []);
-  initialForm: FormGroup;
+  initialForm: UntypedFormGroup;
 
 
   protocols: SelectItem[] = [
@@ -80,7 +80,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
    * @param _snackBar
    */
   constructor(private graphService: GraphService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private _snackBar: MatSnackBar) {
 
   }

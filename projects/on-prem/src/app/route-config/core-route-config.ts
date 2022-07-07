@@ -1,8 +1,9 @@
 
 import {StarterAppComponent} from '../routes/starter-app/starter-app.component';
 import { STARTER_APP_ROUTES, HOME_ROUTE } from './starter-app-route-config/starter-app-route-config';
+import { Routes } from "@angular/router";
 
-export const CORE_ROUTES = [
+export const CORE_ROUTES: Routes = [
     {
     // starterApp only provides the global nav bar at present - but will be a useful place to do stuff that applies to all routes
     // Note: although each route uses claimsResolver this doesnt actually result in multiple REST call to claims

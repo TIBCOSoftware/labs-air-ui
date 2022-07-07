@@ -1,6 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormGroup, FormControl } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl } from '@angular/forms';
 import { of } from 'rxjs';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 
@@ -27,9 +27,9 @@ describe('PipelineRulesComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(PipelineRulesComponent);
         component = fixture.componentInstance;
-        component.ruleForm = new FormGroup({});
-        component.ruleForm.addControl('condDevice', new FormControl(''));
-        component.ruleForm.addControl('actionDevice', new FormControl(''));
+        component.ruleForm = new UntypedFormGroup({});
+        component.ruleForm.addControl('condDevice', new UntypedFormControl(''));
+        component.ruleForm.addControl('actionDevice', new UntypedFormControl(''));
         component.devices = [];
         fixture.detectChanges();
     });

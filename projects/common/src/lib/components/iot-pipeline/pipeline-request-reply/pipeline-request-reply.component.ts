@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { GraphService, Protocol } from '@TIBCOSoftware/labs-air-graph-client';
 
 @Component({
@@ -9,7 +9,7 @@ import { GraphService, Protocol } from '@TIBCOSoftware/labs-air-graph-client';
 })
 export class PipelineRequestReplyComponent implements OnInit {
 
-  @Input() requestReplyForm: FormGroup;
+  @Input() requestReplyForm: UntypedFormGroup;
 
   constructor(private graphService: GraphService) { }
 

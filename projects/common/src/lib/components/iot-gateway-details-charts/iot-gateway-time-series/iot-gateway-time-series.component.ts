@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { Subscription } from 'rxjs';
 import { Device, Resource } from '../../../models/iot.model';
@@ -27,7 +27,7 @@ export class CommonIotGatewayTimeSeriesComponent implements OnInit, OnDestroy {
   device: Device;
   instrument: Resource;
   subscriptions: Subscription[] = [];
-  instrumentForm: FormGroup;
+  instrumentForm: UntypedFormGroup;
   resourceReadings: TSReading[] = [];
   resourceInferredReadings: TSReading[] = [];
   numReadings = 300;
@@ -155,7 +155,7 @@ export class CommonIotGatewayTimeSeriesComponent implements OnInit, OnDestroy {
 
   constructor(
     private graphService: GraphService,
-    private formBuilder: FormBuilder
+    private formBuilder: UntypedFormBuilder
   ) {
     this.instrumentForm = this.formBuilder.group({
       valueType: [""],

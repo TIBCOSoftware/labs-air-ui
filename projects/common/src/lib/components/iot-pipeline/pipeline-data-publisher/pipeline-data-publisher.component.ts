@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { Protocol } from '@TIBCOSoftware/labs-air-graph-client';
 
@@ -15,8 +15,8 @@ export interface SelectItem {
 })
 export class PipelineDataPublisherComponent implements OnInit {
 
-  @Input() dataPublisherForm: FormGroup;
-  @Input() dataOptionsForm: FormGroup;
+  @Input() dataPublisherForm: UntypedFormGroup;
+  @Input() dataOptionsForm: UntypedFormGroup;
 
   logLevels: SelectItem[] = [
       { value: 'INFO', viewValue: 'INFO' },

@@ -2,7 +2,7 @@ import { Component, OnInit, Input, ViewChild, AfterViewInit } from '@angular/cor
 import { SelectionModel } from '@angular/cdk/collections';
 import { DataStore } from '@TIBCOSoftware/labs-air-graph-client';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -24,7 +24,7 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
   dateFormat = 'yyyy-MM-dd  HH:mm:ss'
 
   // Form variables
-  dataStoreForm!: FormGroup;
+  dataStoreForm!: UntypedFormGroup;
 
   postgresDataStore = false;
   snowflakeDataStore = false;
@@ -66,7 +66,7 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
    * @param _snackBar
    */
   constructor(private graphService: GraphService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private _snackBar: MatSnackBar) { }
 
   ngOnInit() {

@@ -1,6 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
@@ -31,7 +31,7 @@ describe('CommonIotInfraDeployerComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(CommonIotInfraDeployerComponent);
         component = fixture.componentInstance;
-        component.deployerForm = new FormGroup({});
+        component.deployerForm = new UntypedFormGroup({});
         fixture.detectChanges();
     });
 

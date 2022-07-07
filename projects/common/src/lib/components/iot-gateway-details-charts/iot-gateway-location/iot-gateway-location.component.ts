@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { TSReading } from '@TIBCOSoftware/labs-air-graph-client';
 import { ChartConfiguration, ChartType, ChartData, Tooltip } from 'chart.js';
@@ -21,7 +21,7 @@ export class CommonIotGatewayLocationComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
   locationData = [];
 
-  instrumentForm: FormGroup;
+  instrumentForm: UntypedFormGroup;
 
   queryLastValuesDisabled = false
   queryByDateDisabled = true;
@@ -39,7 +39,7 @@ export class CommonIotGatewayLocationComponent implements OnInit, OnDestroy {
     datasets: [],
   }
 
-  constructor(private graphService: GraphService, private formBuilder: FormBuilder) {
+  constructor(private graphService: GraphService, private formBuilder: UntypedFormBuilder) {
       this.instrumentForm = this.formBuilder.group({
           valueType: [''],
           valueReadWrite: [''],

@@ -1,6 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { of } from 'rxjs';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 
@@ -28,9 +28,9 @@ describe('PipelineDataStoreComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(PipelineDataStoreComponent);
         component = fixture.componentInstance;
-        component.dataStoreForm = new FormGroup({});
-        component.dataStoreForm.addControl('gateway', new FormControl(''));
-        component.dataStoreForm.addControl('dataStoreId', new FormControl(''));
+        component.dataStoreForm = new UntypedFormGroup({});
+        component.dataStoreForm.addControl('gateway', new UntypedFormControl(''));
+        component.dataStoreForm.addControl('dataStoreId', new UntypedFormControl(''));
         fixture.detectChanges();
     });
 

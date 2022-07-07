@@ -2,7 +2,7 @@ import { Component, OnInit, Input, AfterViewInit, ViewChild } from '@angular/cor
 import { SelectionModel } from '@angular/cdk/collections';
 import { Model } from '@TIBCOSoftware/labs-air-graph-client';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -23,7 +23,7 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
   dateFormat = 'yyyy-MM-dd  HH:mm:ss'
 
   // Form variables
-  modelForm: FormGroup;
+  modelForm: UntypedFormGroup;
 
   mqttProtocol = false;
   kafkaProtocol = false;
@@ -56,12 +56,12 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
 
   @Input() gatewayId: string;
 
-  get headers (): FormArray {
-    return this.modelForm.get('headers') as FormArray
+  get headers (): UntypedFormArray {
+    return this.modelForm.get('headers') as UntypedFormArray
   }
 
-  get headerGroups (): [FormGroup] {
-    return this.headers.controls as [FormGroup]
+  get headerGroups (): [UntypedFormGroup] {
+    return this.headers.controls as [UntypedFormGroup]
   }
   /**
    *
@@ -70,7 +70,7 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
    * @param _snackBar
    */
   constructor(private graphService: GraphService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private _snackBar: MatSnackBar) {
 
   }
@@ -180,7 +180,7 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
 
       if (model.headers?.length > 0) {
         const modelHeaderObj = JSON.parse(atob(model.headers))
-        const headersArray = new FormArray(modelHeaderObj.map(x => this.formBuilder.group(x)));
+        const headersArray = new UntypedFormArray(modelHeaderObj.map(x => this.formBuilder.group(x)));
         this.modelForm.setControl('headers', headersArray);
       }
 
@@ -196,8 +196,8 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
       this.modelForm.reset({
       }, { emitEvent: false });
 
-      this.modelForm.setControl('headers', new FormArray([]));
-      this.modelForm.setControl('base64Encoded', new FormControl(true));
+      this.modelForm.setControl('headers', new UntypedFormArray([]));
+      this.modelForm.setControl('base64Encoded', new UntypedFormControl(true));
       this.graphDeleteOpDisabled = true;
       this.graphAddOpDisabled = true;
       this.graphUpdateOpDisabled = true;
@@ -346,9 +346,9 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
   }
 
   addHeader(): void {
-    const formGroup = new FormGroup({
-      key: new FormControl('',),
-      value: new FormControl('',)
+    const formGroup = new UntypedFormGroup({
+      key: new UntypedFormControl('',),
+      value: new UntypedFormControl('',)
     })
     this.headers.push(formGroup);
   }

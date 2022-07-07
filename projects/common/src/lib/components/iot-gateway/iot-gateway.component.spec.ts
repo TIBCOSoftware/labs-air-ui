@@ -1,7 +1,7 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { of } from 'rxjs';
 import { AppConfigService } from '../../services/config/app-config.service';
@@ -36,7 +36,7 @@ describe('CommonIotGatewayComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(CommonIotGatewayComponent);
         component = fixture.componentInstance;
-        component.gatewayForm = new FormGroup({});
+        component.gatewayForm = new UntypedFormGroup({});
         fixture.detectChanges();
     });
 

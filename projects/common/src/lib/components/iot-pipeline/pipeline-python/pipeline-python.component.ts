@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { PythonResource } from '@TIBCOSoftware/labs-air-graph-client';
 @Component({
@@ -9,7 +9,7 @@ import { PythonResource } from '@TIBCOSoftware/labs-air-graph-client';
 })
 export class PipelinePythonComponent implements OnInit {
 
-  @Input() pythonForm: FormGroup;
+  @Input() pythonForm: UntypedFormGroup;
   @Input() gatewayId: string;
   resources: {
     processors: PythonResource[],

@@ -1,7 +1,7 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { AppConfigService } from '../../../services/config/app-config.service';
 import { EdgeService } from '../../../services/edge/edge.service';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
@@ -25,7 +25,7 @@ describe('PipelineInferencingComponent', () => {
                 { provide: AppConfigService, useValue: mockAppConfigService },
                 { provide: GraphService, useValue: mockGraphService },
                 { provide: EdgeService, useValue: mockEdgeService },
-                FormBuilder
+                UntypedFormBuilder
             ]
 
         })
@@ -36,7 +36,7 @@ describe('PipelineInferencingComponent', () => {
         fixture = TestBed.createComponent(PipelineInferencingComponent);
         component = fixture.componentInstance;
         component.devices = [];
-        component.modelForm = new FormGroup({});
+        component.modelForm = new UntypedFormGroup({});
         fixture.detectChanges();
     });
 
