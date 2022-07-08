@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       all: ${{ steps.changes.outputs.all }}
-      dependenciesChanged: ${{ steps.changes.outputs.depsChanged }}
+      dependenciesChanged: ${{ steps.changes.outputs.dependenciesChanged }}
       cloudChanged: ${{ steps.changes.outputs.cloudChanged }}
       commonChanged: ${{ steps.changes.outputs.commonChanged }}
       onPremChanged: ${{ steps.changes.outputs.onPremChanged }}
