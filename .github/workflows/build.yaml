@@ -74,11 +74,12 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Install dependencies for the ${{ matrix.project }}
+      - name: Install dependencies for the ${{ matrix.project }} project
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
           npm config set fund false
-          npm ci
+          echo Forcing module installation...
+          npm install --force
 
       - name: Run the unit tests for ${{ matrix.project }}
         run: |
