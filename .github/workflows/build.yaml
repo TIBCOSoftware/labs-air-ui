@@ -78,7 +78,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
           npm config set fund false
-          npm install
+          npm ci
 
       - name: Run the unit tests for ${{ matrix.project }}
         run: |
@@ -137,7 +137,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
           npm config set fund false
-          npm install
+          npm ci
 
       - name: Build the ${{ matrix.project }} component
         run: |
@@ -199,7 +199,7 @@ jobs:
         run: |
           npm config set fund false
           rm -rf node_modules/@TIBCOSoftware/labs-air-graph-client
-          npm install
+          npm ci
 
       - name: Run the unit tests for ${{ matrix.project }}
         run: |
@@ -262,7 +262,7 @@ jobs:
         run: |
           npm config set fund false
           rm -rf node_modules/@TIBCOSoftware/labs-air-graph-client
-          npm install
+          npm ci
 
       - name: Restore the common library
         uses: actions/download-artifact@v2
