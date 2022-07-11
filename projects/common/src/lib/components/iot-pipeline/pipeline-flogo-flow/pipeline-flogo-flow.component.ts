@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FlogoDeployService } from '../../../services/deployment/flogo-deploy.service';
@@ -16,7 +16,7 @@ import { SingleValueDialogComponent } from '../pipeline-dialog/single-value-dial
 export class PipelineFlogoFlowComponent implements OnInit {
 
 
-  @Input() flogoFlowForm: FormGroup;
+  @Input() flogoFlowForm: UntypedFormGroup;
 
   dataSource = [];
   columnHeader = ['name', 'type', 'value']
@@ -24,7 +24,7 @@ export class PipelineFlogoFlowComponent implements OnInit {
 
   constructor(private flogoDeployService: FlogoDeployService,
     private _snackBar: MatSnackBar,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private dialog: MatDialog) {
 
   }

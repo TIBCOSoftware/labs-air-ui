@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { ActivatedRoute } from '@angular/router';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 
 export interface SelectItem {
   value: string;
@@ -16,7 +16,7 @@ export interface SelectItem {
 export class CommonIotInfraDeployerComponent implements OnInit {
 
   // Form variables
-  deployerForm: FormGroup;
+  deployerForm: UntypedFormGroup;
   gatewayId = '';
   constructor(private route: ActivatedRoute) {
 

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormArray } from '@angular/forms';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
@@ -85,7 +85,7 @@ export class InfraDeployerComponent implements OnInit {
 
   displayedColumns = ['id', 'name', 'projid', 'projname', 'projdescription', 'projcreated','action'];
   deployableSelection = new SelectionModel<FlattenedDeployable>(false, []);
-  deployableForm: FormGroup;
+  deployableForm: UntypedFormGroup;
 
   deployerTypes: SelectItem[] = [
       { value: 'AIR', viewValue: 'AIR Deployer' },
@@ -93,7 +93,7 @@ export class InfraDeployerComponent implements OnInit {
   ];
 
   constructor(private flogoDeployService: FlogoDeployService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private _snackBar: MatSnackBar) {
 
   }
@@ -131,7 +131,7 @@ get the projects for the deployable table
       console.log('Created form');
   }
 
-  createParameter(name, value): FormGroup {
+  createParameter(name, value): UntypedFormGroup {
       console.log('Creating form with param name: ', name);
 
       return this.formBuilder.group({
@@ -140,8 +140,8 @@ get the projects for the deployable table
       });
   }
 
-  getParameters(): FormArray {
-      return <FormArray> this.deployableForm.get('parameters');
+  getParameters(): UntypedFormArray {
+      return <UntypedFormArray> this.deployableForm.get('parameters');
   }
 
   addParameterItem(name, value) {

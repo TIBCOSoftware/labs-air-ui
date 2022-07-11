@@ -5,7 +5,7 @@ import { Device, Resource, TSCombinedReading } from '../../../models/iot.model';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { TSReading } from '@TIBCOSoftware/labs-air-graph-client';
 
 @Component({
@@ -19,9 +19,9 @@ export class CommonIotGatewayObjectComponent implements OnInit, OnDestroy, After
   objectData = '';
   inferredObjectData = '';
   resourceReadings = [];
-  queryForm: FormGroup = new FormGroup ({
-    pickerStartDate: new FormControl(''),
-    pickerEndDate: new FormControl('')
+  queryForm: UntypedFormGroup = new UntypedFormGroup ({
+    pickerStartDate: new UntypedFormControl(''),
+    pickerEndDate: new UntypedFormControl('')
   })
   queryLastValuesDisabled = true;
   queryByDateDisabled = true;

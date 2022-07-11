@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Device, Resource } from '../../../models/iot.model';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 export interface SelectItem {
@@ -15,7 +15,7 @@ export interface SelectItem {
 })
 export class PipelineRuleTextMatchingComponent implements OnInit {
 
-  @Input() ruleTextMatchingForm: FormGroup;
+  @Input() ruleTextMatchingForm: UntypedFormGroup;
 
   resources: Resource[];
 

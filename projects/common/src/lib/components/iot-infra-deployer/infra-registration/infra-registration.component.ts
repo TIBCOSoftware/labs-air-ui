@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormArray, UntypedFormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import * as YAML from 'yaml';
 import { FlogoDeployService } from '../../../services/deployment/flogo-deploy.service';
@@ -14,8 +14,8 @@ import { FlogoDeployService } from '../../../services/deployment/flogo-deploy.se
 export class InfraRegistrationComponent implements OnInit {
   @Input() name = '';
   @Input() error = '';
-  registrationForm: FormGroup;
-  projectForm: FormGroup;
+  registrationForm: UntypedFormGroup;
+  projectForm: UntypedFormGroup;
   parsedFile: any;
   items = [];
   properties = new Set();
@@ -23,7 +23,7 @@ export class InfraRegistrationComponent implements OnInit {
   envProperties= {};
 
   constructor(private flogoDeployService: FlogoDeployService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private _snackBar: MatSnackBar) {
 
   }
@@ -192,7 +192,7 @@ parse environment file and add list of properties there to the input forms
       });
 
   }
-  createParameter(name,value): FormGroup {
+  createParameter(name,value): UntypedFormGroup {
       console.log('Creating form with param name: ', name);
 
       return this.formBuilder.group({
@@ -201,19 +201,19 @@ parse environment file and add list of properties there to the input forms
       });
   }
 
-  getParameters(): FormArray {
-      return <FormArray>this.registrationForm.get('parameters');
+  getParameters(): UntypedFormArray {
+      return <UntypedFormArray>this.registrationForm.get('parameters');
   }
 
   addParameterItem(name,value) {
       this.getParameters().push(this.createParameter(name,value));
   }
-  validateAllFormFields(formGroup: FormGroup) {         //{1}
+  validateAllFormFields(formGroup: UntypedFormGroup) {         //{1}
       Object.keys(formGroup.controls).forEach(field => {  //{2}
           const control = formGroup.get(field);             //{3}
-          if (control instanceof FormControl) {             //{4}
+          if (control instanceof UntypedFormControl) {             //{4}
               control.markAsTouched({ onlySelf: true });
-          } else if (control instanceof FormGroup) {        //{5}
+          } else if (control instanceof UntypedFormGroup) {        //{5}
               this.validateAllFormFields(control);            //{6}
           }
       });

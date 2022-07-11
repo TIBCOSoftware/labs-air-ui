@@ -2,7 +2,7 @@ import { Component, OnInit, Input, AfterViewInit, ViewChild } from '@angular/cor
 import { SelectionModel } from '@angular/cdk/collections';
 import { Protocol } from '@TIBCOSoftware/labs-air-graph-client';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -23,7 +23,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
   dateFormat = 'yyyy-MM-dd  HH:mm:ss'
 
   // Form variables
-  protocolForm: FormGroup;
+  protocolForm: UntypedFormGroup;
 
   mqttProtocol = false;
   kafkaProtocol = false;
@@ -37,7 +37,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
   protocolsDataSource = new MatTableDataSource<Protocol>();
   protocolDisplayedColumns: string[] = ['id', 'name', 'protocol', 'scope', 'created', 'modified'];
   protocolSelection = new SelectionModel<Protocol>(false, []);
-  initialForm: FormGroup;
+  initialForm: UntypedFormGroup;
 
 
   protocols: SelectItem[] = [
@@ -80,7 +80,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
    * @param _snackBar
    */
   constructor(private graphService: GraphService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private _snackBar: MatSnackBar) {
 
   }
@@ -427,7 +427,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
           });
       }
       else {
-          this.graphService.addProtocol(0, protocol)
+          this.graphService.addProtocol('0', protocol)
               .subscribe(res => {
                   console.log('Result from add protocol', res);
 
@@ -451,7 +451,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
 
 
       // First Check if there are pipelines associated with the protocol
-      this.graphService.getPipelineIdsFromProtocolUid(protocol.uid)
+      this.graphService.getPipelines(protocol.uid)
           .subscribe(res => {
               console.log('Received response for graphService.getPipelineIdsFromProtocolUid: ', res);
 
@@ -556,7 +556,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
       console.log('deleting protocol: ', protocolUid);
 
       // First Check if there are pipelines associated with the protocol
-      this.graphService.getPipelineIdsFromProtocolUid(protocolUid)
+      this.graphService.getPipelines(protocolUid)
           .subscribe(res => {
               console.log('Received response for graphService.getPipelineIdsFromProtocolUid: ', res);
 
@@ -569,7 +569,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
                   this.resetProtocolForm();
               }
               else {
-                  this.graphService.deleteProtocol(0, this.protocolForm.get('uid').value)
+                  this.graphService.deleteProtocol('0', this.protocolForm.get('uid').value)
                       .subscribe(res => {
                           console.log('Result from delete protocol ', res);
 

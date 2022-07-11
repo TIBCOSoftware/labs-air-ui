@@ -16,6 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       all: ${{ steps.changes.outputs.all }}
+      dependenciesChanged: ${{ steps.changes.outputs.dependenciesChanged }}
       cloudChanged: ${{ steps.changes.outputs.cloudChanged }}
       commonChanged: ${{ steps.changes.outputs.commonChanged }}
       onPremChanged: ${{ steps.changes.outputs.onPremChanged }}
@@ -29,6 +30,7 @@ jobs:
         run: |
           PREVIOUS_SHA=$(git rev-parse HEAD^1 2>&1)
           echo "::set-output name=all::$(git diff --name-only --diff-filter=ACMRT "${PREVIOUS_SHA}" ${{ github.sha }} | xargs)"
+          echo "::set-output name=dependenciesChanged::$(git diff --name-only --diff-filter=ACMRT "${PREVIOUS_SHA}" ${{ github.sha }} | grep -E 'package.*.json' | xargs)"
           echo "::set-output name=cloudChanged::$(git diff --name-only --diff-filter=ACMRT "${PREVIOUS_SHA}" ${{ github.sha }} | grep -E 'projects/cloud' | xargs)"
           echo "::set-output name=commonChanged::$(git diff --name-only --diff-filter=ACMRT "${PREVIOUS_SHA}" ${{ github.sha }} | grep -E 'projects/common' | xargs)"
           echo "::set-output name=onPremChanged::$(git diff --name-only --diff-filter=ACMRT "${PREVIOUS_SHA}" ${{ github.sha }} | grep -E 'projects/on-prem' | xargs)"
@@ -43,7 +45,8 @@ jobs:
     if: |
       (needs.identify-changes.outputs.commonChanged ||
         needs.identify-changes.outputs.cloudChanged ||
-        needs.identify-changes.outputs.onPremChanged) ||
+        needs.identify-changes.outputs.onPremChanged ||
+        needs.identify-changes.outputs.dependenciesChanged) ||
       github.ref == 'refs/heads/main'
     strategy:
       matrix:
@@ -62,7 +65,7 @@ jobs:
           path: |
             ./node_modules
           key: |
-            ${{ runner.os }}-cicd-ui-${{ hashFiles('./package-lock.json') }}
+            ${{ runner.os }}-cicd-ui-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-cicd-ui-
 
@@ -71,11 +74,12 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Install dependencies for the ${{ matrix.project }}
+      - name: Install dependencies for the ${{ matrix.project }} project
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
           npm config set fund false
-          npm install
+          echo Forcing module installation...
+          npm install --force
 
       - name: Run the unit tests for ${{ matrix.project }}
         run: |
@@ -100,7 +104,8 @@ jobs:
     if: |
       (needs.identify-changes.outputs.commonChanged ||
         needs.identify-changes.outputs.cloudChanged ||
-        needs.identify-changes.outputs.onPremChanged) ||
+        needs.identify-changes.outputs.onPremChanged ||
+        needs.identify-changes.outputs.dependenciesChanged) ||
       github.ref == 'refs/heads/main'
 
     strategy:
@@ -120,7 +125,7 @@ jobs:
           path: |
             ./node_modules
           key: |
-            ${{ runner.os }}-cicd-ui-${{ hashFiles('./package-lock.json') }}
+            ${{ runner.os }}-cicd-ui-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-cicd-ui-
 
@@ -133,7 +138,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
           npm config set fund false
-          npm install
+          npm install --force
 
       - name: Build the ${{ matrix.project }} component
         run: |
@@ -154,7 +159,8 @@ jobs:
     if: |
       (needs.identify-changes.outputs.commonChanged ||
         needs.identify-changes.outputs.cloudChanged ||
-        needs.identify-changes.outputs.onPremChanged) ||
+        needs.identify-changes.outputs.onPremChanged ||
+        needs.identify-changes.outputs.dependenciesChanged) ||
       github.ref == 'refs/heads/main'
     strategy:
       matrix:
@@ -189,12 +195,12 @@ jobs:
           name: common-library
           path: dist/common
 
-      - name: Install dependencies for the ${{ matrix.project }}
+      - name: Install dependencies for the ${{ matrix.project }} project
         # if: steps.cache.outputs.cache-hit != 'true'
         run: |
           npm config set fund false
           rm -rf node_modules/@TIBCOSoftware/labs-air-graph-client
-          npm install
+          npm install --force
 
       - name: Run the unit tests for ${{ matrix.project }}
         run: |
@@ -221,7 +227,8 @@ jobs:
     if: |
       (needs.identify-changes.outputs.commonChanged ||
         needs.identify-changes.outputs.cloudChanged ||
-        needs.identify-changes.outputs.onPremChanged) ||
+        needs.identify-changes.outputs.onPremChanged ||
+        needs.identify-changes.outputs.dependenciesChanged) ||
       github.ref == 'refs/heads/main'
 
     strategy:
@@ -242,7 +249,7 @@ jobs:
           path: |
             ./node_modules
           key: |
-            ${{ runner.os }}-cicd-ui-${{ hashFiles('./package-lock.json') }}
+            ${{ runner.os }}-cicd-ui-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-cicd-ui-
 
@@ -256,7 +263,7 @@ jobs:
         run: |
           npm config set fund false
           rm -rf node_modules/@TIBCOSoftware/labs-air-graph-client
-          npm install
+          npm install --force
 
       - name: Restore the common library
         uses: actions/download-artifact@v2

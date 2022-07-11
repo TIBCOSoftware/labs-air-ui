@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angula
 
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, FormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -88,22 +88,22 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
     filters: any[] = [];
 
     // should this be just one big form? 
-    pipelineForm: FormGroup;
-    protocolForm: FormGroup;
-    dataStoreForm: FormGroup;
-    streamingForm: FormGroup;
-    modelForm: FormGroup;
-    ruleForm: FormGroup;
-    ruleExpressionForm: FormGroup;
-    ruleTextMatchingForm: FormGroup;
-    flogoFlowForm: FormGroup;
-    restServiceForm: FormGroup;
-    dataOptionsForm: FormGroup;
-    pythonForm: FormGroup;
-    restBroadcastForm: FormGroup;
-    requestReplyForm: FormGroup;
-    pythonPipeForm: FormGroup;
-    errorHandlerForm: FormGroup;
+    pipelineForm: UntypedFormGroup;
+    protocolForm: UntypedFormGroup;
+    dataStoreForm: UntypedFormGroup;
+    streamingForm: UntypedFormGroup;
+    modelForm: UntypedFormGroup;
+    ruleForm: UntypedFormGroup;
+    ruleExpressionForm: UntypedFormGroup;
+    ruleTextMatchingForm: UntypedFormGroup;
+    flogoFlowForm: UntypedFormGroup;
+    restServiceForm: UntypedFormGroup;
+    dataOptionsForm: UntypedFormGroup;
+    pythonForm: UntypedFormGroup;
+    restBroadcastForm: UntypedFormGroup;
+    requestReplyForm: UntypedFormGroup;
+    pythonPipeForm: UntypedFormGroup;
+    errorHandlerForm: UntypedFormGroup;
     artifacts = [];
 
     ruleTuplesDescriptor = [
@@ -189,7 +189,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
         private edgeService: EdgeService,
         private flogoDeployService: FlogoDeployService,
         private route: ActivatedRoute,
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         private _snackBar: MatSnackBar) {
 
     }
@@ -698,7 +698,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
             inputTemplate: '',
             logLevel: 'INFO',
             method: 'PUT',
-            headers: new FormArray([]),
+            headers: new UntypedFormArray([]),
             base64Encoded: true
         }, { emitEvent: false });
 
@@ -707,7 +707,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
             url: '',
             logLevel: 'INFO',
             method: 'PUT',
-            headers: new FormArray([])
+            headers: new UntypedFormArray([])
         }, { emitEvent: false });
 
         this.protocolForm.patchValue({
@@ -762,10 +762,10 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
             }
         });
         // resetting a form group and form array require explicit calls or they don't reset.
-        (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('input', new FormGroup({}));
-        (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('output', new FormArray([]));
-        (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('config', new FormArray([]));
-        (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('dependsOn', new FormArray([]));
+        (this.pythonPipeForm.get('context').get('data') as UntypedFormGroup).setControl('input', new UntypedFormGroup({}));
+        (this.pythonPipeForm.get('context').get('data') as UntypedFormGroup).setControl('output', new UntypedFormArray([]));
+        (this.pythonPipeForm.get('context').get('data') as UntypedFormGroup).setControl('config', new UntypedFormArray([]));
+        (this.pythonPipeForm.get('context').get('data') as UntypedFormGroup).setControl('dependsOn', new UntypedFormArray([]));
     }
 
 
@@ -1040,7 +1040,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
      * @param protocolForm
      * @param dataOptionsForm
      */
-    buildNodeProtocolProperties(protocolForm: FormGroup, dataOptionsForm: FormGroup): any {
+    buildNodeProtocolProperties(protocolForm: UntypedFormGroup, dataOptionsForm: UntypedFormGroup): any {
         const protocol = protocolForm.get('protocol').value;
         let useReading = true;
         let encodeReadingValue = false;
@@ -1141,7 +1141,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
      *
      * @param form
      */
-    buildNodeDataStoreProperties(form: FormGroup, dataOptionsForm: FormGroup): any {
+    buildNodeDataStoreProperties(form: UntypedFormGroup, dataOptionsForm: UntypedFormGroup): any {
         let dataStore = form.get('dataStore').value;
         let useReading = true;
         let useEnrichedReading = true;
@@ -1699,7 +1699,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
             });
 
             const formGroups = context.headers.map(x => this.formBuilder.array(x.map(y => this.formBuilder.group(y)))) as [];
-            const headersArray = this.formBuilder.array(formGroups) as FormArray
+            const headersArray = this.formBuilder.array(formGroups) as UntypedFormArray
             this.modelForm.setControl('headers', headersArray);
 
         }
@@ -1846,7 +1846,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
             });
 
             const formGroups = context.headers.map(x => this.formBuilder.array(x.map(y => this.formBuilder.group(y)))) as [];
-            const headersArray = this.formBuilder.array(formGroups) as FormArray
+            const headersArray = this.formBuilder.array(formGroups) as UntypedFormArray
             this.restServiceForm.setControl('headers', headersArray);
         }
     }
@@ -1888,7 +1888,7 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
             this.restBroadcastForm.setControl('restBodies', this.formBuilder.array(context.restBodies));
 
             const formGroups = context.headers.map(x => this.formBuilder.array(x.map(y => this.formBuilder.group(y)))) as [];
-            const headersArray = this.formBuilder.array(formGroups) as FormArray
+            const headersArray = this.formBuilder.array(formGroups) as UntypedFormArray
             this.restBroadcastForm.setControl('headers', headersArray);
         }
     }
@@ -1936,14 +1936,14 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
                     name: context.processorName
                 }
             });
-            (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('input', this.formBuilder.group(context.input));
+            (this.pythonPipeForm.get('context').get('data') as UntypedFormGroup).setControl('input', this.formBuilder.group(context.input));
             const outputs = context.output.map(x => this.formBuilder.control(x));
-            (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('output', new FormArray(outputs));
+            (this.pythonPipeForm.get('context').get('data') as UntypedFormGroup).setControl('output', new UntypedFormArray(outputs));
             const formGroups = context.config.map(x => this.formBuilder.group(x)) as [];
-            const configArray = this.formBuilder.array(formGroups) as FormArray
-            (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('config', configArray);
+            const configArray = this.formBuilder.array(formGroups) as UntypedFormArray
+            (this.pythonPipeForm.get('context').get('data') as UntypedFormGroup).setControl('config', configArray);
             const dependsOnArray = context.dependsOn.map(x => this.formBuilder.control(x));
-            (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('dependsOn', this.formBuilder.array(dependsOnArray));
+            (this.pythonPipeForm.get('context').get('data') as UntypedFormGroup).setControl('dependsOn', this.formBuilder.array(dependsOnArray));
         }
     }
 
@@ -2292,14 +2292,14 @@ export class CommonIotPipelineComponent implements OnInit, AfterViewInit {
             this.deployDisabled = true;
             this.undeployDisabled = true;
 
-            const pipeline = this.pipelineSelection.selected[0];
+            const pipeline = this.pipelineSelection.selected[0] as Pipeline;
 
             // if (pipeline.status != "Undeployed") {
             //   this.undeploySelectedDataPipeline();
             // }
             this.pipelineSelection.clear();
 
-            this.graphService.deletePipeline(this.gateway.uid, pipeline)
+            this.graphService.deletePipeline(this.gateway.uid, pipeline.uid)
                 .subscribe(res => {
                     console.log('Result from delete pipeline', res);
 

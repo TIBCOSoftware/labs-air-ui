@@ -1,5 +1,5 @@
 import { Component, OnInit, OnChanges, SimpleChanges, Input } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -27,7 +27,7 @@ interface DeviceNode {
 export class PipelineRestServiceComponent implements OnInit, OnChanges {
 
   @Input() devices: Device[];
-  @Input() restForm: FormGroup;
+  @Input() restForm: UntypedFormGroup;
   @Input() filters: any[];
 
   // Added to prevent compile error in oss version

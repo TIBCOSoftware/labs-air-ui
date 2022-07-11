@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { Device, Resource } from '../../../models/iot.model';
 import { Subscription } from 'rxjs';
 
@@ -15,7 +15,7 @@ export interface SelectItem {
 })
 export class PipelineErrorHandlerComponent implements OnInit {
 
-  @Input() errorHandlerForm: FormGroup;
+  @Input() errorHandlerForm: UntypedFormGroup;
 
   logLevels: SelectItem[] = [
       { value: 'INFO', viewValue: 'INFO' },

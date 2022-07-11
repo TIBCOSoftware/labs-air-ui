@@ -2,7 +2,7 @@ import { Component, OnInit, Input, ViewChild, AfterViewInit } from '@angular/cor
 import { SelectionModel } from '@angular/cdk/collections';
 import { DataStore } from '@TIBCOSoftware/labs-air-graph-client';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -24,7 +24,7 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
   dateFormat = 'yyyy-MM-dd  HH:mm:ss'
 
   // Form variables
-  dataStoreForm!: FormGroup;
+  dataStoreForm!: UntypedFormGroup;
 
   postgresDataStore = false;
   snowflakeDataStore = false;
@@ -66,7 +66,7 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
    * @param _snackBar
    */
   constructor(private graphService: GraphService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private _snackBar: MatSnackBar) { }
 
   ngOnInit() {
@@ -428,7 +428,8 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
           });
       }
       else {
-          this.graphService.addDataStore(0, dataStore)
+          // datastore adds 
+          this.graphService.addDataStore('0', dataStore)
               .subscribe(res => {
                   console.log('Result from add dataStore', res);
 
@@ -450,7 +451,7 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
       dataStore.uid = this.dataStoreForm.get('uid').value;
 
       // First Check if there are pipelines associated with the data store
-      this.graphService.getPipelineIdsFromDataStoreUid(dataStore.uid)
+      this.graphService.getPipelines(this.gatewayId)
           .subscribe(res => {
               console.log('Received response for graphService.getPipelineIdsFromDataStoreUid: ', res);
 
@@ -593,7 +594,7 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
       console.log('deleting dataStore: ', dataStoreUid);
 
       // First Check if there are pipelines associated with the data store
-      this.graphService.getPipelineIdsFromDataStoreUid(dataStoreUid)
+      this.graphService.getPipelines(this.gatewayId)
           .subscribe(res => {
               console.log('Received response for graphService.getPipelineIdsFromDataStoreUid: ', res);
 
@@ -607,7 +608,7 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
               }
               else {
 
-                  this.graphService.deleteDataStore(0, this.dataStoreForm.get('uid').value)
+                  this.graphService.deleteDataStore('0', this.dataStoreForm.get('uid').value)
                       .subscribe(res => {
                           console.log('Result from delete dataStore ', res);
 

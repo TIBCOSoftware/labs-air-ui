@@ -1,4 +1,4 @@
-import { FormArray } from "@angular/forms";
+import { UntypedFormArray } from "@angular/forms";
 import { Gateway } from "@TIBCOSoftware/labs-air-graph-client";
 
 export class ResourceProperty {
@@ -275,7 +275,7 @@ export class ScatterChartDataset {
 export class RestBroadcast {
   logLevel: string;
   restTimeout: number;
-  restURLs: FormArray;
-  restMethods: FormArray;
-  restBodies: FormArray;
+  restURLs: UntypedFormArray;
+  restMethods: UntypedFormArray;
+  restBodies: UntypedFormArray;
 }

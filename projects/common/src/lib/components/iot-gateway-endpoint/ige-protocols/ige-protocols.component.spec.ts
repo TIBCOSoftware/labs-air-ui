@@ -4,7 +4,7 @@ import { of } from 'rxjs';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 
 import { IgeProtocolsComponent } from './ige-protocols.component';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 describe('IgeProtocolsComponent', () => {
@@ -20,7 +20,7 @@ describe('IgeProtocolsComponent', () => {
             imports: [MatSnackBarModule],
             providers: [
                 { provide: GraphService, useValue: mockGraphService },
-                FormBuilder
+                UntypedFormBuilder
             ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA]
         })

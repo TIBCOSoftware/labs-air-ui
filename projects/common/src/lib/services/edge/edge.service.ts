@@ -6,7 +6,7 @@ import { catchError, tap, timeout } from 'rxjs/operators';
 
 import { Device, Profile, Service, Subscription, GetCommandResponse, FiltersConfig } from '../../models/iot.model';
 import { AppConfigService } from '../config/app-config.service';
-import { Gateway, ModelConfig } from '@TIBCOSoftware/labs-air-graph-client';
+import { Gateway } from '@TIBCOSoftware/labs-air-graph-client';
 
 const httpOptions = {
     headers: new HttpHeaders({
@@ -544,44 +544,6 @@ export class EdgeService {
           .pipe(
               tap(_ => console.info('registered to receive events')),
               catchError(this.handleError<string>('addRegistration'))
-          );
-  }
-
-  /**
-   *
-   * @param gateway
-   * @param modelConfig
-   */
-  addModelConfig(gateway: Gateway, modelConfig: ModelConfig): Observable<string> {
-
-      const url = this.getEdgexURL(gateway.address, this.edgexInferencingPath, 'addModelConf');
-
-      const authorizedHeaders = httpTextResponseOptions.headers.set('Authorization', 'Bearer ' + gateway.accessToken);
-      httpTextResponseOptions.headers = authorizedHeaders;
-
-      return this.http.post<string>(url, modelConfig, httpTextResponseOptions)
-          .pipe(
-              tap(_ => console.info('added modelConfig')),
-              catchError(this.handleError<string>('addModelConfig'))
-          );
-  }
-
-  /**
-   *
-   * @param gateway
-   * @param modelConfig
-   */
-  deleteModelConfig(gateway: Gateway, modelConfig: ModelConfig): Observable<string> {
-
-      const url = this.getEdgexURL(gateway.address, this.edgexInferencingPath, 'deleteModelConf');
-
-      const authorizedHeaders = httpTextResponseOptions.headers.set('Authorization', 'Bearer ' + gateway.accessToken);
-      httpTextResponseOptions.headers = authorizedHeaders;
-
-      return this.http.post<string>(url, modelConfig, httpTextResponseOptions)
-          .pipe(
-              tap(_ => console.info('deleted modelConfig')),
-              catchError(this.handleError<string>('deleteModelConfig'))
           );
   }
 

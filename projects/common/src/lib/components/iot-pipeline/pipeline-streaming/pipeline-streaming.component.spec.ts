@@ -1,6 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 
 import { PipelineStreamingComponent } from './pipeline-streaming.component';
 
@@ -19,8 +19,8 @@ describe('PipelineStreamingComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(PipelineStreamingComponent);
         component = fixture.componentInstance;
-        component.streamingForm = new FormGroup({});
-        component.streamingForm.addControl('deviceName', new FormControl(''));
+        component.streamingForm = new UntypedFormGroup({});
+        component.streamingForm.addControl('deviceName', new UntypedFormControl(''));
         component.devices = [];
         fixture.detectChanges();
     });

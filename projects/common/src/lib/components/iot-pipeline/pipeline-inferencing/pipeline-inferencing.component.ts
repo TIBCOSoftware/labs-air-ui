@@ -7,7 +7,7 @@ import { EdgeService } from '../../../services/edge/edge.service';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 
 import { Device, FiltersConfig } from '../../../models/iot.model';
-import { FormArray, FormGroup, FormBuilder } from '@angular/forms';
+import { UntypedFormArray, UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
 import { Model } from '@TIBCOSoftware/labs-air-graph-client';
 
 export interface SelectItem {
@@ -31,7 +31,7 @@ export class PipelineInferencingComponent implements OnInit, OnChanges  {
 
   @Input() devices: Device[];
   @Input() models: Model[];
-  @Input() modelForm: FormGroup;
+  @Input() modelForm: UntypedFormGroup;
   @Input() filters: any[];
 
   // Added to prevent compile error in oss version
@@ -56,7 +56,7 @@ export class PipelineInferencingComponent implements OnInit, OnChanges  {
 
   constructor(private edgeService: EdgeService,
     private graphService: GraphService,
-    private formBuilder: FormBuilder) {
+    private formBuilder: UntypedFormBuilder) {
 
   }
 
@@ -281,8 +281,8 @@ export class PipelineInferencingComponent implements OnInit, OnChanges  {
       );
       const modelHeaderObjArray = JSON.parse(atob(model.headers))
       const formGroups = modelHeaderObjArray.map(y => this.formBuilder.group(y)) as [];
-      const formGroupsArray = this.formBuilder.array(formGroups) as FormArray;
-      const headers = new FormArray([]);
+      const formGroupsArray = this.formBuilder.array(formGroups) as UntypedFormArray;
+      const headers = new UntypedFormArray([]);
       headers.push(formGroupsArray);
       this.modelForm.setControl('headers', headers);
   }

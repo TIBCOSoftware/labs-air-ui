@@ -1,6 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { of } from 'rxjs';
 import { EdgeService } from '../../../services/edge/edge.service';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
@@ -32,8 +32,8 @@ describe('PipelineRuleTextMatchingComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(PipelineRuleTextMatchingComponent);
         component = fixture.componentInstance;
-        component.ruleTextMatchingForm = new FormGroup({});
-        component.ruleTextMatchingForm.addControl('device', new FormControl(''));
+        component.ruleTextMatchingForm = new UntypedFormGroup({});
+        component.ruleTextMatchingForm.addControl('device', new UntypedFormControl(''));
         component.resources = [];
         fixture.detectChanges();
     });
