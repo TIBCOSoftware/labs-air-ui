@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Validators, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { GraphService, Protocol } from '@TIBCOSoftware/labs-air-graph-client';
 import { debounceTime, distinctUntilChanged, Observable, Subscription } from 'rxjs';
 
@@ -15,10 +15,10 @@ export class PipelineRequestReplyComponent implements OnInit, OnDestroy {
   @Output() formUpdatedEvent = new EventEmitter<any>();
   @Input() nodeChangeEvent: Observable<any>;
   nodeChangeSubscription: Subscription;
-  requestReplyForm: FormGroup;
   formChangeSubscription: Subscription;
+  @Input() requestReplyForm: UntypedFormGroup;
 
-  constructor(private graphService: GraphService, private formBuilder: FormBuilder) { }
+  constructor(private graphService: GraphService, private formBuilder: UntypedFormBuilder) { }
 
   logLevels = [
     { value: 'INFO', viewValue: 'INFO' },

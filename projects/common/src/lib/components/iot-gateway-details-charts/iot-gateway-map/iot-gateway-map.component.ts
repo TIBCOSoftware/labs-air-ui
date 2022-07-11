@@ -61,17 +61,17 @@ export class CommonIotGatewayMapComponent implements OnInit, OnDestroy {
           uuid: deviceName
       });
 
-      const center = this.graphService.getRouteCenter(deviceName);
+      // const center = this.graphService.getRouteCenter(deviceName);
 
       if (this.createMapFlag) {
           this.mapConfig = {
               createMap: this.createMapFlag,
-              centerLat: center[0],
-              centerLon: center[1],
+              // centerLat: center[0],
+              // centerLon: center[1],
               zoom: 4,
               showColorAxis: false,
               data: mapData,
-              polyline: this.graphService.getRoute(deviceName)
+              // polyline: this.graphService.getRoute(deviceName)
           };
           this.createMapFlag = false;
       }

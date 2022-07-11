@@ -7,7 +7,7 @@ import { EdgeService } from '../../../services/edge/edge.service';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 
 import { Device, FiltersConfig, ModelConfig } from '../../../models/iot.model';
-import { FormArray, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Validators, UntypedFormArray, UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
 import { Model } from '@TIBCOSoftware/labs-air-graph-client';
 import { debounceTime, distinctUntilChanged, Observable, Subscription } from 'rxjs';
 
@@ -32,13 +32,13 @@ export class PipelineInferencingComponent implements OnInit, OnChanges, OnDestro
 
     @Input() devices: Device[];
     @Input() models: Model[];
-    @Input() filters: any[];
     @Input() model: any;
     @Output() formUpdatedEvent = new EventEmitter<Model>();
     formChangeSubscription: Subscription;
-    modelForm: FormGroup;
     @Input() nodeChangeEvent: Observable<any>;
     nodeChangeSubscription: Subscription;
+    @Input() modelForm: UntypedFormGroup;
+    @Input() filters: any[];
 
     // Added to prevent compile error in oss version
     activeNode: Node;
@@ -60,10 +60,7 @@ export class PipelineInferencingComponent implements OnInit, OnChanges, OnDestro
     /** The selection for checklist */
     checklistSelection = new SelectionModel<DeviceNode>(true /* multiple */);
 
-    constructor(private edgeService: EdgeService,
-        private graphService: GraphService,
-        private formBuilder: FormBuilder) {
-
+    constructor(private formBuilder: UntypedFormBuilder) {
     }
 
     ngOnInit(): void {
@@ -290,8 +287,8 @@ export class PipelineInferencingComponent implements OnInit, OnChanges, OnDestro
         );
         const modelHeaderObjArray = JSON.parse(atob(model.headers))
         const formGroups = modelHeaderObjArray.map(y => this.formBuilder.group(y)) as [];
-        const formGroupsArray = this.formBuilder.array(formGroups) as FormArray;
-        const headers = new FormArray([]);
+        const formGroupsArray = this.formBuilder.array(formGroups) as UntypedFormArray;
+        const headers = new UntypedFormArray([]);
         headers.push(formGroupsArray);
         this.modelForm.setControl('headers', headers);
     }
@@ -373,7 +370,7 @@ export class PipelineInferencingComponent implements OnInit, OnChanges, OnDestro
             });
 
             const formGroups = context.headers.map(x => this.formBuilder.array(x.map(y => this.formBuilder.group(y)))) as [];
-            const headersArray = this.formBuilder.array(formGroups) as FormArray
+            const headersArray = this.formBuilder.array(formGroups) as UntypedFormArray
             this.modelForm.setControl('headers', headersArray);
 
         }

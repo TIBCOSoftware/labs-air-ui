@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Validators, UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FlogoDeployService } from '../../../services/deployment/flogo-deploy.service';
@@ -18,7 +18,7 @@ export class PipelineFlogoFlowComponent implements OnInit, OnDestroy {
 
     @Input() flogoFlow;
     @Output() formUpdatedEvent = new EventEmitter<FlogoFlow>();
-    flogoFlowForm: FormGroup;
+    flogoFlowForm: UntypedFormGroup;
     formChangeSubscription: Subscription;
     dataSource = [];
     columnHeader = ['name', 'type', 'value']
@@ -29,7 +29,7 @@ export class PipelineFlogoFlowComponent implements OnInit, OnDestroy {
 
     constructor(private flogoDeployService: FlogoDeployService,
         private _snackBar: MatSnackBar,
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         private dialog: MatDialog) {
 
     }

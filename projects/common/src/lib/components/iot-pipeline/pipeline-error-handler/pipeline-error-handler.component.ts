@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { FormBuilder, Validators, UntypedFormGroup } from "@angular/forms";
 import { debounceTime, Subscription, distinctUntilChanged, Observable } from "rxjs";
 
 export interface SelectItem {
@@ -16,9 +16,10 @@ export class PipelineErrorHandlerComponent implements OnInit, OnDestroy {
   @Input() errorHandler;
   @Output() formUpdatedEvent = new EventEmitter<any>();
   formChangeSubscription: Subscription;
-  errorHandlerForm: FormGroup;
   @Input() nodeChangeEvent: Observable<any>;
   nodeChangeSubscription: Subscription;
+
+  @Input() errorHandlerForm: UntypedFormGroup;
 
   logLevels: SelectItem[] = [
     { value: "INFO", viewValue: "INFO" },

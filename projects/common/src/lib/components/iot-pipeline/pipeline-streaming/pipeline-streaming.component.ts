@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { Device, Resource } from '../../../models/iot.model';
 import { Subscription } from 'rxjs';
 
@@ -15,7 +15,7 @@ export interface SelectItem {
 })
 export class PipelineStreamingComponent implements OnInit, OnDestroy {
 
-  @Input() streamingForm: FormGroup;
+  @Input() streamingForm: UntypedFormGroup;
   @Input() devices: Device[];
 
   logLevels: SelectItem[] = [

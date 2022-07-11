@@ -5,7 +5,7 @@ import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 
 import { IgeDataStoresComponent } from './ige-data-stores.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 
 describe('IgeDataStoresComponent', () => {
     let component: IgeDataStoresComponent;
@@ -21,7 +21,7 @@ describe('IgeDataStoresComponent', () => {
             imports: [MatSnackBarModule],
             providers: [
                 { provide: GraphService, useValue: mockGraphService },
-                FormBuilder
+                UntypedFormBuilder
             ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA]
         })

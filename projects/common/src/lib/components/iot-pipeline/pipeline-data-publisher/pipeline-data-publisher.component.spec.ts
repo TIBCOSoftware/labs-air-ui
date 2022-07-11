@@ -1,6 +1,6 @@
  import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { of } from 'rxjs';
 import { EdgeService } from '../../../services/edge/edge.service';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
@@ -31,9 +31,9 @@ describe('PipelineDataPublisherComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(PipelineDataPublisherComponent);
         component = fixture.componentInstance;
-        component.dataPublisherForm = new FormGroup({});
-        component.dataPublisherForm.addControl('gateway', new FormControl(''));
-        component.dataPublisherForm.addControl('protocolId', new FormControl(''));
+        component.dataPublisherForm = new UntypedFormGroup({});
+        component.dataPublisherForm.addControl('gateway', new UntypedFormControl(''));
+        component.dataPublisherForm.addControl('protocolId', new UntypedFormControl(''));
         fixture.detectChanges();
     });
 

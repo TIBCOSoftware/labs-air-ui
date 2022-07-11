@@ -1,5 +1,5 @@
 import { Component, OnInit, OnChanges, SimpleChanges, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -32,7 +32,7 @@ export class PipelineRestServiceComponent implements OnInit, OnChanges, OnDestro
     @Input() nodeChangeEvent: Observable<any>;
     nodeChangeSubscription: Subscription;
     formChangeSubscription: Subscription;
-    restServiceForm: FormGroup;
+    restServiceForm: UntypedFormGroup;
 
     // Added to prevent compile error in oss version
     activeNode: Node;
@@ -55,7 +55,7 @@ export class PipelineRestServiceComponent implements OnInit, OnChanges, OnDestro
     checklistSelection = new SelectionModel<DeviceNode>(true /* multiple */);
 
 
-    constructor(private formBuilder: FormBuilder) {
+    constructor(private formBuilder: UntypedFormBuilder) {
 
     }
 
@@ -304,7 +304,7 @@ export class PipelineRestServiceComponent implements OnInit, OnChanges, OnDestro
             });
 
             const formGroups = context.headers.map(x => this.formBuilder.array(x.map(y => this.formBuilder.group(y)))) as [];
-            const headersArray = this.formBuilder.array(formGroups) as FormArray
+            const headersArray = this.formBuilder.array(formGroups) as UntypedFormArray
             this.restServiceForm.setControl('headers', headersArray);
         }
     }

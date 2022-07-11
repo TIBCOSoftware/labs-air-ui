@@ -297,12 +297,13 @@
       }
     }
   },
-  "defaultProject": "on-prem",
   "cli": {
     "analytics": false,
-    "defaultCollection": "@angular-eslint/schematics",
     "cache": {
       "enabled": false
-    }
+    },
+    "schematicCollections": [
+      "@angular-eslint/schematics"
+    ]
   }
 }

@@ -5,7 +5,7 @@ import { Device, Resource, TSCombinedReading } from '../../../models/iot.model';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { TSReading } from '@TIBCOSoftware/labs-air-graph-client';
 
 @Component({
@@ -19,9 +19,9 @@ export class CommonIotGatewayImageComponent implements OnInit, OnDestroy, AfterV
   imageData = '';
   inferredImageData = '';
   resourceReadings = [];
-  queryForm: FormGroup = new FormGroup ({
-    pickerStartDate: new FormControl(''),
-    pickerEndDate: new FormControl('')
+  queryForm: UntypedFormGroup = new UntypedFormGroup ({
+    pickerStartDate: new UntypedFormControl(''),
+    pickerEndDate: new UntypedFormControl('')
   })
   queryLastValuesDisabled = true;
   queryByDateDisabled = true;
@@ -34,8 +34,8 @@ export class CommonIotGatewayImageComponent implements OnInit, OnDestroy, AfterV
   tableDataSource = new MatTableDataSource<TSCombinedReading>();
   combinedReadingSelection = new SelectionModel<TSCombinedReading>(false, []);
 
-  commandForm = new FormGroup({
-      command: new FormControl('')
+  commandForm = new UntypedFormGroup({
+      command: new UntypedFormControl('')
   });
 
   @ViewChild(MatSort) sort: MatSort;

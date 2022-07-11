@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, Validators, UntypedFormGroup } from '@angular/forms';
 import { DataStore } from '@TIBCOSoftware/labs-air-graph-client';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { debounceTime, Subscription, distinctUntilChanged, Observable } from 'rxjs';
@@ -16,14 +16,14 @@ export interface SelectItem {
 })
 export class PipelineDataStoreComponent implements OnInit, OnDestroy {
 
-    dataStoreForm: FormGroup;
-    dataOptionsForm: FormGroup;
     formChangeSubscription: Subscription;
     @Input() dataStore: any;
     @Input() gatewayId: string;
     @Output() formUpdatedEvent = new EventEmitter<DataStore>();
     @Input() nodeChangeEvent: Observable<any>;
     nodeChangeSubscription: Subscription;
+    @Input() dataStoreForm: UntypedFormGroup;
+    @Input() dataOptionsForm: UntypedFormGroup;
 
     logLevels: SelectItem[] = [
         { value: 'INFO', viewValue: 'INFO' },

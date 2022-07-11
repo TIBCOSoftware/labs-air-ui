@@ -1,6 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { Device, Resource } from '../../../models/iot.model';
@@ -30,7 +30,7 @@ describe('CommonIotGatewayLocationComponent', () => {
         component = fixture.componentInstance;
         component.device = {} as Device;
         component.instrument = { properties: { units: {}}} as Resource;
-        component.instrumentForm = new FormGroup({});
+        component.instrumentForm = new UntypedFormGroup({});
         fixture.detectChanges();
     });
 

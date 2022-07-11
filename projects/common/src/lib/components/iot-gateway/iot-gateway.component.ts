@@ -7,7 +7,7 @@ import { DataStoreMetadata, Device } from '../../models/iot.model';
 import { EdgeService } from '../../services/edge/edge.service';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { DatastoreService } from '../../services/datastore/datastore.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -33,7 +33,7 @@ export class CommonIotGatewayComponent implements OnInit, AfterViewInit {
 
   dataStoreMetadata: DataStoreMetadata = new DataStoreMetadata();
 
-  gatewayForm: FormGroup;
+  gatewayForm: UntypedFormGroup;
   dataSource = new MatTableDataSource<Gateway>();
   displayedColumns: string[] = ['uuid', 'created', 'updated'];
   selection = new SelectionModel<Gateway>(false, []);
@@ -42,7 +42,7 @@ export class CommonIotGatewayComponent implements OnInit, AfterViewInit {
   constructor(private graphService: GraphService,
     private edgeService: EdgeService,
     private datastoreService: DatastoreService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private _snackBar: MatSnackBar,
     private _datePipe: DatePipe) {
 

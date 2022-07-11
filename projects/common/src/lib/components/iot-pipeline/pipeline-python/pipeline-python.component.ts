@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, UntypedFormGroup } from '@angular/forms';
 import { GraphService, PythonResource } from '@TIBCOSoftware/labs-air-graph-client';
 import { debounceTime, distinctUntilChanged, Subscription } from 'rxjs';
 @Component({
@@ -9,11 +9,11 @@ import { debounceTime, distinctUntilChanged, Subscription } from 'rxjs';
 })
 export class PipelinePythonComponent implements OnInit, OnDestroy {
 
+  @Input() pythonForm: UntypedFormGroup;
   @Input() gatewayId: string;
   @Input() python: any;
   @Output() formUpdatedEvent = new EventEmitter<PythonResource>();
   formChangeSubscription: Subscription;
-  pythonForm: FormGroup;
   resources: {
     processors: PythonResource[],
     requirements: PythonResource[],

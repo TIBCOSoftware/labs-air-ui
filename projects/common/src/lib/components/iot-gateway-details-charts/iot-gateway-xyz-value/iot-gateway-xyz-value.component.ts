@@ -5,7 +5,7 @@ import { Device, Resource, TSCombinedReading } from '../../../models/iot.model';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { TSReading } from '@TIBCOSoftware/labs-air-graph-client';
 
 @Component({
@@ -27,7 +27,7 @@ export class CommonIotGatewayXyzValueComponent implements OnInit, OnDestroy, Aft
   dateFormat = 'yyyy-MM-dd HH:mm:ss'
   tableDataSource = new MatTableDataSource<TSCombinedReading>();
   combinedReadingSelection = new SelectionModel<TSCombinedReading>(false, []);
-  queryForm: FormGroup;
+  queryForm: UntypedFormGroup;
   queryLastValuesDisabled = true;
   inferredImageData:any;
   queryByDateDisabled = true;

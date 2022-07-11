@@ -1,5 +1,5 @@
 import { Component, Input, ViewChildren } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-rest-headers',
@@ -8,36 +8,36 @@ import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 })
 export class RestHeadersComponent {
 
-  @Input() formData: FormGroup;
+  @Input() formData: UntypedFormGroup;
   @Input() formArrayIndex: number = 0;
 
   constructor() { }
 
   // headers need to be in [[{key: keyName, value: keyValue}, ...], ...]
 
-  get headersArray (): FormArray {
-    return this.formData.get('headers') as FormArray
+  get headersArray (): UntypedFormArray {
+    return this.formData.get('headers') as UntypedFormArray
   }
 
-  get headers (): FormArray {
-    return this.headersArray.controls[this.formArrayIndex] as FormArray
+  get headers (): UntypedFormArray {
+    return this.headersArray.controls[this.formArrayIndex] as UntypedFormArray
   }
   
-  get headerFormGroup (): [FormGroup] {
-    return this.headers?.controls as [FormGroup]
+  get headerFormGroup (): [UntypedFormGroup] {
+    return this.headers?.controls as [UntypedFormGroup]
   }
 
   addHeaderArray (): void {
-    this.headersArray.push(new FormArray([]));
+    this.headersArray.push(new UntypedFormArray([]));
   }
 
   addHeader(): void {
     if (!this.headers) {
       this.addHeaderArray();
     } 
-    const formGroup = new FormGroup({
-      key: new FormControl('',),
-      value: new FormControl('',)
+    const formGroup = new UntypedFormGroup({
+      key: new UntypedFormControl('',),
+      value: new UntypedFormControl('',)
     })
     this.headers.push(formGroup);
   }

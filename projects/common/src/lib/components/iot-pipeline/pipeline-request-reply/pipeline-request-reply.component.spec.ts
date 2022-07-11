@@ -3,7 +3,7 @@ import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { PipelineRequestReplyComponent } from './pipeline-request-reply.component';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { of } from 'rxjs';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
@@ -30,8 +30,8 @@ describe('PipelineRequestReplyComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(PipelineRequestReplyComponent);
     component = fixture.componentInstance;
-    component.requestReplyForm = new FormGroup({
-      gateway: new FormControl('')
+    component.requestReplyForm = new UntypedFormGroup({
+      gateway: new UntypedFormControl('')
     })
     fixture.detectChanges();
   });

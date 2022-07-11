@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, UntypedFormGroup } from '@angular/forms';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { Protocol } from '@TIBCOSoftware/labs-air-graph-client';
 import { debounceTime, Subscription, distinctUntilChanged, Observable } from 'rxjs';
@@ -21,6 +21,8 @@ export class PipelineDataPublisherComponent implements OnInit, OnDestroy {
     @Input() nodeChangeEvent: Observable<any>;
     nodeChangeSubscription: Subscription;
     @Output() formUpdatedEvent = new EventEmitter<Protocol>();
+    @Input() dataPublisherForm: UntypedFormGroup;
+    @Input() dataOptionsForm: UntypedFormGroup;
 
     logLevels: SelectItem[] = [
         { value: 'INFO', viewValue: 'INFO' },
@@ -47,8 +49,6 @@ export class PipelineDataPublisherComponent implements OnInit, OnDestroy {
         { value: 'SSL', viewValue: 'SSL' }
     ];
 
-    dataPublisherForm: FormGroup;
-    dataOptionsForm: FormGroup;
     formChangeSubscription: Subscription;
 
     onKafkaAuthModeSelected(event) {

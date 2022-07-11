@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Device, Resource } from '../../../models/iot.model';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 export interface SelectItem {
@@ -16,7 +16,7 @@ export interface SelectItem {
 export class PipelineRulesComponent implements OnInit {
 
   @Input() devices: Device[];
-  @Input() ruleForm: FormGroup;
+  @Input() ruleForm: UntypedFormGroup;
 
   conditionResources: Resource[];
   actionResources: Resource[];

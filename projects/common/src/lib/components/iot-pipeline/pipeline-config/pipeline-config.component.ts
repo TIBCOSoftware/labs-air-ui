@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 
 export interface SelectItem {
   value: string;
@@ -30,7 +30,7 @@ export class PipelineConfigComponent {
       { value: 'DEBUG', viewValue: 'DEBUG' }
   ];
 
-  @Input() pipelineForm: FormGroup;
+  @Input() pipelineForm: UntypedFormGroup;
 
   constructor() { }
 

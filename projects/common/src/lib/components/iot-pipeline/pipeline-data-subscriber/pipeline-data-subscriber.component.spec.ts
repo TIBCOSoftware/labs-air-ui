@@ -1,7 +1,7 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { of } from 'rxjs';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 
@@ -29,10 +29,10 @@ describe('PipelineDataSubscriberComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(PipelineDataSubscriberComponent);
         component = fixture.componentInstance;
-        component.dataSubscriberForm = new FormGroup({});
-        component.dataSubscriberForm.addControl('gateway', new FormControl(''));
-        component.dataSubscriberForm.addControl('protocolId', new FormControl(''));
-        component.dataSubscriberForm.addControl('logLevel', new FormControl(''));
+        component.dataSubscriberForm = new UntypedFormGroup({});
+        component.dataSubscriberForm.addControl('gateway', new UntypedFormControl(''));
+        component.dataSubscriberForm.addControl('protocolId', new UntypedFormControl(''));
+        component.dataSubscriberForm.addControl('logLevel', new UntypedFormControl(''));
         fixture.detectChanges();
     });
 

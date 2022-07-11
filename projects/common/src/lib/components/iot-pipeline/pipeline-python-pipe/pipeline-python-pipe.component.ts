@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ɵɵsetComponentScope, ɵɵtrustConstantResourceUrl } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Validators, UntypedFormArray, UntypedFormControl, UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
 import { PythonResource } from '@TIBCOSoftware/labs-air-graph-client';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { debounceTime, distinctUntilChanged, Observable, Subscription } from 'rxjs';
@@ -11,11 +11,11 @@ import { debounceTime, distinctUntilChanged, Observable, Subscription } from 'rx
 })
 export class PipelinePythonPipeComponent implements OnInit, OnDestroy {
 
+  @Input() pythonPipeForm: UntypedFormGroup;
   @Input() gatewayId: string;
   @Input() pythonInputs: any[];
   @Input() pythonPipe: any;
   @Output() formUpdatedEvent = new EventEmitter<PythonResource>();
-  pythonPipeForm: FormGroup;
   showResourceConfiguration = false;
   inputSelections = [];
   subscription: Subscription;
@@ -23,7 +23,7 @@ export class PipelinePythonPipeComponent implements OnInit, OnDestroy {
   @Input() nodeChangeEvent: Observable<any>;
   nodeChangeSubscription: Subscription;
 
-  constructor(private graphService: GraphService, private formBuilder: FormBuilder) { }
+  constructor(private graphService: GraphService, private formBuilder: UntypedFormBuilder) { }
 
   logLevels = [
     { value: 'INFO', viewValue: 'INFO' },
@@ -34,21 +34,21 @@ export class PipelinePythonPipeComponent implements OnInit, OnDestroy {
 
   resources: PythonResource[] = [];
 
-  useGPUForm = new FormGroup({
-    key: new FormControl('use_gpu'),
-    value: new FormControl(true)
+  useGPUForm = new UntypedFormGroup({
+    key: new UntypedFormControl('use_gpu'),
+    value: new UntypedFormControl(true)
   })
 
   get pipeContextName(): string {
     return this.pythonPipeForm.get('context').get('name').value;
   }
 
-  get pipeInputs(): FormGroup {
-    return this.pythonPipeForm.get('context').get('data').get('input') as FormGroup;
+  get pipeInputs(): UntypedFormGroup {
+    return this.pythonPipeForm.get('context').get('data').get('input') as UntypedFormGroup;
   }
 
-  get configs(): FormArray {
-    return this.pythonPipeForm.get('context').get('data').get('config') as FormArray
+  get configs(): UntypedFormArray {
+    return this.pythonPipeForm.get('context').get('data').get('config') as UntypedFormArray
   }
 
   get useGPU(): boolean {
@@ -84,10 +84,10 @@ export class PipelinePythonPipeComponent implements OnInit, OnDestroy {
       }
     })
     const pythonRawOutputs = JSON.parse(atob(processor.outputs));
-    const outputControls = pythonRawOutputs.map(x => new FormControl(x));
-    (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('output', new FormArray(outputControls));
+    const outputControls = pythonRawOutputs.map(x => new UntypedFormControl(x));
+    (this.pythonPipeForm.get('context').get('data') as UntypedFormGroup).setControl('output', new UntypedFormArray(outputControls));
     const pythonInputs = JSON.parse(atob(processor.inputs));
-    (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('input', this.parsePythonInputs(pythonInputs));
+    (this.pythonPipeForm.get('context').get('data') as UntypedFormGroup).setControl('input', this.parsePythonInputs(pythonInputs));
   }
 
   getInputSelection() {
@@ -99,19 +99,19 @@ export class PipelinePythonPipeComponent implements OnInit, OnDestroy {
 
   // checks if the depends is updated to the latest node
   checkConnectedNode() {
-    const pythonPipeDependsOn = (this.pythonPipeForm.get('context').get('data').get('dependsOn') as FormArray)
+    const pythonPipeDependsOn = (this.pythonPipeForm.get('context').get('data').get('dependsOn') as UntypedFormArray)
     if ((this.pythonInputs.length > 0) && (pythonPipeDependsOn.value[0] !== this.pythonInputs[0].data.customdata.name)) {
       pythonPipeDependsOn.clear();
-      pythonPipeDependsOn.push(new FormControl(this.pythonInputs[0].data.customdata.name))
+      pythonPipeDependsOn.push(new UntypedFormControl(this.pythonInputs[0].data.customdata.name))
     } else if ((this.pythonInputs.length > 0) && (pythonPipeDependsOn.value[0] === this.pythonInputs[0].data.customdata.name)) {
       pythonPipeDependsOn.value[0] = this.pythonInputs[0].data.customdata.name
     }
   }
 
   addConfig() {
-    this.configs.push(new FormGroup({
-      key: new FormControl(),
-      value: new FormControl()
+    this.configs.push(new UntypedFormGroup({
+      key: new UntypedFormControl(),
+      value: new UntypedFormControl()
     }))
   }
 
@@ -127,10 +127,10 @@ export class PipelinePythonPipeComponent implements OnInit, OnDestroy {
     }
   }
 
-  parsePythonInputs(pythonInputs: [string]): FormGroup {
-    const inputFormGroup = new FormGroup({});
+  parsePythonInputs(pythonInputs: [string]): UntypedFormGroup {
+    const inputFormGroup = new UntypedFormGroup({});
     pythonInputs.forEach(x => {
-      inputFormGroup.addControl(x, new FormControl('Engine.' + x))
+      inputFormGroup.addControl(x, new UntypedFormControl('Engine.' + x))
     })
     return inputFormGroup
   }
@@ -180,19 +180,19 @@ export class PipelinePythonPipeComponent implements OnInit, OnDestroy {
         }
       });
       if (pythonPipe.context.data.input) {
-        (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('input', this.formBuilder.group(pythonPipe.context.data.input));
+        (this.pythonPipeForm.get('context').get('data') as UntypedFormGroup).setControl('input', this.formBuilder.group(pythonPipe.context.data.input));
       }
       if (pythonPipe.context.data.output) {
         const outputs = pythonPipe.context.data.output.map(x => this.formBuilder.control(x));
-        (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('output', new FormArray(outputs));
+        (this.pythonPipeForm.get('context').get('data') as UntypedFormGroup).setControl('output', new UntypedFormArray(outputs));
       }
       if (pythonPipe.context.data.config.length > 0) {
         const formGroups = pythonPipe.context.data.config.map(x => this.formBuilder.group(x)) as [];
-        const configArray = this.formBuilder.array(formGroups) as FormArray
-        (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('config', configArray);
+        const configArray = this.formBuilder.array(formGroups) as UntypedFormArray
+        (this.pythonPipeForm.get('context').get('data') as UntypedFormGroup).setControl('config', configArray);
       }
       const dependsOnArray = pythonPipe.context.data.dependsOn.map(x => this.formBuilder.control(x));
-      (this.pythonPipeForm.get('context').get('data') as FormGroup).setControl('dependsOn', this.formBuilder.array(dependsOnArray));
+      (this.pythonPipeForm.get('context').get('data') as UntypedFormGroup).setControl('dependsOn', this.formBuilder.array(dependsOnArray));
     }
   }
 
