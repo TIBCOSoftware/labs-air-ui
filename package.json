@@ -38,7 +38,7 @@
     "@angular/router": "^14.0.5",
     "@openid/appauth": "^1.3.1",
     "@tibco/spotfire-wrapper": "^0.18.0",
-    "@TIBCOSoftware/labs-air-graph-client": "file:./TIBCOSoftware-labs-air-graph-client-0.7.0-970.1.tgz",
+    "@TIBCOSoftware/labs-air-graph-client": "file:./TIBCOSoftware-labs-air-graph-client-0.7.0-971.tgz",
     "chart.js": "3.6.0",
     "chartjs-adapter-luxon": "^1.1.0",
     "chartjs-plugin-datalabels": "^2.0.0",
