@@ -42,8 +42,6 @@
     "chart.js": "3.6.0",
     "chartjs-adapter-luxon": "^1.1.0",
     "chartjs-plugin-datalabels": "^2.0.0",
-    "chartjs-plugin-doughnutlabel": "^2.0.3",
-    "chartjs-plugin-labels": "^1.1.0",
     "chartjs-plugin-streaming": "^2.0.0",
     "heatmap.js": "git+https://github.com/sanuradhag/heatmap.js.git",
     "luxon": "^2.3.0",
