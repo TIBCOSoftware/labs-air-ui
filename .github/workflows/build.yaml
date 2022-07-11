@@ -79,7 +79,7 @@ jobs:
         run: |
           npm config set fund false
           echo Forcing module installation...
-          npm install --force
+          npm ci
 
       - name: Run the unit tests for ${{ matrix.project }}
         run: |
@@ -263,7 +263,7 @@ jobs:
         run: |
           npm config set fund false
           rm -rf node_modules/@TIBCOSoftware/labs-air-graph-client
-          npm install --force
+          npm ci
 
       - name: Restore the common library
         uses: actions/download-artifact@v2
