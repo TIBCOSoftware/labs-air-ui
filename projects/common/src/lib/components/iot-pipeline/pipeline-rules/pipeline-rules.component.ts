@@ -1,11 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { Device, Resource } from '../../../models/iot.model';
-import { UntypedFormGroup } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { debounceTime, distinctUntilChanged, Observable, Subscription } from 'rxjs';
 
 export interface SelectItem {
-  value: string;
-  viewValue: string;
+    value: string;
+    viewValue: string;
 }
 
 @Component({
@@ -13,103 +13,178 @@ export interface SelectItem {
     templateUrl: './pipeline-rules.component.html',
     styleUrls: ['./pipeline-rules.component.css']
 })
-export class PipelineRulesComponent implements OnInit {
+export class PipelineRulesComponent implements OnInit, OnDestroy {
 
-  @Input() devices: Device[];
-  @Input() ruleForm: UntypedFormGroup;
+    @Input() rule: any;
+    @Input() devices: Device[];
+    @Output() formUpdatedEvent = new EventEmitter<any>();
+    @Input() nodeChangeEvent: Observable<any>;
+    nodeChangeSubscription: Subscription;
+    formChangeSubscription: Subscription;
+    ruleForm: UntypedFormGroup;
 
-  conditionResources: Resource[];
-  actionResources: Resource[];
+    conditionResources: Resource[];
+    actionResources: Resource[];
 
-  private subscr1:Subscription;
-  private subscr2:Subscription;
+    private subscr1: Subscription;
+    private subscr2: Subscription;
 
-  logLevels: SelectItem[] = [
-      { value: 'INFO', viewValue: 'INFO' },
-      { value: 'WARN', viewValue: 'WARN' },
-      { value: 'ERROR', viewValue: 'ERROR' },
-      { value: 'DEBUG', viewValue: 'DEBUG' }
-  ];
+    logLevels: SelectItem[] = [
+        { value: 'INFO', viewValue: 'INFO' },
+        { value: 'WARN', viewValue: 'WARN' },
+        { value: 'ERROR', viewValue: 'ERROR' },
+        { value: 'DEBUG', viewValue: 'DEBUG' }
+    ];
 
-  operations: SelectItem[] = [
-      { value: '==', viewValue: '==' },
-      { value: '>', viewValue: '>' },
-      { value: '>=', viewValue: '>=' },
-      { value: '<', viewValue: '<' },
-      { value: '<=', viewValue: '<=' },
-      { value: '!=', viewValue: '!=' }
-  ];
+    operations: SelectItem[] = [
+        { value: '==', viewValue: '==' },
+        { value: '>', viewValue: '>' },
+        { value: '>=', viewValue: '>=' },
+        { value: '<', viewValue: '<' },
+        { value: '<=', viewValue: '<=' },
+        { value: '!=', viewValue: '!=' }
+    ];
 
-  constructor() { }
+    constructor(private formBuilder: UntypedFormBuilder) { }
 
-  ngOnInit(): void {
+    ngOnInit(): void {
+        this.initForm();
+        this.onFormChanges();
+        if (this.rule) {
+            this.updateRuleForm(this.rule.data['customdata'])
+        }
+    }
 
-      let idx = this.getIndexForDevice(this.ruleForm.get('condDevice').value);
+    ngOnDestroy(): void {
+        this.formChangeSubscription.unsubscribe();
+        this.nodeChangeSubscription.unsubscribe();
+        this.subscr1.unsubscribe();
+        this.subscr2.unsubscribe();
+    }
 
-      if (idx >= 0)
-          this.conditionResources = this.devices[idx].profile.deviceResources as Resource[];
+    onConditionDeviceSelected(event) {
 
-      idx = this.getIndexForDevice(this.ruleForm.get('actionDevice').value);
+        console.log('Condition Device Selected: ', event);
 
-      if (idx >= 0)
-          this.actionResources = this.devices[idx].profile.deviceResources as Resource[];
+        // Set the resourceDataSource
+        const idx = this.getIndexForDevice(event.value);
+        this.conditionResources = this.devices[idx].profile.deviceResources as Resource[];
+    }
 
+    onActionDeviceSelected(event) {
 
-      this.onFormChanges();
-  }
+        console.log('Action Device Selected: ', event);
 
-  onConditionDeviceSelected(event) {
+        // Set the resourceDataSource
+        const idx = this.getIndexForDevice(event.value);
+        this.actionResources = this.devices[idx].profile.deviceResources as Resource[];
+    }
 
-      console.log('Condition Device Selected: ', event);
+    getIndexForDevice(name: string): number {
+        let idx = -1;
 
-      // Set the resourceDataSource
-      const idx = this.getIndexForDevice(event.value);
-      this.conditionResources = this.devices[idx].profile.deviceResources as Resource[];
-  }
+        for (let i = 0; i < this.devices.length; i++) {
 
-  onActionDeviceSelected(event) {
+            if (this.devices[i].name == name) {
+                idx = i;
+                break;
+            }
+        }
 
-      console.log('Action Device Selected: ', event);
+        return idx;
+    }
 
-      // Set the resourceDataSource
-      const idx = this.getIndexForDevice(event.value);
-      this.actionResources = this.devices[idx].profile.deviceResources as Resource[];
-  }
+    onFormChanges(): void {
+        this.nodeChangeSubscription = this.nodeChangeEvent.subscribe(node => {
+            this.updateRuleForm(node.data['customdata']);
+        });
+        this.formChangeSubscription = this.ruleForm.valueChanges
+            .pipe(debounceTime(200), distinctUntilChanged())
+            .subscribe(() => {
+                this.formUpdatedEvent.emit(this.ruleForm.value)
+            })
 
-  getIndexForDevice(name: string): number {
-      let idx = -1;
+        this.subscr1 = this.ruleForm.get('condDevice').valueChanges.subscribe(val => {
 
-      for (let i = 0; i < this.devices.length; i++) {
+            // Set the resourceDataSource
+            const idx = this.getIndexForDevice(val);
 
-          if (this.devices[i].name == name) {
-              idx = i;
-              break;
-          }
-      }
+            if (idx >= 0)
+                this.conditionResources = this.devices[idx].profile.deviceResources as Resource[];
+        });
 
-      return idx;
-  }
+        this.subscr2 = this.ruleForm.get('actionDevice').valueChanges.subscribe(val => {
 
-  onFormChanges(): void {
+            // Set the resourceDataSource
+            const idx = this.getIndexForDevice(val);
 
-      this.subscr1 = this.ruleForm.get('condDevice').valueChanges.subscribe(val => {
+            if (idx >= 0)
+                this.actionResources = this.devices[idx].profile.deviceResources as Resource[];
+        });
 
-          // Set the resourceDataSource
-          const idx = this.getIndexForDevice(val);
+    }
 
-          if (idx >= 0)
-              this.conditionResources = this.devices[idx].profile.deviceResources as Resource[];
-      });
+    initForm() {
+        this.ruleForm = this.formBuilder.group({
+            name: ['', Validators.required],
+            description: [''],
+            condDevice: ['', Validators.required],
+            condResource: ['', Validators.required],
+            condCompareNewMetricToValue: [true],
+            condCompareNewMetricToValueOp: ['', Validators.required],
+            condCompareNewMetricValue: ['', Validators.required],
+            condCompareNewMetricToLastMetric: [false],
+            condCompareNewMetricToLastMetricOp: [''],
+            condCompareLastMetricToValue: [false],
+            condCompareLastMetricToValueOp: [''],
+            condCompareLastMetricValue: [''],
+            actionSendNotification: [true],
+            actionNotification: ['', Validators.required],
+            actionSendCommand: [true],
+            actionDevice: ['', Validators.required],
+            actionResource: ['', Validators.required],
+            actionValue: ['', Validators.required],
+            logLevel: ['INFO', Validators.required]
+        });
+        let idx = this.getIndexForDevice(this.ruleForm.get('condDevice').value);
 
-      this.subscr2 = this.ruleForm.get('actionDevice').valueChanges.subscribe(val => {
+        if (idx >= 0)
+            this.conditionResources = this.devices[idx].profile.deviceResources as Resource[];
 
-          // Set the resourceDataSource
-          const idx = this.getIndexForDevice(val);
+        idx = this.getIndexForDevice(this.ruleForm.get('actionDevice').value);
 
-          if (idx >= 0)
-              this.actionResources = this.devices[idx].profile.deviceResources as Resource[];
-      });
+        if (idx >= 0)
+            this.actionResources = this.devices[idx].profile.deviceResources as Resource[];
+    }
 
-  }
+    updateRuleForm(context) {
+
+        if (context != null || context != undefined) {
+            console.log('Updating rules component with context: ', context);
+
+            this.ruleForm.patchValue({
+                name: context.name,
+                description: context.description,
+                condDevice: context.condDevice,
+                condResource: context.condResource,
+                condCompareNewMetricToValue: context.condCompareNewMetricToValue,
+                condCompareNewMetricToValueOp: context.condCompareNewMetricToValueOp,
+                condCompareNewMetricValue: context.condCompareNewMetricValue,
+                condCompareNewMetricToLastMetric: context.condCompareNewMetricToLastMetric,
+                condCompareNewMetricToLastMetricOp: context.condCompareNewMetricToLastMetricOp,
+                condCompareLastMetricToValue: context.condCompareLastMetricToValue,
+                condCompareLastMetricToValueOp: context.condCompareLastMetricToValueOp,
+                condCompareLastMetricValue: context.condCompareLastMetricValue,
+                actionSendNotification: context.actionSendNotification,
+                actionNotification: context.actionNotification,
+                actionSendCommand: context.actionSendCommand,
+                actionDevice: context.actionDevice,
+                actionResource: context.actionResource,
+                actionValue: context.actionValue,
+                logLevel: context.logLevel,
+            });
+
+        }
+    }
 
 }

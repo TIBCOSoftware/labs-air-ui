@@ -27,59 +27,71 @@
 
     <div class="configuration-panel">
         <!-- Configuration Panel Components -->
-        <app-common-pipeline-config *ngIf="pipelineConfig" [pipelineForm]="pipelineForm" fxFlex></app-common-pipeline-config>
+        <app-common-pipeline-config *ngIf="pipelineConfig" [pipelineForm]="pipelineForm" fxFlex>
+        </app-common-pipeline-config>
 
         <app-common-pipeline-data-subscriber *ngIf="dataSubscriberConfig" [dataSubscriber]="selectedNode"
             (formUpdatedEvent)="saveToCanvas($event)" [nodeChangeEvent]="nodeChangeEvent.asObservable()" fxFlex>
         </app-common-pipeline-data-subscriber>
 
-        <app-common-pipeline-filtering *ngIf="filteringConfig" #filterComponent [devices]="devices" [filters]="filters" fxFlex>
+        <app-common-pipeline-filtering *ngIf="filteringConfig" #filterComponent [devices]="devices" [filters]="filters"
+            fxFlex>
         </app-common-pipeline-filtering>
 
-        <app-common-pipeline-inferencing *ngIf="inferencingConfig" #inferenceComponent [devices]="devices" [models]="models"
-            [model]="selectedNode" [filters]="filters" (formUpdatedEvent)="saveToCanvas($event)" [nodeChangeEvent]="nodeChangeEvent.asObservable()"
-            fxFlex>
+        <app-common-pipeline-inferencing *ngIf="inferencingConfig" #inferenceComponent [devices]="devices"
+            [models]="models" [model]="selectedNode" [filters]="filters" (formUpdatedEvent)="saveToCanvas($event)"
+            [nodeChangeEvent]="nodeChangeEvent.asObservable()" fxFlex>
         </app-common-pipeline-inferencing>
 
-        <app-common-pipeline-data-store *ngIf="dataStoreConfig" [gatewayId]="gatewayId" [dataStore]="selectedNode" 
+        <app-common-pipeline-data-store *ngIf="dataStoreConfig" [gatewayId]="gatewayId" [dataStore]="selectedNode"
             (formUpdatedEvent)="saveToCanvas($event)" fxFlex>
         </app-common-pipeline-data-store>
 
-        <app-common-pipeline-data-publisher *ngIf="dataPublisherConfig" [protocol]="selectedNode" (formUpdatedEvent)="saveToCanvas($event)" 
-            [gatewayId]="gatewayId" fxFlex>
+        <app-common-pipeline-data-publisher *ngIf="dataPublisherConfig" [protocol]="selectedNode"
+            (formUpdatedEvent)="saveToCanvas($event)" [gatewayId]="gatewayId" fxFlex>
         </app-common-pipeline-data-publisher>
 
-        <app-common-pipeline-streaming *ngIf="streamingConfig" [streamingForm]="streamingForm" [devices]="devices" fxFlex>
+        <app-common-pipeline-streaming *ngIf="streamingConfig" [streaming]="selectedNode"
+            (formUpdatedEvent)="saveToCanvas($event)" [nodeChangeEvent]="nodeChangeEvent.asObservable()"
+            [devices]="devices" fxFlex>
         </app-common-pipeline-streaming>
 
-        <app-common-pipeline-rules *ngIf="rulesConfig" [ruleForm]="ruleForm" [devices]="devices" fxFlex>
+        <app-common-pipeline-rules *ngIf="rulesConfig" [rule]="selectedNode" [devices]="devices"
+            (formUpdatedEvent)="saveToCanvas($event)" [nodeChangeEvent]="nodeChangeEvent.asObservable()" fxFlex>
         </app-common-pipeline-rules>
 
-        <app-common-pipeline-rule-expression *ngIf="ruleExpressionConfig" [ruleExpressionForm]="ruleExpressionForm"
-            [devices]="devices" fxFlex>
+        <app-common-pipeline-rule-expression *ngIf="ruleExpressionConfig" [ruleExpression]="selectedNode"
+            [devices]="devices" (formUpdatedEvent)="saveToCanvas($event)"
+            [nodeChangeEvent]="nodeChangeEvent.asObservable()" fxFlex>
         </app-common-pipeline-rule-expression>
 
-        <app-common-pipeline-rule-text-matching *ngIf="ruleTextMatchingConfig" [ruleTextMatchingForm]="ruleTextMatchingForm" fxFlex>
+        <app-common-pipeline-rule-text-matching *ngIf="ruleTextMatchingConfig" [ruleTextMatching]="selectedNode"
+            (formUpdatedEvent)="saveToCanvas($event)" [nodeChangeEvent]="nodeChangeEvent.asObservable()" fxFlex>
         </app-common-pipeline-rule-text-matching>
 
-        <app-common-pipeline-flogo-flow *ngIf="flogoFlowConfig" [flogoFlow]="selectedNode" (formUpdatedEvent)="saveToCanvas($event)" 
-            [nodeChangeEvent]="nodeChangeEvent.asObservable()" fxFlex>
+        <app-common-pipeline-flogo-flow *ngIf="flogoFlowConfig" [flogoFlow]="selectedNode"
+            (formUpdatedEvent)="saveToCanvas($event)" [nodeChangeEvent]="nodeChangeEvent.asObservable()" fxFlex>
         </app-common-pipeline-flogo-flow>
 
         <app-common-pipeline-rest-service *ngIf="restServiceConfig" #restComponent [devices]="devices"
-            [restService]="selectedNode" (formUpdatedEvent)="saveToCanvas($event)" [nodeChangeEvent]="nodeChangeEvent.asObservable()" [filters]="filters" fxFlex>
+            [restService]="selectedNode" (formUpdatedEvent)="saveToCanvas($event)"
+            [nodeChangeEvent]="nodeChangeEvent.asObservable()" [filters]="filters" fxFlex>
         </app-common-pipeline-rest-service>
-        <app-pipeline-python *ngIf="pythonConfig" [python]="selectedNode" [gatewayId]="gatewayId" 
+        <app-pipeline-python *ngIf="pythonConfig" [python]="selectedNode" [gatewayId]="gatewayId"
             (formUpdatedEvent)="saveToCanvas($event)">
         </app-pipeline-python>
-        <app-pipeline-rest-broadcast *ngIf="restBroadcastConfig" [restBroadcast]="selectedNode" [models]="models" (formUpdatedEvent)="saveToCanvas($event)" [nodeChangeEvent]="nodeChangeEvent.asObservable()">
+        <app-pipeline-rest-broadcast *ngIf="restBroadcastConfig" [restBroadcast]="selectedNode" [models]="models"
+            (formUpdatedEvent)="saveToCanvas($event)" [nodeChangeEvent]="nodeChangeEvent.asObservable()">
         </app-pipeline-rest-broadcast>
-        <app-pipeline-request-reply *ngIf="requestReplyConfig" [requestReply]="selectedNode" (formUpdatedEvent)="saveToCanvas($event)" [nodeChangeEvent]="nodeChangeEvent.asObservable()">
+        <app-pipeline-request-reply *ngIf="requestReplyConfig" [requestReply]="selectedNode"
+            (formUpdatedEvent)="saveToCanvas($event)" [nodeChangeEvent]="nodeChangeEvent.asObservable()">
         </app-pipeline-request-reply>
-        <app-pipeline-python-pipe [pythonPipe]="selectedNode" [gatewayId]="gatewayId" *ngIf="pythonPipeConfig" 
-            [pythonInputs]="pythonInputs" (formUpdatedEvent)="saveToCanvas($event)" [nodeChangeEvent]="nodeChangeEvent.asObservable()">
+        <app-pipeline-python-pipe [pythonPipe]="selectedNode" [gatewayId]="gatewayId" *ngIf="pythonPipeConfig"
+            [pythonInputs]="pythonInputs" (formUpdatedEvent)="saveToCanvas($event)"
+            [nodeChangeEvent]="nodeChangeEvent.asObservable()">
         </app-pipeline-python-pipe>
-        <app-common-pipeline-error-handler *ngIf="errorHandlerConfig" [errorHandler]="selectedNode" (formUpdatedEvent)="saveToCanvas($event)" fxFlex>
+        <app-common-pipeline-error-handler *ngIf="errorHandlerConfig" [errorHandler]="selectedNode"
+            (formUpdatedEvent)="saveToCanvas($event)" fxFlex>
         </app-common-pipeline-error-handler>
     </div>
 

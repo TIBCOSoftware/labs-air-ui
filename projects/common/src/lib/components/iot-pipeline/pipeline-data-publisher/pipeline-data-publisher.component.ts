@@ -21,8 +21,8 @@ export class PipelineDataPublisherComponent implements OnInit, OnDestroy {
     @Input() nodeChangeEvent: Observable<any>;
     nodeChangeSubscription: Subscription;
     @Output() formUpdatedEvent = new EventEmitter<Protocol>();
-    @Input() dataPublisherForm: UntypedFormGroup;
-    @Input() dataOptionsForm: UntypedFormGroup;
+    dataPublisherForm: UntypedFormGroup;
+    dataOptionsForm: UntypedFormGroup;
 
     logLevels: SelectItem[] = [
         { value: 'INFO', viewValue: 'INFO' },
@@ -62,6 +62,9 @@ export class PipelineDataPublisherComponent implements OnInit, OnDestroy {
         this.getProtocols(this.gatewayId);
         this.initForms();
         this.onFormChanges();
+        if (this.protocol) {
+            this.updateProtocolForm(this.protocol.data['customdata'])
+        }
     }
 
     ngOnDestroy(): void {

@@ -767,7 +767,7 @@ export class PipelineService {
       // }
       this.pipelineSelection.clear();
 
-      this.graphService.deletePipeline(this.gateway.uid, pipeline)
+      this.graphService.deletePipeline(this.gateway.uid, pipeline.uid)
         .subscribe(res => {
           console.log('Result from delete pipeline', res);
 
