@@ -1,10 +1,13 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { of } from 'rxjs';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Observable, of } from 'rxjs';
 import { EdgeService } from '../../../services/edge/edge.service';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { Gateway } from '@TIBCOSoftware/labs-air-graph-client';
+import { MatSelectModule } from '@angular/material/select'
+import { MatInputModule } from '@angular/material/input';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { PipelineRuleExpressionComponent } from './pipeline-rule-expression.component';
 
@@ -24,7 +27,8 @@ describe('PipelineRuleExpressionComponent', () => {
                 { provide: GraphService, useValue: mockGraphService },
                 { provide: EdgeService, useValue: mockEdgeService }
             ],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA]
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
+            imports: [ReactiveFormsModule, MatSelectModule, MatInputModule, BrowserAnimationsModule]
         })
             .compileComponents();
     });
@@ -32,8 +36,7 @@ describe('PipelineRuleExpressionComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(PipelineRuleExpressionComponent);
         component = fixture.componentInstance;
-        component.ruleExpressionForm = new UntypedFormGroup({});
-        component.ruleExpressionForm.addControl('device', new UntypedFormControl(''));
+        component.nodeChangeEvent = new Observable<any>();
         component.devices = [];
         fixture.detectChanges();
     });

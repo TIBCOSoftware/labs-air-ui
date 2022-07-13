@@ -36,7 +36,7 @@ export class PipelineRequestReplyComponent implements OnInit, OnDestroy {
     this.getProtocols(this.gatewayId);
     this.initForm();
     this.onFormChanges();
-    if (this.requestReply) {
+    if (this.requestReply?.data['customdata']) {
       this.updateMQTTRequestReplyForm(this.requestReply.data['customdata'])
     }
   }

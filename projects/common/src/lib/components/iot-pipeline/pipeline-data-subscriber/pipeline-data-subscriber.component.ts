@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormBuilder, Validators, UntypedFormGroup } from '@angular/forms';
 import { Protocol } from '@TIBCOSoftware/labs-air-graph-client';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { debounceTime, Subscription, distinctUntilChanged, Observable } from 'rxjs';
@@ -50,16 +50,14 @@ export class PipelineDataSubscriberComponent implements OnInit, OnDestroy {
     onKafkaAuthModeSelected(event) {
     }
 
-    constructor(private graphService: GraphService, private formBuilder: FormBuilder) {
-
+    constructor(private graphService: GraphService, private formBuilder: UntypedFormBuilder) {
     }
 
     ngOnInit() {
         this.initForm();
         this.getProtocols(this.dataSubscriberForm.get('gateway').value);
-
         this.onFormChanges();
-        if (this.dataSubscriber) {
+        if (this.dataSubscriber?.data['customdata']) {
             this.updateDataSubscriberForm(this.dataSubscriber.data['customdata'])
         }
     }

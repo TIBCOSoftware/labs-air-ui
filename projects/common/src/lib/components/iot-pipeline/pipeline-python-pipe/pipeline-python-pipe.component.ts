@@ -61,7 +61,7 @@ export class PipelinePythonPipeComponent implements OnInit, OnDestroy {
     this.checkConnectedNode();
     this.onFormChange();
     this.getInputSelection();
-    if (this.pythonPipe.data['customdata']) {
+    if (this.pythonPipe?.data['customdata']) {
       this.updatePythonPipeForm(this.pythonPipe.data['customdata']);
     }
   }

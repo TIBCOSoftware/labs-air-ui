@@ -78,7 +78,7 @@
             [nodeChangeEvent]="nodeChangeEvent.asObservable()" [filters]="filters" fxFlex>
         </app-common-pipeline-rest-service>
         <app-pipeline-python *ngIf="pythonConfig" [python]="selectedNode" [gatewayId]="gatewayId"
-            (formUpdatedEvent)="saveToCanvas($event)">
+            (formUpdatedEvent)="saveToCanvas($event)" [nodeChangeEvent]="nodeChangeEvent.asObservable()">
         </app-pipeline-python>
         <app-pipeline-rest-broadcast *ngIf="restBroadcastConfig" [restBroadcast]="selectedNode" [models]="models"
             (formUpdatedEvent)="saveToCanvas($event)" [nodeChangeEvent]="nodeChangeEvent.asObservable()">

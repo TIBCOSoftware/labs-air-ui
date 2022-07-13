@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { Resource } from '../../../models/iot.model';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, Observable, Subscription } from 'rxjs';
@@ -7,13 +7,12 @@ export interface SelectItem {
   value: string;
   viewValue: string;
 }
-
 @Component({
   selector: 'app-common-pipeline-rule-text-matching',
   templateUrl: './pipeline-rule-text-matching.component.html',
   styleUrls: ['./pipeline-rule-text-matching.component.css']
 })
-export class PipelineRuleTextMatchingComponent implements OnInit {
+export class PipelineRuleTextMatchingComponent implements OnInit, OnDestroy {
 
   @Output() formUpdatedEvent = new EventEmitter<any>();
   @Input() nodeChangeEvent: Observable<any>;
@@ -47,7 +46,7 @@ export class PipelineRuleTextMatchingComponent implements OnInit {
   ngOnInit(): void {
     this.initForm()
     this.onFormChanges();
-    if (this.ruleTextMatching) {
+    if (this.ruleTextMatching?.data['customdata']) {
       this.updateRuleTextMatchingForm(this.ruleTextMatching.data['customdata'])
     }
   }

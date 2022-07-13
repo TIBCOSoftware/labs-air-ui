@@ -65,7 +65,7 @@ export class PipelineRestServiceComponent implements OnInit, OnChanges, OnDestro
         this.initForm();
         this.onFormChanges();
         console.log('REST Service - ngOnInit - devices: ', this.devices);
-        if (this.restService) {
+        if (this.restService?.data['customdata']) {
             this.updateRESTServiceForm(this.restService.data['customdata'])
         }
     }

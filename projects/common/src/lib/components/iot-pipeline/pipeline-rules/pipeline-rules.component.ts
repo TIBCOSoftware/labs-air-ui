@@ -50,7 +50,7 @@ export class PipelineRulesComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.initForm();
         this.onFormChanges();
-        if (this.rule) {
+        if (this.rule?.data['customdata']) {
             this.updateRuleForm(this.rule.data['customdata'])
         }
     }

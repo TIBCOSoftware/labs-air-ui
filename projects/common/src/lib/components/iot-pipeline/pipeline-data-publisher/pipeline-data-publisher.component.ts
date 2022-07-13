@@ -62,7 +62,7 @@ export class PipelineDataPublisherComponent implements OnInit, OnDestroy {
         this.getProtocols(this.gatewayId);
         this.initForms();
         this.onFormChanges();
-        if (this.protocol) {
+        if (this.protocol?.data['customdata']) {
             this.updateProtocolForm(this.protocol.data['customdata'])
         }
     }

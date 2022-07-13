@@ -55,7 +55,7 @@ export class PipelineStreamingComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.initForm();
         this.onFormChanges();
-        if (this.streaming) {
+        if (this.streaming?.data['customdata']) {
             this.updateStreamingForm(this.streaming.data['customdata'])
         }
     }

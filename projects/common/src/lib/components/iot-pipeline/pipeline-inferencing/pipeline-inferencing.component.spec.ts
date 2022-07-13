@@ -1,10 +1,14 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { AppConfigService } from '../../../services/config/app-config.service';
 import { EdgeService } from '../../../services/edge/edge.service';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
+import { Observable } from 'rxjs';
+import { MatSelectModule } from '@angular/material/select'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatInputModule } from '@angular/material/input';
 
 import { PipelineInferencingComponent } from './pipeline-inferencing.component';
 
@@ -19,7 +23,7 @@ describe('PipelineInferencingComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [PipelineInferencingComponent],
-            imports: [HttpClientTestingModule],
+            imports: [HttpClientTestingModule, ReactiveFormsModule, MatSelectModule, MatInputModule, BrowserAnimationsModule],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
                 { provide: AppConfigService, useValue: mockAppConfigService },
@@ -37,6 +41,7 @@ describe('PipelineInferencingComponent', () => {
         component = fixture.componentInstance;
         component.devices = [];
         component.modelForm = new UntypedFormGroup({});
+        component.nodeChangeEvent = new Observable<any>();
         fixture.detectChanges();
     });
 

@@ -69,7 +69,7 @@ export class PipelineInferencingComponent implements OnInit, OnChanges, OnDestro
         this.initializeDataSource();
         console.log('PipelineInferencing - ngOnInit - devices: ', this.devices);
         this.onFormChanges();
-        if (this.model) {
+        if (this.model?.data['customdata']) {
             this.updateInferencingForm(this.model.data['customdata']);
         }
     }

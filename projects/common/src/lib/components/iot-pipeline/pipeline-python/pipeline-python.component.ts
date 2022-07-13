@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, UntypedFormGroup } from '@angular/forms';
 import { GraphService, PythonResource } from '@TIBCOSoftware/labs-air-graph-client';
-import { debounceTime, distinctUntilChanged, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Observable, Subscription } from 'rxjs';
 @Component({
   selector: 'app-pipeline-python',
   templateUrl: './pipeline-python.component.html',
@@ -13,6 +13,8 @@ export class PipelinePythonComponent implements OnInit, OnDestroy {
   @Input() gatewayId: string;
   @Input() python: any;
   @Output() formUpdatedEvent = new EventEmitter<PythonResource>();
+  @Input() nodeChangeEvent: Observable<any>;
+  nodeChangeSubscription: Subscription;
   formChangeSubscription: Subscription;
   resources: {
     processors: PythonResource[],
@@ -30,12 +32,13 @@ export class PipelinePythonComponent implements OnInit, OnDestroy {
     this.getResources();
     this.initForm();
     this.onFormChange();
-    if (this.python) {
+    if (this.python?.data['customdata']) {
       this.updatePythonForm(this.python.data['customdata'])
     }
   }
 
   ngOnDestroy(): void {
+    this.nodeChangeSubscription.unsubscribe();
     this.formChangeSubscription.unsubscribe();
   }
 
@@ -65,6 +68,9 @@ export class PipelinePythonComponent implements OnInit, OnDestroy {
   }
 
   onFormChange() {
+    this.nodeChangeSubscription = this.nodeChangeEvent.subscribe(node => {
+      this.updatePythonForm(node.data['customdata']);
+    });
     this.formChangeSubscription = this.pythonForm.valueChanges
       .pipe(debounceTime(200), distinctUntilChanged())
       .subscribe(() => {

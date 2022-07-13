@@ -1,12 +1,15 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { of } from 'rxjs';
+import { ReactiveFormsModule, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { Observable, of } from 'rxjs';
 import { EdgeService } from '../../../services/edge/edge.service';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { Gateway } from '@TIBCOSoftware/labs-air-graph-client';
 
 import { PipelineRuleTextMatchingComponent } from './pipeline-rule-text-matching.component';
+import { MatSelectModule } from '@angular/material/select'
+import { MatInputModule } from '@angular/material/input';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('PipelineRuleTextMatchingComponent', () => {
     let component: PipelineRuleTextMatchingComponent;
@@ -22,9 +25,10 @@ describe('PipelineRuleTextMatchingComponent', () => {
             declarations: [PipelineRuleTextMatchingComponent],
             providers: [
                 { provide: GraphService, useValue: mockGraphService },
-                { provide: EdgeService, useValue: mockEdgeService }
+                { provide: EdgeService, useValue: mockEdgeService },
             ],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA]
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
+            imports: [MatSelectModule, MatInputModule, BrowserAnimationsModule, ReactiveFormsModule]
         })
             .compileComponents();
     });
@@ -35,6 +39,7 @@ describe('PipelineRuleTextMatchingComponent', () => {
         component.ruleTextMatchingForm = new UntypedFormGroup({});
         component.ruleTextMatchingForm.addControl('device', new UntypedFormControl(''));
         component.resources = [];
+        component.nodeChangeEvent = new Observable<any>();
         fixture.detectChanges();
     });
 

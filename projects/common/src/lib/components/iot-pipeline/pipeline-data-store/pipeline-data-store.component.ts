@@ -51,7 +51,7 @@ export class PipelineDataStoreComponent implements OnInit, OnDestroy {
         this.initForm();
         this.getDataStores(this.dataStoreForm.get('gateway').value);
         this.onFormChanges();
-        if (this.dataStore) {
+        if (this.dataStore?.data['customdata']) {
             this.updateDataStoreForm(this.dataStore.data['customdata'])
         }
     }

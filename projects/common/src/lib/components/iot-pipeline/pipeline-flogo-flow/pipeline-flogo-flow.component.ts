@@ -37,7 +37,10 @@ export class PipelineFlogoFlowComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.initForm();
         // Initialize data source if properties available in flow form
-        const properties = this.flogoFlow.flowProperties;
+        let properties = ''
+        if (this.flogoFlow) {
+            properties = this.flogoFlow.flowProperties;
+        }
 
         if (properties != '' && properties != undefined) {
             this.dataSource = JSON.parse(properties);
@@ -67,7 +70,7 @@ export class PipelineFlogoFlowComponent implements OnInit, OnDestroy {
             this.updateFlogoFlowForm(node.data['customdata']);
         });
 
-        if (this.flogoFlow) {
+        if (this.flogoFlow?.data['customdata']) {
             this.updateFlogoFlowForm(this.flogoFlow.data['customdata'])
         }
     }

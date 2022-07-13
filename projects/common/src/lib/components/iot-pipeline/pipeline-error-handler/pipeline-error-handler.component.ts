@@ -35,7 +35,7 @@ export class PipelineErrorHandlerComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initForm();
     this.onFormChanges();
-    if (this.errorHandler) {
+    if (this.errorHandler?.data['customdata']) {
       this.updateErrorHandlerForm(this.errorHandler.data['customdata'])
     }
   }

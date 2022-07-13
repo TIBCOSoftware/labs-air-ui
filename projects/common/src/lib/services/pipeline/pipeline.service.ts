@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { FlogoDeployService } from '../../services/deployment/flogo-deploy.service';
 import { EdgeService } from '../../services/edge/edge.service';

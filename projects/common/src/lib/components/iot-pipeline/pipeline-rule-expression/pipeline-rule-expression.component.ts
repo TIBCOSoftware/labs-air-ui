@@ -48,7 +48,7 @@ export class PipelineRuleExpressionComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.initForm();
         this.onFormChanges();
-        if (this.ruleExpression) {
+        if (this.ruleExpression?.data['customdata']) {
             this.updateRuleExpressionForm(this.ruleExpression.data['customdata']);
             const idx = this.getIndexForDevice(this.ruleExpressionForm.get('device').value);
 

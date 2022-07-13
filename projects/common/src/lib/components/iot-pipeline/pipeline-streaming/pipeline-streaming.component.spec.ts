@@ -1,6 +1,10 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Observable } from 'rxjs';
 
 import { PipelineStreamingComponent } from './pipeline-streaming.component';
 
@@ -11,7 +15,8 @@ describe('PipelineStreamingComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [PipelineStreamingComponent],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA]
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
+            imports: [ReactiveFormsModule, MatSelectModule, MatInputModule, BrowserAnimationsModule]
         })
             .compileComponents();
     });
@@ -19,8 +24,7 @@ describe('PipelineStreamingComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(PipelineStreamingComponent);
         component = fixture.componentInstance;
-        component.streamingForm = new UntypedFormGroup({});
-        component.streamingForm.addControl('deviceName', new UntypedFormControl(''));
+        component.nodeChangeEvent = new Observable<any>();
         component.devices = [];
         fixture.detectChanges();
     });
