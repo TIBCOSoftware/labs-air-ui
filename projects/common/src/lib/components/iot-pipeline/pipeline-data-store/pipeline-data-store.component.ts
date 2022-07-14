@@ -119,7 +119,7 @@ export class PipelineDataStoreComponent implements OnInit, OnDestroy {
         this.mysqlDataStore = false;
         this.tgdbDataStore = false;
         this.dgraphDataStore = false;
-
+        this.resetDataStore();
         if (dataStore.dataStoreType == 'PostgreSQL2') {
 
             this.dataStoreForm.patchValue({
@@ -131,31 +131,6 @@ export class PipelineDataStoreComponent implements OnInit, OnDestroy {
                     databaseName: dataStore.databaseName,
                     user: dataStore.user,
                     password: dataStore.password
-                },
-                snowflake: {
-                    accountName: 'changeme',
-                    warehouse: 'changeme',
-                    database: 'changeme',
-                    schema: 'changeme',
-                    authType: 'Basic Authentication',
-                    username: 'changeme',
-                    password: 'changeme',
-                    role: 'changeme',
-                    clientId: '',
-                    clientSecret: '',
-                    authorizationCode: '',
-                    redirectURI: '',
-                    loginTimeout: '20'
-                },
-                tgdb: {
-                    url: 'changeme',
-                    username: 'changeme',
-                    password: 'changeme'
-                },
-                dgraph: {
-                    url: 'changeme',
-                    username: 'changeme',
-                    password: 'changeme'
                 }
             });
 
@@ -180,23 +155,6 @@ export class PipelineDataStoreComponent implements OnInit, OnDestroy {
                     authorizationCode: dataStore.authorizationCode,
                     redirectURI: dataStore.redirectURI,
                     loginTimeout: dataStore.loginTimeout
-                },
-                postgres: {
-                    host: 'changeme',
-                    port: 'changeme',
-                    databaseName: 'changeme',
-                    user: 'changeme',
-                    password: 'changeme'
-                },
-                tgdb: {
-                    url: 'changeme',
-                    username: 'changeme',
-                    password: 'changeme'
-                },
-                dgraph: {
-                    url: 'changeme',
-                    username: 'changeme',
-                    password: 'changeme'
                 }
             });
 
@@ -211,33 +169,6 @@ export class PipelineDataStoreComponent implements OnInit, OnDestroy {
                     url: dataStore.url,
                     username: dataStore.username,
                     password: dataStore.password
-                },
-                postgres: {
-                    host: 'changeme',
-                    port: 'changeme',
-                    databaseName: 'changeme',
-                    user: 'changeme',
-                    password: 'changeme'
-                },
-                snowflake: {
-                    accountName: 'changeme',
-                    warehouse: 'changeme',
-                    database: 'changeme',
-                    schema: 'changeme',
-                    authType: 'Basic Authentication',
-                    username: 'changeme',
-                    password: 'changeme',
-                    role: 'changeme',
-                    clientId: '',
-                    clientSecret: '',
-                    authorizationCode: '',
-                    redirectURI: '',
-                    loginTimeout: '20'
-                },
-                dgraph: {
-                    url: 'changeme',
-                    username: 'changeme',
-                    password: 'changeme'
                 }
             });
 
@@ -252,33 +183,6 @@ export class PipelineDataStoreComponent implements OnInit, OnDestroy {
                     url: dataStore.url,
                     username: dataStore.username,
                     password: dataStore.password
-                },
-                postgres: {
-                    host: 'changeme',
-                    port: 'changeme',
-                    databaseName: 'changeme',
-                    user: 'changeme',
-                    password: 'changeme'
-                },
-                snowflake: {
-                    accountName: 'changeme',
-                    warehouse: 'changeme',
-                    database: 'changeme',
-                    schema: 'changeme',
-                    authType: 'Basic Authentication',
-                    username: 'changeme',
-                    password: 'changeme',
-                    role: 'changeme',
-                    clientId: '',
-                    clientSecret: '',
-                    authorizationCode: '',
-                    redirectURI: '',
-                    loginTimeout: '20'
-                },
-                tgdb: {
-                    url: 'changeme',
-                    username: 'changeme',
-                    password: 'changeme'
                 }
             });
 
@@ -289,7 +193,6 @@ export class PipelineDataStoreComponent implements OnInit, OnDestroy {
     }
 
     onFormChanges(): void {
-        console.log('yes this works')
         this.nodeChangeSubscription = this.nodeChangeEvent.subscribe( node => {
             this.updateDataStoreForm(node.data['customdata']);
         });
@@ -442,5 +345,42 @@ export class PipelineDataStoreComponent implements OnInit, OnDestroy {
             }
 
         }
+    }
+
+    resetDataStore() {
+        this.dataStoreForm.patchValue({
+            tgdb: {
+                url: 'changeme',
+                username: 'changeme',
+                password: 'changeme'
+            },
+            postgres: {
+                host: 'changeme',
+                port: 'changeme',
+                databaseName: 'changeme',
+                user: 'changeme',
+                password: 'changeme'
+            },
+            snowflake: {
+                accountName: 'changeme',
+                warehouse: 'changeme',
+                database: 'changeme',
+                schema: 'changeme',
+                authType: 'Basic Authentication',
+                username: 'changeme',
+                password: 'changeme',
+                role: 'changeme',
+                clientId: '',
+                clientSecret: '',
+                authorizationCode: '',
+                redirectURI: '',
+                loginTimeout: '20'
+            },
+            dgraph: {
+                url: 'changeme',
+                username: 'changeme',
+                password: 'changeme'
+            }
+        });
     }
 }
