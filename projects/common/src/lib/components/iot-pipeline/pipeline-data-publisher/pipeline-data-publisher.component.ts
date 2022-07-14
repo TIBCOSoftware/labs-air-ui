@@ -128,7 +128,7 @@ export class PipelineDataPublisherComponent implements OnInit, OnDestroy {
         this.kafkaProtocol = false;
         this.amqpProtocol = false;
         this.httpProtocol = false;
-
+        this.resetProtocolType();
         if (protocol.protocolType == 'MQTT') {
             const delimInd = protocol.brokerURL.lastIndexOf(':');
             const hostname = protocol.brokerURL.substring(6, delimInd);
@@ -150,36 +150,6 @@ export class PipelineDataPublisherComponent implements OnInit, OnDestroy {
                         clientKey: protocol.clientKey,
                         topic: protocol.topic,
                         maximumQOS: protocol.maximumQOS
-                    },
-                    kafka: {
-                        hostname: 'changeme',
-                        port: 'changeme',
-                        authMode: 'changeme',
-                        username: 'changeme',
-                        password: 'changeme',
-                        clientCertificate: 'changeme',
-                        clientKey: 'changeme',
-                        serverCertificate: 'changeme',
-                        connectionTimeout: 'changeme',
-                        retryBackoff: 'changeme',
-                        topic: 'changeme',
-                        consumerGroupId: 'changeme',
-                        commitInterval: 'changeme',
-                        initialOffset: 'changeme',
-                        fetchMinBytes: 'changeme',
-                        fetchMaxWait: 'changeme',
-                        heartbeatInterval: 'changeme',
-                        sessionTimeout: 'changeme'
-                    },
-                    amqp: {
-                        hostname: 'changeme',
-                        port: 'changeme',
-                        username: 'changeme',
-                        password: 'changeme',
-                        exchangeName: 'changeme',
-                        exchangeType: 'changeme',
-                        routingKey: 'changeme',
-                        reliable: 'changeme'
                     }
                 },
                 { emitEvent: false }
@@ -197,18 +167,6 @@ export class PipelineDataPublisherComponent implements OnInit, OnDestroy {
                 {
                     uid: protocol.uid,
                     protocol: protocol.protocolType,
-                    mqtt: {
-                        hostname: 'changeme',
-                        port: 'changeme',
-                        username: 'changeme',
-                        password: 'changeme',
-                        encryptionMode: 'None',
-                        caCerticate: 'changeme',
-                        clientCertificate: 'changeme',
-                        clientKey: 'changeme',
-                        topic: 'changeme',
-                        maximumQOS: '2'
-                    },
                     kafka: {
                         hostname: hostname,
                         port: port,
@@ -228,16 +186,6 @@ export class PipelineDataPublisherComponent implements OnInit, OnDestroy {
                         fetchMaxWait: protocol.fetchMaxWait,
                         heartbeatInterval: protocol.heartbeatInterval,
                         sessionTimeout: protocol.sessionTimeout,
-                    },
-                    amqp: {
-                        hostname: 'changeme',
-                        port: 'changeme',
-                        username: 'changeme',
-                        password: 'changeme',
-                        exchangeName: 'changeme',
-                        exchangeType: 'changeme',
-                        routingKey: 'changeme',
-                        reliable: 'changeme'
                     }
                 },
                 { emitEvent: false }
@@ -245,6 +193,7 @@ export class PipelineDataPublisherComponent implements OnInit, OnDestroy {
 
             this.kafkaProtocol = true;
         }
+        // clone from 248-721 of 190:8 - 213
         else if (protocol.protocolType == 'AMQP') {
             const delimInd = protocol.brokerURL.lastIndexOf(':');
             const hostname = protocol.brokerURL.substring(0, delimInd);
@@ -255,38 +204,6 @@ export class PipelineDataPublisherComponent implements OnInit, OnDestroy {
                 {
                     uid: protocol.uid,
                     protocol: protocol.protocolType,
-                    mqtt: {
-                        hostname: 'changeme',
-                        port: 'changeme',
-                        username: 'changeme',
-                        password: 'changeme',
-                        encryptionMode: 'None',
-                        caCerticate: 'changeme',
-                        clientCertificate: 'changeme',
-                        clientKey: 'changeme',
-                        topic: 'changeme',
-                        maximumQOS: '2'
-                    },
-                    kafka: {
-                        hostname: 'changeme',
-                        port: 'changeme',
-                        authMode: 'changeme',
-                        username: 'changeme',
-                        password: 'changeme',
-                        clientCertificate: 'changeme',
-                        clientKey: 'changeme',
-                        serverCertificate: 'changeme',
-                        connectionTimeout: 'changeme',
-                        retryBackoff: 'changeme',
-                        topic: 'changeme',
-                        consumerGroupId: 'changeme',
-                        commitInterval: 'changeme',
-                        initialOffset: 'changeme',
-                        fetchMinBytes: 'changeme',
-                        fetchMaxWait: 'changeme',
-                        heartbeatInterval: 'changeme',
-                        sessionTimeout: 'changeme'
-                    },
                     amqp: {
                         hostname: hostname,
                         port: port,
@@ -488,7 +405,56 @@ export class PipelineDataPublisherComponent implements OnInit, OnDestroy {
                     }
                 });
             }
-
         }
+    }
+
+    resetProtocolType() {
+        this.dataPublisherForm.patchValue(
+            {
+                mqtt: {
+                    hostname: 'changeme',
+                    port: 'changeme',
+                    username: 'changeme',
+                    password: 'changeme',
+                    encryptionMode: 'None',
+                    caCerticate: 'changeme',
+                    clientCertificate: 'changeme',
+                    clientKey: 'changeme',
+                    topic: 'changeme',
+                    maximumQOS: '2'
+                },
+                kafka: {
+                    hostname: 'changeme',
+                    port: 'changeme',
+                    authMode: 'changeme',
+                    username: 'changeme',
+                    password: 'changeme',
+                    clientCertificate: 'changeme',
+                    clientKey: 'changeme',
+                    serverCertificate: 'changeme',
+                    connectionTimeout: 'changeme',
+                    retryBackoff: 'changeme',
+                    topic: 'changeme',
+                    consumerGroupId: 'changeme',
+                    commitInterval: 'changeme',
+                    initialOffset: 'changeme',
+                    fetchMinBytes: 'changeme',
+                    fetchMaxWait: 'changeme',
+                    heartbeatInterval: 'changeme',
+                    sessionTimeout: 'changeme'
+                },
+                amqp: {
+                    hostname: 'changeme',
+                    port: 'changeme',
+                    username: 'changeme',
+                    password: 'changeme',
+                    exchangeName: 'changeme',
+                    exchangeType: 'changeme',
+                    routingKey: 'changeme',
+                    reliable: 'changeme'
+                }
+            },
+            { emitEvent: false }
+        );
     }
 }

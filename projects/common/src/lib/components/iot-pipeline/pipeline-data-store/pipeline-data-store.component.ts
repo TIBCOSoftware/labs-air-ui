@@ -16,12 +16,12 @@ export interface SelectItem {
 })
 export class PipelineDataStoreComponent implements OnInit, OnDestroy {
 
-    formChangeSubscription: Subscription;
     @Input() dataStore: any;
     @Input() gatewayId: string;
     @Output() formUpdatedEvent = new EventEmitter<DataStore>();
     @Input() nodeChangeEvent: Observable<any>;
     nodeChangeSubscription: Subscription;
+    formChangeSubscription: Subscription;
     @Input() dataStoreForm: UntypedFormGroup;
     @Input() dataOptionsForm: UntypedFormGroup;
 
@@ -289,6 +289,7 @@ export class PipelineDataStoreComponent implements OnInit, OnDestroy {
     }
 
     onFormChanges(): void {
+        console.log('yes this works')
         this.nodeChangeSubscription = this.nodeChangeEvent.subscribe( node => {
             this.updateDataStoreForm(node.data['customdata']);
         });
