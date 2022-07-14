@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, UntypedFormGroup } from '@angular/forms';
+import { Validators, UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { Protocol } from '@TIBCOSoftware/labs-air-graph-client';
 import { debounceTime, Subscription, distinctUntilChanged, Observable } from 'rxjs';
@@ -54,7 +54,7 @@ export class PipelineDataPublisherComponent implements OnInit, OnDestroy {
     onKafkaAuthModeSelected(event) {
     }
 
-    constructor(private graphService: GraphService, private formBuilder: FormBuilder) {
+    constructor(private graphService: GraphService, private formBuilder: UntypedFormBuilder) {
 
     }
 
@@ -129,23 +129,23 @@ export class PipelineDataPublisherComponent implements OnInit, OnDestroy {
         this.amqpProtocol = false;
         this.httpProtocol = false;
         this.resetProtocolType();
-        const delimInd = protocol.brokerURL.lastIndexOf(':');
+        let delimInd = protocol.brokerURL.lastIndexOf(':');
         if (protocol.protocolType == 'MQTT') {
             this.dataPublisherForm.patchValue(
                 {
                     uid: protocol.uid,
                     protocol: protocol.protocolType,
                     mqtt: {
-                        hostname: protocol.brokerURL.substring(6, delimInd),
-                        port: protocol.brokerURL.substring(delimInd + 1),
-                        username: protocol.username,
-                        password: protocol.password,
-                        encryptionMode: protocol.encryptionMode,
-                        caCertificate: protocol.caCerticate,
-                        clientCertificate: protocol.clientCertificate,
-                        clientKey: protocol.clientKey,
-                        topic: protocol.topic,
-                        maximumQOS: protocol.maximumQOS
+                        hostname: protocol.mqtt.brokerURL.substring(6, delimInd),
+                        port: protocol.mqtt.brokerURL.substring(delimInd + 1),
+                        username: protocol.mqtt.username,
+                        password: protocol.mqtt.password,
+                        encryptionMode: protocol.mqtt.encryptionMode,
+                        caCertificate: protocol.mqtt.caCerticate,
+                        clientCertificate: protocol.mqtt.clientCertificate,
+                        clientKey: protocol.mqtt.clientKey,
+                        topic: protocol.mqtt.topic,
+                        maximumQOS: protocol.mqtt.maximumQOS
                     }
                 },
                 { emitEvent: false }
@@ -159,24 +159,24 @@ export class PipelineDataPublisherComponent implements OnInit, OnDestroy {
                     uid: protocol.uid,
                     protocol: protocol.protocolType,
                     kafka: {
-                        hostname: protocol.brokerURL.substring(0, delimInd),
-                        port: protocol.brokerURL.substring(delimInd + 1),
-                        authMode: protocol.authMode,
-                        username: protocol.username,
-                        password: protocol.password,
-                        clientCertificate: protocol.clientCertificate,
-                        clientKey: protocol.clientKey,
-                        serverCertificate: protocol.serverCertificate,
-                        connectionTimeout: protocol.connectionTimeout,
-                        retryBackoff: protocol.retryBackoff,
-                        topic: protocol.topic,
-                        consumerGroupId: protocol.consumerGroupId,
-                        commitInterval: protocol.commitInterval,
-                        initialOffset: protocol.initialOffset,
-                        fetchMinBytes: protocol.fetchMinBytes,
-                        fetchMaxWait: protocol.fetchMaxWait,
-                        heartbeatInterval: protocol.heartbeatInterval,
-                        sessionTimeout: protocol.sessionTimeout,
+                        hostname: protocol.kafka.brokerURL.substring(0, delimInd),
+                        port: protocol.kafka.brokerURL.substring(delimInd + 1),
+                        authMode: protocol.kafka.authMode,
+                        username: protocol.kafka.username,
+                        password: protocol.kafka.password,
+                        clientCertificate: protocol.kafka.clientCertificate,
+                        clientKey: protocol.kafka.clientKey,
+                        serverCertificate: protocol.kafka.serverCertificate,
+                        connectionTimeout: protocol.kafka.connectionTimeout,
+                        retryBackoff: protocol.kafka.retryBackoff,
+                        topic: protocol.kafka.topic,
+                        consumerGroupId: protocol.kafka.consumerGroupId,
+                        commitInterval: protocol.kafka.commitInterval,
+                        initialOffset: protocol.kafka.initialOffset,
+                        fetchMinBytes: protocol.kafka.fetchMinBytes,
+                        fetchMaxWait: protocol.kafka.fetchMaxWait,
+                        heartbeatInterval: protocol.kafka.heartbeatInterval,
+                        sessionTimeout: protocol.kafka.sessionTimeout,
                     }
                 },
                 { emitEvent: false }
@@ -190,11 +190,11 @@ export class PipelineDataPublisherComponent implements OnInit, OnDestroy {
                     uid: protocol.uid,
                     protocol: protocol.protocolType,
                     amqp: {
-                        hostname: protocol.brokerURL.substring(0, delimInd),
-                        port: protocol.brokerURL.substring(delimInd + 1),
-                        username: protocol.username,
-                        password: protocol.password,
-                        exchangeName: protocol.topic,
+                        hostname: protocol.amqp.brokerURL.substring(0, delimInd),
+                        port: protocol.amqp.brokerURL.substring(delimInd + 1),
+                        username: protocol.amqp.username,
+                        password: protocol.amqp.password,
+                        exchangeName: protocol.amqp.topic,
                         exchangeType: 'topic',
                         routingKey: 'air',
                         reliable: 'true'
@@ -213,6 +213,7 @@ export class PipelineDataPublisherComponent implements OnInit, OnDestroy {
     onFormChanges(): void {
         this.nodeChangeSubscription = this.nodeChangeEvent.subscribe( node => {
             this.updateProtocolForm(node.data['customdata']);
+            console.log('DID THIS FIRE?')
         });
 
         this.formChangeSubscription = this.dataPublisherForm.valueChanges
@@ -329,16 +330,15 @@ export class PipelineDataPublisherComponent implements OnInit, OnDestroy {
                     protocolId: protocolId,
                     logLevel: context.logLevel,
                     mqtt: {
-                        hostname: context.hostname,
-                        port: context.port,
-                        username: context.username,
-                        password: context.password,
-                        encryptionMode: context.encryptionMode,
-                        caCertificate: context.caCertificate,
-                        clientCertificate: context.clientCertificate,
-                        clientKey: context.clientKey,
-                        topic: context.topic,
-                        maximumQOS: context.maximumQOS
+                        hostname: context.mqtt.hostname,
+                        port: context.mqtt.port,
+                        username: context.mqtt.username,
+                        password: context.mqtt.password,
+                        caCertificate: context.mqtt.caCertificate,
+                        clientCertificate: context.mqtt.clientCertificate,
+                        clientKey: context.mqtt.clientKey,
+                        topic: context.mqtt.topic,
+                        maximumQOS: context.mqtt.maximumQOS
                     }
                 });
 
@@ -350,24 +350,24 @@ export class PipelineDataPublisherComponent implements OnInit, OnDestroy {
                     protocolId: protocolId,
                     logLevel: context.logLevel,
                     kafka: {
-                        hostname: context.hostname,
-                        port: context.port,
-                        authMode: context.authMode,
-                        username: context.username,
-                        password: context.password,
-                        clientCertificate: context.clientCertificate,
+                        hostname: context.kafka.hostname,
+                        port: context.kafka.port,
+                        authMode: context.kafka.authMode,
+                        username: context.kafka.username,
+                        password: context.kafka.password,
+                        clientCertificate: context.kafka.clientCertificate,
                         clientKey: context.clientKey,
-                        serverCertificate: context.serverCertificate,
-                        connectionTimeout: context.connectionTimeout,
-                        retryBackoff: context.retryBackoff,
-                        topic: context.topic,
-                        consumerGroupId: context.consumerGroupId,
-                        commitInterval: context.commitInterval,
-                        initialOffset: context.initialOffset,
-                        fetchMinBytes: context.fetchMinBytes,
-                        fetchMaxWait: context.fetchMaxWait,
-                        heartbeatInterval: context.heartbeatInterval,
-                        sessionTimeout: context.sessionTimeout
+                        serverCertificate: context.kafka.serverCertificate,
+                        connectionTimeout: context.kafka.connectionTimeout,
+                        retryBackoff: context.kafka.retryBackoff,
+                        topic: context.kafka.topic,
+                        consumerGroupId: context.kafka.consumerGroupId,
+                        commitInterval: context.kafka.commitInterval,
+                        initialOffset: context.kafka.initialOffset,
+                        fetchMinBytes: context.kafka.fetchMinBytes,
+                        fetchMaxWait: context.kafka.fetchMaxWait,
+                        heartbeatInterval: context.kafka.heartbeatInterval,
+                        sessionTimeout: context.kafka.sessionTimeout
                     }
                 });
             }
@@ -378,14 +378,14 @@ export class PipelineDataPublisherComponent implements OnInit, OnDestroy {
                     protocolId: protocolId,
                     logLevel: context.logLevel,
                     amqp: {
-                        hostname: context.hostname,
-                        port: context.port,
-                        username: context.username,
-                        password: context.password,
-                        exchangeName: context.exchangeName,
-                        exchangeType: context.exchangeType,
-                        routingKey: context.routingKey,
-                        reliable: context.reliable
+                        hostname: context.amqp.hostname,
+                        port: context.amqp.port,
+                        username: context.amqp.username,
+                        password: context.amqp.password,
+                        exchangeName: context.amqp.exchangeName,
+                        exchangeType: context.amqp.exchangeType,
+                        routingKey: context.amqp.routingKey,
+                        reliable: context.amqp.reliable
                     }
                 });
             }
