@@ -129,19 +129,15 @@ export class PipelineDataPublisherComponent implements OnInit, OnDestroy {
         this.amqpProtocol = false;
         this.httpProtocol = false;
         this.resetProtocolType();
+        const delimInd = protocol.brokerURL.lastIndexOf(':');
         if (protocol.protocolType == 'MQTT') {
-            const delimInd = protocol.brokerURL.lastIndexOf(':');
-            const hostname = protocol.brokerURL.substring(6, delimInd);
-            const port = protocol.brokerURL.substring(delimInd + 1);
-
-            // Update transport Form
             this.dataPublisherForm.patchValue(
                 {
                     uid: protocol.uid,
                     protocol: protocol.protocolType,
                     mqtt: {
-                        hostname: hostname,
-                        port: port,
+                        hostname: protocol.brokerURL.substring(6, delimInd),
+                        port: protocol.brokerURL.substring(delimInd + 1),
                         username: protocol.username,
                         password: protocol.password,
                         encryptionMode: protocol.encryptionMode,
@@ -158,18 +154,13 @@ export class PipelineDataPublisherComponent implements OnInit, OnDestroy {
             this.mqttProtocol = true;
         }
         else if (protocol.protocolType == 'Kafka') {
-            const delimInd = protocol.brokerURL.lastIndexOf(':');
-            const hostname = protocol.brokerURL.substring(0, delimInd);
-            const port = protocol.brokerURL.substring(delimInd + 1);
-
-            // Update transport Form
             this.dataPublisherForm.patchValue(
                 {
                     uid: protocol.uid,
                     protocol: protocol.protocolType,
                     kafka: {
-                        hostname: hostname,
-                        port: port,
+                        hostname: protocol.brokerURL.substring(0, delimInd),
+                        port: protocol.brokerURL.substring(delimInd + 1),
                         authMode: protocol.authMode,
                         username: protocol.username,
                         password: protocol.password,
@@ -193,20 +184,14 @@ export class PipelineDataPublisherComponent implements OnInit, OnDestroy {
 
             this.kafkaProtocol = true;
         }
-        // clone from 248-721 of 190:8 - 213
         else if (protocol.protocolType == 'AMQP') {
-            const delimInd = protocol.brokerURL.lastIndexOf(':');
-            const hostname = protocol.brokerURL.substring(0, delimInd);
-            const port = protocol.brokerURL.substring(delimInd + 1);
-
-            // Update transport Form
             this.dataPublisherForm.patchValue(
                 {
                     uid: protocol.uid,
                     protocol: protocol.protocolType,
                     amqp: {
-                        hostname: hostname,
-                        port: port,
+                        hostname: protocol.brokerURL.substring(0, delimInd),
+                        port: protocol.brokerURL.substring(delimInd + 1),
                         username: protocol.username,
                         password: protocol.password,
                         exchangeName: protocol.topic,
@@ -217,7 +202,6 @@ export class PipelineDataPublisherComponent implements OnInit, OnDestroy {
                 },
                 { emitEvent: false }
             );
-
             this.amqpProtocol = true;
         }
         else if (protocol.protocolType == 'HTTP') {
