@@ -77,7 +77,6 @@ export class PipelineDataPublisherComponent implements OnInit, OnDestroy {
         this.graphService.getProtocols(gatewayId)
             .subscribe(res => {
                 this.protocols = res as Protocol[];
-                console.log('Protocol List', this.protocols)
 
                 const currentProtocol = this.dataPublisherForm.get('protocolId').value;
 
