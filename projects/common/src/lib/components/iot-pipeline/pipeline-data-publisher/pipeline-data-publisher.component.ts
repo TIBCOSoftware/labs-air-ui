@@ -77,6 +77,7 @@ export class PipelineDataPublisherComponent implements OnInit, OnDestroy {
         this.graphService.getProtocols(gatewayId)
             .subscribe(res => {
                 this.protocols = res as Protocol[];
+                console.log('Protocol List', this.protocols)
 
                 const currentProtocol = this.dataPublisherForm.get('protocolId').value;
 
@@ -136,16 +137,16 @@ export class PipelineDataPublisherComponent implements OnInit, OnDestroy {
                     uid: protocol.uid,
                     protocol: protocol.protocolType,
                     mqtt: {
-                        hostname: protocol.mqtt.brokerURL.substring(6, delimInd),
-                        port: protocol.mqtt.brokerURL.substring(delimInd + 1),
-                        username: protocol.mqtt.username,
-                        password: protocol.mqtt.password,
-                        encryptionMode: protocol.mqtt.encryptionMode,
-                        caCertificate: protocol.mqtt.caCerticate,
-                        clientCertificate: protocol.mqtt.clientCertificate,
-                        clientKey: protocol.mqtt.clientKey,
-                        topic: protocol.mqtt.topic,
-                        maximumQOS: protocol.mqtt.maximumQOS
+                        hostname: protocol.brokerURL.substring(6, delimInd),
+                        port: protocol.brokerURL.substring(delimInd + 1),
+                        username: protocol.username,
+                        password: protocol.password,
+                        encryptionMode: protocol.encryptionMode,
+                        caCertificate: protocol.caCerticate,
+                        clientCertificate: protocol.clientCertificate,
+                        clientKey: protocol.clientKey,
+                        topic: protocol.topic,
+                        maximumQOS: protocol.maximumQOS
                     }
                 },
                 { emitEvent: false }
@@ -159,24 +160,24 @@ export class PipelineDataPublisherComponent implements OnInit, OnDestroy {
                     uid: protocol.uid,
                     protocol: protocol.protocolType,
                     kafka: {
-                        hostname: protocol.kafka.brokerURL.substring(0, delimInd),
-                        port: protocol.kafka.brokerURL.substring(delimInd + 1),
-                        authMode: protocol.kafka.authMode,
-                        username: protocol.kafka.username,
-                        password: protocol.kafka.password,
-                        clientCertificate: protocol.kafka.clientCertificate,
-                        clientKey: protocol.kafka.clientKey,
-                        serverCertificate: protocol.kafka.serverCertificate,
-                        connectionTimeout: protocol.kafka.connectionTimeout,
-                        retryBackoff: protocol.kafka.retryBackoff,
-                        topic: protocol.kafka.topic,
-                        consumerGroupId: protocol.kafka.consumerGroupId,
-                        commitInterval: protocol.kafka.commitInterval,
-                        initialOffset: protocol.kafka.initialOffset,
-                        fetchMinBytes: protocol.kafka.fetchMinBytes,
-                        fetchMaxWait: protocol.kafka.fetchMaxWait,
-                        heartbeatInterval: protocol.kafka.heartbeatInterval,
-                        sessionTimeout: protocol.kafka.sessionTimeout,
+                        hostname: protocol.brokerURL.substring(0, delimInd),
+                        port: protocol.brokerURL.substring(delimInd + 1),
+                        authMode: protocol.authMode,
+                        username: protocol.username,
+                        password: protocol.password,
+                        clientCertificate: protocol.clientCertificate,
+                        clientKey: protocol.clientKey,
+                        serverCertificate: protocol.serverCertificate,
+                        connectionTimeout: protocol.connectionTimeout,
+                        retryBackoff: protocol.retryBackoff,
+                        topic: protocol.topic,
+                        consumerGroupId: protocol.consumerGroupId,
+                        commitInterval: protocol.commitInterval,
+                        initialOffset: protocol.initialOffset,
+                        fetchMinBytes: protocol.fetchMinBytes,
+                        fetchMaxWait: protocol.fetchMaxWait,
+                        heartbeatInterval: protocol.heartbeatInterval,
+                        sessionTimeout: protocol.sessionTimeout,
                     }
                 },
                 { emitEvent: false }
@@ -190,11 +191,11 @@ export class PipelineDataPublisherComponent implements OnInit, OnDestroy {
                     uid: protocol.uid,
                     protocol: protocol.protocolType,
                     amqp: {
-                        hostname: protocol.amqp.brokerURL.substring(0, delimInd),
-                        port: protocol.amqp.brokerURL.substring(delimInd + 1),
-                        username: protocol.amqp.username,
-                        password: protocol.amqp.password,
-                        exchangeName: protocol.amqp.topic,
+                        hostname: protocol.brokerURL.substring(0, delimInd),
+                        port: protocol.brokerURL.substring(delimInd + 1),
+                        username: protocol.username,
+                        password: protocol.password,
+                        exchangeName: protocol.topic,
                         exchangeType: 'topic',
                         routingKey: 'air',
                         reliable: 'true'

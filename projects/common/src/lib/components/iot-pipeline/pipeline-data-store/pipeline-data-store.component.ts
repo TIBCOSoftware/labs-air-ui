@@ -126,11 +126,11 @@ export class PipelineDataStoreComponent implements OnInit, OnDestroy {
                 uid: dataStore.uid,
                 dataStore: dataStore.dataStoreType,
                 postgres: {
-                    host: dataStore.postgres.host,
-                    port: dataStore.postgres.port,
-                    databaseName: dataStore.postgres.databaseName,
-                    user: dataStore.postgres.user,
-                    password: dataStore.postgres.password
+                    host: dataStore.host,
+                    port: dataStore.port,
+                    databaseName: dataStore.databaseName,
+                    user: dataStore.user,
+                    password: dataStore.password
                 }
             });
 
@@ -142,18 +142,18 @@ export class PipelineDataStoreComponent implements OnInit, OnDestroy {
                 uid: dataStore.uid,
                 dataStore: dataStore.dataStoreType,
                 snowflake: {
-                    accountName: dataStore.snowflake.accountName,
-                    database: dataStore.snowflake.database,
-                    schema: dataStore.snowflake.schema,
-                    authType: dataStore.snowflake.authType,
-                    username: dataStore.snowflake.username,
-                    password: dataStore.snowflake.password,
-                    role: dataStore.snowflake.role,
-                    clientId: dataStore.snowflake.clientId,
-                    clientSecret: dataStore.snowflake.clientSecret,
-                    authorizationCode: dataStore.snowflake.authorizationCode,
-                    redirectURI: dataStore.snowflake.redirectURI,
-                    loginTimeout: dataStore.snowflake.loginTimeout
+                    accountName: dataStore.accountName,
+                    database: dataStore.database,
+                    schema: dataStore.schema,
+                    authType: dataStore.authType,
+                    username: dataStore.username,
+                    password: dataStore.password,
+                    role: dataStore.role,
+                    clientId: dataStore.clientId,
+                    clientSecret: dataStore.clientSecret,
+                    authorizationCode: dataStore.authorizationCode,
+                    redirectURI: dataStore.redirectURI,
+                    loginTimeout: dataStore.loginTimeout
                 }
             });
 
@@ -166,8 +166,8 @@ export class PipelineDataStoreComponent implements OnInit, OnDestroy {
                 dataStore: dataStore.dataStoreType,
                 tgdb: {
                     url: dataStore.url,
-                    username: dataStore.tgdb.username,
-                    password: dataStore.tgdb.password
+                    username: dataStore.username,
+                    password: dataStore.password
                 }
             });
 
@@ -180,8 +180,8 @@ export class PipelineDataStoreComponent implements OnInit, OnDestroy {
                 dataStore: dataStore.dataStoreType,
                 dgraph: {
                     url: dataStore.url,
-                    username: dataStore.dgraph.username,
-                    password: dataStore.dgraph.password
+                    username: dataStore.username,
+                    password: dataStore.password
                 }
             });
 
