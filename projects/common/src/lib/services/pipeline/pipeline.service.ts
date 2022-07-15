@@ -374,7 +374,8 @@ export class PipelineService {
             case 'Python Pipe': {
               this.buildPythonPipeArtifacts();
               pipelineFlow.AirDescriptor.logic.push(this.buildPythonPipeDeployObj(flowNode.data.customdata));
-              let foundGPUs = flowNode.data.customdata.config.filter(x => (x.key == 'use_gpu' && x.value == true))
+              console.log('FLOW NODE?', flowNode.data)
+              let foundGPUs = flowNode?.customdata?.context?.data?.config.filter(x => (x.key == 'use_gpu' && x.value == true))
               if (foundGPUs.length > 0) {
                 useGPU = true;
               }
@@ -1716,7 +1717,8 @@ export class PipelineService {
   }
 
   buildPythonPipeDeployProperties(contextObj): any {
-    const config = contextObj.config.reduce(
+    console.log('Python Deploy Obj', contextObj)
+    const config = contextObj.context.data.config.reduce(
       (obj, item) => Object.assign(obj, { [item.key]: this.castItemValue(item.value) }), {});
     let pythonPipeDeployProperties = [
       { 'Name': 'Logging.LogLevel', 'Value': contextObj.logLevel },
@@ -1736,7 +1738,7 @@ export class PipelineService {
       { 'Name': 'Python.DataIn', 'Value': contextObj.dataInput }
     ]
 
-    if (contextObj.dependsOn.length === 0) {
+    if (contextObj?.dependsOn?.length === 0) {
       delete pythonPipeDeployProperties[3].Value.data.depends_on
     }
 

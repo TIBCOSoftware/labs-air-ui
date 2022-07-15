@@ -1766,6 +1766,7 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
     }
 
     validatePipeline() {
+        this.pipelineService.pipelineData = this.pipelineForm.getRawValue();
         this.pipelineService.validatePipeline();
     }
 
