@@ -22,7 +22,6 @@ export class PipelineDataPublisherComponent implements OnInit, OnDestroy {
     nodeChangeSubscription: Subscription;
     @Output() formUpdatedEvent = new EventEmitter<Protocol>();
     dataPublisherForm: UntypedFormGroup;
-    dataOptionsForm: UntypedFormGroup;
 
     logLevels: SelectItem[] = [
         { value: 'INFO', viewValue: 'INFO' },
@@ -213,7 +212,6 @@ export class PipelineDataPublisherComponent implements OnInit, OnDestroy {
     onFormChanges(): void {
         this.nodeChangeSubscription = this.nodeChangeEvent.subscribe( node => {
             this.updateProtocolForm(node.data['customdata']);
-            console.log('DID THIS FIRE?')
         });
 
         this.formChangeSubscription = this.dataPublisherForm.valueChanges
@@ -301,10 +299,7 @@ export class PipelineDataPublisherComponent implements OnInit, OnDestroy {
                 exchangeType: ['topic', Validators.required],
                 routingKey: ['air', Validators.required],
                 reliable: ['true', Validators.required],
-            })
-        });
-    
-        this.dataOptionsForm = this.formBuilder.group({
+            }),
             useReading: [true],
             encodeReadingValue: [false],
             useEnrichedReading: [false],
@@ -339,7 +334,11 @@ export class PipelineDataPublisherComponent implements OnInit, OnDestroy {
                         clientKey: context.mqtt.clientKey,
                         topic: context.mqtt.topic,
                         maximumQOS: context.mqtt.maximumQOS
-                    }
+                    },
+                    useReading: context.useReading,
+                    encodeReadingValue: context.encodeReadingValue,
+                    useEnrichedReading: context.useEnrichedReading,
+                    encodeEnrichedReadingValue: context.encodeEnrichedReadingValue
                 });
 
             }
@@ -368,7 +367,11 @@ export class PipelineDataPublisherComponent implements OnInit, OnDestroy {
                         fetchMaxWait: context.kafka.fetchMaxWait,
                         heartbeatInterval: context.kafka.heartbeatInterval,
                         sessionTimeout: context.kafka.sessionTimeout
-                    }
+                    },
+                    useReading: context.useReading,
+                    encodeReadingValue: context.encodeReadingValue,
+                    useEnrichedReading: context.useEnrichedReading,
+                    encodeEnrichedReadingValue: context.encodeEnrichedReadingValue
                 });
             }
             else if (protocol == 'AMQP') {
@@ -386,9 +389,14 @@ export class PipelineDataPublisherComponent implements OnInit, OnDestroy {
                         exchangeType: context.amqp.exchangeType,
                         routingKey: context.amqp.routingKey,
                         reliable: context.amqp.reliable
-                    }
+                    },
+                    useReading: context.useReading,
+                    encodeReadingValue: context.encodeReadingValue,
+                    useEnrichedReading: context.useEnrichedReading,
+                    encodeEnrichedReadingValue: context.encodeEnrichedReadingValue
                 });
             }
+            
         }
     }
 

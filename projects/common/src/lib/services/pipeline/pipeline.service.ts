@@ -234,7 +234,6 @@ export class PipelineService {
             case 'Data Store': {
               const useReading = flowNode.data.customdata.useReading;
               const useEnrichedReading = flowNode.data.customdata.useEnrichedReading;
-
               if (useReading) {
                 pipelineFlow.AirDescriptor.logic.push(this.buildDataStoreDeployObj(flowNode.data.customdata, null));
               }
@@ -254,6 +253,7 @@ export class PipelineService {
               const useReading = flowNode.data.customdata.useReading;
               const useEnrichedReading = flowNode.data.customdata.useEnrichedReading;
 
+              console.log('useReading?', flowNode);
               if (useReading) {
                 pipelineFlow.AirDescriptor.logic.push(this.buildDataPublisherDeployObj(flowNode.data.customdata, null));
               }
@@ -1004,14 +1004,14 @@ export class PipelineService {
 
     if (contextObj.protocol == 'MQTT') {
 
-      const encpass = 'SECRET:' + btoa(contextObj.password);
+      const encpass = 'SECRET:' + btoa(contextObj.mqtt.password);
 
       protocolObj = [
         { 'Name': 'Data.Gateway', 'Value': this.gatewayId },
-        { 'Name': 'MQTTTrigger.Topic', 'Value': contextObj.topic },
-        { 'Name': 'MQTTTrigger.MaximumQOS', 'Value': contextObj.maximumQOS },
-        { 'Name': 'Mqtt.IoTMQTT.Broker_URL', 'Value': 'tcp://' + contextObj.hostname + ':' + contextObj.port },
-        { 'Name': 'Mqtt.IoTMQTT.Username', 'Value': contextObj.username },
+        { 'Name': 'MQTTTrigger.Topic', 'Value': contextObj.mqtt.topic },
+        { 'Name': 'MQTTTrigger.MaximumQOS', 'Value': contextObj.mqtt.maximumQOS },
+        { 'Name': 'Mqtt.IoTMQTT.Broker_URL', 'Value': 'tcp://' + contextObj.mqtt.hostname + ':' + contextObj.mqtt.port },
+        { 'Name': 'Mqtt.IoTMQTT.Username', 'Value': contextObj.mqtt.username },
         { 'Name': 'Mqtt.IoTMQTT.Password', 'Value': encpass },
         { 'Name': 'Mqtt.encryptionMode', 'Value': 'changeme' },
         { 'Name': 'Mqtt.caCertificate', 'Value': 'changeme' },
@@ -1064,10 +1064,10 @@ export class PipelineService {
       const encpass = 'SECRET:' + btoa(contextObj.password);
 
       protocolObj = [
-        { 'Name': 'MQTTPub.Topic', 'Value': contextObj.topic },
-        { 'Name': 'MQTTPub.MaximumQOS', 'Value': contextObj.maximumQOS },
-        { 'Name': 'Mqtt.IoTMQTT.Broker_URL', 'Value': 'tcp://' + contextObj.hostname + ':' + contextObj.port },
-        { 'Name': 'Mqtt.IoTMQTT.Username', 'Value': contextObj.username },
+        { 'Name': 'MQTTPub.Topic', 'Value': contextObj.mqtt.topic },
+        { 'Name': 'MQTTPub.MaximumQOS', 'Value': contextObj.mqtt.maximumQOS },
+        { 'Name': 'Mqtt.IoTMQTT.Broker_URL', 'Value': 'tcp://' + contextObj.mqtt.hostname + ':' + contextObj.mqtt.port },
+        { 'Name': 'Mqtt.IoTMQTT.Username', 'Value': contextObj.mqtt.username },
         { 'Name': 'Mqtt.IoTMQTT.Password', 'Value': encpass },
         { 'Name': 'Mqtt.encryptionMode', 'Value': 'changeme' },
         { 'Name': 'Mqtt.caCertificate', 'Value': 'changeme' },
@@ -1101,11 +1101,11 @@ export class PipelineService {
     else if (contextObj.protocol == 'AMQP') {
 
       protocolObj = [
-        { 'Name': 'AMQP.url', 'Value': 'amqp://' + contextObj.username + ':' + contextObj.password + '@' + contextObj.hostname + ':' + contextObj.port + '/' },
-        { 'Name': 'AMQP.exchangeName', 'Value': contextObj.exchangeName },
-        { 'Name': 'AMQP.exchangeType', 'Value': contextObj.exchangeType },
-        { 'Name': 'AMQP.routingKey', 'Value': contextObj.routingKey },
-        { 'Name': 'AMQP.reliable', 'Value': contextObj.reliable }
+        { 'Name': 'AMQP.url', 'Value': 'amqp://' + contextObj.amqp.username + ':' + contextObj.amqp.password + '@' + contextObj.amqp.hostname + ':' + contextObj.amqp.port + '/' },
+        { 'Name': 'AMQP.exchangeName', 'Value': contextObj.amqp.exchangeName },
+        { 'Name': 'AMQP.exchangeType', 'Value': contextObj.amqp.exchangeType },
+        { 'Name': 'AMQP.routingKey', 'Value': contextObj.amqp.routingKey },
+        { 'Name': 'AMQP.reliable', 'Value': contextObj.amqp.reliable }
       ];
     }
 
@@ -1145,45 +1145,45 @@ export class PipelineService {
     if (contextObj.dataStore == 'PostgreSQL2') {
 
       dataStoreObj = [
-        { 'Name': 'PostgreSQL.IoTPostgres.Host', 'Value': contextObj.host },
-        { 'Name': 'PostgreSQL.IoTPostgres.Port', 'Value': contextObj.port.toString() },
-        { 'Name': 'PostgreSQL.IoTPostgres.Database_Name', 'Value': contextObj.databaseName },
-        { 'Name': 'PostgreSQL.IoTPostgres.User', 'Value': contextObj.user },
-        { 'Name': 'PostgreSQL.IoTPostgres.Password', 'Value': contextObj.password },
+        { 'Name': 'PostgreSQL.IoTPostgres.Host', 'Value': contextObj.postgres.host },
+        { 'Name': 'PostgreSQL.IoTPostgres.Port', 'Value': contextObj.postgres.port.toString() },
+        { 'Name': 'PostgreSQL.IoTPostgres.Database_Name', 'Value': contextObj.postgres.databaseName },
+        { 'Name': 'PostgreSQL.IoTPostgres.User', 'Value': contextObj.postgres.user },
+        { 'Name': 'PostgreSQL.IoTPostgres.Password', 'Value': contextObj.postgres.password },
         { 'Name': 'Logging.LogLevel', 'Value': contextObj.logLevel }
       ];
     }
     else if (contextObj.dataStore == 'Snowflake') {
 
       dataStoreObj = [
-        { 'Name': '', 'Value': contextObj.accountName },
-        { 'Name': '', 'Value': contextObj.accountName },
-        { 'Name': '', 'Value': contextObj.database },
-        { 'Name': '', 'Value': contextObj.schema },
-        { 'Name': '', 'Value': contextObj.authType },
-        { 'Name': '', 'Value': contextObj.username },
-        { 'Name': '', 'Value': contextObj.password },
-        { 'Name': '', 'Value': contextObj.clientId },
-        { 'Name': '', 'Value': contextObj.clientSecret },
-        { 'Name': '', 'Value': contextObj.authorizationCode },
-        { 'Name': '', 'Value': contextObj.redirectURI },
-        { 'Name': '', 'Value': contextObj.loginTimeout }
+        { 'Name': '', 'Value': contextObj.snowflake.accountName },
+        { 'Name': '', 'Value': contextObj.snowflake.accountName },
+        { 'Name': '', 'Value': contextObj.snowflake.database },
+        { 'Name': '', 'Value': contextObj.snowflake.schema },
+        { 'Name': '', 'Value': contextObj.snowflake.authType },
+        { 'Name': '', 'Value': contextObj.snowflake.username },
+        { 'Name': '', 'Value': contextObj.snowflake.password },
+        { 'Name': '', 'Value': contextObj.snowflake.clientId },
+        { 'Name': '', 'Value': contextObj.snowflake.clientSecret },
+        { 'Name': '', 'Value': contextObj.snowflake.authorizationCode },
+        { 'Name': '', 'Value': contextObj.snowflake.redirectURI },
+        { 'Name': '', 'Value': contextObj.snowflake.loginTimeout }
       ];
     }
     else if (contextObj.dataStore == 'TGDB') {
 
       dataStoreObj = [
-        { 'Name': 'GraphBuilder_TGDB.IoTTGDB.TGDB_Server_URL', 'Value': contextObj.url },
-        { 'Name': 'GraphBuilder_TGDB.IoTTGDB.Username', 'Value': contextObj.username },
-        { 'Name': 'GraphBuilder_TGDB.IoTTGDB.Password', 'Value': contextObj.password }
+        { 'Name': 'GraphBuilder_TGDB.IoTTGDB.TGDB_Server_URL', 'Value': contextObj.tgdb.url },
+        { 'Name': 'GraphBuilder_TGDB.IoTTGDB.Username', 'Value': contextObj.tgdb.username },
+        { 'Name': 'GraphBuilder_TGDB.IoTTGDB.Password', 'Value': contextObj.tgdb.password }
       ];
     }
     else if (contextObj.dataStore = 'Dgraph') {
 
       dataStoreObj = [
-        { 'Name': 'GraphBuilder_dgraph.IoTDgraph.Dgraph_Server_URL', 'Value': contextObj.url },
-        { 'Name': 'GraphBuilder_dgraph.IoTDgraph.Username', 'Value': contextObj.username },
-        { 'Name': 'GraphBuilder_dgraph.IoTDgraph.Password', 'Value': contextObj.password }
+        { 'Name': 'GraphBuilder_dgraph.IoTDgraph.Dgraph_Server_URL', 'Value': contextObj.dgraph.url },
+        { 'Name': 'GraphBuilder_dgraph.IoTDgraph.Username', 'Value': contextObj.dgraph.username },
+        { 'Name': 'GraphBuilder_dgraph.IoTDgraph.Password', 'Value': contextObj.dgraph.password }
       ];
 
     }

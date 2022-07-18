@@ -23,7 +23,6 @@ export class PipelineDataStoreComponent implements OnInit, OnDestroy {
     nodeChangeSubscription: Subscription;
     formChangeSubscription: Subscription;
     @Input() dataStoreForm: UntypedFormGroup;
-    @Input() dataOptionsForm: UntypedFormGroup;
 
     logLevels: SelectItem[] = [
         { value: 'INFO', viewValue: 'INFO' },
@@ -255,10 +254,7 @@ export class PipelineDataStoreComponent implements OnInit, OnDestroy {
                 url: ['changeme', Validators.required],
                 username: ['changeme', Validators.required],
                 password: ['changeme', Validators.required]
-            })
-        });
-
-        this.dataOptionsForm = this.formBuilder.group({
+            }),
             useReading: [true],
             encodeReadingValue: [false],
             useEnrichedReading: [false],
@@ -289,7 +285,11 @@ export class PipelineDataStoreComponent implements OnInit, OnDestroy {
                         databaseName: context.postgres.databaseName,
                         user: context.postgres.user,
                         password: context.postgres.password
-                    }
+                    },
+                    useReading: context.useReading,
+                    encodeReadingValue: context.encodeReadingValue,
+                    useEnrichedReading: context.useEnrichedReading,
+                    encodeEnrichedReadingValue: context.encodeEnrichedReadingValue
                 });
 
             }
@@ -313,7 +313,11 @@ export class PipelineDataStoreComponent implements OnInit, OnDestroy {
                         authorizationCode: context.snowflake.authorizationCode,
                         redirectURI: context.snowflake.redirectURI,
                         loginTimeout: context.snowflake.loginTimeout
-                    }
+                    },
+                    useReading: context.useReading,
+                    encodeReadingValue: context.encodeReadingValue,
+                    useEnrichedReading: context.useEnrichedReading,
+                    encodeEnrichedReadingValue: context.encodeEnrichedReadingValue
                 });
             }
             else if (dataStore == 'TGDB') {
@@ -326,7 +330,11 @@ export class PipelineDataStoreComponent implements OnInit, OnDestroy {
                         url: context.url,
                         username: context.tgdb.username,
                         password: context.tgdb.password
-                    }
+                    },
+                    useReading: context.useReading,
+                    encodeReadingValue: context.encodeReadingValue,
+                    useEnrichedReading: context.useEnrichedReading,
+                    encodeEnrichedReadingValue: context.encodeEnrichedReadingValue
                 });
             }
             else if (dataStore == 'Dgraph') {
@@ -339,7 +347,11 @@ export class PipelineDataStoreComponent implements OnInit, OnDestroy {
                         url: context.url,
                         username: context.dgraph.username,
                         password: context.dgraph.password
-                    }
+                    },
+                    useReading: context.useReading,
+                    encodeReadingValue: context.encodeReadingValue,
+                    useEnrichedReading: context.useEnrichedReading,
+                    encodeEnrichedReadingValue: context.encodeEnrichedReadingValue
                 });
             }
 
