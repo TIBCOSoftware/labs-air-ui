@@ -374,8 +374,7 @@ export class PipelineService {
             case 'Python Pipe': {
               this.buildPythonPipeArtifacts();
               pipelineFlow.AirDescriptor.logic.push(this.buildPythonPipeDeployObj(flowNode.data.customdata));
-              console.log('FLOW NODE?', flowNode.data)
-              let foundGPUs = flowNode?.customdata?.context?.data?.config.filter(x => (x.key == 'use_gpu' && x.value == true))
+              let foundGPUs = flowNode?.data?.customdata?.context?.data?.config.filter(x => (x.key == 'use_gpu' && x.value == true))
               if (foundGPUs.length > 0) {
                 useGPU = true;
               }
