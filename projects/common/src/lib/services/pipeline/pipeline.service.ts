@@ -98,7 +98,6 @@ export class PipelineService {
   validatePipeline() {
     const pipelineId = this.pipelineData.uid;
     const pipelineFlow = this.buildPipelineRequest(pipelineId.toString());
-
     if (pipelineFlow != null) {
       this.flogoDeployService.validateF1(pipelineId.toString(), pipelineFlow)
         .subscribe(res => {
@@ -372,7 +371,6 @@ export class PipelineService {
               break;
             }
             case 'Python Pipe': {
-              this.buildPythonPipeArtifacts();
               pipelineFlow.AirDescriptor.logic.push(this.buildPythonPipeDeployObj(flowNode.data.customdata));
               let foundGPUs = flowNode?.data?.customdata?.context?.data?.config.filter(x => (x.key == 'use_gpu' && x.value == true))
               if (foundGPUs.length > 0) {
@@ -1725,19 +1723,19 @@ export class PipelineService {
       { 'Name': 'Python.Producer', 'Value': contextObj.name },
       {
         'Name': 'Python.Context', 'Value': {
-          'name': contextObj.processorName,
+          'name': contextObj.context.processorName,
           'data': {
-            'input': contextObj.input,
-            'output': contextObj.output,
+            'input': contextObj.context.data.input,
+            'output': contextObj.context.data.output,
           },
-          'depends_on': contextObj.dependsOn,
+          'depends_on': contextObj.context.dependsOn,
           'config': config
         }
       },
       { 'Name': 'Python.DataIn', 'Value': contextObj.dataInput }
     ]
 
-    if (contextObj?.dependsOn?.length === 0) {
+    if (contextObj?.context.dependsOn?.length === 0) {
       delete pythonPipeDeployProperties[3].Value.data.depends_on
     }
 
