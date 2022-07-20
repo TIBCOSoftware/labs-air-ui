@@ -1,11 +1,12 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
+import { Component, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { FormBuilder, Validators, UntypedFormGroup } from '@angular/forms';
 import { DataStore } from '@TIBCOSoftware/labs-air-graph-client';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
+import { debounceTime, Subscription, distinctUntilChanged, Observable } from 'rxjs';
 
 export interface SelectItem {
-  value: string;
-  viewValue: string;
+    value: string;
+    viewValue: string;
 }
 
 @Component({
@@ -13,280 +14,384 @@ export interface SelectItem {
     templateUrl: './pipeline-data-store.component.html',
     styleUrls: ['./pipeline-data-store.component.css']
 })
-export class PipelineDataStoreComponent implements OnInit {
+export class PipelineDataStoreComponent implements OnInit, OnDestroy {
 
-  @Input() dataStoreForm: UntypedFormGroup;
-  @Input() dataOptionsForm: UntypedFormGroup;
+    @Input() dataStore: any;
+    @Input() gatewayId: string;
+    @Output() formUpdatedEvent = new EventEmitter<DataStore>();
+    @Input() nodeChangeEvent: Observable<any>;
+    nodeChangeSubscription: Subscription;
+    formChangeSubscription: Subscription;
+    @Input() dataStoreForm: UntypedFormGroup;
 
-  logLevels: SelectItem[] = [
-      { value: 'INFO', viewValue: 'INFO' },
-      { value: 'WARN', viewValue: 'WARN' },
-      { value: 'ERROR', viewValue: 'ERROR' },
-      { value: 'DEBUG', viewValue: 'DEBUG' }
-  ];
+    logLevels: SelectItem[] = [
+        { value: 'INFO', viewValue: 'INFO' },
+        { value: 'WARN', viewValue: 'WARN' },
+        { value: 'ERROR', viewValue: 'ERROR' },
+        { value: 'DEBUG', viewValue: 'DEBUG' }
+    ];
 
-  hidePassword = true;
+    hidePassword = true;
 
-  postgresDataStore = false;
-  snowflakeDataStore = false;
-  oracleDataStore = false;
-  mysqlDataStore = false;
-  tgdbDataStore = false;
-  dgraphDataStore = false;
+    postgresDataStore = false;
+    snowflakeDataStore = false;
+    oracleDataStore = false;
+    mysqlDataStore = false;
+    tgdbDataStore = false;
+    dgraphDataStore = false;
 
-  dataStores: DataStore[];
+    dataStores: DataStore[];
 
-  constructor(private graphService: GraphService) {
+    constructor(private graphService: GraphService, private formBuilder: FormBuilder) {
 
-  }
+    }
 
-  ngOnInit() {
-      this.getDataStores(this.dataStoreForm.get('gateway').value);
+    ngOnInit() {
+        this.initForm();
+        this.getDataStores(this.dataStoreForm.get('gateway').value);
+        this.onFormChanges();
+        if (this.dataStore?.data['customdata']) {
+            this.updateDataStoreForm(this.dataStore.data['customdata'])
+        }
+    }
 
-      this.onFormChanges();
-  }
+    ngOnDestroy(): void {
+        this.formChangeSubscription.unsubscribe();
+        this.nodeChangeSubscription.unsubscribe();
+    }
 
-  public getDataStores(gatewayId: string) {
-      console.log('Getting data stores for: ', gatewayId);
+    public getDataStores(gatewayId: string) {
+        console.log('Getting data stores for: ', gatewayId);
 
-      this.graphService.getDataStores(gatewayId)
-          .subscribe(res => {
-              console.log('Received response for graphService.getDataStores: ', res);
-              this.dataStores = res as DataStore[];
+        this.graphService.getDataStores(gatewayId)
+            .subscribe(res => {
+                console.log('Received response for graphService.getDataStores: ', res);
+                this.dataStores = res as DataStore[];
 
-              const currentDataStore = this.dataStoreForm.get('dataStoreId').value;
-              if (currentDataStore == '') {
-                  this.postgresDataStore = false;
-                  this.snowflakeDataStore = false;
-                  this.oracleDataStore = false;
-                  this.mysqlDataStore = false;
-                  this.tgdbDataStore = false;
-                  this.dgraphDataStore = false;
-              }
-              else {
-                  const dataStore = this.getDataStoreById(currentDataStore);
-                  this.setForm(dataStore);
-              }
-
-
-          });
-  }
+                const currentDataStore = this.dataStoreForm.get('dataStoreId').value;
+                if (currentDataStore == '') {
+                    this.postgresDataStore = false;
+                    this.snowflakeDataStore = false;
+                    this.oracleDataStore = false;
+                    this.mysqlDataStore = false;
+                    this.tgdbDataStore = false;
+                    this.dgraphDataStore = false;
+                }
+                else {
+                    const dataStore = this.getDataStoreById(currentDataStore);
+                    this.setForm(dataStore);
+                }
 
 
-  onDataStoreSelected(event) {
-      console.log('Option selected: ', event);
+            });
+    }
 
-      const dataStore = this.getDataStoreById(event.value);
 
-      this.setForm(dataStore);
+    onDataStoreSelected(event) {
+        console.log('Option selected: ', event);
 
-  }
+        const dataStore = this.getDataStoreById(event.value);
 
-  getDataStoreById(id) {
-      let dataStore = null;
+        this.setForm(dataStore);
 
-      for (let i = 0; i < this.dataStores.length; i++) {
-          if (this.dataStores[i].uuid == id) {
-              dataStore = this.dataStores[i];
-              break;
-          }
-      }
+    }
 
-      return dataStore;
-  }
+    getDataStoreById(id) {
+        let dataStore = null;
 
-  setForm(dataStore) {
-      console.log('Selected data store: ', dataStore.dataStoreType);
+        for (let i = 0; i < this.dataStores.length; i++) {
+            if (this.dataStores[i].uuid == id) {
+                dataStore = this.dataStores[i];
+                break;
+            }
+        }
 
-      this.postgresDataStore = false;
-      this.snowflakeDataStore = false;
-      this.oracleDataStore = false;
-      this.mysqlDataStore = false;
-      this.tgdbDataStore = false;
-      this.dgraphDataStore = false;
+        return dataStore;
+    }
 
-      if (dataStore.dataStoreType == 'PostgreSQL2') {
+    setForm(dataStore) {
+        console.log('Selected data store: ', dataStore.dataStoreType);
 
-          this.dataStoreForm.patchValue({
-              uid: dataStore.uid,
-              dataStore: dataStore.dataStoreType,
-              postgres: {
-                  host: dataStore.host,
-                  port: dataStore.port,
-                  databaseName: dataStore.databaseName,
-                  user: dataStore.user,
-                  password: dataStore.password
-              },
-              snowflake: {
-                  accountName: 'changeme',
-                  warehouse: 'changeme',
-                  database: 'changeme',
-                  schema: 'changeme',
-                  authType: 'Basic Authentication',
-                  username: 'changeme',
-                  password: 'changeme',
-                  role: 'changeme',
-                  clientId: '',
-                  clientSecret: '',
-                  authorizationCode: '',
-                  redirectURI: '',
-                  loginTimeout: '20'
-              },
-              tgdb: {
-                  url: 'changeme',
-                  username: 'changeme',
-                  password: 'changeme'
-              },
-              dgraph: {
-                  url: 'changeme',
-                  username: 'changeme',
-                  password: 'changeme'
-              }
-          });
+        this.postgresDataStore = false;
+        this.snowflakeDataStore = false;
+        this.oracleDataStore = false;
+        this.mysqlDataStore = false;
+        this.tgdbDataStore = false;
+        this.dgraphDataStore = false;
+        this.resetDataStore();
+        if (dataStore.dataStoreType == 'PostgreSQL2') {
 
-          this.postgresDataStore = true;
-      }
-      else if (dataStore.dataStoreType == 'Snowflake') {
+            this.dataStoreForm.patchValue({
+                uid: dataStore.uid,
+                dataStore: dataStore.dataStoreType,
+                postgres: {
+                    host: dataStore.host,
+                    port: dataStore.port,
+                    databaseName: dataStore.databaseName,
+                    user: dataStore.user,
+                    password: dataStore.password
+                }
+            });
 
-          this.dataStoreForm.patchValue({
-              uid: dataStore.uid,
-              dataStore: dataStore.dataStoreType,
-              snowflake: {
-                  accountName: dataStore.accountName,
-                  warehouse: dataStore.warehouse,
-                  database: dataStore.database,
-                  schema: dataStore.schema,
-                  authType: dataStore.authType,
-                  username: dataStore.username,
-                  password: dataStore.password,
-                  role: dataStore.role,
-                  clientId: dataStore.clientId,
-                  clientSecret: dataStore.clientSecret,
-                  authorizationCode: dataStore.authorizationCode,
-                  redirectURI: dataStore.redirectURI,
-                  loginTimeout: dataStore.loginTimeout
-              },
-              postgres: {
-                  host: 'changeme',
-                  port: 'changeme',
-                  databaseName: 'changeme',
-                  user: 'changeme',
-                  password: 'changeme'
-              },
-              tgdb: {
-                  url: 'changeme',
-                  username: 'changeme',
-                  password: 'changeme'
-              },
-              dgraph: {
-                  url: 'changeme',
-                  username: 'changeme',
-                  password: 'changeme'
-              }
-          });
+            this.postgresDataStore = true;
+        }
+        else if (dataStore.dataStoreType == 'Snowflake') {
 
-          this.snowflakeDataStore = true;
-      }
-      else if (dataStore.dataStoreType == 'TGDB') {
+            this.dataStoreForm.patchValue({
+                uid: dataStore.uid,
+                dataStore: dataStore.dataStoreType,
+                snowflake: {
+                    accountName: dataStore.accountName,
+                    database: dataStore.database,
+                    schema: dataStore.schema,
+                    authType: dataStore.authType,
+                    username: dataStore.username,
+                    password: dataStore.password,
+                    role: dataStore.role,
+                    clientId: dataStore.clientId,
+                    clientSecret: dataStore.clientSecret,
+                    authorizationCode: dataStore.authorizationCode,
+                    redirectURI: dataStore.redirectURI,
+                    loginTimeout: dataStore.loginTimeout
+                }
+            });
 
-          this.dataStoreForm.patchValue({
-              uid: dataStore.uid,
-              dataStore: dataStore.dataStoreType,
-              tgdb: {
-                  url: dataStore.url,
-                  username: dataStore.username,
-                  password: dataStore.password
-              },
-              postgres: {
-                  host: 'changeme',
-                  port: 'changeme',
-                  databaseName: 'changeme',
-                  user: 'changeme',
-                  password: 'changeme'
-              },
-              snowflake: {
-                  accountName: 'changeme',
-                  warehouse: 'changeme',
-                  database: 'changeme',
-                  schema: 'changeme',
-                  authType: 'Basic Authentication',
-                  username: 'changeme',
-                  password: 'changeme',
-                  role: 'changeme',
-                  clientId: '',
-                  clientSecret: '',
-                  authorizationCode: '',
-                  redirectURI: '',
-                  loginTimeout: '20'
-              },
-              dgraph: {
-                  url: 'changeme',
-                  username: 'changeme',
-                  password: 'changeme'
-              }
-          });
+            this.snowflakeDataStore = true;
+        }
+        else if (dataStore.dataStoreType == 'TGDB') {
 
-          this.tgdbDataStore = true;
-      }
-      else if (dataStore.dataStoreType == 'Dgraph') {
+            this.dataStoreForm.patchValue({
+                uid: dataStore.uid,
+                dataStore: dataStore.dataStoreType,
+                tgdb: {
+                    url: dataStore.url,
+                    username: dataStore.username,
+                    password: dataStore.password
+                }
+            });
 
-          this.dataStoreForm.patchValue({
-              uid: dataStore.uid,
-              dataStore: dataStore.dataStoreType,
-              dgraph: {
-                  url: dataStore.url,
-                  username: dataStore.username,
-                  password: dataStore.password
-              },
-              postgres: {
-                  host: 'changeme',
-                  port: 'changeme',
-                  databaseName: 'changeme',
-                  user: 'changeme',
-                  password: 'changeme'
-              },
-              snowflake: {
-                  accountName: 'changeme',
-                  warehouse: 'changeme',
-                  database: 'changeme',
-                  schema: 'changeme',
-                  authType: 'Basic Authentication',
-                  username: 'changeme',
-                  password: 'changeme',
-                  role: 'changeme',
-                  clientId: '',
-                  clientSecret: '',
-                  authorizationCode: '',
-                  redirectURI: '',
-                  loginTimeout: '20'
-              },
-              tgdb: {
-                  url: 'changeme',
-                  username: 'changeme',
-                  password: 'changeme'
-              }
-          });
+            this.tgdbDataStore = true;
+        }
+        else if (dataStore.dataStoreType == 'Dgraph') {
 
-          console.log('Set to display Dgraph: ', dataStore);
+            this.dataStoreForm.patchValue({
+                uid: dataStore.uid,
+                dataStore: dataStore.dataStoreType,
+                dgraph: {
+                    url: dataStore.url,
+                    username: dataStore.username,
+                    password: dataStore.password
+                }
+            });
 
-          this.dgraphDataStore = true;
-      }
-  }
+            console.log('Set to display Dgraph: ', dataStore);
 
-  onFormChanges(): void {
-      this.dataStoreForm.valueChanges.subscribe(val => {
+            this.dgraphDataStore = true;
+        }
+    }
 
-          if (this.dataStoreForm.get('dataStore').value == '') {
+    onFormChanges(): void {
+        this.nodeChangeSubscription = this.nodeChangeEvent.subscribe( node => {
+            this.updateDataStoreForm(node.data['customdata']);
+        });
 
-              this.postgresDataStore = false;
-              this.snowflakeDataStore = false;
-              this.oracleDataStore = false;
-              this.mysqlDataStore = false;
-              this.tgdbDataStore = false;
-              this.dgraphDataStore = false;
-          }
+        this.formChangeSubscription = this.dataStoreForm.valueChanges
+        .pipe(
+            debounceTime(200),
+            distinctUntilChanged()
+        )
+        .subscribe(val => {
 
-      });
-  }
+            if (this.dataStoreForm.get('dataStore').value == '') {
 
+                this.postgresDataStore = false;
+                this.snowflakeDataStore = false;
+                this.oracleDataStore = false;
+                this.mysqlDataStore = false;
+                this.tgdbDataStore = false;
+                this.dgraphDataStore = false;
+            }
+
+            this.formUpdatedEvent.emit(this.dataStoreForm.value);
+        });
+    }
+
+    initForm() {
+        this.dataStoreForm = this.formBuilder.group({
+            uid: ['changeme', Validators.required],
+            gateway: [this.gatewayId, Validators.required],
+            dataStoreId: ['', Validators.required],
+            dataStore: ['', Validators.required],
+            logLevel: ['INFO', Validators.required],
+            postgres: this.formBuilder.group({
+                host: ['changeme', Validators.required],
+                port: ['changeme', Validators.required],
+                databaseName: ['changeme', Validators.required],
+                user: ['changeme', Validators.required],
+                password: ['changeme', Validators.required]
+            }),
+            snowflake: this.formBuilder.group({
+                accountName: ['changeme', Validators.required],
+                warehouse: ['changeme', Validators.required],
+                database: ['changeme', Validators.required],
+                schema: ['changeme', Validators.required],
+                authType: ['Basic Authentication', Validators.required],
+                username: ['changeme', Validators.required],
+                password: ['changeme', Validators.required],
+                role: ['changeme', Validators.required],
+                clientId: [''],
+                clientSecret: [''],
+                authorizationCode: [''],
+                redirectURI: [''],
+                loginTimeout: ['20', Validators.required]
+            }),
+            dgraph: this.formBuilder.group({
+                url: ['changeme', Validators.required],
+                username: ['changeme', Validators.required],
+                password: ['changeme', Validators.required]
+            }),
+            tgdb: this.formBuilder.group({
+                url: ['changeme', Validators.required],
+                username: ['changeme', Validators.required],
+                password: ['changeme', Validators.required]
+            }),
+            useReading: [true],
+            encodeReadingValue: [false],
+            useEnrichedReading: [false],
+            encodeEnrichedReadingValue: [false]
+        });
+    }
+
+    updateDataStoreForm(context) {
+
+        if (context != null || context != undefined) {
+            console.log('Updating dataStoreform with context: ', context);
+
+            const dataStoreId = context.dataStoreId;
+            const dataStore = context.dataStore;
+
+            // Update datastore form
+            console.log('Setting datastore form datastore to: ', dataStore);
+
+            if (dataStore == 'PostgreSQL2') {
+
+                this.dataStoreForm.patchValue({
+                    dataStoreId: dataStoreId,
+                    dataStore: dataStore,
+                    logLevel: context.logLevel,
+                    postgres: {
+                        host: context.postgres.host,
+                        port: context.postgres.port,
+                        databaseName: context.postgres.databaseName,
+                        user: context.postgres.user,
+                        password: context.postgres.password
+                    },
+                    useReading: context.useReading,
+                    encodeReadingValue: context.encodeReadingValue,
+                    useEnrichedReading: context.useEnrichedReading,
+                    encodeEnrichedReadingValue: context.encodeEnrichedReadingValue
+                });
+
+            }
+            else if (dataStore == 'Snowflake') {
+
+                this.dataStoreForm.patchValue({
+                    dataStoreId: dataStoreId,
+                    dataStore: dataStore,
+                    logLevel: context.logLevel,
+                    snowflake: {
+                        accountName: context.snowflake.accountName,
+                        warehouse: context.snowflake.warehouse,
+                        database: context.snowflake.database,
+                        schema: context.snowflake.schema,
+                        authType: context.snowflake.authType,
+                        username: context.snowflake.username,
+                        password: context.snowflake.password,
+                        role: context.snowflake.role,
+                        clientId: context.snowflake.clientId,
+                        clientSecret: context.snowflake.clientSecret,
+                        authorizationCode: context.snowflake.authorizationCode,
+                        redirectURI: context.snowflake.redirectURI,
+                        loginTimeout: context.snowflake.loginTimeout
+                    },
+                    useReading: context.useReading,
+                    encodeReadingValue: context.encodeReadingValue,
+                    useEnrichedReading: context.useEnrichedReading,
+                    encodeEnrichedReadingValue: context.encodeEnrichedReadingValue
+                });
+            }
+            else if (dataStore == 'TGDB') {
+
+                this.dataStoreForm.patchValue({
+                    dataStoreId: dataStoreId,
+                    dataStore: dataStore,
+                    logLevel: context.logLevel,
+                    tgdb: {
+                        url: context.url,
+                        username: context.tgdb.username,
+                        password: context.tgdb.password
+                    },
+                    useReading: context.useReading,
+                    encodeReadingValue: context.encodeReadingValue,
+                    useEnrichedReading: context.useEnrichedReading,
+                    encodeEnrichedReadingValue: context.encodeEnrichedReadingValue
+                });
+            }
+            else if (dataStore == 'Dgraph') {
+
+                this.dataStoreForm.patchValue({
+                    dataStoreId: dataStoreId,
+                    dataStore: dataStore,
+                    logLevel: context.logLevel,
+                    dgraph: {
+                        url: context.url,
+                        username: context.dgraph.username,
+                        password: context.dgraph.password
+                    },
+                    useReading: context.useReading,
+                    encodeReadingValue: context.encodeReadingValue,
+                    useEnrichedReading: context.useEnrichedReading,
+                    encodeEnrichedReadingValue: context.encodeEnrichedReadingValue
+                });
+            }
+
+        }
+    }
+
+    resetDataStore() {
+        this.dataStoreForm.patchValue({
+            tgdb: {
+                url: 'changeme',
+                username: 'changeme',
+                password: 'changeme'
+            },
+            postgres: {
+                host: 'changeme',
+                port: 'changeme',
+                databaseName: 'changeme',
+                user: 'changeme',
+                password: 'changeme'
+            },
+            snowflake: {
+                accountName: 'changeme',
+                warehouse: 'changeme',
+                database: 'changeme',
+                schema: 'changeme',
+                authType: 'Basic Authentication',
+                username: 'changeme',
+                password: 'changeme',
+                role: 'changeme',
+                clientId: '',
+                clientSecret: '',
+                authorizationCode: '',
+                redirectURI: '',
+                loginTimeout: '20'
+            },
+            dgraph: {
+                url: 'changeme',
+                username: 'changeme',
+                password: 'changeme'
+            }
+        });
+    }
 }

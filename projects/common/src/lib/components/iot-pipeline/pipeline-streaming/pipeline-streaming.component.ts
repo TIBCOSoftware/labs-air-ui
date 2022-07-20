@@ -1,11 +1,11 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
+import { Component, OnInit, OnDestroy, Input, EventEmitter, Output } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Device, Resource } from '../../../models/iot.model';
-import { Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Observable, Subscription } from 'rxjs';
 
 export interface SelectItem {
-  value: string;
-  viewValue: string;
+    value: string;
+    viewValue: string;
 }
 
 @Component({
@@ -15,85 +15,119 @@ export interface SelectItem {
 })
 export class PipelineStreamingComponent implements OnInit, OnDestroy {
 
-  @Input() streamingForm: UntypedFormGroup;
-  @Input() devices: Device[];
+    @Input() streaming: any;
+    @Input() devices: Device[];
+    @Output() formUpdatedEvent = new EventEmitter<any>();
+    @Input() nodeChangeEvent: Observable<any>;
+    nodeChangeSubscription: Subscription;
+    formChangeSubscription: Subscription;
+    streamingForm: UntypedFormGroup;
 
-  logLevels: SelectItem[] = [
-      { value: 'INFO', viewValue: 'INFO' },
-      { value: 'WARN', viewValue: 'WARN' },
-      { value: 'ERROR', viewValue: 'ERROR' },
-      { value: 'DEBUG', viewValue: 'DEBUG' }
-  ];
+    logLevels: SelectItem[] = [
+        { value: 'INFO', viewValue: 'INFO' },
+        { value: 'WARN', viewValue: 'WARN' },
+        { value: 'ERROR', viewValue: 'ERROR' },
+        { value: 'DEBUG', viewValue: 'DEBUG' }
+    ];
 
-  instruments: Resource[] = [];
-  private subscr:Subscription;
+    instruments: Resource[] = [];
+    private subscr: Subscription;
 
 
-  functions: SelectItem[] = [
-      { value: 'avg', viewValue: 'AVG' },
-      { value: 'sum', viewValue: 'SUM' },
-      { value: 'min', viewValue: 'MIN' },
-      { value: 'max', viewValue: 'MAX' },
-      { value: 'count', viewValue: 'COUNT' },
-      { value: 'accumulate', viewValue: 'ACCUMULATE' }
-  ];
+    functions: SelectItem[] = [
+        { value: 'avg', viewValue: 'AVG' },
+        { value: 'sum', viewValue: 'SUM' },
+        { value: 'min', viewValue: 'MIN' },
+        { value: 'max', viewValue: 'MAX' },
+        { value: 'count', viewValue: 'COUNT' },
+        { value: 'accumulate', viewValue: 'ACCUMULATE' }
+    ];
 
-  windowTypes: SelectItem[] = [
-      { value: 'tumbling', viewValue: 'TUMBLING' },
-      { value: 'sliding', viewValue: 'SLIDING' },
-      { value: 'timeTumbling', viewValue: 'TIME TUMBLING' },
-      { value: 'timeSliding', viewValue: 'TIME SLIDING' }
-  ];
+    windowTypes: SelectItem[] = [
+        { value: 'tumbling', viewValue: 'TUMBLING' },
+        { value: 'sliding', viewValue: 'SLIDING' },
+        { value: 'timeTumbling', viewValue: 'TIME TUMBLING' },
+        { value: 'timeSliding', viewValue: 'TIME SLIDING' }
+    ];
 
-  constructor() {
-      console.log('constructor streaming component config');
-  }
+    constructor(private formBuilder: UntypedFormBuilder) { }
 
-  ngOnInit(): void {
+    ngOnInit(): void {
+        this.initForm();
+        this.onFormChanges();
+        if (this.streaming?.data['customdata']) {
+            this.updateStreamingForm(this.streaming.data['customdata'])
+        }
+    }
 
-      const idx = this.getIndexForDevice(this.streamingForm.get('deviceName').value);
+    ngOnDestroy(): void {
+        this.formChangeSubscription.unsubscribe();
+        this.nodeChangeSubscription.unsubscribe();
+        this.subscr.unsubscribe();
+    }
 
-      if (idx >= 0)
-          this.instruments = this.devices[idx].profile.deviceResources as Resource[];
+    getIndexForDevice(name: string): number {
+        let idx = -1;
+        for (let i = 0; i < this.devices.length; i++) {
+            if (this.devices[i].name == name) {
+                idx = i;
+                break;
+            }
+        }
+        return idx;
+    }
 
-      this.onFormChanges();
-  }
+    onFormChanges(): void {
+        // this.streamingForm.valueChanges.subscribe(val => {
+        //   console.log("streamingForm has changed for: ", val.name);
 
-  ngOnDestroy(): void {
+        // });
 
-      // Remove subscription
-      this.subscr.unsubscribe();
-  }
+        this.nodeChangeSubscription = this.nodeChangeEvent.subscribe(node => {
+            this.updateStreamingForm(node.data['customdata']);
+        });
+        this.formChangeSubscription = this.streamingForm.valueChanges
+            .pipe(debounceTime(200), distinctUntilChanged())
+            .subscribe(() => {
+                this.formUpdatedEvent.emit(this.streamingForm.value)
+            })
 
-  getIndexForDevice(name: string): number {
-      let idx = -1;
+        this.subscr = this.streamingForm.get('deviceName').valueChanges.subscribe(val => {
 
-      for (let i = 0; i < this.devices.length; i++) {
+            // Set the resourceDataSource
+            const idx = this.getIndexForDevice(val);
 
-          if (this.devices[i].name == name) {
-              idx = i;
-              break;
-          }
-      }
+            if (idx >= 0)
+                this.instruments = this.devices[idx].profile.deviceResources as Resource[];
+        });
 
-      return idx;
-  }
+    }
 
-  onFormChanges(): void {
-      // this.streamingForm.valueChanges.subscribe(val => {
-      //   console.log("streamingForm has changed for: ", val.name);
+    initForm() {
+        this.streamingForm = this.formBuilder.group({
+            deviceName: ['changeme', Validators.required],
+            instrumentName: ['changeme', Validators.required],
+            function: ['avg', Validators.required],
+            windowType: ['tumbling', Validators.required],
+            windowSize: ['5', Validators.required],
+            logLevel: ['INFO', Validators.required]
+        });
+    }
 
-      // });
+    updateStreamingForm(context) {
 
-      this.subscr = this.streamingForm.get('deviceName').valueChanges.subscribe(val => {
+        if (context != null || context != undefined) {
+            console.log('Updating streaming component with context: ', context);
 
-          // Set the resourceDataSource
-          const idx = this.getIndexForDevice(val);
-
-          if (idx >= 0)
-              this.instruments = this.devices[idx].profile.deviceResources as Resource[];
-      });
-
-  }
+            this.streamingForm.patchValue({
+                deviceName: context.deviceName,
+                instrumentName: context.instrumentName,
+                function: context.function,
+                windowType: context.windowType,
+                windowSize: context.windowSize,
+                logLevel: context.logLevel,
+            });
+        }
+    }
 
 }

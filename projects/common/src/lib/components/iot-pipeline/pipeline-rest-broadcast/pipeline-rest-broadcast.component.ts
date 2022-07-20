@@ -1,29 +1,45 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { UntypedFormArray, UntypedFormControl, UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { MatTabGroup } from '@angular/material/tabs'
 import { Model } from '@TIBCOSoftware/labs-air-graph-client';
+import { debounceTime, distinctUntilChanged, Observable, Subscription } from 'rxjs';
 import { RestHeadersComponent } from '../rest-headers/rest-headers.component';
 @Component({
   selector: 'app-pipeline-rest-broadcast',
   templateUrl: './pipeline-rest-broadcast.component.html',
   styleUrls: ['./pipeline-rest-broadcast.component.css']
 })
-export class PipelineRestBroadcastComponent implements OnInit {
+export class PipelineRestBroadcastComponent implements OnInit, OnDestroy {
 
+  @Input() restBroadcast;
   @Input() restBroadcastForm: UntypedFormGroup;
   @Input() models: Model[];
   @ViewChild('tabs') tabGroup: MatTabGroup;
   @ViewChild('restHeaders') restHeaders!: RestHeadersComponent;
+  @Output() formUpdatedEvent = new EventEmitter<any>();
+  @Input() nodeChangeEvent: Observable<any>;
+  nodeChangeSubscription: Subscription;
+  formChangeSubscription: Subscription;
 
-  logLevels = ['info', 'warn', 'error', 'debug'];
+  logLevels = ['INFO', 'WARN', 'ERROR', 'DEBUG'];
   methods = ['PUT', 'POST'];
 
   constructor(private formBuilder: UntypedFormBuilder) { }
 
   ngOnInit(): void {
-    if (this.restBroadcastForm.get('restURLs').value.length < 1) {
-      this.addNewEndpoint();
+    this.initForm();
+    this.onFormChanges();
+    if (this.restBroadcast) {
+      this.updateRESTBroadcastForm(this.restBroadcast.data['customdata']);
+      if (this.restBroadcastForm.get('restURLs').value.length < 1) {
+        this.addNewEndpoint();
+      }
     }
+  }
+
+  ngOnDestroy(): void {
+    this.formChangeSubscription.unsubscribe();
+    this.nodeChangeSubscription.unsubscribe();
   }
 
   get restURLs (): UntypedFormArray {
@@ -88,4 +104,43 @@ export class PipelineRestBroadcastComponent implements OnInit {
     this.headers.setControl(index, formGroupsArray);
   }
 
+  initForm() {
+    this.restBroadcastForm = this.formBuilder.group({
+      logLevel: ['INFO', Validators.required],
+      restTimeout: ['60', Validators.required],
+      endpointNames: this.formBuilder.array([]),
+      restURLs: this.formBuilder.array([]),
+      restMethods: this.formBuilder.array([]),
+      restBodies: this.formBuilder.array([]),
+      headers: this.formBuilder.array([])
+  });
+  }
+
+  onFormChanges() {
+    this.nodeChangeSubscription = this.nodeChangeEvent.subscribe(node => {
+      this.updateRESTBroadcastForm(node.data['customdata']);
+    });
+    this.formChangeSubscription = this.restBroadcastForm.valueChanges
+      .pipe(debounceTime(200), distinctUntilChanged())
+      .subscribe( () => {
+        this.formUpdatedEvent.emit(this.restBroadcastForm.value);
+      })
+  }
+
+  updateRESTBroadcastForm(context: any) {
+    if (context != null || context != undefined) {
+        this.restBroadcastForm.patchValue({
+            logLevel: context.logLevel,
+            restTimeout: context.restTimeout,
+        });
+        this.restBroadcastForm.setControl('endpointNames', this.formBuilder.array(context.endpointNames))
+        this.restBroadcastForm.setControl('restURLs', this.formBuilder.array(context.restURLs));
+        this.restBroadcastForm.setControl('restMethods', this.formBuilder.array(context.restMethods));
+        this.restBroadcastForm.setControl('restBodies', this.formBuilder.array(context.restBodies));
+
+        const formGroups = context.headers.map(x => this.formBuilder.array(x.map(y => this.formBuilder.group(y)))) as [];
+        const headersArray = this.formBuilder.array(formGroups) as UntypedFormArray
+        this.restBroadcastForm.setControl('headers', headersArray);
+    }
+}
 }

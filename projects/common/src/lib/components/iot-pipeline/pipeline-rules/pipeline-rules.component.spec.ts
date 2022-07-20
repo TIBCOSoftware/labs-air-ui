@@ -1,10 +1,14 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { UntypedFormGroup, UntypedFormControl } from '@angular/forms';
-import { of } from 'rxjs';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Observable, of } from 'rxjs';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import { PipelineRulesComponent } from './pipeline-rules.component';
+import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('PipelineRulesComponent', () => {
     let component: PipelineRulesComponent;
@@ -19,7 +23,8 @@ describe('PipelineRulesComponent', () => {
             providers: [
                 { provide: GraphService, useValue: mockGraphService }
             ],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA]
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
+            imports: [ReactiveFormsModule, MatSelectModule, MatCheckboxModule, MatInputModule, BrowserAnimationsModule]
         })
             .compileComponents();
     });
@@ -27,9 +32,7 @@ describe('PipelineRulesComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(PipelineRulesComponent);
         component = fixture.componentInstance;
-        component.ruleForm = new UntypedFormGroup({});
-        component.ruleForm.addControl('condDevice', new UntypedFormControl(''));
-        component.ruleForm.addControl('actionDevice', new UntypedFormControl(''));
+        component.nodeChangeEvent = new Observable<any>();
         component.devices = [];
         fixture.detectChanges();
     });

@@ -1,9 +1,13 @@
- import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { of } from 'rxjs';
 import { EdgeService } from '../../../services/edge/edge.service';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Observable, of } from 'rxjs';
+import { MatSelectModule } from '@angular/material/select'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import { PipelineDataPublisherComponent } from './pipeline-data-publisher.component';
 
@@ -23,6 +27,7 @@ describe('PipelineDataPublisherComponent', () => {
                 { provide: GraphService, useValue: mockGraphService },
                 { provide: EdgeService, useValue: mockEdgeService }
             ],
+            imports: [ReactiveFormsModule, MatSelectModule, MatCheckboxModule, BrowserAnimationsModule],
             schemas: [CUSTOM_ELEMENTS_SCHEMA]
         })
             .compileComponents();
@@ -34,6 +39,7 @@ describe('PipelineDataPublisherComponent', () => {
         component.dataPublisherForm = new UntypedFormGroup({});
         component.dataPublisherForm.addControl('gateway', new UntypedFormControl(''));
         component.dataPublisherForm.addControl('protocolId', new UntypedFormControl(''));
+        component.nodeChangeEvent = new Observable<any>();
         fixture.detectChanges();
     });
 

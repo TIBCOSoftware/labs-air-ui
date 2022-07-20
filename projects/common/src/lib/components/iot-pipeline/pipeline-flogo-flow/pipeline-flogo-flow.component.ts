@@ -1,11 +1,12 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
-import { Subject } from 'rxjs';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Validators, UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
+import { Observable, Subject, Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FlogoDeployService } from '../../../services/deployment/flogo-deploy.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { SingleValueDialogComponent } from '../pipeline-dialog/single-value-dialog.component';
+import { FlogoFlow } from '../../../models/pipeline.model';
 
 
 @Component({
@@ -13,137 +14,201 @@ import { SingleValueDialogComponent } from '../pipeline-dialog/single-value-dial
     templateUrl: './pipeline-flogo-flow.component.html',
     styleUrls: ['./pipeline-flogo-flow.component.css']
 })
-export class PipelineFlogoFlowComponent implements OnInit {
+export class PipelineFlogoFlowComponent implements OnInit, OnDestroy {
+
+    @Input() flogoFlow;
+    @Output() formUpdatedEvent = new EventEmitter<FlogoFlow>();
+    flogoFlowForm: UntypedFormGroup;
+    formChangeSubscription: Subscription;
+    dataSource = [];
+    columnHeader = ['name', 'type', 'value']
+    dataSourceChange = new Subject();
+    dataSourceSubscription: Subscription;
+    @Input() nodeChangeEvent: Observable<any>;
+    nodeChangeSubscription: Subscription;
+
+    constructor(private flogoDeployService: FlogoDeployService,
+        private _snackBar: MatSnackBar,
+        private formBuilder: UntypedFormBuilder,
+        private dialog: MatDialog) {
+
+    }
+
+    ngOnInit(): void {
+        this.initForm();
+        // Initialize data source if properties available in flow form
+        let properties = ''
+        if (this.flogoFlow) {
+            properties = this.flogoFlow.flowProperties;
+        }
+
+        if (properties != '' && properties != undefined) {
+            this.dataSource = JSON.parse(properties);
+        }
+
+        this.formChangeSubscription = this.flogoFlowForm.valueChanges
+            .pipe(
+                debounceTime(200),
+                distinctUntilChanged()
+            )
+            .subscribe(() => {
+                this.formUpdatedEvent.emit(this.flogoFlowForm.value)
+            });
+
+        // when a value changes on the array, update the form value.
+        this.dataSourceSubscription = this.dataSourceChange
+            .pipe(debounceTime(800), distinctUntilChanged())
+            .subscribe(() => {
+                this.flogoFlowForm.patchValue({
+
+                    flowProperties: JSON.stringify(this.dataSource)
+                });
+            });
+
+        this.nodeChangeSubscription = this.nodeChangeEvent.subscribe(node => {
+            this.updateFlogoFlowForm(node.data['customdata']);
+        });
+
+        if (this.flogoFlow?.data['customdata']) {
+            this.updateFlogoFlowForm(this.flogoFlow.data['customdata'])
+        }
+    }
+
+    ngOnDestroy(): void {
+        this.dataSourceSubscription.unsubscribe();
+        this.formChangeSubscription.unsubscribe();
+        this.nodeChangeSubscription.unsubscribe();
+    }
+
+    onFileSelected(event) {
+
+        const file: File = event.target.files[0];
+
+        if (file) {
+
+            console.log('Selected file: ', file.name);
+
+            const fileReader = new FileReader();
+            fileReader.onload = (e) => {
+                console.log('File content: ', fileReader.result);
+                this.flogoFlowForm.patchValue(
+                    {
+                        flowFilename: file.name,
+                        flowDefinition: fileReader.result
+                    },
+                    { emitEvent: false }
+                );
+
+                // Get application properties
+                this.getFlogoAppProperties(fileReader.result);
+            };
+
+            fileReader.readAsText(file);
+
+        }
+    }
+
+    getFlogoAppProperties(flowDefinition) {
+        if (flowDefinition != '') {
+            const request = {
+                flogoApp: flowDefinition
+            };
+
+            this.flogoDeployService.getFlogoPropertiesF1(request)
+                .subscribe(res => {
+                    console.log('Received getFlogoPropertiesF1 response: ', res);
+
+                    this.flogoFlowForm.patchValue({
+                        flowProperties: JSON.stringify(res.properties),
+                    });
+
+                    this.dataSource = res.properties;
+                    console.log('DATA SOURCE', this.dataSource);
+
+                    // let message = 'Success';
+                    // if (res == undefined || res.Success == false) {
+                    //   message = 'Failure';
+                    // }
+
+                    // this._snackBar.open(message, "Deploy Pipeline", {
+                    //   duration: 3000,
+                    // });
+
+                });
+        }
+    }
+
+    dataSourceChanged(event, rowId: number, cellsType: string) {
+
+        console.log('Inside dataSourceChanged() event: ', event);
+
+        console.log('Inside dataSourceChanged() rowId and cellsType: ', rowId, cellsType);
+
+        console.log('dataSource Inside dataSourceChanged(): ', this.dataSource);
+
+        this.dataSourceChange.next(event);
+    }
+
+    openDialog(rowId, element): void {
+        const dialogRef = this.dialog.open(SingleValueDialogComponent, {
+            width: '250px',
+            data: { value: '' }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+
+            if (result != undefined) {
+
+                const dsCopy = this.dataSource.slice();
+
+                element.Value = result;
 
 
-  @Input() flogoFlowForm: UntypedFormGroup;
+                this.dataSource = dsCopy;
 
-  dataSource = [];
-  columnHeader = ['name', 'type', 'value']
-  dataSourceChange = new Subject();
+                // Update flogo flow form
+                this.flogoFlowForm.patchValue({
 
-  constructor(private flogoDeployService: FlogoDeployService,
-    private _snackBar: MatSnackBar,
-    private formBuilder: UntypedFormBuilder,
-    private dialog: MatDialog) {
+                    flowProperties: JSON.stringify(this.dataSource)
+                });
 
-  }
+            }
 
-  ngOnInit(): void {
-      // Initialize data source if properties available in flow form
-      const properties = this.flogoFlowForm.get('flowProperties').value;
+        });
+    }
 
-      if (properties != '') {
-          this.dataSource = JSON.parse(properties);
-      }
+    initForm() {
+        this.flogoFlowForm = this.formBuilder.group({
+            flowFilename: ['', Validators.required],
+            flowDefinition: ['', Validators.required],
+            flowProperties: ['', Validators.required],
+            volumeName: [''],
+            volumePath: [''],
+            portMap1: ['8080:9999'],
+            portMap2: [''],
+            httpServicePort: [''],
+            propsEnv: ['auto']
+        });
+    }
 
-      // when a value changes on the array, update the form value.
-      this.dataSourceChange
-          .pipe(debounceTime(800), distinctUntilChanged())
-          .subscribe(() => {
-              console.log('Data source changed to: ', this.dataSource);
-              this.flogoFlowForm.patchValue({
+    updateFlogoFlowForm(context) {
 
-                  flowProperties: JSON.stringify(this.dataSource)
-              });
-          });
-  }
+        if (context != null || context != undefined) {
+            console.log('Updating flogo flow component with context: ', context);
 
-  onFileSelected(event) {
+            this.flogoFlowForm.patchValue({
+                flowFilename: context.flowFilename,
+                flowDefinition: context.flowDefinition,
+                flowProperties: context.flowProperties,
+                volumeName: context.volumeName,
+                volumePath: context.volumePath,
+                portMap1: context.portMap1,
+                portMap2: context.portMap2,
+                httpServicePort: context.httpServicePort,
+                propsEnv: context.propsEnv,
+            });
 
-      const file: File = event.target.files[0];
-
-      if (file) {
-
-          console.log('Selected file: ', file.name);
-
-          const fileReader = new FileReader();
-          fileReader.onload = (e) => {
-              console.log('File content: ', fileReader.result);
-              this.flogoFlowForm.patchValue(
-                  {
-                      flowFilename: file.name,
-                      flowDefinition: fileReader.result
-                  },
-                  { emitEvent: false }
-              );
-
-              // Get application properties
-              this.getFlogoAppProperties(fileReader.result);
-          };
-
-          fileReader.readAsText(file);
-
-      }
-  }
-
-  getFlogoAppProperties(flowDefinition) {
-      if (flowDefinition != '') {
-          const request = {
-              flogoApp: flowDefinition
-          };
-
-          this.flogoDeployService.getFlogoPropertiesF1(request)
-              .subscribe(res => {
-                  console.log('Received getFlogoPropertiesF1 response: ', res);
-
-                  this.flogoFlowForm.patchValue({
-                      flowProperties: JSON.stringify(res.properties),
-                  });
-
-                  this.dataSource = res.properties;
-                  console.log('DATA SOURCE', this.dataSource);
-
-                  // let message = 'Success';
-                  // if (res == undefined || res.Success == false) {
-                  //   message = 'Failure';
-                  // }
-
-                  // this._snackBar.open(message, "Deploy Pipeline", {
-                  //   duration: 3000,
-                  // });
-
-              });
-      }
-  }
-
-  dataSourceChanged(event, rowId: number, cellsType: string) {
-
-      console.log('Inside dataSourceChanged() event: ', event);
-
-      console.log('Inside dataSourceChanged() rowId and cellsType: ', rowId, cellsType);
-
-      console.log('dataSource Inside dataSourceChanged(): ', this.dataSource);
-
-      this.dataSourceChange.next(event);
-  }
-
-  openDialog(rowId, element): void {
-      const dialogRef = this.dialog.open(SingleValueDialogComponent, {
-          width: '250px',
-          data: { value: '' }
-      });
-
-      dialogRef.afterClosed().subscribe(result => {
-
-          if (result != undefined) {
-
-              const dsCopy = this.dataSource.slice();
-
-              element.Value = result;
-
-
-              this.dataSource = dsCopy;
-
-              // Update flogo flow form
-              this.flogoFlowForm.patchValue({
-
-                  flowProperties: JSON.stringify(this.dataSource)
-              });
-
-          }
-
-      });
-  }
+        }
+    }
 
 }

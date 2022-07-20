@@ -1,6 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { ReactiveFormsModule, UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
+import { Observable } from 'rxjs';
 
 import { PipelinePythonPipeComponent } from './pipeline-python-pipe.component';
 
@@ -16,6 +20,7 @@ describe('PipelinePythonPipeComponent', () => {
       providers: [
         { provide: GraphService, useValue: mockGraphService }
       ],
+      imports: [ReactiveFormsModule, MatSelectModule, MatInputModule, BrowserAnimationsModule]
     })
       .compileComponents();
   });
@@ -24,20 +29,7 @@ describe('PipelinePythonPipeComponent', () => {
     fixture = TestBed.createComponent(PipelinePythonPipeComponent);
     component = fixture.componentInstance;
     component.pythonInputs = [];
-    component.pythonPipeForm = new UntypedFormGroup({
-      name: new UntypedFormControl(''),
-      logLevel: new UntypedFormControl('INFO'),
-      fileContent: new UntypedFormControl(''),
-      context: new UntypedFormGroup({
-        name: new UntypedFormControl(''),
-        data: new UntypedFormGroup({
-          input: new UntypedFormGroup({}),
-          output: new UntypedFormArray([]),
-          dependsOn: new UntypedFormArray([]),
-        }),
-      })
-    })
-    component.subscription = component.pythonPipeForm.controls['name'].valueChanges.subscribe();
+    component.nodeChangeEvent = new Observable<any>();
     fixture.detectChanges();
   });
 

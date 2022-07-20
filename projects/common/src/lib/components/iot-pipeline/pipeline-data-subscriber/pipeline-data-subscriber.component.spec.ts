@@ -1,9 +1,11 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { of } from 'rxjs';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Observable, of } from 'rxjs';
+import { MatSelectModule } from '@angular/material/select'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { PipelineDataSubscriberComponent } from './pipeline-data-subscriber.component';
 
@@ -17,9 +19,9 @@ describe('PipelineDataSubscriberComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [PipelineDataSubscriberComponent],
-            imports: [HttpClientTestingModule],
+            imports: [HttpClientTestingModule, ReactiveFormsModule, MatSelectModule, BrowserAnimationsModule],
             providers: [
-                { provide: GraphService, useValue: mockGraphService }
+                { provide: GraphService, useValue: mockGraphService, }
             ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA]
         })
@@ -29,10 +31,7 @@ describe('PipelineDataSubscriberComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(PipelineDataSubscriberComponent);
         component = fixture.componentInstance;
-        component.dataSubscriberForm = new UntypedFormGroup({});
-        component.dataSubscriberForm.addControl('gateway', new UntypedFormControl(''));
-        component.dataSubscriberForm.addControl('protocolId', new UntypedFormControl(''));
-        component.dataSubscriberForm.addControl('logLevel', new UntypedFormControl(''));
+        component.nodeChangeEvent = new Observable<any>();
         fixture.detectChanges();
     });
 
