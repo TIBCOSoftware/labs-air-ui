@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, OnDestroy } fr
 
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
-import { UntypedFormArray, UntypedFormBuilder, FormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
@@ -464,7 +464,6 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
                     break;
                 }
                 case 'Python': {
-                    // this.updatePythonComponent(contextObj);
                     this.pythonConfig = true;
                     break;
                 }
@@ -477,7 +476,6 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
                     break;
                 }
                 case 'Python Pipe': {
-                    // this.updatePythonPipeComponent(contextObj);
                     this.pythonPipeConfig = true;
                     break;
                 }
