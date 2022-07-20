@@ -1714,7 +1714,6 @@ export class PipelineService {
   }
 
   buildPythonPipeDeployProperties(contextObj): any {
-    console.log('Python Deploy Obj', contextObj)
     const config = contextObj.context.data.config.reduce(
       (obj, item) => Object.assign(obj, { [item.key]: this.castItemValue(item.value) }), {});
     let pythonPipeDeployProperties = [
@@ -1735,7 +1734,6 @@ export class PipelineService {
       { 'Name': 'Python.DataIn', 'Value': contextObj.dataInput }
     ]
 
-    console.log('dependsOn?', contextObj?.context.data.dependsOn)
     if (contextObj?.context.data.dependsOn?.length == 0) {
       delete pythonPipeDeployProperties[3].Value.data.depends_on
     }

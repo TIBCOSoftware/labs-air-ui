@@ -594,18 +594,22 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
     }
 
     deletePipelineFromGraph() {
+        this.pipelineService.pipelineData = this.pipelineForm.getRawValue();
         this.pipelineService.deletePipelineFromGraph();
     }
 
     printPipeline() {
+        this.pipelineService.pipelineData = this.pipelineForm.getRawValue();
         this.pipelineService.printPipeline();
     }
 
     deployPipeline() {
+        this.pipelineService.pipelineData = this.pipelineForm.getRawValue();
         this.pipelineService.deployPipeline();
     }
 
     undeployPipeline() {
+        this.pipelineService.pipelineData = this.pipelineForm.getRawValue();
         this.pipelineService.undeployPipeline();
     }
 
