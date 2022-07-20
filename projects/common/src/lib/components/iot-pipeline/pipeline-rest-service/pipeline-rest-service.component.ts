@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, SimpleChanges, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { NestedTreeControl } from '@angular/cdk/tree';
@@ -23,7 +23,7 @@ interface DeviceNode {
     templateUrl: './pipeline-rest-service.component.html',
     styleUrls: ['./pipeline-rest-service.component.css']
 })
-export class PipelineRestServiceComponent implements OnInit, OnChanges, OnDestroy {
+export class PipelineRestServiceComponent implements OnInit, OnDestroy {
 
     @Input() devices: Device[];
     @Input() filters: any[];
@@ -73,14 +73,6 @@ export class PipelineRestServiceComponent implements OnInit, OnChanges, OnDestro
     ngOnDestroy(): void {
         this.formChangeSubscription.unsubscribe();
         this.nodeChangeSubscription.unsubscribe();
-    }
-
-    ngOnChanges(changes: SimpleChanges) {
-
-        this.initializeDataSource();
-
-        console.log('REST Service - ngOnChanges - devices: ', this.devices);
-
     }
 
     hasChild = (_: number, node: DeviceNode) => !!node.deviceResources && node.deviceResources.length > 0;
@@ -316,7 +308,8 @@ export class PipelineRestServiceComponent implements OnInit, OnChanges, OnDestro
         this.formChangeSubscription = this.restServiceForm.valueChanges
             .pipe(debounceTime(200), distinctUntilChanged())
             .subscribe(() => {
-                this.formUpdatedEvent.emit(this.restServiceForm.value)
+                this.formUpdatedEvent.emit(this.restServiceForm.value);
+                this.initializeDataSource();
             })
     }
 

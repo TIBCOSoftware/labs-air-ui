@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnInit, Input, SimpleChanges, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 
 import { NestedTreeControl } from '@angular/cdk/tree';
@@ -27,7 +27,7 @@ interface DeviceNode {
     templateUrl: './pipeline-inferencing.component.html',
     styleUrls: ['./pipeline-inferencing.component.css']
 })
-export class PipelineInferencingComponent implements OnInit, OnChanges, OnDestroy {
+export class PipelineInferencingComponent implements OnInit, OnDestroy {
 
 
     @Input() devices: Device[];
@@ -77,11 +77,6 @@ export class PipelineInferencingComponent implements OnInit, OnChanges, OnDestro
     ngOnDestroy(): void {
         this.formChangeSubscription.unsubscribe();
         this.nodeChangeSubscription.unsubscribe();
-    }
-
-    ngOnChanges(changes: SimpleChanges) {
-        console.log('PipelineInferencing - ngOnChanges - devices: ', this.devices);
-        this.initializeDataSource();
     }
 
     hasChild = (_: number, node: DeviceNode) => !!node.deviceResources && node.deviceResources.length > 0;
@@ -303,8 +298,8 @@ export class PipelineInferencingComponent implements OnInit, OnChanges, OnDestro
             distinctUntilChanged()
         )
         .subscribe( () => {
-            console.log('Emitting', this.modelForm.value);
-            this.formUpdatedEvent.emit(this.modelForm.value)
+            this.formUpdatedEvent.emit(this.modelForm.value);
+            this.initializeDataSource();
         });
     }
 
