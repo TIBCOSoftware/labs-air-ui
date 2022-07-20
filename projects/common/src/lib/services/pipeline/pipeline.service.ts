@@ -1723,19 +1723,20 @@ export class PipelineService {
       { 'Name': 'Python.Producer', 'Value': contextObj.name },
       {
         'Name': 'Python.Context', 'Value': {
-          'name': contextObj.context.processorName,
+          'name': contextObj.context.name,
           'data': {
             'input': contextObj.context.data.input,
             'output': contextObj.context.data.output,
           },
-          'depends_on': contextObj.context.dependsOn,
+          'depends_on': contextObj.context.data.dependsOn,
           'config': config
         }
       },
       { 'Name': 'Python.DataIn', 'Value': contextObj.dataInput }
     ]
 
-    if (contextObj?.context.dependsOn?.length === 0) {
+    console.log('dependsOn?', contextObj?.context.data.dependsOn)
+    if (contextObj?.context.data.dependsOn?.length == 0) {
       delete pythonPipeDeployProperties[3].Value.data.depends_on
     }
 
