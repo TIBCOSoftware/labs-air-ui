@@ -436,7 +436,6 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
                     break;
                 }
                 case 'Inferencing': {
-                    // this.updateInferencingComponent(contextObj);
                     this.inferencingConfig = true;
                     break;
                 }

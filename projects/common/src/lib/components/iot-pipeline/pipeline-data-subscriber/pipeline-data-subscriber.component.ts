@@ -229,8 +229,6 @@ export class PipelineDataSubscriberComponent implements OnInit, OnDestroy {
             distinctUntilChanged()
         )
         .subscribe(val => {
-            console.log('dataSubscriberForm has changed for: ', val);
-
             if (this.dataSubscriberForm.get('protocol').value == 'MQTT') {
                 this.mqttProtocol = true;
             }

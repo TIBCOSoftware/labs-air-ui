@@ -59,7 +59,6 @@ export class PipelineFlogoFlowComponent implements OnInit, OnDestroy {
         this.dataSourceSubscription = this.dataSourceChange
             .pipe(debounceTime(800), distinctUntilChanged())
             .subscribe(() => {
-                console.log('Data source changed to: ', this.dataSource);
                 this.flogoFlowForm.patchValue({
 
                     flowProperties: JSON.stringify(this.dataSource)
