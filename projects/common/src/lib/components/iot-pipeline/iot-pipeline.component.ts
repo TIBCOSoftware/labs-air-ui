@@ -85,21 +85,6 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
 
     // should this be just one big form? 
     pipelineForm: UntypedFormGroup;
-    protocolForm: UntypedFormGroup;
-    dataStoreForm: UntypedFormGroup;
-    streamingForm: UntypedFormGroup;
-    modelForm: UntypedFormGroup;
-    ruleForm: UntypedFormGroup;
-    ruleExpressionForm: UntypedFormGroup;
-    ruleTextMatchingForm: UntypedFormGroup;
-    flogoFlowForm: UntypedFormGroup;
-    restServiceForm: UntypedFormGroup;
-    dataOptionsForm: UntypedFormGroup;
-    pythonForm: UntypedFormGroup;
-    restBroadcastForm: UntypedFormGroup;
-    requestReplyForm: UntypedFormGroup;
-    pythonPipeForm: UntypedFormGroup;
-    errorHandlerForm: UntypedFormGroup;
     artifacts = [];
 
     selectedNode: any;
@@ -158,6 +143,7 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
     }
 
     ngOnDestroy(): void {
+        this.pipelineService.pipelineSelection.clear();
         this.pipelineObserver.unsubscribe();
     }
 
