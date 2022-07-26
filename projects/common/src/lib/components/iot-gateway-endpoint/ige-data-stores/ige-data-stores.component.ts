@@ -353,7 +353,7 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
           dataStore.dataStoreType = dataStoreType;
           dataStore.uuid = this.dataStoreForm.get('snowflake.uuid').value;
           dataStore.host = '';
-          dataStore.port = '0';
+          dataStore.port = 0;
           dataStore.databaseName = '';
           dataStore.user = '';
           dataStore.password = this.dataStoreForm.get('snowflake.password').value;
@@ -378,7 +378,7 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
           dataStore.dataStoreType = dataStoreType;
           dataStore.uuid = this.dataStoreForm.get('tgdb.uuid').value;
           dataStore.host = '';
-          dataStore.port = '0';
+          dataStore.port = 0;
           dataStore.databaseName = '';
           dataStore.user = '';
           dataStore.password = this.dataStoreForm.get('tgdb.password').value;
@@ -402,7 +402,7 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
           dataStore.dataStoreType = dataStoreType;
           dataStore.uuid = this.dataStoreForm.get('dgraph.uuid').value;
           dataStore.host = '';
-          dataStore.port = '0';
+          dataStore.port = 0;
           dataStore.databaseName = '';
           dataStore.user = '';
           dataStore.password = this.dataStoreForm.get('dgraph.password').value;
@@ -507,7 +507,7 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
                       dataStore.dataStoreType = dataStoreType;
                       dataStore.uuid = this.dataStoreForm.get('snowflake.uuid').value;
                       dataStore.host = '';
-                      dataStore.port = '0';
+                      dataStore.port = 0;
                       dataStore.databaseName = '';
                       dataStore.user = '';
                       dataStore.password = this.dataStoreForm.get('snowflake.password').value;
@@ -532,7 +532,7 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
                       dataStore.dataStoreType = dataStoreType;
                       dataStore.uuid = this.dataStoreForm.get('tgdb.uuid').value;
                       dataStore.host = '';
-                      dataStore.port = '0';
+                      dataStore.port = 0;
                       dataStore.databaseName = '';
                       dataStore.user = '';
                       dataStore.password = this.dataStoreForm.get('tgdb.password').value;
@@ -555,7 +555,7 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
                       dataStore.dataStoreType = dataStoreType;
                       dataStore.uuid = this.dataStoreForm.get('dgraph.uuid').value;
                       dataStore.host = '';
-                      dataStore.port = '0';
+                      dataStore.port = 0;
                       dataStore.databaseName = '';
                       dataStore.user = '';
                       dataStore.password = this.dataStoreForm.get('dgraph.password').value;

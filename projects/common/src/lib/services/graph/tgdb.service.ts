@@ -12,7 +12,7 @@ import {
   Pipeline,
   Protocol,
   PythonResource,
-  TSReading
+  Reading
 } from '@TIBCOSoftware/labs-air-graph-client';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 
@@ -1019,7 +1019,7 @@ export class TgdbService { // extends GraphService {
    * @param instrumentName
    * @param numReadings
    */
-  getReadings(deviceName: any, instrumentName: any, numReadings: any, account: string): Observable<TSReading[]> {
+  getReadings(deviceName: any, instrumentName: any, numReadings: any, account: string): Observable<Reading[]> {
       const url = `${this.tgdbUrl}/search`;
 
       const query1 = `{
@@ -1045,9 +1045,9 @@ export class TgdbService { // extends GraphService {
 
       return this.http.post<any>(url, query, httpOptions)
           .pipe(
-              map(response => response.queryResult.content.nodes as TSReading[]),
+              map(response => response.queryResult.content.nodes as Reading[]),
               tap(_ => console.info('fetched readings')),
-              catchError(this.handleError<TSReading[]>('getReadings', []))
+              catchError(this.handleError<Reading[]>('getReadings', []))
           );
   }
   /**
@@ -1056,7 +1056,7 @@ export class TgdbService { // extends GraphService {
    * @param instrumentName
    * @param ts
    */
-  getReadingsAt(deviceName: any, instrumentName: any, ts: any, account: string): Observable<TSReading[]> {
+  getReadingsAt(deviceName: any, instrumentName: any, ts: any, account: string): Observable<Reading[]> {
       const url = `${this.tgdbUrl}/query`;
 
       const myquery = `{resp(func: has(reading)) @filter(gt(created, ${ts})) @cascade {value created ~resource_reading @filter(eq(uuid, "${deviceName}_${instrumentName}")) { }}}`;
@@ -1076,9 +1076,9 @@ export class TgdbService { // extends GraphService {
       // return this.http.post<any>(url, `{resp(func: has(reading)) @filter(gt(created, ${fromts})) @cascade {value created ~resource_reading @filter(eq(uuid, "${deviceName}_${instrumentName}")) { }}}`, httpOptions)
       return this.http.post<any>(url, query, httpOptions)
           .pipe(
-              map(response => response.data.resp as TSReading[]),
+              map(response => response.data.resp as Reading[]),
               tap(_ => console.info('fetched readings')),
-              catchError(this.handleError<TSReading[]>('getReadingsAt', []))
+              catchError(this.handleError<Reading[]>('getReadingsAt', []))
           );
   }
 
@@ -1088,7 +1088,7 @@ export class TgdbService { // extends GraphService {
    * @param instrumentName
    * @param fromts
    */
-  getReadingsStartingAt(deviceName: any, instrumentName: any, fromts: any, account: string): Observable<TSReading[]> {
+  getReadingsStartingAt(deviceName: any, instrumentName: any, fromts: any, account: string): Observable<Reading[]> {
       const url = `${this.tgdbUrl}/query`;
 
       const myquery = `{resp(func: has(reading)) @filter(gt(created, ${fromts})) @cascade {value created ~resource_reading @filter(eq(uuid, "${deviceName}_${instrumentName}")) { }}}`;
@@ -1108,9 +1108,9 @@ export class TgdbService { // extends GraphService {
       // return this.http.post<any>(url, `{resp(func: has(reading)) @filter(gt(created, ${fromts})) @cascade {value created ~resource_reading @filter(eq(uuid, "${deviceName}_${instrumentName}")) { }}}`, httpOptions)
       return this.http.post<any>(url, query, httpOptions)
           .pipe(
-              map(response => response.data.resp as TSReading[]),
+              map(response => response.data.resp as Reading[]),
               tap(_ => console.info('fetched readings')),
-              catchError(this.handleError<TSReading[]>('getReadingsStartingAt', []))
+              catchError(this.handleError<Reading[]>('getReadingsStartingAt', []))
           );
   }
 
@@ -1121,7 +1121,7 @@ export class TgdbService { // extends GraphService {
    * @param fromts
    * @param tots
    */
-  getReadingsBetween(deviceName: any, instrumentName: any, fromts: any, tots: any, account: string): Observable<TSReading[]> {
+  getReadingsBetween(deviceName: any, instrumentName: any, fromts: any, tots: any, account: string): Observable<Reading[]> {
       const url = `${this.tgdbUrl}/query`;
 
       const myquery = `{resp(func: has(reading)) @filter(gt(created, ${fromts})) @cascade {value created ~resource_reading @filter(eq(uuid, "${deviceName}_${instrumentName}")) { }}}`;
@@ -1141,9 +1141,9 @@ export class TgdbService { // extends GraphService {
       // return this.http.post<any>(url, `{resp(func: has(reading)) @filter(gt(created, ${fromts})) @cascade {value created ~resource_reading @filter(eq(uuid, "${deviceName}_${instrumentName}")) { }}}`, httpOptions)
       return this.http.post<any>(url, query, httpOptions)
           .pipe(
-              map(response => response.data.resp as TSReading[]),
+              map(response => response.data.resp as Reading[]),
               tap(_ => console.info('fetched readings')),
-              catchError(this.handleError<TSReading[]>('getReadingsBetween', []))
+              catchError(this.handleError<Reading[]>('getReadingsBetween', []))
           );
   }
 
@@ -1151,7 +1151,7 @@ export class TgdbService { // extends GraphService {
    *
    * @param deviceName
    */
-  getLastReadingsForDevice(deviceName: any, account: string): Observable<TSReading[]> {
+  getLastReadingsForDevice(deviceName: any, account: string): Observable<Reading[]> {
       const url = `${this.tgdbUrl}/query`;
 
       const query = `{
@@ -1170,9 +1170,9 @@ export class TgdbService { // extends GraphService {
 
       return this.http.post<any>(url, query, httpOptions)
           .pipe(
-              map(response => response.data.resp as TSReading[]),
+              map(response => response.data.resp as Reading[]),
               tap(_ => console.info('fetched readings')),
-              catchError(this.handleError<TSReading[]>('getLastReadingsForDevice', []))
+              catchError(this.handleError<Reading[]>('getLastReadingsForDevice', []))
           );
   }
 

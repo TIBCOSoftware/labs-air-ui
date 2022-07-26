@@ -1,7 +1,7 @@
 {
     "SOURCE": "on-prem appconfig",
     "production": false,
-    "dgraphUrl": "http://localhost:8080",
+    "dgraphUrl": "http://localhost:6010",
     "dgraphBasicAuthEnabled": false,
     "dgraphBasicAuth": "Basic WW91IGZvdW5kIG1lLCBidXQgSSdtIG5vdCB0aGUgcmVhbCBwYXNzd29yZC4=",
     "f1EndpointUrl": "http://localhost:5408",

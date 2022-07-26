@@ -6,7 +6,7 @@ import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { UntypedFormGroup } from '@angular/forms';
-import { TSReading } from '@TIBCOSoftware/labs-air-graph-client';
+import { Reading } from '@TIBCOSoftware/labs-air-graph-client';
 
 @Component({
     selector: 'app-common-iot-gateway-xyz-value',
@@ -70,9 +70,9 @@ export class CommonIotGatewayXyzValueComponent implements OnInit, OnDestroy, Aft
   getReadings() {
       this.combinedReadingSelection.clear();
 
-      this.graphService.getReadings(this.device.name, this.instrument.name, 300)
+      this.graphService.getReadings('0', this.device.name, this.instrument.name, 300)
           .subscribe(res => {
-              this.resourceReadings = res as TSReading[];
+              this.resourceReadings = res as Reading[];
 
               console.log('GetReadings Resource: ', this.resourceReadings);
 
@@ -84,9 +84,9 @@ export class CommonIotGatewayXyzValueComponent implements OnInit, OnDestroy, Aft
   }
 
   getResourceInferredReadings(deviceName, resourceName, numReadings) {
-      this.graphService.getReadings(deviceName, resourceName, numReadings)
+      this.graphService.getReadings('0', deviceName, resourceName, numReadings)
           .subscribe(res => {
-              this.resourceInferredReadings = res as TSReading[];
+              this.resourceInferredReadings = res as Reading[];
 
               console.log('GetReadings Resource Inferred: ', this.resourceInferredReadings);
 
@@ -97,9 +97,9 @@ export class CommonIotGatewayXyzValueComponent implements OnInit, OnDestroy, Aft
   }
 
   getStreamingReadings() {
-      this.subscriptions.push(this.graphService.getReadings(this.device.name, this.instrument.name, 1)
+      this.subscriptions.push(this.graphService.getReadings('0', this.device.name, this.instrument.name, 1)
           .subscribe(res => {
-              this.resourceReadings = res as TSReading[];
+              this.resourceReadings = res as Reading[];
 
               if (this.resourceReadings.length > 0) {
                   this.getStreamingResourceInferredReadings(this.device.name, this.instrument.name + '_Inferred', 1, this.resourceReadings[0].created);
@@ -111,7 +111,7 @@ export class CommonIotGatewayXyzValueComponent implements OnInit, OnDestroy, Aft
   getStreamingResourceInferredReadings(deviceName, resourceName, numReadings, ts) {
       this.subscriptions.push(this.graphService.getReadingsAt(deviceName, resourceName, ts)
           .subscribe(res => {
-              this.resourceInferredReadings = res as TSReading[];
+              this.resourceInferredReadings = res as Reading[];
               this.inferredXYZData = '';
               this.setStreamingInferredXYZData();
           }));

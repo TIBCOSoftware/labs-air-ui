@@ -36,7 +36,7 @@ import { RestServiceComponent } from '../rete/components/rest-service-component'
 import { NodePrimaryComponent } from '../rete/nodes/node-primary/node-primary.component';
 import { RestBroadcastComponent } from '../rete/components/rest-broadcast.component'
 import { MQTTRequestReplyComponent } from '../rete/components/mqtt-request-reply.component'
-import { Gateway, Model, Pipeline } from '@TIBCOSoftware/labs-air-graph-client';
+import { Gateway, RestEndpoint, Pipeline } from '@TIBCOSoftware/labs-air-graph-client';
 import { PythonComponent } from '../rete/components/python-component';
 import { PythonPipeComponent } from '../rete/components/python-pipe-component'
 import { Observable, Subject, Subscriber, Subscription } from 'rxjs';
@@ -181,7 +181,7 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
         return this.pipelineService.pipelineSelected;
     }
 
-    get models(): Model[] {
+    get models(): RestEndpoint[] {
         return this.pipelineService.models;
     }
 

@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { TSReading } from '@TIBCOSoftware/labs-air-graph-client';
+import { Reading } from '@TIBCOSoftware/labs-air-graph-client';
 import { interval, Subscription } from 'rxjs';
 import { Device, Resource } from '../../../models/iot.model';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
@@ -15,8 +15,8 @@ export class CommonIotGatewayMapComponent implements OnInit, OnDestroy {
   mapConfig = null;
   mapMarketUpdate = null;
   createMapFlag = true;
-  public resourceReadings: TSReading[] = [];
-  public resourceInferredReadings: TSReading[] = [];
+  public resourceReadings: Reading[] = [];
+  public resourceInferredReadings: Reading[] = [];
   subscriptions: Subscription[] = [];
   source = interval(5000);
 
@@ -37,9 +37,10 @@ export class CommonIotGatewayMapComponent implements OnInit, OnDestroy {
   }
 
   getReadings() {
-      this.graphService.getReadings(this.device.name, this.instrument.name, 300)
+      //todo need a real gateway uuid here
+      this.graphService.getReadings('0', this.device.name, this.instrument.name, 300)
           .subscribe(res => {
-              this.resourceReadings = res as TSReading[];
+              this.resourceReadings = res as Reading[];
               this.setMapDataSet(this.device.name);
           });
   }

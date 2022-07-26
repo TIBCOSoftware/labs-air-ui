@@ -3,7 +3,7 @@ import { Device, Resource } from '../../../models/iot.model';
 import { Subscription } from 'rxjs';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { GoogleChartInterface } from 'ng2-google-charts';
-import { TSReading } from '@TIBCOSoftware/labs-air-graph-client';
+import { Reading } from '@TIBCOSoftware/labs-air-graph-client';
 
 @Component({
     selector: 'app-common-iot-gateway-discrete-value',
@@ -13,7 +13,7 @@ import { TSReading } from '@TIBCOSoftware/labs-air-graph-client';
 export class CommonIotGatewayDiscreteValueComponent implements OnInit, OnDestroy {
   device: Device;
   instrument: Resource;
-  resourceReadings: TSReading[] = [];
+  resourceReadings: Reading[] = [];
   subscriptions: Subscription[] = []
   numReadings = 40;
 
@@ -41,9 +41,9 @@ export class CommonIotGatewayDiscreteValueComponent implements OnInit, OnDestroy
   }
   public getReadings() {
       if (this.device && this.instrument){
-          this.subscriptions.push(this.graphService.getReadings(this.device.name, this.instrument.name, this.numReadings)
+          this.subscriptions.push(this.graphService.getReadings('0', this.device.name, this.instrument.name, this.numReadings)
               .subscribe(res => {
-                  this.resourceReadings = res as TSReading[];
+                  this.resourceReadings = res as Reading[];
                   this.setTimelineDataSet(this.device.name);
               }));
       }

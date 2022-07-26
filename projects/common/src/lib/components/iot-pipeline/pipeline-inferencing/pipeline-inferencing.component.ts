@@ -8,7 +8,7 @@ import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 
 import { Device, FiltersConfig, ModelConfig } from '../../../models/iot.model';
 import { Validators, UntypedFormArray, UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
-import { Model } from '@TIBCOSoftware/labs-air-graph-client';
+import { RestEndpoint } from '@TIBCOSoftware/labs-air-graph-client';
 import { debounceTime, distinctUntilChanged, Observable, Subscription } from 'rxjs';
 
 export interface SelectItem {
@@ -31,9 +31,9 @@ export class PipelineInferencingComponent implements OnInit, OnDestroy {
 
 
     @Input() devices: Device[];
-    @Input() models: Model[];
+    @Input() models: RestEndpoint[];
     @Input() model: any;
-    @Output() formUpdatedEvent = new EventEmitter<Model>();
+    @Output() formUpdatedEvent = new EventEmitter<RestEndpoint>();
     formChangeSubscription: Subscription;
     @Input() nodeChangeEvent: Observable<any>;
     nodeChangeSubscription: Subscription;

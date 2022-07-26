@@ -4,7 +4,7 @@ import { Device, Resource } from '../../../models/iot.model';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { TSReading } from '@TIBCOSoftware/labs-air-graph-client';
+import { Reading } from '@TIBCOSoftware/labs-air-graph-client';
 
 @Component({
     selector: 'app-common-iot-gateway-text',
@@ -17,7 +17,7 @@ export class CommonIotGatewayTextComponent implements OnInit, OnDestroy, AfterVi
   subscriptions: Subscription[] = []
   displayedColumns = ['created', 'value']
   dateFormat = 'yyyy-MM-dd HH:mm:ss';
-  dataSource: MatTableDataSource<TSReading> = new MatTableDataSource<TSReading>();
+  dataSource: MatTableDataSource<Reading> = new MatTableDataSource<Reading>();
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(private graphService: GraphService) { }
@@ -36,17 +36,17 @@ export class CommonIotGatewayTextComponent implements OnInit, OnDestroy, AfterVi
   }
 
   public getReadings(): void {
-      this.subscriptions.push(this.graphService.getReadings(this.device.name, this.instrument.name, 300)
+      this.subscriptions.push(this.graphService.getReadings('0', this.device.name, this.instrument.name, 300)
           .subscribe(res => {
 
               // Check if values need to be decoded.  _Inferred values are encoded
               if (this.instrument.name.includes('_Inferred')) {
-                  for (const reading of res as TSReading[]) {
+                  for (const reading of res as Reading[]) {
                       reading.value = atob(reading.value);
                   }
               }
 
-              this.dataSource.data = res as TSReading[];
+              this.dataSource.data = res as Reading[];
 
           }));
   }
