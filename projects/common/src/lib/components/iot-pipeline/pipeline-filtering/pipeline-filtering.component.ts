@@ -5,7 +5,7 @@ import { NestedTreeControl } from '@angular/cdk/tree';
 import { SelectionModel } from '@angular/cdk/collections';
 
 import { Device, FiltersConfig } from '../../../models/iot.model';
-import { debounceTime, distinctUntilChanged, Observable, Subject, Subscription } from 'rxjs';
+import { debounceTime, Observable, Subject, Subscription } from 'rxjs';
 
 interface DeviceNode {
     name: string;
@@ -60,7 +60,6 @@ export class PipelineFilteringComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         console.log('------> PipelineFiltering - ngOnInit');
-        console.log('FILTERSSS', this.filters)
         // this.devicesDataSource.data = TREE_DATA;
         this.initializeDataSource();
 
