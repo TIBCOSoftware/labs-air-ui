@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnInit, OnDestroy, Input, SimpleChanges } from '@angular/core';
+import { Component, OnChanges, OnInit, OnDestroy, Input, SimpleChanges, EventEmitter, Output } from '@angular/core';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 
 import { NestedTreeControl } from '@angular/cdk/tree';
@@ -7,6 +7,7 @@ import { EdgeService } from '../../../services/edge/edge.service';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 
 import { Device, FiltersConfig } from '../../../models/iot.model';
+import { Subscription } from 'rxjs';
 
 interface DeviceNode {
     name: string;
@@ -28,6 +29,9 @@ export class PipelineFilteringComponent implements OnInit, OnChanges, OnDestroy 
 
     @Input() devices: Device[];
     @Input() filters: any[];
+    @Output() updatedEvent = new EventEmitter<any>();
+    nodeChangeSubscription: Subscription;
+
 
     // Added to prevent compile error in oss version
     activeNode: Node;
@@ -49,10 +53,8 @@ export class PipelineFilteringComponent implements OnInit, OnChanges, OnDestroy 
     /** The selection for checklist */
     checklistSelection = new SelectionModel<DeviceNode>(true /* multiple */);
 
-    constructor(private edgeService: EdgeService,
-        private graphService: GraphService) {
+    constructor( ) {
 
-        console.log('------> PipelineFiltering - constructor');
     }
 
     ngOnInit(): void {
@@ -76,6 +78,8 @@ export class PipelineFilteringComponent implements OnInit, OnChanges, OnDestroy 
         this.initializeDataSource();
 
         console.log('PipelineFiltering - ngOnChanges - devices: ', this.devices);
+        console.log('FILTERS', this.filters)
+        this.updatedEvent.emit(this.filters);
 
     }
 
