@@ -9,7 +9,6 @@ import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { PipelineService } from '../../services/pipeline/pipeline.service';
 import { Device, Filter } from '../../models/iot.model';
 
-import { PipelineFilteringComponent } from './pipeline-filtering/pipeline-filtering.component';
 import { PipelineInferencingComponent } from './pipeline-inferencing/pipeline-inferencing.component';
 import { PipelineRestServiceComponent } from './pipeline-rest-service/pipeline-rest-service.component';
 // Rete editor specific
@@ -84,21 +83,6 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
 
     // should this be just one big form? 
     pipelineForm: UntypedFormGroup;
-    protocolForm: UntypedFormGroup;
-    dataStoreForm: UntypedFormGroup;
-    streamingForm: UntypedFormGroup;
-    modelForm: UntypedFormGroup;
-    ruleForm: UntypedFormGroup;
-    ruleExpressionForm: UntypedFormGroup;
-    ruleTextMatchingForm: UntypedFormGroup;
-    flogoFlowForm: UntypedFormGroup;
-    restServiceForm: UntypedFormGroup;
-    dataOptionsForm: UntypedFormGroup;
-    pythonForm: UntypedFormGroup;
-    restBroadcastForm: UntypedFormGroup;
-    requestReplyForm: UntypedFormGroup;
-    pythonPipeForm: UntypedFormGroup;
-    errorHandlerForm: UntypedFormGroup;
     artifacts = [];
 
     selectedNode: any;
@@ -641,7 +625,8 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
         }
     }
 
-    updateFilter(filters: Filter[]) {
+    updateFilters(filters) {
+        this.saveToCanvas(filters);
         this.filters = filters;
     }
 

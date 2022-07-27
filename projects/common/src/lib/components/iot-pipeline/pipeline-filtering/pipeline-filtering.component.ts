@@ -1,13 +1,11 @@
-import { Component, OnChanges, OnInit, OnDestroy, Input, SimpleChanges, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, EventEmitter, Output } from '@angular/core';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { SelectionModel } from '@angular/cdk/collections';
-import { EdgeService } from '../../../services/edge/edge.service';
-import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 
 import { Device, FiltersConfig } from '../../../models/iot.model';
-import { Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Observable, Subject, Subscription } from 'rxjs';
 
 interface DeviceNode {
     name: string;
@@ -25,13 +23,16 @@ export interface SelectItem {
     templateUrl: './pipeline-filtering.component.html',
     styleUrls: ['./pipeline-filtering.component.css']
 })
-export class PipelineFilteringComponent implements OnInit, OnChanges, OnDestroy {
+export class PipelineFilteringComponent implements OnInit, OnDestroy {
 
     @Input() devices: Device[];
     @Input() filters: any[];
+    @Input() nodeChangeEvent: Observable<any>;
     @Output() updatedEvent = new EventEmitter<any>();
-    nodeChangeSubscription: Subscription;
+    checkedSubject = new Subject();
 
+    nodeChangeSubscription: Subscription;
+    checkedSubscription: Subscription;
 
     // Added to prevent compile error in oss version
     activeNode: Node;
@@ -63,24 +64,21 @@ export class PipelineFilteringComponent implements OnInit, OnChanges, OnDestroy 
         this.initializeDataSource();
 
         console.log('PipelineFiltering - ngOnInit - devices: ', this.devices);
+        this.nodeChangeSubscription = this.nodeChangeEvent.subscribe( node => {
+            this.initializeDataSource();
+        });
 
+        this.checkedSubscription = this.checkedSubject.pipe(debounceTime(200)).subscribe(() => {
+            this.updatedEvent.emit(this.getFilters());
+        })
     }
 
     ngOnDestroy(): void {
         console.log('------> PipelineFiltering - ngOnDestroy');
 
         this.checklistSelection.clear();
-    }
-
-    ngOnChanges(changes: SimpleChanges) {
-        console.log('------> PipelineFiltering - ngOnChanges');
-
-        this.initializeDataSource();
-
-        console.log('PipelineFiltering - ngOnChanges - devices: ', this.devices);
-        console.log('FILTERS', this.filters)
-        this.updatedEvent.emit(this.filters);
-
+        this.nodeChangeSubscription.unsubscribe();
+        this.checkedSubscription.unsubscribe();
     }
 
     hasChild = (_: number, node: DeviceNode) => !!node.deviceResources && node.deviceResources.length > 0;
@@ -127,7 +125,7 @@ export class PipelineFilteringComponent implements OnInit, OnChanges, OnDestroy 
         console.log('====> PipelineFiltering - leafItemSelectionToggle');
 
         this.checklistSelection.toggle(node);
-
+        this.checkedSubject.next('');
     }
 
     /** Toggle the to-do item selection. Select/deselect all the descendants node */
@@ -143,7 +141,7 @@ export class PipelineFilteringComponent implements OnInit, OnChanges, OnDestroy 
 
         // Force update for the parent
         descendants.forEach(child => this.checklistSelection.isSelected(child));
-
+        this.checkedSubject.next('');
     }
 
 
@@ -228,6 +226,7 @@ export class PipelineFilteringComponent implements OnInit, OnChanges, OnDestroy 
 
         //   this.treeControl.expand(this.treeControl.dataNodes[i])
         // }
+        this.checkedSubject.next('');
     }
 
     selectAll() {
@@ -253,7 +252,7 @@ export class PipelineFilteringComponent implements OnInit, OnChanges, OnDestroy 
         //     this.checklistSelection.toggle(this.treeControl.dataNodes[i]);
         //   this.treeControl.expand(this.treeControl.dataNodes[i])
         // }
-
+        this.checkedSubject.next('');
     }
 
     getFilters(): any {
