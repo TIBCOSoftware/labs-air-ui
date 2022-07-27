@@ -60,6 +60,7 @@ export class PipelineFilteringComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         console.log('------> PipelineFiltering - ngOnInit');
+        console.log('FILTERSSS', this.filters)
         // this.devicesDataSource.data = TREE_DATA;
         this.initializeDataSource();
 

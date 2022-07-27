@@ -79,8 +79,6 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
 
     lastNodeSelected = null;
 
-    filters: any[] = [];
-
     // should this be just one big form? 
     pipelineForm: UntypedFormGroup;
     artifacts = [];
@@ -162,6 +160,10 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
 
     get devices(): Device[] {
         return this.pipelineService.devices;
+    }
+
+    get filters(): Filter[] {
+        return this.pipelineService.filters;
     }
 
     async ngAfterViewInit() {
@@ -276,9 +278,6 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
             if (this.lastNodeSelected != null && this.lastNodeSelected == node) {
                 console.log('Removing selected node.  Need to clean panel');
 
-                // Clean shared variables
-                this.clearFormsAndFilters();
-
                 this.lastNodeSelected = null;
 
                 this.resetNodeContext(null);
@@ -297,12 +296,6 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
                 this.getPythonInputOutput(node);
             }
 
-            if (this.lastNodeSelected != null) {
-
-                // Clean shared variables
-                this.clearFormsAndFilters();
-            }
-
             this.lastNodeSelected = node;
 
             this.resetNodeContext(node);
@@ -315,9 +308,6 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
             console.log('Editor selected');
 
             if (this.lastNodeSelected != null) {
-
-                // Clean shared variables
-                this.clearFormsAndFilters();
 
                 // Remove visual selection
                 // this.editor.selected.remove(this.lastNodeSelected);
@@ -491,7 +481,7 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
     }
 
     clearFormsAndFilters() {
-        this.filters = [];
+        this.pipelineService.filters = [];
     }
 
     /**
@@ -626,8 +616,9 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
     }
 
     updateFilters(filters) {
-        this.saveToCanvas(filters);
-        this.filters = filters;
+        const filtersObj = {filters: filters}
+        this.saveToCanvas(filtersObj);
+        this.pipelineService.filters = filters;
     }
 
 }

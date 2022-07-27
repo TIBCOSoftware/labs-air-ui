@@ -36,6 +36,7 @@ export class PipelineService {
   artifacts = [];
   devices: Device[] = [];
   models: Model[] = [];
+  filters = [];
   pipelineSelection = new SelectionModel<Pipeline>(false, []);
 
   pipelineChange = new Subject<{ type: string, pipeline?: Pipeline }>();
@@ -902,6 +903,14 @@ export class PipelineService {
         const decodedData = decodeURIComponent(row.flowConfiguration);
         const jsonData = JSON.parse(decodedData);
         this.editor.fromJSON(jsonData);
+        this.filters = [];
+        Object.values(jsonData.nodes).forEach((node: any) => {
+          if (node?.data?.customdata?.filters) {
+            node.data.customdata.filters.forEach(filter => {
+              this.filters.push(filter);
+            })
+          }
+        })
       }
 
       // Reset command buttons
