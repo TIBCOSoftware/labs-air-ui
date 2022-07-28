@@ -76,6 +76,7 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
     errorHandlerConfig = false;
     xcor = 0;
     ycor = 0;
+    menuBoolean = false;
 
     lastNodeSelected = null;
 
@@ -115,7 +116,6 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
         // Get gateway id from route
         this.gatewayId = this.route.snapshot.paramMap.get('gatewayId');
         this.pipelineService.gatewayId = this.gatewayId;
-
         this.pipelineObserver = this.pipelineService.pipelineChange.subscribe(value => {
             if (value.type == 'clearForm') {
                 this.clearPipeline();
@@ -134,8 +134,8 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
         this.pipelineObserver.unsubscribe();
     }
 
-    get pipelinesDataSource(): MatTableDataSource<Pipeline> {
-        return this.pipelineService.pipelinesDataSource
+    get pipelinesDataSource(): Pipeline[] {
+        return this.pipelineService.pipelineDataSource;
     }
 
     get pipelineSelection(): SelectionModel<Pipeline> {
@@ -618,6 +618,10 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
         const filtersObj = {filters: filters}
         this.saveToCanvas(filtersObj);
         this.pipelineService.filters = filters;
+    }
+
+    toggleMenu() {
+        this.menuBoolean = !this.menuBoolean;
     }
 
 }

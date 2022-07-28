@@ -41,7 +41,8 @@ export class PipelineService {
 
   pipelineChange = new Subject<{ type: string, pipeline?: Pipeline }>();
 
-  pipelinesDataSource = new MatTableDataSource<Pipeline>();
+  // pipelinesDataSource = new MatTableDataSource<Pipeline>();
+  pipelineDataSource = [];
 
   ruleTuplesDescriptor = [
     {
@@ -569,15 +570,16 @@ export class PipelineService {
         if (res[0]?.pipelines != undefined) {
 
           console.log('Setting pipelineDataSource.data fo incoming pipeline');
-
-
-          this.pipelinesDataSource.data = res[0].pipelines as Pipeline[];
+          
+          // this.pipelinesDataSource.data = res[0].pipelines as Pipeline[];
+          this.pipelineDataSource = res[0].pipelines as Pipeline[];
+          console.log('PIPELINE DATA', this.pipelineDataSource)
 
           // Select last selectedPipeline
           if (selectedPipeline != null) {
-            for (let i = 0; i < this.pipelinesDataSource.data.length; i++) {
-              if (this.pipelinesDataSource.data[i].name == selectedPipeline.name) {
-                this.onPipelineClicked(this.pipelinesDataSource.data[i], updateEditor);
+            for (let i = 0; i < this.pipelineDataSource.length; i++) {
+              if (this.pipelineDataSource[i].name == selectedPipeline.name) {
+                this.onPipelineClicked(this.pipelineDataSource[i], updateEditor);
               }
             }
           }
@@ -585,7 +587,8 @@ export class PipelineService {
         }
         else {
 
-          this.pipelinesDataSource = new MatTableDataSource<Pipeline>();
+          // this.pipelineDataSource = new MatTableDataSource<Pipeline>();
+          this.pipelineDataSource = [];
 
           console.log('Setting pipelineDataSource.data to null');
         }
@@ -608,13 +611,14 @@ export class PipelineService {
 
           console.log('Setting pipelineDataSource.data fo incoming pipeline');
 
-          this.pipelinesDataSource.data = res[0].pipelines as Pipeline[];
-
-          console.log('Got Pipelines on pilpelinesDataSource.data: ' + this.pipelinesDataSource.data.toString());
+          this.pipelineDataSource = res[0].pipelines as Pipeline[];
+          console.log('PIPELINE DATA', this.pipelineDataSource)
+          console.log('Got Pipelines on pilpelinesDataSource.data: ' + this.pipelineDataSource.toString());
         }
         else {
 
-          this.pipelinesDataSource = new MatTableDataSource<Pipeline>();
+          // this.pipelinesDataSource = new MatTableDataSource<Pipeline>();
+          this.pipelineDataSource = [];
 
           console.log('Setting pipelineDataSource.data to null');
         }
