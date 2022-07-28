@@ -6,6 +6,7 @@ import { EdgeService } from '../../../services/edge/edge.service';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 
 import { PipelineFilteringComponent } from './pipeline-filtering.component';
+import { Observable } from 'rxjs';
 
 describe('PipelineFilteringComponent', () => {
     let component: PipelineFilteringComponent;
@@ -22,8 +23,6 @@ describe('PipelineFilteringComponent', () => {
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
                 { provide: AppConfigService, useValue: mockAppConfigService },
-                { provide: GraphService, useValue: mockGraphService },
-                { provide: EdgeService, useValue: mockEdgeService }
             ]
         })
             .compileComponents();
@@ -33,6 +32,7 @@ describe('PipelineFilteringComponent', () => {
         fixture = TestBed.createComponent(PipelineFilteringComponent);
         component = fixture.componentInstance;
         component.devices = [];
+        component.nodeChangeEvent = new Observable<any>();
         fixture.detectChanges();
     });
 
