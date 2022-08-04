@@ -2,6 +2,44 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.7.0](https://github.com/TIBCOSoftware/labs-air-ui/compare/v0.7.0-970...v0.7.0) (2022-08-04)
+
+
+### Features
+
+* **infra:** configures white source ([952945d](https://github.com/TIBCOSoftware/labs-air-ui/commits/952945d5414b951a6d36822998b32d0ccfbd0aca)), closes [#121](https://github.com/TIBCOSoftware/labs-air-ui/issues/121)
+* refactor reamining activities ([510743e](https://github.com/TIBCOSoftware/labs-air-ui/commits/510743e3089df3e088295b43966c875312de0c09))
+
+
+### Bugfixes
+
+* adding 2 consecutive MQTT protocols ([7c93adc](https://github.com/TIBCOSoftware/labs-air-ui/commits/7c93adcf428d7764bc1496fd91d3616f8848f498))
+* **cicd:** add detection of dependency changes to cause build tasks ([3bf8029](https://github.com/TIBCOSoftware/labs-air-ui/commits/3bf8029def670ad6d6c589d928c3c8df62b2c1f3))
+* **cicd:** fixes variable definition ([e0bc061](https://github.com/TIBCOSoftware/labs-air-ui/commits/e0bc061162ef1ffdfb365078238223b27ea1d982))
+* **cicd:** forcing module installation since there are dependency conflicts ([fd3d867](https://github.com/TIBCOSoftware/labs-air-ui/commits/fd3d867a333149dbc7d38704ba015d309ebad699))
+* **cicd:** forcing npm install of module dependencies ([c94b43e](https://github.com/TIBCOSoftware/labs-air-ui/commits/c94b43e1137844953fd76b26989b9f8c1202ddbc))
+* deploy values properly populate ([2b2c604](https://github.com/TIBCOSoftware/labs-air-ui/commits/2b2c604314c9b6f4eefec66fe787b655387232fa))
+* fix python activity data fields ([7249bad](https://github.com/TIBCOSoftware/labs-air-ui/commits/7249bad5ce44a993fabdb96260aa95f5ac6c8f9a))
+* fix python pipe errors ([73243cf](https://github.com/TIBCOSoftware/labs-air-ui/commits/73243cfd73a4a1dc895fee0c1de4423a9b7d52c6))
+* form values on pipeline click ([a57c401](https://github.com/TIBCOSoftware/labs-air-ui/commits/a57c40177869a30955deb524c295c22566d274ee))
+* infinite initiliaze loop ([659418e](https://github.com/TIBCOSoftware/labs-air-ui/commits/659418eaa9c49c3c53f30ce4c6cab1f73aa28992))
+* loading filter data from activity ([b8e6b0f](https://github.com/TIBCOSoftware/labs-air-ui/commits/b8e6b0ffde257abc22920720cac07557ed32c166))
+* loading pipeline form data ([813b766](https://github.com/TIBCOSoftware/labs-air-ui/commits/813b766790445429311d5c0720d21e5f13b6efd2))
+* missing observables ([82a75a5](https://github.com/TIBCOSoftware/labs-air-ui/commits/82a75a529fb45b653541f4a9a54d73bf853fda1b))
+* package typo ([a4ebe62](https://github.com/TIBCOSoftware/labs-air-ui/commits/a4ebe62f1036278d23228057b2ac1b24ed92b499))
+* partially issue fixes [#18](https://github.com/TIBCOSoftware/labs-air-ui/issues/18), set min height and max-widths ([f9ea70f](https://github.com/TIBCOSoftware/labs-air-ui/commits/f9ea70f8edd2dca446714f499e4fbe8b8f0b2009))
+* pipeline selection if navigating away ([8988e46](https://github.com/TIBCOSoftware/labs-air-ui/commits/8988e467bd44fe0b3a3230adde9f9098e10a5bad))
+* print pipeline ([5270b28](https://github.com/TIBCOSoftware/labs-air-ui/commits/5270b28e5e9069b962eab5dc7b51c26715c812a6))
+* python pipe dependsOn ([8f39474](https://github.com/TIBCOSoftware/labs-air-ui/commits/8f3947419e70cc51e70c5c383fb760e7b53575b8))
+* restore base funcitonality to pipeline ([ca7db0f](https://github.com/TIBCOSoftware/labs-air-ui/commits/ca7db0f96304eb3b6fa8698d4d2d145e7b9a6dda))
+* restore validate and deploy functionality ([48adcb8](https://github.com/TIBCOSoftware/labs-air-ui/commits/48adcb81c15085e9aa741fa44ff0bebe589a4b4b))
+* revert npm ci to install --force ([f57c262](https://github.com/TIBCOSoftware/labs-air-ui/commits/f57c262df4c363b11832a862aee683aa0ce6461c))
+* saving filters to pipeline ([5b846f3](https://github.com/TIBCOSoftware/labs-air-ui/commits/5b846f3cacbb845d6ac66fa8b2066c9daf6c2604))
+* sensor overflow ([4bebb03](https://github.com/TIBCOSoftware/labs-air-ui/commits/4bebb03738f56854b0cc6f8da54cde933a85cef4))
+* tests and lint ([200c7dd](https://github.com/TIBCOSoftware/labs-air-ui/commits/200c7dd71f10604aafd18ff2448abfb9747ca3a9))
+* tests for angular 14 ([a424917](https://github.com/TIBCOSoftware/labs-air-ui/commits/a424917c5ade1c58ba81bd7911a85154e62f66bd))
+* update data ref for pipeline ([2302996](https://github.com/TIBCOSoftware/labs-air-ui/commits/2302996ae5ebaf2ea0482a3b01e79c986b875187))
+
 ## [0.7.0-970](https://github.com/TIBCOSoftware/labs-air-ui/compare/v0.7.0-812...v0.7.0-970) (2022-05-31)
 
 
