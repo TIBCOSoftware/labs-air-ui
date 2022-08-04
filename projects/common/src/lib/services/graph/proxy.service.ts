@@ -22,7 +22,7 @@ import { HttpClient } from '@angular/common/http';
 import {AppConfigService} from "common";
 
 @Injectable()
-export class  DGraphCloudService {
+export class ProxyService {
 
   /**
    *

@@ -12,7 +12,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Gateway } from '@TIBCOSoftware/labs-air-graph-client';
-import {DGraphCloudService} from "common";
+import {ProxyService} from "common";
 
 @Component({
     selector: 'app-common-iot-gateway',
@@ -40,7 +40,7 @@ export class CommonIotGatewayComponent implements OnInit, AfterViewInit {
   selection = new SelectionModel<Gateway>(false, []);
   @ViewChild(MatSort, { static: false }) sort: MatSort = new MatSort();
 
-  constructor(private graphService: DGraphCloudService,
+  constructor(private graphService: ProxyService,
     private edgeService: EdgeService,
     private datastoreService: DatastoreService,
     private formBuilder: UntypedFormBuilder,
@@ -60,19 +60,7 @@ export class CommonIotGatewayComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-      // this.dataSource = new DevicesDataSource(this.edgeService);
-      // this.dataSource.loadDevices();
       this.getGateways();
-
-      // selection changed
-      // this.selection.onChange.subscribe((a) => {
-      //   if (a.added[0])   // will be undefined if no selection
-      //   {
-      //     // alert('You selected ' + a.added[0]);
-      //     console.log('Row clicked: ', a.added[0]);
-      //   }
-      // });
-
   }
 
   ngAfterViewInit() {

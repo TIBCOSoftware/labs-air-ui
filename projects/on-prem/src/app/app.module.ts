@@ -1,5 +1,5 @@
 import { NgModule, APP_INITIALIZER, enableProdMode } from '@angular/core';
-import {AppConfigService, DGraphCloudService} from 'common';
+import {AppConfigService, ProxyService} from 'common';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { MaterialModule } from './material.module';
@@ -73,7 +73,7 @@ const appInitializerFn = (appConfigService: AppConfigService) => {
         deps: [AppConfigService, TokenService]
       },
       TokenService,
-      DGraphCloudService,
+      ProxyService,
         DatePipe,
         { provide: LocationStrategy, useClass: HashLocationStrategy },
     ],

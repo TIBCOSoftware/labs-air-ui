@@ -9,7 +9,7 @@ import {
     PythonResourceService,
     ReadingsService,
 } from '@TIBCOSoftware/labs-air-graph-client';
-import { DGraphCloudService } from './dgraph-cloud.service';
+import { ProxyService } from './proxy.service';
 import {
     HttpClientTestingModule,
     HttpTestingController
@@ -20,7 +20,7 @@ import { AppConfigService } from 'common';
 
 
 describe('DgraphService', () => {
-    let dgraphService: DGraphCloudService;
+    let dgraphService: ProxyService;
     const httpClientSpy = jasmine.createSpyObj(['get', 'post']);
     let httpTestingController: HttpTestingController;
 
@@ -51,10 +51,10 @@ describe('DgraphService', () => {
                 { provide: ReadingsService, useValue: readingService },
                 { provide: PythonResourceService, useValue: pythonResourceService },
                 { provide: HttpClient, useValue: httpClientSpy },
-                DGraphCloudService
+                ProxyService
             ]
         });
-        dgraphService = TestBed.inject(DGraphCloudService);
+        dgraphService = TestBed.inject(ProxyService);
         httpTestingController = TestBed.inject(HttpTestingController);
     });
 

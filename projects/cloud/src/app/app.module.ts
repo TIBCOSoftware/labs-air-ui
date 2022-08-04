@@ -27,7 +27,7 @@ import { AuthorizationService } from './services/authorization.service';
 import { Requestor, FetchRequestor } from '@openid/appauth';
 import { CallbackComponent } from './routes/callback/callback.component';
 import { TokenService } from './services/token.service';
-import {DGraphCloudService} from 'common'
+import {ProxyService} from 'common'
 
 const appInitializerFn = (appConfigService: AppConfigService) => {
   return () => {
@@ -101,7 +101,7 @@ const loadAuthorizationConfig = (appConfigService: AppConfigService) => {
           }),
       deps: [AppConfigService, TokenService]
     },
-    { provide: GraphService, useClass: DGraphCloudService },
+    { provide: GraphService, useClass: ProxyService },
     { provide: LocationStrategy, useClass: PathLocationStrategy },
     { provide: Requestor, useValue: new FetchRequestor()},
     { provide: 'AuthorizationConfig', deps: [AppConfigService], useFactory: loadAuthorizationConfig}
