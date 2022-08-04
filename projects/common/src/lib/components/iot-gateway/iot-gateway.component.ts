@@ -12,6 +12,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Gateway } from '@TIBCOSoftware/labs-air-graph-client';
+import {DGraphCloudService} from "common";
 
 @Component({
     selector: 'app-common-iot-gateway',
@@ -39,7 +40,7 @@ export class CommonIotGatewayComponent implements OnInit, AfterViewInit {
   selection = new SelectionModel<Gateway>(false, []);
   @ViewChild(MatSort, { static: false }) sort: MatSort = new MatSort();
 
-  constructor(private graphService: GraphService,
+  constructor(private graphService: DGraphCloudService,
     private edgeService: EdgeService,
     private datastoreService: DatastoreService,
     private formBuilder: UntypedFormBuilder,

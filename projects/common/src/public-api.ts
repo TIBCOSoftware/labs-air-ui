@@ -6,6 +6,7 @@ export * from './lib/common-library.module';
 
 export * from './lib/services/config/app-config.service';
 export * from './lib/services/breadcrumbs/breadcrumbs.service';
+export * from './lib/services/graph/dgraph-cloud.service'
 
 // Components
 export * from './lib/components/iot-gateway/iot-gateway.component';

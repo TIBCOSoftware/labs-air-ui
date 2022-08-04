@@ -1,5 +1,5 @@
 import { NgModule, APP_INITIALIZER, enableProdMode } from '@angular/core';
-import { AppConfigService } from 'common';
+import {AppConfigService, GraphService} from 'common';
 import { HttpClientModule } from "@angular/common/http";
 import { BrowserModule } from '@angular/platform-browser';
 import { MaterialModule } from './material.module';
@@ -16,18 +16,18 @@ import { SplashComponent } from './routes/splash/splash.component';
 import { HomeComponent } from './routes/home/home.component';
 import { IotHomeCockpitComponent } from './components/iot-home-cockpit/iot-home-cockpit.component';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
-import { BASE_PATH, Configuration, GraphService } from '@TIBCOSoftware/labs-air-graph-client';
+import { BASE_PATH, Configuration } from '@TIBCOSoftware/labs-air-graph-client';
 import { Ng2GoogleChartsModule } from 'ng2-google-charts';
 import { IotGatewayDashboardComponent } from './components/iot-gateway-dashboard/iot-gateway-dashboard.component';
 import { SpotfireDashboardComponent } from './components/spotfire-dashboard/spotfire-dashboard.component';
 import { IotDashboardComponent } from './components/iot-dashboard/iot-dashboard.component';
 import { CommonLibraryModule } from 'common';
 import { ApiModule as LabsAirGraphApiModule } from '@TIBCOSoftware/labs-air-graph-client';
-import { DGraphCloudService } from './services/graph/dgraph-cloud.service';
 import { AuthorizationService } from './services/authorization.service';
 import { Requestor, FetchRequestor } from '@openid/appauth';
 import { CallbackComponent } from './routes/callback/callback.component';
 import { TokenService } from './services/token.service';
+import {DGraphCloudService} from 'common'
 
 const appInitializerFn = (appConfigService: AppConfigService) => {
   return () => {

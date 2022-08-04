@@ -1,5 +1,5 @@
 import { NgModule, APP_INITIALIZER, enableProdMode } from '@angular/core';
-import { AppConfigService } from 'common';
+import {AppConfigService, DGraphCloudService} from 'common';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { MaterialModule } from './material.module';
@@ -16,13 +16,14 @@ import { SplashComponent } from './routes/splash/splash.component';
 import { HomeComponent } from './routes/home/home.component';
 import { IotHomeCockpitComponent } from './components/iot-home-cockpit/iot-home-cockpit.component';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
-import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { Ng2GoogleChartsModule } from 'ng2-google-charts';
 import { IotGatewayDashboardComponent } from './components/iot-gateway-dashboard/iot-gateway-dashboard.component';
 import { SpotfireDashboardComponent } from './components/spotfire-dashboard/spotfire-dashboard.component';
 import { IotDashboardComponent } from './components/iot-dashboard/iot-dashboard.component';
 import { CommonLibraryModule } from 'common';
-import { DGraphService } from './services/graph/dgraph.service';
+import {ApiModule, Configuration} from "@TIBCOSoftware/labs-air-graph-client";
+import {TokenService} from "../../../cloud/src/app/services/token.service";
+import {AuthorizationService} from "../../../cloud/src/app/services/authorization.service";
 
 const appInitializerFn = (appConfigService: AppConfigService) => {
     return () => {
@@ -57,18 +58,23 @@ const appInitializerFn = (appConfigService: AppConfigService) => {
         NgxHeatmapModule,
         Ng2GoogleChartsModule,
         NgChartsModule,
-        CommonLibraryModule
+        CommonLibraryModule,
+        ApiModule
     ],
     providers: [
-        AppConfigService,
-        {
-            provide: APP_INITIALIZER,
-            useFactory: appInitializerFn,
-            multi: true,
-            deps: [AppConfigService],
-        },
+      {
+        provide: Configuration,
+        useFactory: (appConfigService: AppConfigService, tokenService: TokenService) =>
+          new Configuration(
+            {
+              basePath: appConfigService.getFromConfigOrEnv('dgraphUrl'),
+              accessToken:  ''
+            }),
+        deps: [AppConfigService, TokenService]
+      },
+      TokenService,
+      DGraphCloudService,
         DatePipe,
-        { provide: GraphService, useClass: DGraphService },
         { provide: LocationStrategy, useClass: HashLocationStrategy },
     ],
     bootstrap: [AppComponent],

@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import {
   DataStore,
   DataStoreService,
@@ -19,12 +18,11 @@ import {
   Reading
 } from '@TIBCOSoftware/labs-air-graph-client';
 import { catchError, Observable, of } from 'rxjs';
-import { AppConfigService } from 'common';
 import { HttpClient } from '@angular/common/http';
+import {AppConfigService} from "common";
 
 @Injectable()
-export class DGraphCloudService extends GraphService {
-
+export class  DGraphCloudService {
 
   /**
    *
@@ -42,15 +40,8 @@ export class DGraphCloudService extends GraphService {
     private protocolService: ProtocolService,
     private readingService: ReadingsService,
     private pythonResourceService: PythonResourceService) {
-    super(http, appConfigService.getFromConfigOrEnv('dgraphUrl'), false);
-    console.log(`Constructor dGraphCloud service with url ${appConfigService.getFromConfigOrEnv('dgraphUrl')}`);
-
-    /* const dgraphBasicAuthEnabled = this.appConfigService.getFromConfigOrEnv('dgraphBasicAuthEnabled');
-    if (dgraphBasicAuthEnabled) {
-      const dgraphBasicAuth = this.appConfigService.getFromConfigOrEnv('dgraphBasicAuth');
-      httpOptions.headers = httpOptions.headers.append('Authorization', dgraphBasicAuth);
-      httpMutateOptions.headers = httpMutateOptions.headers.append('Authorization', dgraphBasicAuth);
-    }*/
+    //super(http, appConfigService.getFromConfigOrEnv('dgraphUrl'), false);
+    // console.log(`Constructor dGraphCloud service with url ${appConfigService.getFromConfigOrEnv('dgraphUrl')}`);
   }
 
   /**
