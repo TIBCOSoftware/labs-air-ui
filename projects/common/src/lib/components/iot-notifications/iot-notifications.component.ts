@@ -1,9 +1,9 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
-import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { Notification } from '@TIBCOSoftware/labs-air-graph-client';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import {ProxyService} from "../../services/graph/proxy.service";
 
 @Component({
     selector: 'app-common-iot-notifications',
@@ -21,7 +21,7 @@ export class CommonIotNotificationsComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
-  constructor(private graphService: GraphService) { }
+  constructor(private graphService: ProxyService) { }
 
   ngOnInit() {
       this.getNotifications();

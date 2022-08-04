@@ -1,11 +1,11 @@
 import { Component, OnInit, Input, ViewChild, AfterViewInit } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { DataStore } from '@TIBCOSoftware/labs-air-graph-client';
-import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import {ProxyService} from "common";
 
 
 export interface SelectItem {
@@ -65,7 +65,7 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
    * @param formBuilder
    * @param _snackBar
    */
-  constructor(private graphService: GraphService,
+  constructor(private graphService: ProxyService,
     private formBuilder: UntypedFormBuilder,
     private _snackBar: MatSnackBar) { }
 

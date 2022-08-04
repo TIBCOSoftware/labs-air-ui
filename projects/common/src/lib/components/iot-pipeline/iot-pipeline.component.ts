@@ -5,7 +5,6 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
-import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { PipelineService } from '../../services/pipeline/pipeline.service';
 import { Device } from '../../models/iot.model';
 
@@ -40,6 +39,7 @@ import { Gateway, RestEndpoint, Pipeline } from '@TIBCOSoftware/labs-air-graph-c
 import { PythonComponent } from '../rete/components/python-component';
 import { PythonPipeComponent } from '../rete/components/python-pipe-component'
 import { Observable, Subject, Subscriber, Subscription } from 'rxjs';
+import {ProxyService} from "../../services/graph/proxy.service";
 @Component({
     selector: 'app-common-iot-pipeline',
     templateUrl: './iot-pipeline.component.html',
@@ -132,7 +132,7 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
     @ViewChild('nodeEditor') el: ElementRef;
     editor = null;
 
-    constructor(private graphService: GraphService,
+    constructor(private graphService: ProxyService,
         private route: ActivatedRoute,
         private formBuilder: UntypedFormBuilder,
         private pipelineService: PipelineService) {

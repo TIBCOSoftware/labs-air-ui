@@ -4,7 +4,7 @@ import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { PythonResource,  } from '@TIBCOSoftware/labs-air-graph-client';
-import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
+import {ProxyService} from "common";
 
 @Component({
   selector: 'app-ige-resources',
@@ -41,7 +41,7 @@ export class IgeResourcesComponent implements OnInit {
   showFileUpload = true;
   code = ''
 
-  constructor(private graphService: GraphService, private _snackBar: MatSnackBar) { }
+  constructor(private graphService: ProxyService, private _snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.resourceSelection.clear();

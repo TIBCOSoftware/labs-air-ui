@@ -1,7 +1,6 @@
 import { Component, OnInit, Directive, ViewContainerRef, ViewChild, ComponentFactoryResolver } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
-import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { Device, Resource } from '../../models/iot.model';
 import { EdgeService } from '../../services/edge/edge.service';
 import { BreadcrumbsService } from '../../services/breadcrumbs/breadcrumbs.service';
@@ -15,6 +14,7 @@ import { CommonIotGatewayTimeSeriesComponent } from '../iot-gateway-details-char
 import { CommonIotGatewayXyzValueComponent } from '../iot-gateway-details-charts/iot-gateway-xyz-value/iot-gateway-xyz-value.component';
 import { CommonIotGatewayTextComponent } from '../iot-gateway-details-charts/iot-gateway-text/iot-gateway-text.component';
 import { Gateway } from '@TIBCOSoftware/labs-air-graph-client';
+import {ProxyService} from "../../services/graph/proxy.service";
 
 @Directive({
     // eslint-disable-next-line @angular-eslint/directive-selector
@@ -44,7 +44,7 @@ export class CommonIotGatewayDetailsComponent implements OnInit {
 
   menuItems: string[] = [];
 
-  constructor(private graphService: GraphService,
+  constructor(private graphService: ProxyService,
     private edgeService: EdgeService,
     private route: ActivatedRoute,
     private breadcrumbs: BreadcrumbsService,
@@ -72,15 +72,17 @@ export class CommonIotGatewayDetailsComponent implements OnInit {
   public getDevices(gateway: Gateway) {
 
       const decodedData = atob(gateway.devicesMetadata);
-      const jsonData = JSON.parse(decodedData);
-
-      console.log('Devices: ', jsonData);
-
-      this.devicesDataSource.data = jsonData as Device[];
-      this.selectedDevice = this.devicesDataSource.data[0];
-      this.buildSensorList(this.selectedDevice.profile.deviceResources);
-      this.selectChartType('Overview');
-
+      try {
+          const jsonData = JSON.parse(decodedData);
+          console.log('Devices: ', jsonData);
+          this.devicesDataSource.data = jsonData as Device[];
+          this.selectedDevice = this.devicesDataSource.data[0];
+          this.buildSensorList(this.selectedDevice.profile.deviceResources);
+          this.selectChartType('Overview');
+      } catch (e) {
+          console.log("No Devices for gateway.")
+          // todo fix bug on UI where nothing is being shown because there is no metadata
+      }
   }
 
   public getDevicesExternal(gateway: Gateway) {

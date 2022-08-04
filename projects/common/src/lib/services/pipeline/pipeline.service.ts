@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { FlogoDeployService } from '../../services/deployment/flogo-deploy.service';
 import { EdgeService } from '../../services/edge/edge.service';
 
-import { Gateway, GraphService, RestEndpoint, Pipeline } from '@TIBCOSoftware/labs-air-graph-client';
+import { Gateway, RestEndpoint, Pipeline } from '@TIBCOSoftware/labs-air-graph-client';
 
 import { NodeEditor } from 'rete';
 
@@ -12,6 +12,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Device } from '../../models/iot.model';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Subject } from 'rxjs';
+import {ProxyService} from "common";
 
 
 @Injectable({
@@ -21,7 +22,7 @@ import { Subject } from 'rxjs';
 export class PipelineService {
 
   constructor(
-    private graphService: GraphService,
+    private graphService: ProxyService,
     private flogoDeployService: FlogoDeployService,
     private _snackBar: MatSnackBar,
     private edgeService: EdgeService) { }

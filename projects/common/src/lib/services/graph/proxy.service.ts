@@ -194,7 +194,7 @@ export class ProxyService {
    *
    * @param gatewayName
    */
-  getGatewayAndModels(gatewayName: any): Observable<Gateway[]> {
+  getGatewayAndRestEndpoints(gatewayName: any): Observable<Gateway[]> {
     return this.modelService.getGatewayAndRestEndpoints(gatewayName).pipe(
       catchError(this.handleError<Gateway[]>('getGatewayWithModels', []))
     );
@@ -204,9 +204,9 @@ export class ProxyService {
    *
    * @param gatewayName
    */
-  getModels(gatewayName: any): Observable<RestEndpoint[]> {
+  getRestEndpoints(gatewayName: any): Observable<RestEndpoint[]> {
     return this.modelService.getRestEndpoints(gatewayName).pipe(
-      catchError(this.handleError<RestEndpoint[]>('getModels', []))
+      catchError(this.handleError<RestEndpoint[]>('getRestEndpoints', []))
     );
   }
 
@@ -215,9 +215,9 @@ export class ProxyService {
    * @param gatewayUuid
    * @param model
    */
-  addModel(gatewayUuid: string, model: RestEndpoint): Observable<RestEndpoint> {
+  addRestEndpoint(gatewayUuid: string, model: RestEndpoint): Observable<RestEndpoint> {
     return this.modelService.addRestEndpoint(model, gatewayUuid).pipe(
-      catchError(this.handleError<RestEndpoint>('addModels'))
+      catchError(this.handleError<RestEndpoint>('addRestEndpoint'))
     );
   }
 
@@ -225,9 +225,9 @@ export class ProxyService {
    *
    * @param model
    */
-  updateModel(model: RestEndpoint): Observable<RestEndpoint> {
+  updateRestEndpoint(model: RestEndpoint): Observable<RestEndpoint> {
     return this.modelService.updateRestEndpoint(model).pipe(
-      catchError(this.handleError<RestEndpoint>('updateModels'))
+      catchError(this.handleError<RestEndpoint>('updateRestEndpoint'))
     );
   }
 
@@ -236,9 +236,9 @@ export class ProxyService {
    * @param gatewayUuid
    * @param modelUuid
    */
-  deleteModel(gatewayUuid: string, modelUuid: string): Observable<string> {
+  deleteRestEndpoint(gatewayUuid: string, modelUuid: string): Observable<string> {
     return this.modelService.deleteRestEndpoint(gatewayUuid, modelUuid).pipe(
-      catchError(this.handleError<string>('deleteModel'))
+      catchError(this.handleError<string>('deleteRestEndpoint'))
     );
   }
 
