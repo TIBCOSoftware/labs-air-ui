@@ -1,4 +1,7 @@
 <div id="mySidenav" class="sidenav" [class.sidenav-open]="menuBoolean">
+    <button (click)="toggleMenu()">
+        Close Menu
+    </button>
     <div *ngFor="let pipeline of pipelinesDataSource" (click)="onPipelineClicked(pipeline, true)">
         <p>{{pipeline.name}}</p>
     </div>
