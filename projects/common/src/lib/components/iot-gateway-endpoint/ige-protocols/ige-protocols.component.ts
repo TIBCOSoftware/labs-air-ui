@@ -128,6 +128,8 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
   createForm() {
       this.protocolForm = this.formBuilder.group({
           uid: ['changeme', Validators.required],
+          uuid: ['changeme', Validators.required],
+          name: ['changeme', Validators.required],
           protocolType: ['', Validators.nullValidator],
           scope: ['GLOBAL', Validators.required],
           mqtt: this.formBuilder.group({
@@ -233,6 +235,8 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
 
           this.protocolForm.patchValue({
               uid: protocol.uid,
+              uuid: protocol.uuid,
+              name: protocol.name,
               protocolType: protocol.protocolType,
               scope: scope,
               mqtt: {
@@ -261,6 +265,8 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
 
           this.protocolForm.patchValue({
               uid: protocol.uid,
+              uuid: protocol.uuid,
+              name: protocol.name,
               protocolType: protocol.protocolType,
               scope: scope,
               kafka: {
@@ -296,6 +302,8 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
 
           this.protocolForm.patchValue({
               uid: protocol.uid,
+              uuid: protocol.uuid,
+              name: protocol.name,
               protocolType: protocol.protocolType,
               scope: scope,
               amqp: {
@@ -427,7 +435,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
           });
       }
       else {
-          this.graphService.addProtocol('0', protocol)
+          this.graphService.addProtocol(this.gatewayId, protocol)
               .subscribe(res => {
                   console.log('Result from add protocol', res);
 
@@ -447,11 +455,11 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
 
       const ts = Date.now();
       const protocol = {} as Protocol;
-      protocol.uid = this.protocolForm.get('uid').value;
+      protocol.uuid = this.protocolForm.get('uuid').value;
 
 
       // First Check if there are pipelines associated with the protocol
-      this.graphService.getPipelines(protocol.uid)
+      this.graphService.getPipelines(this.gatewayId) // todo change to appropriate api
           .subscribe(res => {
               console.log('Received response for graphService.getPipelineIdsFromProtocolUid: ', res);
 
@@ -471,7 +479,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
                       scope = this.gatewayId;
                   }
                   protocol.scope = scope;
-
+        //todo once added new clinet change protocol.uuid to protocol.name
                   if (protocolType == 'MQTT') {
                       protocol.authMode = '';
                       protocol.brokerURL = 'tcp://' + this.protocolForm.get('mqtt.hostname').value + ':' + this.protocolForm.get('mqtt.port').value;
@@ -496,7 +504,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
                       protocol.sessionTimeout = '';
                       protocol.topic = this.protocolForm.get('mqtt.topic').value;
                       protocol.username = this.protocolForm.get('mqtt.username').value;
-                      protocol.uuid = this.protocolForm.get('mqtt.uuid').value;
+                      // protocol.name = this.protocolForm.get('name').value; //todo put back in when client generated files are updated
                   }
                   else if (protocolType == 'Kafka') {
                       protocol.authMode = this.protocolForm.get('kafka.authMode').value;
@@ -522,7 +530,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
                       protocol.sessionTimeout = this.protocolForm.get('kafka.sessionTimeout').value;
                       protocol.topic = this.protocolForm.get('kafka.topic').value;
                       protocol.username = this.protocolForm.get('kafka.username').value;
-                      protocol.uuid = this.protocolForm.get('mqtt.uuid').value;
+                      // protocol.name = this.protocolForm.get('name').value; //todo put back in when client generated files are updated
                   }
                   else if (protocolType == 'AMQP') {
                       protocol.brokerURL = this.protocolForm.get('amqp.hostname').value + ':' + this.protocolForm.get('amqp.port').value;
@@ -532,7 +540,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
                       protocol.modified = ts;
                       protocol.protocolType = protocolType;
                       protocol.topic = this.protocolForm.get('amqp.exchangeName').value;
-                      protocol.uuid = this.protocolForm.get('amqp.uuid').value;
+                      // protocol.name = this.protocolForm.get('name').value; //todo put back in when client generated files are updated
                   }
 
                   this.graphService.updateProtocol(protocol)
@@ -552,11 +560,11 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
    * Deletes the protocol from the graph data store
    */
   deleteProtocol() {
-      const protocolUid = this.protocolForm.get('uid').value;
-      console.log('deleting protocol: ', protocolUid);
+      const protocolId = this.protocolForm.get('uuid').value;
+      console.log('deleting protocol: ', protocolId);
 
       // First Check if there are pipelines associated with the protocol
-      this.graphService.getPipelines(protocolUid)
+      this.graphService.getPipelines(this.gatewayId) //todo change api here
           .subscribe(res => {
               console.log('Received response for graphService.getPipelineIdsFromProtocolUid: ', res);
 
@@ -569,7 +577,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
                   this.resetProtocolForm();
               }
               else {
-                  this.graphService.deleteProtocol('0', this.protocolForm.get('uid').value)
+                  this.graphService.deleteProtocol(this.gatewayId, protocolId)
                       .subscribe(res => {
                           console.log('Result from delete protocol ', res);
 
