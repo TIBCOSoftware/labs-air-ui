@@ -97,7 +97,7 @@ export class PipelineService {
   ]
 
   validatePipeline() {
-    const pipelineId = this.pipelineData.uid;
+    const pipelineId = this.pipelineData.uuid;
     const pipelineFlow = this.buildPipelineRequest(pipelineId.toString());
     if (pipelineFlow != null) {
       this.flogoDeployService.validateF1(pipelineId.toString(), pipelineFlow)
@@ -451,7 +451,7 @@ export class PipelineService {
 
   deployPipeline() {
 
-    const pipelineId = this.pipelineData.uid;
+    const pipelineId = this.pipelineData.uuid;
     const pipelineFlow = this.buildPipelineRequest(pipelineId.toString());
 
     if (pipelineFlow != null) {
@@ -486,7 +486,7 @@ export class PipelineService {
 
 
   undeployPipeline() {
-    const pipelineId = this.pipelineData.uid;
+    const pipelineId = this.pipelineData.uuid;
     const deployType = this.pipelineData.pipelineType;
     const deployerType = this.pipelineData.deployerType;
 
@@ -702,7 +702,7 @@ export class PipelineService {
     const editorData = this.editor.toJSON();
 
     const pipelineName = this.pipelineData.name;
-    const pipelineId = this.pipelineData.uid;
+    const pipelineId = this.pipelineData.uuid;
     const pipelineType = this.pipelineData.pipelineType;
     const deployerType = this.pipelineData.deployerType;
     if (pipelineName == '' || pipelineType == '') {
@@ -726,7 +726,7 @@ export class PipelineService {
       pipeline.subscriptionTopic = this.getSubscriptionTopic();
 
       // Add pipeline to graph
-      this.graphService.addPipeline(this.gateway.uid, pipeline)
+      this.graphService.addPipeline(this.gateway.uuid, pipeline)
         .subscribe(res => {
           console.log('Added pipeline: ', res);
 
@@ -765,7 +765,7 @@ export class PipelineService {
       // }
       this.pipelineSelection.clear();
 
-      this.graphService.deletePipeline(this.gateway.uid, pipeline.uid)
+      this.graphService.deletePipeline(this.gateway.uuid, pipeline.uuid)
         .subscribe(res => {
           console.log('Result from delete pipeline', res);
 
@@ -869,7 +869,7 @@ export class PipelineService {
     if (this.pipelineSelection.hasValue()) {
       console.log('pipelineSelection has value');
 
-      if (this.pipelineSelection.selected[0].uid == row.uid &&
+      if (this.pipelineSelection.selected[0].uuid == row.uuid &&
         this.pipelineSelection.selected[0] != row) {
         this.pipelineSelection.select(row);
         this.pipelineSelected = true;
@@ -880,13 +880,13 @@ export class PipelineService {
     }
 
     // Skip if same row is selected
-    if (currentPipelineSelected == null || currentPipelineSelected.uid != row.uid) {
-      console.log('Not Skipping as same row is not selected row uid', row.uid);
+    if (currentPipelineSelected == null || currentPipelineSelected.uuid != row.uuid) {
+      console.log('Not Skipping as same row is not selected row uid', row.uuid);
       this.pipelineData = row;
 
       // Clear previous selection and editor
       if (currentPipelineSelected != null) {
-        console.log('Not Skipping as same row is not selected currentselection uid', currentPipelineSelected.uid);
+        console.log('Not Skipping as same row is not selected currentselection uid', currentPipelineSelected.uuid);
         this.pipelineSelection.clear();
         this.pipelineChange.next({ type: 'clearForm' })
         this.editor.clear();

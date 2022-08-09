@@ -40,6 +40,7 @@ import { PythonComponent } from '../rete/components/python-component';
 import { PythonPipeComponent } from '../rete/components/python-pipe-component'
 import { Observable, Subject, Subscriber, Subscription } from 'rxjs';
 import {ProxyService} from "../../services/graph/proxy.service";
+import {debug} from "ng-packagr/lib/utils/log";
 @Component({
     selector: 'app-common-iot-pipeline',
     templateUrl: './iot-pipeline.component.html',
@@ -498,15 +499,16 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
     createForms() {
 
         this.pipelineForm = this.formBuilder.group({
-            uid: ['', Validators.required],
+            uuid: ['', Validators.required],
             name: ['', Validators.required],
             pipelineType: ['', Validators.required],
             deployerType: ['', Validators.required],
             description: ['', Validators.required],
-            created: ['', Validators.required],
-            modified: ['', Validators.required],
+            created: [0, Validators.required],
+            modified: [0, Validators.required],
             status: ['', Validators.required],
             flowConfiguration: ['', Validators.required],
+            subscriptionTopic: ['', Validators.required],
             logLevel: ['INFO', Validators.required]
         });
     }
@@ -574,7 +576,7 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
         this.errorHandlerConfig = false;
 
         this.pipelineForm.patchValue({
-            uid: '',
+            uuid: '',
             name: '',
             pipelineType: '',
             deployerType: '',
@@ -617,14 +619,15 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
 
     setPipelineForm(pipeline: Pipeline) {
         this.pipelineForm.patchValue({
-            uid: pipeline.uid,
+            uuid: pipeline.uuid,
             name: pipeline.name,
             pipelineType: pipeline.pipelineType,
             deployerType: pipeline.deployerType,
             description: pipeline.description,
             status: pipeline.status,
             flowConfiguration: pipeline.flowConfiguration,
-            logLevel: pipeline.logLevel
+            logLevel: pipeline.logLevel,
+            subscriptionTopic: pipeline.subscriptionTopic
         });
     }
 
