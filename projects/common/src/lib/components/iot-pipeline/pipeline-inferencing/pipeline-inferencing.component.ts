@@ -136,7 +136,7 @@ export class PipelineInferencingComponent implements OnInit, OnDestroy {
 
         // Force update for the parent
         descendants.forEach(child => this.checklistSelection.isSelected(child));
-
+        this.formUpdatedEvent.emit(this.modelForm.value);
     }
 
 

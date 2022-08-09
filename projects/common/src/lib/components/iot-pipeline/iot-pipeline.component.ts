@@ -132,6 +132,7 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
 
     ngOnDestroy(): void {
         this.pipelineObserver.unsubscribe();
+        this.pipelineService.pipelineSelection.clear();
     }
 
     get pipelinesDataSource(): MatTableDataSource<Pipeline> {
