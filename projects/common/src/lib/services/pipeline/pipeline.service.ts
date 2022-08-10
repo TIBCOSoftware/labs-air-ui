@@ -904,13 +904,6 @@ export class PipelineService {
         const jsonData = JSON.parse(decodedData);
         this.editor.fromJSON(jsonData);
         this.filters = [];
-        Object.values(jsonData.nodes).forEach((node: any) => {
-          if (node?.data?.customdata?.filters) {
-            node.data.customdata.filters.forEach(filter => {
-              this.filters.push(filter);
-            })
-          }
-        })
       }
 
       // Reset command buttons
@@ -1262,7 +1255,7 @@ export class PipelineService {
     const inferenceObj = [
       { 'Name': 'Logging.LogLevel', 'Value': contextObj.logLevel },
       { 'Name': 'REST.Timeout', 'Value': '40000' },
-      { 'Name': 'REST.Producer', 'Value': contextObj.modelName },
+      { 'Name': 'REST.Producer', 'Value': contextObj.name },
       { 'Name': 'REST.InferenceData', 'Value': inferenceData },
       { 'Name': 'REST.Conditions', 'Value': JSON.stringify(contextObj.filters) },
       { 'Name': 'REST.URLMapping', 'Value': JSON.stringify(urlMapping) },
