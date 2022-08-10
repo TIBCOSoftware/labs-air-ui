@@ -132,6 +132,7 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
 
     ngOnDestroy(): void {
         this.pipelineObserver.unsubscribe();
+        this.pipelineService.pipelineSelection.clear();
     }
 
     get pipelinesDataSource(): MatTableDataSource<Pipeline> {
@@ -289,12 +290,13 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
         this.editor.on('nodeselected', node => {
             console.log('Editor node selected', node);
             console.log('Node data: ', node.data);
-
-            this.nodeChangeEvent.next(node);
+            this.pipelineService.filters = [];
 
             if (node.name == 'Python Pipe') {
                 this.getPythonInputOutput(node);
             }
+
+            this.nodeChangeEvent.next(node);
 
             this.lastNodeSelected = node;
 
@@ -479,10 +481,6 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
         });
     }
 
-    clearFormsAndFilters() {
-        this.pipelineService.filters = [];
-    }
-
     /**
      * Handles selection of pipeline on table
      */
@@ -586,7 +584,7 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
     saveToCanvas(eventData: any) {
         const node = this.editor.nodes.find(node => node.id === this.selectedNode.id)
         node.data['customdata'] = eventData;
-        console.log(' saving nodes', this.editor.nodes);
+        console.log('saving nodes', this.editor.nodes);
     }
 
     getPythonInputOutput(node) {
@@ -615,7 +613,7 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
     }
 
     updateFilters(filters) {
-        const filtersObj = {filters: filters}
+        const filtersObj = { filters: filters }
         this.saveToCanvas(filtersObj);
         this.pipelineService.filters = filters;
     }
