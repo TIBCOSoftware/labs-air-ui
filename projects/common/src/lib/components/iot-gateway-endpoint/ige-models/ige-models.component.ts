@@ -25,10 +25,6 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
   // Form variables
   modelForm: UntypedFormGroup;
 
-  mqttProtocol = false;
-  kafkaProtocol = false;
-  httpProtocol = false;
-
   graphAddOpDisabled = true;
   graphUpdateOpDisabled = true;
   graphDeleteOpDisabled = true;
@@ -109,7 +105,6 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
    */
   createForm() {
       this.modelForm = this.formBuilder.group({
-          uid: ['', Validators.required],
           uuid: ['', Validators.required],
           name: ['', Validators.required],
           description: ['', Validators.required],
@@ -141,14 +136,6 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
           });
   }
 
-  /** Whether the number of selected elements matches the total number of rows. */
-  isAllSelected() {
-      // const numSelected = this.modelSelection.selected.length;
-      // const numRows = this.modelsDataSource.data.length;
-      // return numSelected === numRows;
-      return false;
-  }
-
   /**
    * Function called when a model table row is selected
    * @param row - the table row object. It maps to a Model object.
@@ -166,7 +153,6 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
       }
 
       this.modelForm.patchValue({
-          uid: model.uid,
           uuid: model.uuid,
           name: model.name,
           description: model.description,
@@ -220,7 +206,6 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
 
       model.created = ts;
       model.modified = ts;
-      model.uuid = this.modelForm.get('name').value;
       model.name = this.modelForm.get('name').value;
       model.description = this.modelForm.get('description').value;
       model.inputType = this.modelForm.get('inputType').value;
@@ -232,14 +217,14 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
       console.log('Adding model with uuid: ', model.uuid);
 
       // First check that model with the same name already exist
-      if (this.modelExist(model.uuid)) {
+      if (this.modelExist(model.name)) {
 
           this._snackBar.open('Model name is not unique.', 'Cancel', {
               duration: 3000,
           });
       }
       else {
-          this.graphService.addRestEndpoint('0', model)
+          this.graphService.addRestEndpoint(this.gatewayId, model)
               .subscribe(res => {
                   console.log('Result from add model', res);
 
@@ -265,8 +250,7 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
       model.scope = scope;
 
       model.modified = ts;
-      model.uid = this.modelForm.get('uid').value;
-      model.uuid = this.modelForm.get('name').value;
+      model.uuid = this.modelForm.get('uuid').value;
       model.name = this.modelForm.get('name').value;
       model.description = this.modelForm.get('description').value;
       model.inputType = this.modelForm.get('inputType').value;
@@ -292,11 +276,11 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
    * Deletes the model from the graph data store
    */
   deleteModel() {
-      const modelUid = this.modelForm.get('uid').value;
+      const modelUid = this.modelForm.get('uuid').value;
       console.log('deleting model: ', modelUid);
 
 
-      this.graphService.deleteRestEndpoint('0', this.modelForm.get('uid').value)
+      this.graphService.deleteRestEndpoint(this.gatewayId, this.modelForm.get('uuid').value)
           .subscribe(res => {
               console.log('Result from delete model ', res);
 
