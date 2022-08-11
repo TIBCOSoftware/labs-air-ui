@@ -106,11 +106,11 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
   createForm() {
 
       this.dataStoreForm = this.formBuilder.group({
-          uid: ['changeme', Validators.required],
+          uuid: ['changeme', Validators.required],
           dataStoreType: ['', Validators.required],
           scope: ['GLOBAL', Validators.required],
           postgres: this.formBuilder.group({
-              uuid: ['changeme', Validators.required],
+              name: ['changeme', Validators.required],
               host: ['changeme', Validators.required],
               port: ['0', Validators.required],
               databaseName: ['changeme', Validators.required],
@@ -118,7 +118,7 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
               password: ['changeme', Validators.required]
           }),
           snowflake: this.formBuilder.group({
-              uuid: ['changeme', Validators.required],
+              name: ['changeme', Validators.required],
               accountName: ['changeme', Validators.required],
               warehouse: ['changeme', Validators.required],
               database: ['changeme', Validators.required],
@@ -134,13 +134,13 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
               loginTimeout: ['20', Validators.required]
           }),
           dgraph: this.formBuilder.group({
-              uuid: ['changeme', Validators.required],
+              name: ['changeme', Validators.required],
               url: ['changeme', Validators.required],
               username: ['changeme', Validators.required],
               password: ['changeme', Validators.required]
           }),
           tgdb: this.formBuilder.group({
-              uuid: ['changeme', Validators.required],
+              name: ['changeme', Validators.required],
               url: ['changeme', Validators.required],
               username: ['changeme', Validators.required],
               password: ['changeme', Validators.required]
@@ -204,11 +204,11 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
       if (dataStore.dataStoreType == 'PostgreSQL2') {
 
           this.dataStoreForm.patchValue({
-              uid: dataStore.uid,
+              uuid: dataStore.uuid,
               dataStoreType: dataStore.dataStoreType,
               scope: scope,
               postgres: {
-                  uuid: dataStore.uuid,
+                  name: dataStore.name,
                   host: dataStore.host,
                   port: dataStore.port,
                   databaseName: dataStore.databaseName,
@@ -223,11 +223,11 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
       else if (dataStore.dataStoreType == 'Snowflake') {
 
           this.dataStoreForm.patchValue({
-              uid: dataStore.uid,
+              uuid: dataStore.uuid,
               dataStoreType: dataStore.dataStoreType,
               scope: scope,
               snowflake: {
-                  uuid: dataStore.uuid,
+                  name: dataStore.name,
                   accountName: dataStore.accountName,
                   warehouse: dataStore.warehouse,
                   database: dataStore.database,
@@ -249,11 +249,11 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
       else if (dataStore.dataStoreType == 'Dgraph') {
 
           this.dataStoreForm.patchValue({
-              uid: dataStore.uid,
+              uuid: dataStore.uuid,
               dataStoreType: dataStore.dataStoreType,
               scope: scope,
               dgraph: {
-                  uuid: dataStore.uuid,
+                  name: dataStore.name,
                   url: dataStore.url,
                   username: dataStore.username,
                   password: dataStore.password
@@ -265,11 +265,11 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
       else if (dataStore.dataStoreType == 'TGDB') {
 
           this.dataStoreForm.patchValue({
-              uid: dataStore.uid,
+              uuid: dataStore.uuid,
               dataStoreType: dataStore.dataStoreType,
               scope: scope,
               dgraph: {
-                  uuid: dataStore.uuid,
+                  name: dataStore.name,
                   url: dataStore.url,
                   username: dataStore.username,
                   password: dataStore.password
@@ -322,13 +322,12 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
       const dataStoreType = this.dataStoreForm.get('dataStoreType').value;
 
       if (dataStoreType == 'PostgreSQL2') {
-
           dataStore.created = ts;
           dataStore.modified = ts;
-          dataStore.uuid = this.dataStoreForm.get('postgres.uuid').value;
+          //dataStore.name = this.dataStoreForm.get('postgres.name').value; todo once new client is added.
           dataStore.dataStoreType = dataStoreType;
           dataStore.host = this.dataStoreForm.get('postgres.host').value;
-          dataStore.port = this.dataStoreForm.get('postgres.port').value;
+          dataStore.port = parseInt(this.dataStoreForm.get('postgres.port').value);
           dataStore.databaseName = this.dataStoreForm.get('postgres.databaseName').value;
           dataStore.user = this.dataStoreForm.get('postgres.user').value;
           dataStore.password = this.dataStoreForm.get('postgres.password').value;
@@ -351,7 +350,7 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
           dataStore.created = ts;
           dataStore.modified = ts;
           dataStore.dataStoreType = dataStoreType;
-          dataStore.uuid = this.dataStoreForm.get('snowflake.uuid').value;
+          //dataStore.name = this.dataStoreForm.get('snowflake.name').value; todo once new client is added.
           dataStore.host = '';
           dataStore.port = 0;
           dataStore.databaseName = '';
@@ -376,7 +375,7 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
           dataStore.created = ts;
           dataStore.modified = ts;
           dataStore.dataStoreType = dataStoreType;
-          dataStore.uuid = this.dataStoreForm.get('tgdb.uuid').value;
+         // dataStore.name = this.dataStoreForm.get('tgdb.name').value; todo once new client is added.
           dataStore.host = '';
           dataStore.port = 0;
           dataStore.databaseName = '';
@@ -400,7 +399,7 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
           dataStore.created = ts;
           dataStore.modified = ts;
           dataStore.dataStoreType = dataStoreType;
-          dataStore.uuid = this.dataStoreForm.get('dgraph.uuid').value;
+          // dataStore.name = this.dataStoreForm.get('dgraph.name').value; todo once new client is added.
           dataStore.host = '';
           dataStore.port = 0;
           dataStore.databaseName = '';
@@ -429,7 +428,7 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
       }
       else {
           // datastore adds 
-          this.graphService.addDataStore('0', dataStore)
+          this.graphService.addDataStore(this.gatewayId, dataStore)
               .subscribe(res => {
                   console.log('Result from add dataStore', res);
 
@@ -448,140 +447,120 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
 
       const ts = Date.now();
       const dataStore = {} as DataStore;
-      dataStore.uid = this.dataStoreForm.get('uid').value;
+      dataStore.uuid = this.dataStoreForm.get('uuid').value;
 
-      // First Check if there are pipelines associated with the data store
-      this.graphService.getPipelines(this.gatewayId)
+
+      const dataStoreType = this.dataStoreForm.get('dataStoreType').value;
+
+      let scope = this.dataStoreForm.get('scope').value;
+      if (scope != 'GLOBAL') {
+          scope = this.gatewayId;
+      }
+      dataStore.scope = scope;
+
+      const uuidDirty = false;
+
+      if (dataStoreType == 'PostgreSQL2') {
+
+          dataStore.created = ts;
+          dataStore.modified = ts;
+          // dataStore.name = this.dataStoreForm.get('postgres.name').value; todo fix
+          dataStore.dataStoreType = dataStoreType;
+          dataStore.host = this.dataStoreForm.get('postgres.host').value;
+          dataStore.port = this.dataStoreForm.get('postgres.port').value;
+          dataStore.databaseName = this.dataStoreForm.get('postgres.databaseName').value;
+          dataStore.user = this.dataStoreForm.get('postgres.user').value;
+          dataStore.password = this.dataStoreForm.get('postgres.password').value;
+          dataStore.accountName = '';
+          dataStore.warehouse = '';
+          dataStore.database = '';
+          dataStore.schema = '';
+          dataStore.authType = '';
+          dataStore.username = '';
+          dataStore.role = '';
+          dataStore.clientId = '';
+          dataStore.clientSecret = '';
+          dataStore.authorizationCode = '';
+          dataStore.redirectURI = '';
+          dataStore.loginTimeout = '';
+          dataStore.url = '';
+      } else if (dataStoreType == 'Snowflake') {
+
+          dataStore.created = ts;
+          dataStore.modified = ts;
+          dataStore.dataStoreType = dataStoreType;
+          //dataStore.name = this.dataStoreForm.get('snowflake.name').value;
+          dataStore.host = '';
+          dataStore.port = 0;
+          dataStore.databaseName = '';
+          dataStore.user = '';
+          dataStore.password = this.dataStoreForm.get('snowflake.password').value;
+          dataStore.accountName = this.dataStoreForm.get('snowflake.accountName').value;
+          dataStore.warehouse = this.dataStoreForm.get('snowflake.warehouse').value;
+          dataStore.database = this.dataStoreForm.get('snowflake.database').value;
+          dataStore.schema = this.dataStoreForm.get('snowflake.schema').value;
+          dataStore.authType = this.dataStoreForm.get('snowflake.authType').value;
+          dataStore.username = this.dataStoreForm.get('snowflake.username').value;
+          dataStore.role = this.dataStoreForm.get('snowflake.role').value;
+          dataStore.clientId = this.dataStoreForm.get('snowflake.clientId').value;
+          dataStore.clientSecret = this.dataStoreForm.get('snowflake.clientSecret').value;
+          dataStore.authorizationCode = this.dataStoreForm.get('snowflake.authorizationCode').value;
+          dataStore.redirectURI = this.dataStoreForm.get('snowflake.redirectURI').value;
+          dataStore.loginTimeout = this.dataStoreForm.get('snowflake.loginTimeout').value;
+          dataStore.url = '';
+      } else if (dataStoreType == 'TGDB') {
+
+          dataStore.created = ts;
+          dataStore.modified = ts;
+          dataStore.dataStoreType = dataStoreType;
+          //  dataStore.uuid = this.dataStoreForm.get('tgdb.uuid').value; todo
+          dataStore.host = '';
+          dataStore.port = 0;
+          dataStore.databaseName = '';
+          dataStore.user = '';
+          dataStore.password = this.dataStoreForm.get('tgdb.password').value;
+          dataStore.accountName = '';
+          dataStore.warehouse = '';
+          dataStore.database = '';
+          dataStore.schema = '';
+          dataStore.authType = '';
+          dataStore.username = this.dataStoreForm.get('tgdb.username').value;
+          dataStore.clientId = '';
+          dataStore.clientSecret = '';
+          dataStore.authorizationCode = '';
+          dataStore.redirectURI = '';
+          dataStore.loginTimeout = '';
+          dataStore.url = this.dataStoreForm.get('tgdb.url').value;
+      } else if (dataStoreType == 'Dgraph') {
+          dataStore.created = ts;
+          dataStore.modified = ts;
+          dataStore.dataStoreType = dataStoreType;
+          // dataStore.uuid = this.dataStoreForm.get('dgraph.uuid').value; todo
+          dataStore.host = '';
+          dataStore.port = 0;
+          dataStore.databaseName = '';
+          dataStore.user = '';
+          dataStore.password = this.dataStoreForm.get('dgraph.password').value;
+          dataStore.accountName = '';
+          dataStore.warehouse = '';
+          dataStore.database = '';
+          dataStore.schema = '';
+          dataStore.authType = '';
+          dataStore.username = this.dataStoreForm.get('dgraph.username').value;
+          dataStore.clientId = '';
+          dataStore.clientSecret = '';
+          dataStore.authorizationCode = '';
+          dataStore.redirectURI = '';
+          dataStore.loginTimeout = '';
+          dataStore.url = this.dataStoreForm.get('dgraph.url').value;
+      }
+
+      this.graphService.updateDataStore(dataStore)
           .subscribe(res => {
-              console.log('Received response for graphService.getPipelineIdsFromDataStoreUid: ', res);
+              console.log('Result from update dataStore', res);
 
-              if (res.length > 0) {
-
-                  console.log('Can\'t delete data store.  Pipelines need to be deleted first');
-                  this._snackBar.open('Pipelines are associated with this data store.  Can\'t be deleted', 'Cancel', {
-                      duration: 5000,
-                  });
-                  this.resetDataStoreForm();
-              }
-              else {
-
-                  const dataStoreType = this.dataStoreForm.get('dataStoreType').value;
-
-                  let scope = this.dataStoreForm.get('scope').value;
-                  if (scope != 'GLOBAL') {
-                      scope = this.gatewayId;
-                  }
-                  dataStore.scope = scope;
-
-                  const uuidDirty = false;
-
-                  if (dataStoreType == 'PostgreSQL2') {
-
-                      dataStore.created = ts;
-                      dataStore.modified = ts;
-                      dataStore.uuid = this.dataStoreForm.get('postgres.uuid').value;
-                      dataStore.dataStoreType = dataStoreType;
-                      dataStore.host = this.dataStoreForm.get('postgres.host').value;
-                      dataStore.port = this.dataStoreForm.get('postgres.port').value;
-                      dataStore.databaseName = this.dataStoreForm.get('postgres.databaseName').value;
-                      dataStore.user = this.dataStoreForm.get('postgres.user').value;
-                      dataStore.password = this.dataStoreForm.get('postgres.password').value;
-                      dataStore.accountName = '';
-                      dataStore.warehouse = '';
-                      dataStore.database = '';
-                      dataStore.schema = '';
-                      dataStore.authType = '';
-                      dataStore.username = '';
-                      dataStore.role = '';
-                      dataStore.clientId = '';
-                      dataStore.clientSecret = '';
-                      dataStore.authorizationCode = '';
-                      dataStore.redirectURI = '';
-                      dataStore.loginTimeout = '';
-                      dataStore.url = '';
-                  }
-                  else if (dataStoreType == 'Snowflake') {
-
-                      dataStore.created = ts;
-                      dataStore.modified = ts;
-                      dataStore.dataStoreType = dataStoreType;
-                      dataStore.uuid = this.dataStoreForm.get('snowflake.uuid').value;
-                      dataStore.host = '';
-                      dataStore.port = 0;
-                      dataStore.databaseName = '';
-                      dataStore.user = '';
-                      dataStore.password = this.dataStoreForm.get('snowflake.password').value;
-                      dataStore.accountName = this.dataStoreForm.get('snowflake.accountName').value;
-                      dataStore.warehouse = this.dataStoreForm.get('snowflake.warehouse').value;
-                      dataStore.database = this.dataStoreForm.get('snowflake.database').value;
-                      dataStore.schema = this.dataStoreForm.get('snowflake.schema').value;
-                      dataStore.authType = this.dataStoreForm.get('snowflake.authType').value;
-                      dataStore.username = this.dataStoreForm.get('snowflake.username').value;
-                      dataStore.role = this.dataStoreForm.get('snowflake.role').value;
-                      dataStore.clientId = this.dataStoreForm.get('snowflake.clientId').value;
-                      dataStore.clientSecret = this.dataStoreForm.get('snowflake.clientSecret').value;
-                      dataStore.authorizationCode = this.dataStoreForm.get('snowflake.authorizationCode').value;
-                      dataStore.redirectURI = this.dataStoreForm.get('snowflake.redirectURI').value;
-                      dataStore.loginTimeout = this.dataStoreForm.get('snowflake.loginTimeout').value;
-                      dataStore.url = '';
-                  }
-                  else if (dataStoreType == 'TGDB') {
-
-                      dataStore.created = ts;
-                      dataStore.modified = ts;
-                      dataStore.dataStoreType = dataStoreType;
-                      dataStore.uuid = this.dataStoreForm.get('tgdb.uuid').value;
-                      dataStore.host = '';
-                      dataStore.port = 0;
-                      dataStore.databaseName = '';
-                      dataStore.user = '';
-                      dataStore.password = this.dataStoreForm.get('tgdb.password').value;
-                      dataStore.accountName = '';
-                      dataStore.warehouse = '';
-                      dataStore.database = '';
-                      dataStore.schema = '';
-                      dataStore.authType = '';
-                      dataStore.username = this.dataStoreForm.get('tgdb.username').value;
-                      dataStore.clientId = '';
-                      dataStore.clientSecret = '';
-                      dataStore.authorizationCode = '';
-                      dataStore.redirectURI = '';
-                      dataStore.loginTimeout = '';
-                      dataStore.url = this.dataStoreForm.get('tgdb.url').value;
-                  }
-                  else if (dataStoreType == 'Dgraph') {
-                      dataStore.created = ts;
-                      dataStore.modified = ts;
-                      dataStore.dataStoreType = dataStoreType;
-                      dataStore.uuid = this.dataStoreForm.get('dgraph.uuid').value;
-                      dataStore.host = '';
-                      dataStore.port = 0;
-                      dataStore.databaseName = '';
-                      dataStore.user = '';
-                      dataStore.password = this.dataStoreForm.get('dgraph.password').value;
-                      dataStore.accountName = '';
-                      dataStore.warehouse = '';
-                      dataStore.database = '';
-                      dataStore.schema = '';
-                      dataStore.authType = '';
-                      dataStore.username = this.dataStoreForm.get('dgraph.username').value;
-                      dataStore.clientId = '';
-                      dataStore.clientSecret = '';
-                      dataStore.authorizationCode = '';
-                      dataStore.redirectURI = '';
-                      dataStore.loginTimeout = '';
-                      dataStore.url = this.dataStoreForm.get('dgraph.url').value;
-                  }
-
-                  this.graphService.updateDataStore(dataStore)
-                      .subscribe(res => {
-                          console.log('Result from update dataStore', res);
-
-                          this.getDataStores(this.gatewayId);
-                          this.resetDataStoreForm();
-                      });
-
-              }
+              this.getDataStores(this.gatewayId);
+              this.resetDataStoreForm();
           });
 
   }
@@ -590,11 +569,11 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
    * Deletes the dataStore from the graph data store
    */
   deleteDataStore() {
-      const dataStoreUid = this.dataStoreForm.get('uid').value;
+      const dataStoreUid = this.dataStoreForm.get('uuid').value;
       console.log('deleting dataStore: ', dataStoreUid);
 
       // First Check if there are pipelines associated with the data store
-      this.graphService.getPipelines(this.gatewayId)
+      this.graphService.getPipelines(this.gatewayId) //todo change to the appropriate api
           .subscribe(res => {
               console.log('Received response for graphService.getPipelineIdsFromDataStoreUid: ', res);
 
@@ -608,7 +587,7 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
               }
               else {
 
-                  this.graphService.deleteDataStore('0', this.dataStoreForm.get('uid').value)
+                  this.graphService.deleteDataStore(this.gatewayId, this.dataStoreForm.get('uuid').value)
                       .subscribe(res => {
                           console.log('Result from delete dataStore ', res);
 
@@ -665,7 +644,7 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
               postgres: {
                   uuid: '',
                   host: '',
-                  port: '',
+                  port: 0,
                   databaseName: '',
                   user: '',
                   password: ''
@@ -724,7 +703,7 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
               postgres: {
                   uuid: 'changeme',
                   host: 'changeme',
-                  port: '0',
+                  port: 0,
                   databaseName: 'changeme',
                   user: 'changeme',
                   password: 'changeme'
@@ -757,7 +736,7 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
               postgres: {
                   uuid: 'changeme',
                   host: 'changeme',
-                  port: '0',
+                  port: 0,
                   databaseName: 'changeme',
                   user: 'changeme',
                   password: 'changeme'
@@ -800,7 +779,7 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
               postgres: {
                   uuid: 'changeme',
                   host: 'changeme',
-                  port: '0',
+                  port: 0,
                   databaseName: 'changeme',
                   user: 'changeme',
                   password: 'changeme'
@@ -822,7 +801,7 @@ export class IgeDataStoresComponent implements OnInit, AfterViewInit {
                   loginTimeout: 'changeme'
               },
               tgdb: {
-                  uuid: 'changeme',
+                  name: 'changeme',
                   url: 'changeme',
                   username: 'changeme',
                   password: 'changeme'
