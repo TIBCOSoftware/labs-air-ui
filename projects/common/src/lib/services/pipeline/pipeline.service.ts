@@ -908,13 +908,6 @@ export class PipelineService {
         const jsonData = JSON.parse(decodedData);
         this.editor.fromJSON(jsonData);
         this.filters = [];
-        Object.values(jsonData.nodes).forEach((node: any) => {
-          if (node?.data?.customdata?.filters) {
-            node.data.customdata.filters.forEach(filter => {
-              this.filters.push(filter);
-            })
-          }
-        })
       }
 
       // Reset command buttons
@@ -1266,7 +1259,7 @@ export class PipelineService {
     const inferenceObj = [
       { 'Name': 'Logging.LogLevel', 'Value': contextObj.logLevel },
       { 'Name': 'REST.Timeout', 'Value': '40000' },
-      { 'Name': 'REST.Producer', 'Value': contextObj.modelName },
+      { 'Name': 'REST.Producer', 'Value': contextObj.name },
       { 'Name': 'REST.InferenceData', 'Value': inferenceData },
       { 'Name': 'REST.Conditions', 'Value': JSON.stringify(contextObj.filters) },
       { 'Name': 'REST.URLMapping', 'Value': JSON.stringify(urlMapping) },
@@ -1684,19 +1677,19 @@ export class PipelineService {
     pythonDeployProperties = [
       {
         'Type': 'file',
-        'Name': contextObj.processor + contextObj.processor.includes('.py') ? '' : '.py',
-        'Value': decodeURIComponent(contextObj.processorContent),
+        'Name': contextObj.processor + (contextObj.processor.includes('.py') ? '' : '.py'),
+        'Value': atob(contextObj.processorContent),
         'Encoded': false
       },
       {
         'Type': 'file',
-        'Name': contextObj.requirement + contextObj.processor.includes('.txt') ? '' : '.txt',
-        'Value': decodeURIComponent(contextObj.requirementContent),
+        'Name': contextObj.requirement + (contextObj.requirement.includes('.txt') ? '' : '.txt'),
+        'Value': atob(contextObj.requirementContent),
         'Encoded': false
       },
     ];
     if (contextObj.dockerfile) {
-      pythonDeployProperties.push({ 'Type': 'file', 'Name': 'dockerfile', 'Value': decodeURIComponent(contextObj.dockerfileContent), 'Encoded': false });
+      pythonDeployProperties.push({ 'Type': 'file', 'Name': 'dockerfile', 'Value': atob(contextObj.dockerfileContent), 'Encoded': false });
     }
     if (contextObj.volume) {
       pythonDeployProperties.push({ 'Type': 'folder', 'Name': contextObj.volumeName, 'Value': contextObj.volumePath });

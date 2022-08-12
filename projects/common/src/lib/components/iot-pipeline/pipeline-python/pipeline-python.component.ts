@@ -62,7 +62,7 @@ export class PipelinePythonComponent implements OnInit, OnDestroy {
 
   showResourceContent(name: string, resourceType: string) {
     if (name) {
-      this.resourceContent = decodeURIComponent(this.resources[resourceType].find(resource => resource.name == name).fileContent);
+      this.resourceContent = atob(this.resources[resourceType].find(resource => resource.name == name).fileContent);
       this.showResourceContentBoolean = true;
     }
   }

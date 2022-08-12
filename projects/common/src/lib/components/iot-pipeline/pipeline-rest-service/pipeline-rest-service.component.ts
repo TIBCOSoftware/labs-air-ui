@@ -26,13 +26,13 @@ interface DeviceNode {
 export class PipelineRestServiceComponent implements OnInit, OnDestroy {
 
     @Input() devices: Device[];
-    @Input() filters: any[];
     @Input() restService;
     @Output() formUpdatedEvent = new EventEmitter<any>();
     @Input() nodeChangeEvent: Observable<any>;
     nodeChangeSubscription: Subscription;
     formChangeSubscription: Subscription;
     restServiceForm: UntypedFormGroup;
+    filters = [];
 
     // Added to prevent compile error in oss version
     activeNode: Node;
@@ -61,13 +61,13 @@ export class PipelineRestServiceComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         // this.devicesDataSource.data = TREE_DATA;
-        this.initializeDataSource();
         this.initForm();
         this.onFormChanges();
         console.log('REST Service - ngOnInit - devices: ', this.devices);
         if (this.restService?.data['customdata']) {
             this.updateRESTServiceForm(this.restService.data['customdata'])
         }
+        this.initializeDataSource();
     }
 
     ngOnDestroy(): void {
@@ -116,9 +116,8 @@ export class PipelineRestServiceComponent implements OnInit, OnDestroy {
 
     /** Toggle a leaf to-do item selection. Check all the parents to see if they changed */
     leafItemSelectionToggle(node: DeviceNode): void {
-
         this.checklistSelection.toggle(node);
-
+        this.restServiceForm.setControl('filters', this.formBuilder.array(this.getFilters()));
     }
 
     /** Toggle the to-do item selection. Select/deselect all the descendants node */
@@ -132,7 +131,7 @@ export class PipelineRestServiceComponent implements OnInit, OnDestroy {
 
         // Force update for the parent
         descendants.forEach(child => this.checklistSelection.isSelected(child));
-
+        this.restServiceForm.setControl('filters', this.formBuilder.array(this.getFilters()));
     }
 
 
@@ -205,6 +204,7 @@ export class PipelineRestServiceComponent implements OnInit, OnDestroy {
             descendants.forEach(child => this.checklistSelection.isSelected(child));
 
             this.treeControl.expand(node);
+            this.restServiceForm.setControl('filters', this.formBuilder.array(this.getFilters()));
 
         });
 
@@ -240,6 +240,7 @@ export class PipelineRestServiceComponent implements OnInit, OnDestroy {
         //   this.treeControl.expand(this.treeControl.dataNodes[i])
         // }
 
+        this.restServiceForm.setControl('filters', this.formBuilder.array(this.getFilters()));
     }
 
 
@@ -278,7 +279,8 @@ export class PipelineRestServiceComponent implements OnInit, OnDestroy {
             description: ['', Validators.required],
             url: ['', Validators.required],
             logLevel: ['INFO', Validators.required],
-            headers: this.formBuilder.array([])
+            headers: this.formBuilder.array([]),
+            filters: this.formBuilder.array([])
         });
     }
 
@@ -287,7 +289,6 @@ export class PipelineRestServiceComponent implements OnInit, OnDestroy {
         if (context != null || context != undefined) {
             console.log('Updating rest service component with context: ', context);
 
-            this.filters = context.filters;
 
             this.restServiceForm.patchValue({
                 description: context.description,
@@ -298,6 +299,9 @@ export class PipelineRestServiceComponent implements OnInit, OnDestroy {
             const formGroups = context.headers.map(x => this.formBuilder.array(x.map(y => this.formBuilder.group(y)))) as [];
             const headersArray = this.formBuilder.array(formGroups) as UntypedFormArray
             this.restServiceForm.setControl('headers', headersArray);
+
+            this.restServiceForm.setControl('filters', this.formBuilder.array(context.filters))
+            this.filters = context.filters;
         }
     }
 
@@ -308,8 +312,8 @@ export class PipelineRestServiceComponent implements OnInit, OnDestroy {
         this.formChangeSubscription = this.restServiceForm.valueChanges
             .pipe(debounceTime(200), distinctUntilChanged())
             .subscribe(() => {
+                console.log('FORM UPDATEDDD')
                 this.formUpdatedEvent.emit(this.restServiceForm.value);
-                this.initializeDataSource();
             })
     }
 
