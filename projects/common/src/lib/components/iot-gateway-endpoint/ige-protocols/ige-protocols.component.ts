@@ -30,7 +30,6 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
   amqpProtocol = false;
   httpProtocol = false;
 
-  graphAddOpDisabled = true;
   graphUpdateOpDisabled = true;
   graphDeleteOpDisabled = true;
 
@@ -89,19 +88,12 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
    *
    */
   ngOnInit() {
-
       this.protocolSelection.clear();
-
       this.createForm();
-
       this.initialForm = this.protocolForm.value;
-
       this.onFormChanges();
-
       console.log('Getting protocols');
-
       this.getProtocols(this.gatewayId);
-
   }
 
   /**
@@ -190,7 +182,6 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
               console.log('Received response for graphService.getProtocols: ', res);
               this.protocolsDataSource.data = res as Protocol[];
 
-              this.graphAddOpDisabled = true;
               this.graphUpdateOpDisabled = true;
               this.graphDeleteOpDisabled = true;
           });
@@ -314,9 +305,7 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
           this.amqpProtocol = true;
 
       }
-
       this.graphDeleteOpDisabled = false;
-      this.graphAddOpDisabled = true;
       this.graphUpdateOpDisabled = true;
   }
 
@@ -328,7 +317,6 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
 
 
       this.graphDeleteOpDisabled = true;
-      this.graphAddOpDisabled = true;
       this.graphUpdateOpDisabled = true;
 
       this.mqttProtocol = false;
@@ -591,10 +579,6 @@ export class IgeProtocolsComponent implements OnInit, AfterViewInit {
           if (this.protocolForm.dirty) {
 
               this.graphDeleteOpDisabled = true;
-
-              if(!this.protocolSelection.hasValue()) {
-                this.graphAddOpDisabled = false;
-              }
 
               if (this.protocolSelection.hasValue()) {
                   this.graphUpdateOpDisabled = false;
