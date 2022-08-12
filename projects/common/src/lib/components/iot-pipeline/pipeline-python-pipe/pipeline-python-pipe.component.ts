@@ -93,7 +93,9 @@ export class PipelinePythonPipeComponent implements OnInit, OnDestroy {
   getInputSelection() {
     this.inputSelections = [];
     this.pythonInputs.forEach(node => {
-      node.data.customdata.context.data.output.forEach(output => this.inputSelections.push(node.data.customdata.context.data.name + '.' + output));
+      node.data.customdata.context.data.output.forEach(output =>  {
+        this.inputSelections.push(node.data.customdata.context.name + '.' + output)
+      });
     });
   }
 

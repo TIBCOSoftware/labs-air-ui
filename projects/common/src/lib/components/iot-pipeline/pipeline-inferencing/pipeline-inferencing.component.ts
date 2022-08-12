@@ -3,13 +3,11 @@ import { MatTreeNestedDataSource } from '@angular/material/tree';
 
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { SelectionModel } from '@angular/cdk/collections';
-import { EdgeService } from '../../../services/edge/edge.service';
-import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 
-import { Device, FiltersConfig, ModelConfig } from '../../../models/iot.model';
+import { Device, FiltersConfig } from '../../../models/iot.model';
 import { Validators, UntypedFormArray, UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
 import { RestEndpoint } from '@TIBCOSoftware/labs-air-graph-client';
-import { debounceTime, distinctUntilChanged, Observable, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Observable, Subject, Subscription } from 'rxjs';
 
 export interface SelectItem {
     value: string;
@@ -38,7 +36,7 @@ export class PipelineInferencingComponent implements OnInit, OnDestroy {
     @Input() nodeChangeEvent: Observable<any>;
     nodeChangeSubscription: Subscription;
     @Input() modelForm: UntypedFormGroup;
-    @Input() filters: any[];
+    filters: any[];
 
     // Added to prevent compile error in oss version
     activeNode: Node;
@@ -66,12 +64,12 @@ export class PipelineInferencingComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         // this.devicesDataSource.data = TREE_DATA;
         this.initForm();
-        this.initializeDataSource();
         console.log('PipelineInferencing - ngOnInit - devices: ', this.devices);
         this.onFormChanges();
         if (this.model?.data['customdata']) {
             this.updateInferencingForm(this.model.data['customdata']);
         }
+        this.initializeDataSource();
     }
 
     ngOnDestroy(): void {
@@ -122,7 +120,7 @@ export class PipelineInferencingComponent implements OnInit, OnDestroy {
     leafItemSelectionToggle(node: DeviceNode): void {
 
         this.checklistSelection.toggle(node);
-
+        this.modelForm.setControl('filters', this.formBuilder.array(this.getFilters()));
     }
 
     /** Toggle the to-do item selection. Select/deselect all the descendants node */
@@ -136,7 +134,7 @@ export class PipelineInferencingComponent implements OnInit, OnDestroy {
 
         // Force update for the parent
         descendants.forEach(child => this.checklistSelection.isSelected(child));
-
+        this.modelForm.setControl('filters', this.formBuilder.array(this.getFilters()));
     }
 
 
@@ -159,14 +157,6 @@ export class PipelineInferencingComponent implements OnInit, OnDestroy {
     }
 
     selectNode(parent: string, name: string) {
-
-        console.log('selectNode: ', parent, ' ', name);
-        console.log('deviceDataSource.data: ', this.devicesDataSource.data);
-        console.log('deviceDataSource.data length: ', this.devicesDataSource.data.length);
-        console.log('deviceDataSource.data[0]: ', this.devicesDataSource.data[0]);
-
-        console.log('deviceNodeList length: ', this.deviceNodeList.length);
-        console.log('deviceNodeList[0]: ', this.deviceNodeList[0]);
 
         for (const parentNode of this.devicesDataSource.data) {
 
@@ -218,6 +208,7 @@ export class PipelineInferencingComponent implements OnInit, OnDestroy {
 
         //   this.treeControl.expand(this.treeControl.dataNodes[i])
         // }
+        this.modelForm.setControl('filters', this.formBuilder.array(this.getFilters()));
     }
 
     selectAll() {
@@ -235,15 +226,9 @@ export class PipelineInferencingComponent implements OnInit, OnDestroy {
             descendants.forEach(child => this.checklistSelection.isSelected(child));
 
             this.treeControl.expand(node);
-
         });
 
-        // for (let i = 0; i < this.treeControl.dataNodes.length; i++) {
-        //   if(!this.checklistSelection.isSelected(this.treeControl.dataNodes[i]))
-        //     this.checklistSelection.toggle(this.treeControl.dataNodes[i]);
-        //   this.treeControl.expand(this.treeControl.dataNodes[i])
-        // }
-
+        this.modelForm.setControl('filters', this.formBuilder.array(this.getFilters()))
     }
 
     onModelSelected(event) {
@@ -299,7 +284,6 @@ export class PipelineInferencingComponent implements OnInit, OnDestroy {
         )
         .subscribe( () => {
             this.formUpdatedEvent.emit(this.modelForm.value);
-            this.initializeDataSource();
         });
     }
 
@@ -343,16 +327,14 @@ export class PipelineInferencingComponent implements OnInit, OnDestroy {
             logLevel: ['INFO', Validators.required],
             method: ['PUT', Validators.required],
             headers: this.formBuilder.array([]),
-            base64Encoded: [true, Validators.required]
+            base64Encoded: [true, Validators.required],
+            filters: this.formBuilder.array([])
         });
     }
 
     updateInferencingForm(context) {
-
         if (context != null || context != undefined) {
             console.log('Updating inferencing component with context: ', context);
-
-            // this.filters = context.filters;
 
             this.modelForm.patchValue({
                 name: context.name,
@@ -367,7 +349,8 @@ export class PipelineInferencingComponent implements OnInit, OnDestroy {
             const formGroups = context.headers.map(x => this.formBuilder.array(x.map(y => this.formBuilder.group(y)))) as [];
             const headersArray = this.formBuilder.array(formGroups) as UntypedFormArray
             this.modelForm.setControl('headers', headersArray);
-
+            this.modelForm.setControl('filters', this.formBuilder.array(context.filters))
+            this.filters = context.filters;
         }
     }
 }

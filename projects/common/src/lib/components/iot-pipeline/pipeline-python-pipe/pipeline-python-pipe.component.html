@@ -46,14 +46,17 @@
             <h4 class="input-heading">Input Config</h4>
             <div class="input-selection" formGroupName="data">
                 <div class="input" formGroupName="input" *ngFor="let pipe of pipeInputs.controls | keyvalue; let i = index">
-                    <mat-form-field appearance="outline">
-                        <mat-label>Input value for {{pipe.key}}</mat-label>
-                        <mat-select [formControlName]="pipe.key">
-                            <mat-option *ngFor="let item of inputSelections" [value]="item">
-                                {{item}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
+                    <span>Input value for <b>{{pipe.key}}</b>:</span>
+                    <div>
+                        <mat-form-field appearance="outline">
+                            <mat-label>{{pipe.key}}</mat-label>
+                            <mat-select [formControlName]="pipe.key">
+                                <mat-option *ngFor="let item of inputSelections" [value]="item">
+                                    {{item}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
                 </div>
             </div>
             <div class="extra-config">

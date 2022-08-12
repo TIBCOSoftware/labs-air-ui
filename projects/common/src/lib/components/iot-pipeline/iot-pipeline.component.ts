@@ -6,9 +6,8 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { ActivatedRoute } from '@angular/router';
 
 import { PipelineService } from '../../services/pipeline/pipeline.service';
-import { Device } from '../../models/iot.model';
+import { Device, Filter } from '../../models/iot.model';
 
-import { PipelineFilteringComponent } from './pipeline-filtering/pipeline-filtering.component';
 import { PipelineInferencingComponent } from './pipeline-inferencing/pipeline-inferencing.component';
 import { PipelineRestServiceComponent } from './pipeline-rest-service/pipeline-rest-service.component';
 // Rete editor specific
@@ -50,7 +49,6 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
 
     gatewayId = '';
     gateway = null as Gateway;
-    devices: Device[] = [];
     // pipelineSelected = this.pipelineService.pipelineSelected;  // Used to control the display of buttons
 
     dateFormat = 'yyyy-MM-dd  HH:mm:ss';
@@ -82,39 +80,14 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
 
     lastNodeSelected = null;
 
-    filters: any[] = [];
-
     // should this be just one big form? 
     pipelineForm: UntypedFormGroup;
-    protocolForm: UntypedFormGroup;
-    dataStoreForm: UntypedFormGroup;
-    streamingForm: UntypedFormGroup;
-    modelForm: UntypedFormGroup;
-    ruleForm: UntypedFormGroup;
-    ruleExpressionForm: UntypedFormGroup;
-    ruleTextMatchingForm: UntypedFormGroup;
-    flogoFlowForm: UntypedFormGroup;
-    restServiceForm: UntypedFormGroup;
-    dataOptionsForm: UntypedFormGroup;
-    pythonForm: UntypedFormGroup;
-    restBroadcastForm: UntypedFormGroup;
-    requestReplyForm: UntypedFormGroup;
-    pythonPipeForm: UntypedFormGroup;
-    errorHandlerForm: UntypedFormGroup;
     artifacts = [];
 
     selectedNode: any;
 
     pipelineObserver: Subscription;
     nodeChangeEvent: Subject<any> = new Subject<any>();
-
-    private filterComponent: PipelineFilteringComponent;
-
-    @ViewChild('filterComponent') set fcontent(content: PipelineFilteringComponent) {
-        if (content) { // initially setter gets called with undefined
-            this.filterComponent = content;
-        }
-    }
 
     private inferenceComponent: PipelineInferencingComponent;
     @ViewChild('inferenceComponent') set icontent(content: PipelineInferencingComponent) {
@@ -160,6 +133,7 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
 
     ngOnDestroy(): void {
         this.pipelineObserver.unsubscribe();
+        this.pipelineService.pipelineSelection.clear();
     }
 
     get pipelinesDataSource(): MatTableDataSource<Pipeline> {
@@ -184,6 +158,14 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
 
     get models(): RestEndpoint[] {
         return this.pipelineService.models;
+    }
+
+    get devices(): Device[] {
+        return this.pipelineService.devices;
+    }
+
+    get filters(): Filter[] {
+        return this.pipelineService.filters;
     }
 
     async ngAfterViewInit() {
@@ -298,9 +280,6 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
             if (this.lastNodeSelected != null && this.lastNodeSelected == node) {
                 console.log('Removing selected node.  Need to clean panel');
 
-                // Clean shared variables
-                this.clearFormsAndFilters();
-
                 this.lastNodeSelected = null;
 
                 this.resetNodeContext(null);
@@ -312,18 +291,13 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
         this.editor.on('nodeselected', node => {
             console.log('Editor node selected', node);
             console.log('Node data: ', node.data);
-
-            this.nodeChangeEvent.next(node);
+            this.pipelineService.filters = [];
 
             if (node.name == 'Python Pipe') {
                 this.getPythonInputOutput(node);
             }
 
-            if (this.lastNodeSelected != null) {
-
-                // Clean shared variables
-                this.clearFormsAndFilters();
-            }
+            this.nodeChangeEvent.next(node);
 
             this.lastNodeSelected = node;
 
@@ -337,9 +311,6 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
             console.log('Editor selected');
 
             if (this.lastNodeSelected != null) {
-
-                // Clean shared variables
-                this.clearFormsAndFilters();
 
                 // Remove visual selection
                 // this.editor.selected.remove(this.lastNodeSelected);
@@ -433,7 +404,6 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
                 }
                 case 'Filters': {
                     this.filteringConfig = true;
-                    this.updateFiltersComponent(contextObj);
                     break;
                 }
                 case 'Inferencing': {
@@ -511,23 +481,6 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
             subscriptionTopic: ['', Validators.required],
             logLevel: ['INFO', Validators.required]
         });
-    }
-
-    clearFormsAndFilters() {
-        this.filters = [];
-    }
-
-    /**
-     *
-     * @param context
-     */
-    updateFiltersComponent(context) {
-
-        if (context != null || context != undefined) {
-            console.log('Updating filter component with context: ', context);
-
-            this.filters = context.filters;
-        }
     }
 
     /**
@@ -634,7 +587,7 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
     saveToCanvas(eventData: any) {
         const node = this.editor.nodes.find(node => node.id === this.selectedNode.id)
         node.data['customdata'] = eventData;
-        console.log(' saving nodes', this.editor.nodes);
+        console.log('saving nodes', this.editor.nodes);
     }
 
     getPythonInputOutput(node) {
@@ -660,6 +613,12 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
         if (nextNode.length > 0) {
             return nextNode
         }
+    }
+
+    updateFilters(filters) {
+        const filtersObj = { filters: filters }
+        this.saveToCanvas(filtersObj);
+        this.pipelineService.filters = filters;
     }
 
 }
