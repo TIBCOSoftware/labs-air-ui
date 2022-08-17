@@ -23,7 +23,7 @@ export class IgeResourcesComponent implements OnInit {
     name: new UntypedFormControl,
     type: new UntypedFormControl,
     fileContent: new UntypedFormControl,
-    uid: new UntypedFormControl,
+    uuid: new UntypedFormControl,
     created: new UntypedFormControl,
     modified: new UntypedFormControl,
     inputs: new UntypedFormArray([]),
@@ -59,7 +59,7 @@ export class IgeResourcesComponent implements OnInit {
       name: row.name,
       type: row.type,
       fileContent: row.fileContent,
-      uid: row.uid,
+      uuid: row.uuid,
       created: row.created,
       modified: row.modified,
       scope: row.scope,
@@ -133,7 +133,7 @@ export class IgeResourcesComponent implements OnInit {
     resource.created = this.resourceForm.get('created').value;
     resource.modified = ts;
     resource.name = this.resourceForm.get('name').value;
-    resource.uid = this.resourceForm.get('uid').value;
+    resource.uuid = this.resourceForm.get('uuid').value;
     resource.type = this.resourceForm.get('type').value;
     resource.scope = this.gatewayId as PythonResource.ScopeEnum;
     resource.fileContent = this.resourceForm.get('fileContent').value;
@@ -149,7 +149,7 @@ export class IgeResourcesComponent implements OnInit {
   }
 
   deleteResource() {
-    this.graphService.deletePythonResource(this.resourceForm.get('uid').value).subscribe(
+    this.graphService.deletePythonResource(this.resourceForm.get('uuid').value).subscribe(
       () => {
         this.getResources();
         this.resetResource();
