@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { UntypedFormArray, UntypedFormControl, UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { MatTabGroup } from '@angular/material/tabs'
-import { Model } from '@TIBCOSoftware/labs-air-graph-client';
+import { RestEndpoint } from '@TIBCOSoftware/labs-air-graph-client';
 import { debounceTime, distinctUntilChanged, Observable, Subscription } from 'rxjs';
 import { RestHeadersComponent } from '../rest-headers/rest-headers.component';
 @Component({
@@ -13,7 +13,7 @@ export class PipelineRestBroadcastComponent implements OnInit, OnDestroy {
 
   @Input() restBroadcast;
   @Input() restBroadcastForm: UntypedFormGroup;
-  @Input() models: Model[];
+  @Input() models: RestEndpoint[];
   @ViewChild('tabs') tabGroup: MatTabGroup;
   @ViewChild('restHeaders') restHeaders!: RestHeadersComponent;
   @Output() formUpdatedEvent = new EventEmitter<any>();
@@ -93,7 +93,7 @@ export class PipelineRestBroadcastComponent implements OnInit, OnDestroy {
     return model;
   }
 
-  setForm(model: Model, index: number) {
+  setForm(model: RestEndpoint, index: number) {
     this.restURLs.setControl(index, new UntypedFormControl(model.url));
     this.restBodies.setControl(index, new UntypedFormControl(atob(model.inputTemplate)));
     this.restMethods.setControl(index, new UntypedFormControl(model.method));

@@ -1,12 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
-import { TSReading } from '@TIBCOSoftware/labs-air-graph-client';
+import { Reading } from '@TIBCOSoftware/labs-air-graph-client';
 import { ChartConfiguration, ChartType, ChartData, Tooltip } from 'chart.js';
 import { Subscription } from 'rxjs';
 import { Device, Resource } from '../../../models/iot.model';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
-import { AppConfigService } from '../../../services/config/app-config.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-common-iot-gateway-location',
@@ -16,8 +16,8 @@ import { AppConfigService } from '../../../services/config/app-config.service';
 export class CommonIotGatewayLocationComponent implements OnInit, OnDestroy {
   device: Device;
   instrument: Resource;
-  resourceReadings: TSReading[]  = [];
-  resourceInferredReadings: TSReading[]  = [];
+  resourceReadings: Reading[]  = [];
+  resourceInferredReadings: Reading[]  = [];
   subscriptions: Subscription[] = [];
   locationData = [];
 
@@ -38,8 +38,12 @@ export class CommonIotGatewayLocationComponent implements OnInit, OnDestroy {
   scatterChartDatasets: ChartData<'scatter'> = {
     datasets: [],
   }
+  gatewayId: string;
 
-  constructor(private graphService: GraphService, private formBuilder: UntypedFormBuilder) {
+  constructor(
+    private graphService: GraphService, 
+    private formBuilder: UntypedFormBuilder,
+    private route: ActivatedRoute) {
       this.instrumentForm = this.formBuilder.group({
           valueType: [''],
           valueReadWrite: [''],
@@ -122,17 +126,17 @@ export class CommonIotGatewayLocationComponent implements OnInit, OnDestroy {
   }
 
   public getReadings() {
-      this.subscriptions.push(this.graphService.getReadings(this.device.name, this.instrument.name, 300)
+      this.subscriptions.push(this.graphService.getReadings(this.gatewayId,this.device.name, this.instrument.name, 300)
           .subscribe(res => {
-              this.resourceReadings = res as TSReading[];
+              this.resourceReadings = res as Reading[];
               this.setScatterChartDataSet();
           }));
   }
 
   public getReadingsBetween(deviceName: string, resourceName: string, fromts: number, tots: number) {
-    this.subscriptions.push(this.graphService.getReadingsBetween(deviceName, resourceName, fromts, tots)
+    this.subscriptions.push(this.graphService.getReadingsBetween(this.gatewayId, deviceName, resourceName, fromts, tots)
           .subscribe(res => {
-              this.resourceReadings = res as TSReading[];
+              this.resourceReadings = res as Reading[];
               this.setScatterChartDataSet();
           }));
   }

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { FlogoDeployService } from '../../services/deployment/flogo-deploy.service';
 import { EdgeService } from '../../services/edge/edge.service';
 
-import { Gateway, GraphService, Model, Pipeline } from '@TIBCOSoftware/labs-air-graph-client';
+import { Gateway, GraphService, RestEndpoint, Pipeline } from '@TIBCOSoftware/labs-air-graph-client';
 
 import { NodeEditor } from 'rete';
 
@@ -35,7 +35,7 @@ export class PipelineService {
   pipelineSelected = false;
   artifacts = [];
   devices: Device[] = [];
-  models: Model[] = [];
+  restEndpoint: RestEndpoint[] = [];
   filters = [];
   pipelineSelection = new SelectionModel<Pipeline>(false, []);
 
@@ -666,11 +666,11 @@ export class PipelineService {
   getModels(gatewayId) {
     console.log('Calling GraphService to get models for: ', gatewayId);
 
-    this.graphService.getModels(gatewayId)
+    this.graphService.getRestEndpoints(gatewayId)
       .subscribe(res => {
-        this.models = res as Model[];
+        this.restEndpoint = res as RestEndpoint[];
 
-        console.log('Got models: ', this.models);
+        console.log('Got models: ', this.restEndpoint);
 
       });
   }

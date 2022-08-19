@@ -39,7 +39,7 @@
         </app-common-pipeline-filtering>
 
         <app-common-pipeline-inferencing *ngIf="inferencingConfig" #inferenceComponent [devices]="devices"
-            [models]="models" [model]="selectedNode" (formUpdatedEvent)="saveToCanvas($event)"
+            [models]="restEndpoint" [model]="selectedNode" (formUpdatedEvent)="saveToCanvas($event)"
             [nodeChangeEvent]="nodeChangeEvent.asObservable()" fxFlex>
         </app-common-pipeline-inferencing>
 
@@ -80,7 +80,7 @@
         <app-pipeline-python *ngIf="pythonConfig" [python]="selectedNode" [gatewayId]="gatewayId"
             (formUpdatedEvent)="saveToCanvas($event)" [nodeChangeEvent]="nodeChangeEvent.asObservable()">
         </app-pipeline-python>
-        <app-pipeline-rest-broadcast *ngIf="restBroadcastConfig" [restBroadcast]="selectedNode" [models]="models"
+        <app-pipeline-rest-broadcast *ngIf="restBroadcastConfig" [restBroadcast]="selectedNode" [models]="restEndpoint"
             (formUpdatedEvent)="saveToCanvas($event)" [nodeChangeEvent]="nodeChangeEvent.asObservable()">
         </app-pipeline-rest-broadcast>
         <app-pipeline-request-reply *ngIf="requestReplyConfig" [requestReply]="selectedNode"

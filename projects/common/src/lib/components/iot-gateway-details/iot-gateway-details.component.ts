@@ -48,8 +48,7 @@ export class CommonIotGatewayDetailsComponent implements OnInit {
     private edgeService: EdgeService,
     private route: ActivatedRoute,
     private breadcrumbs: BreadcrumbsService,
-    private componentFactoryResolver: ComponentFactoryResolver
-  ) { }
+    private componentFactoryResolver: ComponentFactoryResolver) { }
 
   ngOnInit(): void {
       // load devices

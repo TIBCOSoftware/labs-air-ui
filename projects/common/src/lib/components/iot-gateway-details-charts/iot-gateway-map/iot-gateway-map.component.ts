@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { TSReading } from '@TIBCOSoftware/labs-air-graph-client';
+import { Reading } from '@TIBCOSoftware/labs-air-graph-client';
 import { interval, Subscription } from 'rxjs';
 import { Device, Resource } from '../../../models/iot.model';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-common-iot-gateway-map',
@@ -10,76 +11,82 @@ import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
     styleUrls: ['./iot-gateway-map.component.css']
 })
 export class CommonIotGatewayMapComponent implements OnInit, OnDestroy {
-  device: Device;
-  instrument: Resource;
-  mapConfig = null;
-  mapMarketUpdate = null;
-  createMapFlag = true;
-  public resourceReadings: TSReading[] = [];
-  public resourceInferredReadings: TSReading[] = [];
-  subscriptions: Subscription[] = [];
-  source = interval(5000);
+    device: Device;
+    instrument: Resource;
+    mapConfig = null;
+    mapMarketUpdate = null;
+    createMapFlag = true;
+    public resourceReadings: Reading[] = [];
+    public resourceInferredReadings: Reading[] = [];
+    subscriptions: Subscription[] = [];
+    source = interval(5000);
+    gatewayId: string;
 
-  constructor(private graphService: GraphService) { }
+    constructor(
+        private graphService: GraphService,
+        private route: ActivatedRoute) { }
 
-  ngOnInit(): void {
-      this.getMaps();
-  }
+    ngOnInit(): void {
+        if (this.route.snapshot.paramMap.get('gatewayId')) {
+            this.gatewayId = this.route.snapshot.paramMap.get('gatewayId');
+        }
+        this.getMaps();
+    }
 
-  ngOnDestroy(): void {
-      this.subscriptions.forEach(sub => sub.unsubscribe());
-  }
+    ngOnDestroy(): void {
+        this.subscriptions.forEach(sub => sub.unsubscribe());
+    }
 
-  public getMaps() {
-      this.getReadings();
+    public getMaps() {
+        this.getReadings();
 
-      this.subscriptions.push(this.source.subscribe(val => this.getReadings()));
-  }
+        this.subscriptions.push(this.source.subscribe(val => this.getReadings()));
+    }
 
-  getReadings() {
-      this.graphService.getReadings(this.device.name, this.instrument.name, 300)
-          .subscribe(res => {
-              this.resourceReadings = res as TSReading[];
-              this.setMapDataSet(this.device.name);
-          });
-  }
+    getReadings() {
+        this.graphService.getReadings(this.gatewayId, this.device.name, this.instrument.name, 300)
+            .subscribe(res => {
+                this.resourceReadings = res as Reading[];
+                this.setMapDataSet(this.device.name);
+            });
+    }
 
-  public setMapDataSet(deviceName: string) {
-      const mapData = [];
-      const idx = this.resourceReadings.length - 1;
-      if (idx < 0) {
-          return;
-      }
-      const coords = this.resourceReadings[idx].value.split('|', 3);
-      console.log('Setting marker for map reading: ', this.resourceReadings[idx].value);
-      console.log('Setting marker for map: ', coords);
+    public setMapDataSet(deviceName: string) {
+        const mapData = [];
+        const idx = this.resourceReadings.length - 1;
+        if (idx < 0) {
+            return;
+        }
+        const coords = this.resourceReadings[idx].value.split('|', 3);
+        console.log('Setting marker for map reading: ', this.resourceReadings[idx].value);
+        console.log('Setting marker for map: ', coords);
 
-      mapData.push({
-          lat: Number(coords[0]),
-          lon: Number(coords[1]),
-          label: coords[2],
-          uuid: deviceName
-      });
+        mapData.push({
+            lat: Number(coords[0]),
+            lon: Number(coords[1]),
+            label: coords[2],
+            uuid: deviceName
+        });
 
-      // const center = this.graphService.getRouteCenter(deviceName);
+        // const center = this.graphService.getRouteCenter(deviceName);
 
-      if (this.createMapFlag) {
-          this.mapConfig = {
-              createMap: this.createMapFlag,
-              // centerLat: center[0],
-              // centerLon: center[1],
-              zoom: 4,
-              showColorAxis: false,
-              data: mapData,
-              // polyline: this.graphService.getRoute(deviceName)
-          };
-          this.createMapFlag = false;
-      }
-      else {
-          this.mapConfig = {
-              createMap: this.createMapFlag,
-              data: mapData,
-          };
-      }
-  }
+        if (this.createMapFlag) {
+            this.mapConfig = {
+                createMap: this.createMapFlag,
+                // centerLat: center[0],
+                // centerLon: center[1],
+                zoom: 4,
+                showColorAxis: false,
+                data: mapData,
+                // polyline: this.graphService.getRoute(deviceName)
+            };
+            this.createMapFlag = false;
+        }
+        else {
+            this.mapConfig = {
+                createMap: this.createMapFlag,
+                data: mapData,
+            };
+        }
+    }
 }
