@@ -34,6 +34,7 @@ export class PipelineService {
   undeployDisabled = true;
   pipelineSelected = false;
   artifacts = [];
+  selectableArtifacts = [];
   devices: Device[] = [];
   restEndpoint: RestEndpoint[] = [];
   filters = [];
@@ -389,6 +390,15 @@ export class PipelineService {
       if (useGPU) {
         extra.push({ "Name": "services.$Name$.deploy.resources.reservations.devices[0].capabilities[0]", "Value": "gpu" });
       }
+
+      if (this.pipelineData.configurationFile) {
+
+      }
+
+      if (this.pipelineData.requirement) {
+
+      }
+
       errorFlow.forEach(flowNode => {
 
         console.log('Building from : ', flowNode);
@@ -1748,6 +1758,7 @@ export class PipelineService {
   buildPythonPipeArtifacts() {
     this.graphService.getPythonResources(this.gatewayId).subscribe(resp => {
       let pythonPipeProperties = []
+      this.selectableArtifacts = resp;
       resp.forEach(resource => {
         if (resource.type == 'folder') {
           if (resource.fileContent !== 'null') {
@@ -1786,7 +1797,6 @@ export class PipelineService {
         }
       })
       this.artifacts = pythonPipeProperties
-
     })
   }
 

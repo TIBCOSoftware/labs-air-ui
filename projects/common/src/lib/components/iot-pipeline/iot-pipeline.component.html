@@ -27,7 +27,7 @@
 
     <div class="configuration-panel">
         <!-- Configuration Panel Components -->
-        <app-common-pipeline-config *ngIf="pipelineConfig" [pipelineForm]="pipelineForm" fxFlex>
+        <app-common-pipeline-config *ngIf="pipelineConfig" [pipelineForm]="pipelineForm" [artifacts]="selectableArtifacts" fxFlex>
         </app-common-pipeline-config>
 
         <app-common-pipeline-data-subscriber *ngIf="dataSubscriberConfig" [dataSubscriber]="selectedNode"

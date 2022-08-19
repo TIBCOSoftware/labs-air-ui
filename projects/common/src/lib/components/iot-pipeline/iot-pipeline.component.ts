@@ -167,6 +167,10 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
         return this.pipelineService.filters;
     }
 
+    get selectableArtifacts(): any[] {
+        return this.pipelineService.selectableArtifacts;
+    }
+
     async ngAfterViewInit() {
 
         console.log('PipelineEditor - ngAfterViewInit - devices: ', this.devices);

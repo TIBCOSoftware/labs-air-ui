@@ -42,16 +42,16 @@
             <mat-form-field appearance="outline">
                 <mat-label>Requirement</mat-label>
                 <mat-select formControlName="requirement">
-                    <mat-option *ngFor="let item of logLevels;" [value]="item.value">
-                        {{item.viewValue}}
+                    <mat-option *ngFor="let requirement of requirements;" [value]="requirement.name">
+                        {{requirement.name}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
             <mat-form-field appearance="outline">
                 <mat-label>Configuration</mat-label>
                 <mat-select formControlName="configurationFile">
-                    <mat-option *ngFor="let item of logLevels;" [value]="item.value">
-                        {{item.viewValue}}
+                    <mat-option *ngFor="let file of files;" [value]="file.name">
+                        {{file.name}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>

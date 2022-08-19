@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
-
 export interface SelectItem {
   value: string;
   viewValue: string;
@@ -30,8 +29,17 @@ export class PipelineConfigComponent {
       { value: 'DEBUG', viewValue: 'DEBUG' }
   ];
 
+  @Input() artifacts: any[];
   @Input() pipelineForm: UntypedFormGroup;
 
   constructor() { }
+
+  get files() {
+    return this.artifacts.filter(x => x.type == 'file');
+  }
+
+  get requirements() {
+    return this.artifacts.filter(x => x.type == 'requirement');
+  }
 
 }
