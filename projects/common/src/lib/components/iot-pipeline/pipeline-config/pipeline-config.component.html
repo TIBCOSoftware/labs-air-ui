@@ -41,7 +41,7 @@
         <mat-tab label="Artifact Selection">
             <mat-form-field appearance="outline">
                 <mat-label>Requirement</mat-label>
-                <mat-select formControlName="logLevel">
+                <mat-select formControlName="requirement">
                     <mat-option *ngFor="let item of logLevels;" [value]="item.value">
                         {{item.viewValue}}
                     </mat-option>
@@ -49,7 +49,7 @@
             </mat-form-field>
             <mat-form-field appearance="outline">
                 <mat-label>Configuration</mat-label>
-                <mat-select formControlName="logLevel">
+                <mat-select formControlName="configurationFile">
                     <mat-option *ngFor="let item of logLevels;" [value]="item.value">
                         {{item.viewValue}}
                     </mat-option>

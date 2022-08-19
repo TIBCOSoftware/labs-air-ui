@@ -477,7 +477,9 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
             modified: ['', Validators.required],
             status: ['', Validators.required],
             flowConfiguration: ['', Validators.required],
-            logLevel: ['INFO', Validators.required]
+            logLevel: ['INFO', Validators.required],
+            requirement: [''],
+            configurationFile: ['']
         });
     }
 
@@ -533,7 +535,9 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
             deployerType: '',
             description: '',
             status: '',
-            logLevel: 'INFO'
+            logLevel: 'INFO',
+            requirement: '',
+            configurationFile: ''
         });
 
     }
@@ -577,7 +581,9 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
             description: pipeline.description,
             status: pipeline.status,
             flowConfiguration: pipeline.flowConfiguration,
-            logLevel: pipeline.logLevel
+            logLevel: pipeline.logLevel,
+            requirement: pipeline.requirement,
+            configurationFile: pipeline.configurationFile
         });
     }
 
