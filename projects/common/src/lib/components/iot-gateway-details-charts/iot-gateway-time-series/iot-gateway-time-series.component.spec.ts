@@ -6,6 +6,7 @@ import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { Device, Resource } from '../../../models/iot.model';
 
 import { CommonIotGatewayTimeSeriesComponent } from './iot-gateway-time-series.component';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('CommonIotGatewayTimeSeriesComponent', () => {
     let component: CommonIotGatewayTimeSeriesComponent;
@@ -16,7 +17,7 @@ describe('CommonIotGatewayTimeSeriesComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [CommonIotGatewayTimeSeriesComponent],
-            imports: [ReactiveFormsModule],
+            imports: [ReactiveFormsModule, RouterTestingModule],
             providers: [
                 { provide: GraphService, useValue: mockGraphService }
             ],

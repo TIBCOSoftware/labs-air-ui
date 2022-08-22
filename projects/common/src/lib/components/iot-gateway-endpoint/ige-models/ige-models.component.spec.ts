@@ -10,7 +10,7 @@ import { UntypedFormBuilder } from '@angular/forms';
 describe('IgeModelsComponent', () => {
     let component: IgeModelsComponent;
     let fixture: ComponentFixture<IgeModelsComponent>;
-    const mockGraphService = jasmine.createSpyObj(['getModels']);
+    const mockGraphService = jasmine.createSpyObj(['getRestEndpoints']);
 
     mockGraphService.getModels.and.returnValue(of([]));
 

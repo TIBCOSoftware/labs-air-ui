@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { Device, Resource } from '../../../models/iot.model';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { CommonIotGatewayXyzValueComponent } from './iot-gateway-xyz-value.component';
 
@@ -19,7 +20,8 @@ describe('CommonIotGatewayXyzValueComponent', () => {
             providers: [
                 { provide: GraphService, useValue: mockGraphService }
             ],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA]
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
+            imports: [RouterTestingModule]
         })
             .compileComponents();
     });

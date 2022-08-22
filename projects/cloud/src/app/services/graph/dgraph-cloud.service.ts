@@ -5,8 +5,8 @@ import {
   DataStoreService,
   Gateway,
   GatewayService,
-  Model,
-  ModelService,
+  RestEndpoint,
+  RestEndpointsService,
   Notification,
   NotificationService,
   Pipeline,
@@ -15,8 +15,8 @@ import {
   ProtocolService,
   PythonResource,
   PythonResourceService,
-  ReadingService,
-  TSReading
+  ReadingsService,
+  Reading
 } from '@TIBCOSoftware/labs-air-graph-client';
 import { catchError, Observable, of } from 'rxjs';
 import { AppConfigService } from 'common';
@@ -36,11 +36,11 @@ export class DGraphCloudService extends GraphService {
     private appConfigService: AppConfigService,
     private dataStoreService: DataStoreService,
     private gatewayService: GatewayService,
-    private modelService: ModelService,
+    private restEndpointService: RestEndpointsService,
     private notificationService: NotificationService,
     private pipelineService: PipelineService,
     private protocolService: ProtocolService,
-    private readingService: ReadingService,
+    private readingService: ReadingsService,
     private pythonResourceService: PythonResourceService) {
     super(http, appConfigService.getFromConfigOrEnv('dgraphUrl'), false);
     console.log(`Constructor dGraphCloud service with url ${appConfigService.getFromConfigOrEnv('dgraphUrl')}`);
@@ -204,8 +204,8 @@ export class DGraphCloudService extends GraphService {
    * @param gatewayName
    */
   getGatewayAndModels(gatewayName: any): Observable<Gateway[]> {
-    return this.modelService.getGatewayAndModels(gatewayName).pipe(
-      catchError(this.handleError<Gateway[]>('getGatewayWithModels', []))
+    return this.restEndpointService.getGatewayAndRestEndpoints(gatewayName).pipe(
+      catchError(this.handleError<Gateway[]>('getGatewayWithRestEndpoints', []))
     );
   }
 
@@ -213,41 +213,41 @@ export class DGraphCloudService extends GraphService {
    *
    * @param gatewayName
    */
-  getModels(gatewayName: any): Observable<Model[]> {
-    return this.modelService.getModels(gatewayName).pipe(
-      catchError(this.handleError<Model[]>('getModels', []))
+  getModels(gatewayName: any): Observable<RestEndpoint[]> {
+    return this.restEndpointService.getRestEndpoints(gatewayName).pipe(
+      catchError(this.handleError<RestEndpoint[]>('getRestEndpoints', []))
     );
   }
 
   /**
    *
    * @param gatewayUuid
-   * @param model
+   * @param restEndpoint
    */
-  addModel(gatewayUuid: string, model: Model): Observable<Model> {
-    return this.modelService.addModel(model, gatewayUuid).pipe(
-      catchError(this.handleError<Model>('addModels'))
+  addModel(gatewayUuid: string, restEndpoint: RestEndpoint): Observable<RestEndpoint> {
+    return this.restEndpointService.addRestEndpoint(restEndpoint, gatewayUuid).pipe(
+      catchError(this.handleError<RestEndpoint>('addRestEndpoint'))
     );
   }
 
   /**
    *
-   * @param model
+   * @param restEndpoint
    */
-  updateModel(model: Model): Observable<Model> {
-    return this.modelService.updateModel(model).pipe(
-      catchError(this.handleError<Model>('updateModels'))
+  updateModel(restEndpoint: RestEndpoint): Observable<RestEndpoint> {
+    return this.restEndpointService.updateRestEndpoint(restEndpoint).pipe(
+      catchError(this.handleError<RestEndpoint>('updateRestEndpoint'))
     );
   }
 
   /**
    *
    * @param gatewayUuid
-   * @param modelUuid
+   * @param restEndpointUuid
    */
-  deleteModel(gatewayUuid: string, modelUuid: string): Observable<string> {
-    return this.modelService.deleteModel(gatewayUuid, modelUuid).pipe(
-      catchError(this.handleError<string>('deleteModel'))
+  deleteModel(gatewayUuid: string, restEndpointUuid: string): Observable<string> {
+    return this.restEndpointService.deleteRestEndpoint(gatewayUuid, restEndpointUuid).pipe(
+      catchError(this.handleError<string>('deleteRestEndpoint'))
     );
   }
 
@@ -346,9 +346,9 @@ export class DGraphCloudService extends GraphService {
    * @param instrumentName
    * @param numReadings
    */
-  getReadings(deviceName: any, instrumentName: any, numReadings: any): Observable<TSReading[]> {
-    return this.readingService.getReadings(deviceName, instrumentName, numReadings).pipe(
-      catchError(this.handleError<TSReading[]>('getReadings', []))
+  getReadings(gatewayUuid: any, deviceName: any, instrumentName: any, numReadings: any): Observable<Reading[]> {
+    return this.readingService.getReadings(gatewayUuid, deviceName, instrumentName, numReadings).pipe(
+      catchError(this.handleError<Reading[]>('getReadings', []))
     );
   }
 
@@ -358,9 +358,9 @@ export class DGraphCloudService extends GraphService {
    * @param instrumentName
    * @param ts
    */
-  getReadingsAt(deviceName: any, instrumentName: any, ts: any): Observable<TSReading[]> {
-    return this.readingService.getReadingsAt(deviceName, instrumentName, ts).pipe(
-      catchError(this.handleError<TSReading[]>('getReadingsAt', []))
+  getReadingsAt(gatewayUuid: any, deviceName: any, instrumentName: any, ts: any): Observable<Reading[]> {
+    return this.readingService.getReadingsAt(gatewayUuid, deviceName, instrumentName, ts).pipe(
+      catchError(this.handleError<Reading[]>('getReadingsAt', []))
     );
   }
 
@@ -370,9 +370,9 @@ export class DGraphCloudService extends GraphService {
    * @param instrumentName
    * @param fromts
    */
-  getReadingsStartingAt(deviceName: any, instrumentName: any, fromts: any): Observable<TSReading[]> {
+  getReadingsStartingAt(deviceName: any, instrumentName: any, fromts: any): Observable<Reading[]> {
     return this.readingService.getReadingsStartingAt(deviceName, instrumentName, fromts).pipe(
-      catchError(this.handleError<TSReading[]>('getReadingsStartingAt', []))
+      catchError(this.handleError<Reading[]>('getReadingsStartingAt', []))
     );
   }
 
@@ -383,19 +383,9 @@ export class DGraphCloudService extends GraphService {
    * @param fromts
    * @param tots
    */
-  getReadingsBetween(deviceName: any, instrumentName: any, fromts: any, tots: any): Observable<TSReading[]> {
-    return this.readingService.getReadingsBetween(deviceName, instrumentName, fromts, tots).pipe(
-      catchError(this.handleError<TSReading[]>('getReadingsBetween', []))
-    );
-  }
-
-  /**
-   *
-   * @param deviceName
-   */
-  getLastReadingsForDevice(deviceName: any): Observable<TSReading[]> {
-    return this.readingService.getLastReadingsForDevice(deviceName).pipe(
-      catchError(this.handleError<TSReading[]>('getLastReadingsForDevice', []))
+  getReadingsBetween(gatewayUuid: any, deviceName: any, instrumentName: any, fromts: any, tots: any): Observable<Reading[]> {
+    return this.readingService.getReadingsBetween(gatewayUuid, deviceName, instrumentName, fromts, tots).pipe(
+      catchError(this.handleError<Reading[]>('getReadingsBetween', []))
     );
   }
 

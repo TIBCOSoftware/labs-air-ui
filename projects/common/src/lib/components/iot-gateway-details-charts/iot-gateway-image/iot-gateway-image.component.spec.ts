@@ -6,6 +6,7 @@ import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { Device, Resource } from '../../../models/iot.model';
 
 import { CommonIotGatewayImageComponent } from './iot-gateway-image.component';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('CommonIotGatewayImageComponent', () => {
     let component: CommonIotGatewayImageComponent;
@@ -22,7 +23,8 @@ describe('CommonIotGatewayImageComponent', () => {
                 { provide: GraphService, useValue: mockGraphService },
                 { provide: EdgeService, useValue: mockEdgeService }
             ],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA]
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
+            imports: [RouterTestingModule]
         })
             .compileComponents();
     });

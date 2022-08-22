@@ -34,11 +34,11 @@ export class PipelineConfigComponent {
 
   constructor() { }
 
-  get files() {
+  get files(): any[] {
     return this.artifacts.filter(x => x.type == 'configuration');
   }
 
-  get requirements() {
+  get requirements(): any[] {
     return this.artifacts.filter(x => x.type == 'requirement');
   }
 
