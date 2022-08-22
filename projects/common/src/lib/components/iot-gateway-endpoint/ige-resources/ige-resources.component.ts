@@ -35,7 +35,8 @@ export class IgeResourcesComponent implements OnInit {
     { value: 'processor', viewValue: 'Processor' },
     { value: 'dockerfile', viewValue: 'Dockerfile'},
     { value: 'file', viewValue: 'File'},
-    { value: 'folder', viewValue: 'Folder'}
+    { value: 'folder', viewValue: 'Folder'},
+    { value: 'configuration', viewValue: 'Configuration'}
   ];
   languages = ['python'];
   showFileUpload = true;

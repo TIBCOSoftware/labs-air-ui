@@ -35,7 +35,7 @@ export class PipelineConfigComponent {
   constructor() { }
 
   get files() {
-    return this.artifacts.filter(x => x.type == 'file');
+    return this.artifacts.filter(x => x.type == 'configuration');
   }
 
   get requirements() {

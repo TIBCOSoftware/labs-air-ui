@@ -391,13 +391,27 @@ export class PipelineService {
         extra.push({ "Name": "services.$Name$.deploy.resources.reservations.devices[0].capabilities[0]", "Value": "gpu" });
       }
 
-      if (this.pipelineData.configurationFile) {
-
+      if (this.artifacts && this.pipelineData.configurationFile) {
+        const resource = this.selectableArtifacts.find(x => x.name == this.pipelineData.configurationFile)
+        pipelineFlow.Artifacts.push({
+          'Type': 'file',
+          'Name': resource.name + (resource.name.includes('.json') ? '' : '.json'),
+          'Value': this.isBase64(resource.fileContent) ? atob(resource.fileContent) : decodeURIComponent(resource.fileContent),
+          'Encoded': false
+        })
       }
 
-      if (this.pipelineData.requirement) {
-
+      if (this.artifacts && this.pipelineData.requirement) {
+        const resource = this.selectableArtifacts.find(x => x.name == this.pipelineData.requirement)
+        pipelineFlow.Artifacts.push({
+          'Type': 'file',
+          'Name': resource.name + (resource.name.includes('.txt') ? '' : '.txt'),
+          'Value': this.isBase64(resource.fileContent) ? atob(resource.fileContent) : decodeURIComponent(resource.fileContent),
+          'Encoded': false
+        })
       }
+
+      console.log('Artifacts afterwards', this.artifacts);
 
       errorFlow.forEach(flowNode => {
 
@@ -1777,23 +1791,21 @@ export class PipelineService {
             });
           }
         } else {
-          let resourceToPush = {
-            'Type': 'file',
-            'Name': resource.name,
-            'Value': this.isBase64(resource.fileContent) ? atob(resource.fileContent) : decodeURIComponent(resource.fileContent),
-            'Encoded': false
-          }
-          switch (resource.type) {
-            case 'processor': {
-              resourceToPush.Name = resourceToPush.Name + (resourceToPush.Name.includes('.py') ? '' : '.py');
-              break
+          if ((resource.type != 'requirement') && (resource.type != 'configuration')) {
+            let resourceToPush = {
+              'Type': 'file',
+              'Name': resource.name,
+              'Value': this.isBase64(resource.fileContent) ? atob(resource.fileContent) : decodeURIComponent(resource.fileContent),
+              'Encoded': false
             }
-            case 'requirement': {
-              resourceToPush.Name = resourceToPush.Name + (resourceToPush.Name.includes('.txt') ? '' : '.txt');
-              break
+            switch (resource.type) {
+              case 'processor': {
+                resourceToPush.Name = resourceToPush.Name + (resourceToPush.Name.includes('.py') ? '' : '.py');
+                break
+              }
             }
+            pythonPipeProperties.push(resourceToPush);
           }
-          pythonPipeProperties.push(resourceToPush);
         }
       })
       this.artifacts = pythonPipeProperties
