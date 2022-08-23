@@ -69,7 +69,7 @@ export class CommonIotGatewayImageComponent implements OnInit, OnDestroy, AfterV
 
       this.combinedReadingSelection.clear();
 
-      this.graphService.getReadings(this.gatewayId,this.device.name, this.instrument.name, 30)
+      this.graphService.getReadings(this.gatewayId, this.device.name, this.instrument.name, 30)
           .subscribe(res => {
               this.resourceReadings = res as Reading[];
 

@@ -67,7 +67,7 @@ export class CommonIotGatewayObjectComponent implements OnInit, OnDestroy, After
 
         this.combinedReadingSelection.clear();
 
-        this.graphService.getReadings(this.gatewayId,this.device.name, this.instrument.name, 30)
+        this.graphService.getReadings(this.gatewayId, this.device.name, this.instrument.name, 30)
             .subscribe(res => {
                 this.resourceReadings = res as Reading[];
 

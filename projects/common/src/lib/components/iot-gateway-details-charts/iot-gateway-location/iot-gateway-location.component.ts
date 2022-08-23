@@ -126,7 +126,7 @@ export class CommonIotGatewayLocationComponent implements OnInit, OnDestroy {
   }
 
   public getReadings() {
-      this.subscriptions.push(this.graphService.getReadings(this.gatewayId,this.device.name, this.instrument.name, 300)
+      this.subscriptions.push(this.graphService.getReadings(this.gatewayId, this.device.name, this.instrument.name, 300)
           .subscribe(res => {
               this.resourceReadings = res as Reading[];
               this.setScatterChartDataSet();

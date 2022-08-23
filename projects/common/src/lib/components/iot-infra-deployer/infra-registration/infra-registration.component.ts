@@ -172,7 +172,7 @@ parse environment file and add list of properties there to the input forms
                                       value= this.envProperties[propety];
                                   }
                                   this.properties.add(propety);
-                                  this.addParameterItem(propety,value);
+                                  this.addParameterItem(propety, value);
                               }
                           }
                       }
@@ -192,7 +192,7 @@ parse environment file and add list of properties there to the input forms
       });
 
   }
-  createParameter(name,value): UntypedFormGroup {
+  createParameter(name, value): UntypedFormGroup {
       console.log('Creating form with param name: ', name);
 
       return this.formBuilder.group({
@@ -205,8 +205,8 @@ parse environment file and add list of properties there to the input forms
       return <UntypedFormArray>this.registrationForm.get('parameters');
   }
 
-  addParameterItem(name,value) {
-      this.getParameters().push(this.createParameter(name,value));
+  addParameterItem(name, value) {
+      this.getParameters().push(this.createParameter(name, value));
   }
   validateAllFormFields(formGroup: UntypedFormGroup) {         //{1}
       Object.keys(formGroup.controls).forEach(field => {  //{2}
@@ -261,7 +261,7 @@ build registration request
       /*
   call registrattion service
   */
-      this.flogoDeployService.registerInfra(registrationRequest,this.projectForm.get('projectName').value)
+      this.flogoDeployService.registerInfra(registrationRequest, this.projectForm.get('projectName').value)
           .subscribe(res => {
               console.log('Received Registration response: ', res);
 

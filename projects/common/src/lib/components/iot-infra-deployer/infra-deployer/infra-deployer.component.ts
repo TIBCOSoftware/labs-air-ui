@@ -83,7 +83,7 @@ export class InfraDeployerComponent implements OnInit {
   dataSource = new MatTableDataSource<FlattenedDeployable>();
   deployablesData: FlattenedDeployable[] = [];
 
-  displayedColumns = ['id', 'name', 'projid', 'projname', 'projdescription', 'projcreated','action'];
+  displayedColumns = ['id', 'name', 'projid', 'projname', 'projdescription', 'projcreated', 'action'];
   deployableSelection = new SelectionModel<FlattenedDeployable>(false, []);
   deployableForm: UntypedFormGroup;
 
@@ -125,7 +125,7 @@ get the projects for the deployable table
           serviceType: ['', Validators.required],
           targetServer: ['', Validators.required],
           username: ['', Validators.required],
-          parameters: this.formBuilder.array([],Validators.required)
+          parameters: this.formBuilder.array([], Validators.required)
       });
 
       console.log('Created form');
@@ -311,7 +311,7 @@ get the projects for the deployable table
           'Description': description,
           'IDs' : [id]
       };
-      console.log('description',deleteRequest);
+      console.log('description', deleteRequest);
       this.flogoDeployService.deleteInfra(deleteRequest)
           .subscribe(res => {
               console.log('Received deletion response: ', res);

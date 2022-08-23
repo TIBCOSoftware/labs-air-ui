@@ -1,4 +1,4 @@
-import { NgModule,APP_INITIALIZER } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { CommonIotGatewayComponent } from './components/iot-gateway/iot-gateway.component';
 import { CommonIotGatewayDetailsComponent, SensorDirective } from './components/iot-gateway-details/iot-gateway-details.component'
 import { CommonIotGatewayOverviewComponent } from './components/iot-gateway-details-charts/iot-gateway-overview/iot-gateway-overview.component';
