@@ -18,6 +18,7 @@ describe('PipelineConfigComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(PipelineConfigComponent);
         component = fixture.componentInstance;
+        component.artifacts = [];
         fixture.detectChanges();
     });
 

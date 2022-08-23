@@ -12,7 +12,7 @@ describe('IgeModelsComponent', () => {
     let fixture: ComponentFixture<IgeModelsComponent>;
     const mockGraphService = jasmine.createSpyObj(['getRestEndpoints']);
 
-    mockGraphService.getModels.and.returnValue(of([]));
+    mockGraphService.getRestEndpoints.and.returnValue(of([]));
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
