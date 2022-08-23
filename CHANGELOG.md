@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0-164](https://github.com/TIBCOSoftware/labs-air-ui/compare/v0.8.0-141...v0.8.0-164) (2022-08-22)
+
+
+### Bugfixes
+
+* fix undefined node names for python pipes. ([f9d604b](https://github.com/TIBCOSoftware/labs-air-ui/commits/f9d604b148578d53ffea6cb9ef7358aa50b939dc))
+* inference filter selection ([e6d97f6](https://github.com/TIBCOSoftware/labs-air-ui/commits/e6d97f6aeaff4c29c0ddcf6f8e69876581f0cf61))
+* pipeline selection when navigating to previous page ([6916bc8](https://github.com/TIBCOSoftware/labs-air-ui/commits/6916bc8094be3a18efe88d7a7a26cdd71b149b7a))
+* python encoding ([c471bf3](https://github.com/TIBCOSoftware/labs-air-ui/commits/c471bf356d8478ebeabe12770a87d4c2ce41fd2c))
+* remove extra disable logic ([da9f91b](https://github.com/TIBCOSoftware/labs-air-ui/commits/da9f91b95e5ce9369978e175469a090ad0b4992a))
+
 ## [0.8.0-141](https://github.com/TIBCOSoftware/labs-air-ui/compare/v0.7.0...v0.8.0-141) (2022-08-04)
 
 ## [0.7.0](https://github.com/TIBCOSoftware/labs-air-ui/compare/v0.7.0-970...v0.7.0) (2022-08-04)
