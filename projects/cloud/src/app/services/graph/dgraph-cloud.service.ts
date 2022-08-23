@@ -358,11 +358,11 @@ export class DGraphCloudService extends GraphService {
    * @param instrumentName
    * @param ts
    */
-  getReadingsAt(gatewayUuid: any, deviceName: any, instrumentName: any, ts: any): Observable<Reading[]> {
-    return this.readingService.getReadingsAt(gatewayUuid, deviceName, instrumentName, ts).pipe(
-      catchError(this.handleError<Reading[]>('getReadingsAt', []))
-    );
-  }
+  // getReadingsAt(gatewayUuid: any, deviceName: any, instrumentName: any, ts: any): Observable<Reading[]> {
+  //   return this.readingService.getReadingsAt(gatewayUuid, deviceName, instrumentName, ts).pipe(
+  //     catchError(this.handleError<Reading[]>('getReadingsAt', []))
+  //   );
+  // }
 
   /**
    *
@@ -370,11 +370,11 @@ export class DGraphCloudService extends GraphService {
    * @param instrumentName
    * @param fromts
    */
-  getReadingsStartingAt(deviceName: any, instrumentName: any, fromts: any): Observable<Reading[]> {
-    return this.readingService.getReadingsStartingAt(deviceName, instrumentName, fromts).pipe(
-      catchError(this.handleError<Reading[]>('getReadingsStartingAt', []))
-    );
-  }
+  // getReadingsStartingAt(deviceName: any, instrumentName: any, fromts: any): Observable<Reading[]> {
+  //   return this.readingService.getReadingsStartingAt(deviceName, instrumentName, fromts).pipe(
+  //     catchError(this.handleError<Reading[]>('getReadingsStartingAt', []))
+  //   );
+  // }
 
   /**
    *
