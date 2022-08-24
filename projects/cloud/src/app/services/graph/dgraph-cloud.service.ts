@@ -205,7 +205,7 @@ export class DGraphCloudService extends GraphService {
    */
   getGatewayAndModels(gatewayName: any): Observable<Gateway[]> {
     return this.restEndpointService.getGatewayAndRestEndpoints(gatewayName).pipe(
-      catchError(this.handleError<Gateway[]>('getGatewayWithRestEndpoints', []))
+      catchError(this.handleError<Gateway[]>('getGatewayAndRestEndpoints', []))
     );
   }
 
