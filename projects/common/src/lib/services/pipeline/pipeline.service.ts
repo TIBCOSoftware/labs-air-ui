@@ -1798,11 +1798,8 @@ export class PipelineService {
               'Value': this.isBase64(resource.fileContent) ? atob(resource.fileContent) : decodeURIComponent(resource.fileContent),
               'Encoded': false
             }
-            switch (resource.type) {
-              case 'processor': {
-                resourceToPush.Name = resourceToPush.Name + (resourceToPush.Name.includes('.py') ? '' : '.py');
-                break
-              }
+            if (resource.type == 'processor') {
+              resourceToPush.Name = resourceToPush.Name + (resourceToPush.Name.includes('.py') ? '' : '.py');
             }
             pythonPipeProperties.push(resourceToPush);
           }
