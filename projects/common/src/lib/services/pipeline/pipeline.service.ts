@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { FlogoDeployService } from '../../services/deployment/flogo-deploy.service';
 import { EdgeService } from '../../services/edge/edge.service';
 
-import { Gateway, GraphService, Model, Pipeline } from '@TIBCOSoftware/labs-air-graph-client';
+import { Gateway, GraphService, RestEndpoint, Pipeline } from '@TIBCOSoftware/labs-air-graph-client';
 
 import { NodeEditor } from 'rete';
 
@@ -34,8 +34,9 @@ export class PipelineService {
   undeployDisabled = true;
   pipelineSelected = false;
   artifacts = [];
+  selectableArtifacts = [];
   devices: Device[] = [];
-  models: Model[] = [];
+  restEndpoint: RestEndpoint[] = [];
   filters = [];
   pipelineSelection = new SelectionModel<Pipeline>(false, []);
 
@@ -389,6 +390,29 @@ export class PipelineService {
       if (useGPU) {
         extra.push({ "Name": "services.$Name$.deploy.resources.reservations.devices[0].capabilities[0]", "Value": "gpu" });
       }
+
+      if (this.artifacts && this.pipelineData.configurationFile) {
+        const resource = this.selectableArtifacts.find(x => x.name == this.pipelineData.configurationFile)
+        pipelineFlow.Artifacts.push({
+          'Type': 'file',
+          'Name': resource.name + (resource.name.includes('.json') ? '' : '.json'),
+          'Value': this.isBase64(resource.fileContent) ? atob(resource.fileContent) : decodeURIComponent(resource.fileContent),
+          'Encoded': false
+        })
+      }
+
+      if (this.artifacts && this.pipelineData.requirement) {
+        const resource = this.selectableArtifacts.find(x => x.name == this.pipelineData.requirement)
+        pipelineFlow.Artifacts.push({
+          'Type': 'file',
+          'Name': resource.name + (resource.name.includes('.txt') ? '' : '.txt'),
+          'Value': this.isBase64(resource.fileContent) ? atob(resource.fileContent) : decodeURIComponent(resource.fileContent),
+          'Encoded': false
+        })
+      }
+
+      console.log('Artifacts afterwards', this.artifacts);
+
       errorFlow.forEach(flowNode => {
 
         console.log('Building from : ', flowNode);
@@ -666,11 +690,11 @@ export class PipelineService {
   getModels(gatewayId) {
     console.log('Calling GraphService to get models for: ', gatewayId);
 
-    this.graphService.getModels(gatewayId)
+    this.graphService.getRestEndpoints(gatewayId)
       .subscribe(res => {
-        this.models = res as Model[];
+        this.restEndpoint = res as RestEndpoint[];
 
-        console.log('Got models: ', this.models);
+        console.log('Got models: ', this.restEndpoint);
 
       });
   }
@@ -1748,6 +1772,7 @@ export class PipelineService {
   buildPythonPipeArtifacts() {
     this.graphService.getPythonResources(this.gatewayId).subscribe(resp => {
       let pythonPipeProperties = []
+      this.selectableArtifacts = resp;
       resp.forEach(resource => {
         if (resource.type == 'folder') {
           if (resource.fileContent !== 'null') {
@@ -1766,27 +1791,21 @@ export class PipelineService {
             });
           }
         } else {
-          let resourceToPush = {
-            'Type': 'file',
-            'Name': resource.name,
-            'Value': this.isBase64(resource.fileContent) ? atob(resource.fileContent) : decodeURIComponent(resource.fileContent),
-            'Encoded': false
-          }
-          switch (resource.type) {
-            case 'processor': {
+          if ((resource.type != 'requirement') && (resource.type != 'configuration')) {
+            let resourceToPush = {
+              'Type': 'file',
+              'Name': resource.name,
+              'Value': this.isBase64(resource.fileContent) ? atob(resource.fileContent) : decodeURIComponent(resource.fileContent),
+              'Encoded': false
+            }
+            if (resource.type == 'processor') {
               resourceToPush.Name = resourceToPush.Name + (resourceToPush.Name.includes('.py') ? '' : '.py');
-              break
             }
-            case 'requirement': {
-              resourceToPush.Name = resourceToPush.Name + (resourceToPush.Name.includes('.txt') ? '' : '.txt');
-              break
-            }
+            pythonPipeProperties.push(resourceToPush);
           }
-          pythonPipeProperties.push(resourceToPush);
         }
       })
       this.artifacts = pythonPipeProperties
-
     })
   }
 

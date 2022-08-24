@@ -6,7 +6,8 @@ import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { TSReading } from '@TIBCOSoftware/labs-air-graph-client';
+import { Reading } from '@TIBCOSoftware/labs-air-graph-client';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-common-iot-gateway-image',
@@ -33,6 +34,7 @@ export class CommonIotGatewayImageComponent implements OnInit, OnDestroy, AfterV
   dateFormat = 'yyyy-MM-dd HH:mm:ss'
   tableDataSource = new MatTableDataSource<TSCombinedReading>();
   combinedReadingSelection = new SelectionModel<TSCombinedReading>(false, []);
+  gatewayId: string;
 
   commandForm = new UntypedFormGroup({
       command: new UntypedFormControl('')
@@ -40,9 +42,12 @@ export class CommonIotGatewayImageComponent implements OnInit, OnDestroy, AfterV
 
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private graphService: GraphService) { }
+  constructor(private graphService: GraphService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+    if (this.route.snapshot.paramMap.get('gatewayId')) {
+        this.gatewayId = this.route.snapshot.paramMap.get('gatewayId');
+    }
       this.getReadings();
   }
 
@@ -64,9 +69,9 @@ export class CommonIotGatewayImageComponent implements OnInit, OnDestroy, AfterV
 
       this.combinedReadingSelection.clear();
 
-      this.graphService.getReadings(this.device.name, this.instrument.name, 30)
+      this.graphService.getReadings(this.gatewayId, this.device.name, this.instrument.name, 30)
           .subscribe(res => {
-              this.resourceReadings = res as TSReading[];
+              this.resourceReadings = res as Reading[];
 
               if (this.resourceReadings.length > 0) {
                   this.getResourceInferredReadings(this.device.name, this.instrument.name + '_Inferred', this.resourceReadings.length);
@@ -75,9 +80,9 @@ export class CommonIotGatewayImageComponent implements OnInit, OnDestroy, AfterV
   }
 
   getResourceInferredReadings(deviceName, resourceName, numReadings) {
-      this.graphService.getReadings(deviceName, resourceName, numReadings)
+      this.graphService.getReadings(this.gatewayId, deviceName, resourceName, numReadings)
           .subscribe(res => {
-              this.resourceInferredReadings = res as TSReading[];
+              this.resourceInferredReadings = res as Reading[];
 
               this.setresourceCombinedReadings();
 
@@ -85,9 +90,9 @@ export class CommonIotGatewayImageComponent implements OnInit, OnDestroy, AfterV
   }
 
   getStreamingReadings() {
-      this.subscriptions.push(this.graphService.getReadings(this.device.name, this.instrument.name, 1)
+      this.subscriptions.push(this.graphService.getReadings(this.gatewayId, this.device.name, this.instrument.name, 1)
           .subscribe(res => {
-              this.resourceReadings = res as TSReading[];
+              this.resourceReadings = res as Reading[];
 
               if (this.resourceReadings.length > 0) {
                   this.getStreamingResourceInferredReadings(this.device.name, this.instrument.name + '_Inferred', 1, this.resourceReadings[0].created);
@@ -99,7 +104,7 @@ export class CommonIotGatewayImageComponent implements OnInit, OnDestroy, AfterV
   getStreamingResourceInferredReadings(deviceName, resourceName, numReadings, ts) {
       this.subscriptions.push(this.graphService.getReadingsAt(deviceName, resourceName, ts)
           .subscribe(res => {
-              this.resourceInferredReadings = res as TSReading[];
+              this.resourceInferredReadings = res as Reading[];
               this.inferredImageData = '';
               this.setStreamingInferredImageData();
           }));

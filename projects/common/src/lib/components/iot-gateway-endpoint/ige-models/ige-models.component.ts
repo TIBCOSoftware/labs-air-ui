@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, AfterViewInit, ViewChild } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
-import { Model } from '@TIBCOSoftware/labs-air-graph-client';
+import { RestEndpoint } from '@TIBCOSoftware/labs-air-graph-client';
 import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -33,9 +33,9 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
   graphUpdateOpDisabled = true;
   graphDeleteOpDisabled = true;
 
-  modelsDataSource = new MatTableDataSource<Model>();
+  modelsDataSource = new MatTableDataSource<RestEndpoint>();
   modelDisplayedColumns: string[] = ['id', 'name', 'inputType', 'scope', 'created', 'modified'];
-  modelSelection = new SelectionModel<Model>(false, []);
+  modelSelection = new SelectionModel<RestEndpoint>(false, []);
 
   scopes: SelectItem[] = [
       { value: 'GLOBAL', viewValue: 'GLOBAL' },
@@ -130,10 +130,10 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
   public getModels(gatewayId: string) {
       console.log('Getting gateway and models for: ', gatewayId);
 
-      this.graphService.getModels(gatewayId)
+      this.graphService.getRestEndpoints(gatewayId)
           .subscribe(res => {
               console.log('Received response for graphService.getModels: ', res);
-              this.modelsDataSource.data = res as Model[];
+              this.modelsDataSource.data = res as RestEndpoint[];
 
               this.graphAddOpDisabled = true;
               this.graphUpdateOpDisabled = true;
@@ -210,7 +210,7 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
    */
   addModel() {
       const ts = Date.now();
-      const model = {} as Model;
+      const model = {} as RestEndpoint;
 
       let scope = this.modelForm.get('scope').value;
       if (scope != 'GLOBAL') {
@@ -239,7 +239,7 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
           });
       }
       else {
-          this.graphService.addModel('0', model)
+          this.graphService.addRestEndpoint('0', model)
               .subscribe(res => {
                   console.log('Result from add model', res);
 
@@ -256,7 +256,7 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
   updateModel() {
 
       const ts = Date.now();
-      const model = {} as Model;
+      const model = {} as RestEndpoint;
 
       let scope = this.modelForm.get('scope').value;
       if (scope != 'GLOBAL') {
@@ -278,7 +278,7 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
       console.log('Update model to url: ', model.url);
       console.log('Update model to inputTemplate: ', model.inputTemplate);
 
-      this.graphService.updateModel(model)
+      this.graphService.updateRestEndpoint(model)
           .subscribe(res => {
               console.log('Result from update model', res);
 
@@ -296,7 +296,7 @@ export class IgeModelsComponent implements OnInit, AfterViewInit {
       console.log('deleting model: ', modelUid);
 
 
-      this.graphService.deleteModel('0', this.modelForm.get('uid').value)
+      this.graphService.deleteRestEndpoint('0', this.modelForm.get('uid').value)
           .subscribe(res => {
               console.log('Result from delete model ', res);
 

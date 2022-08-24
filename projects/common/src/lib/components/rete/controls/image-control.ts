@@ -10,7 +10,7 @@ export class ImageControl extends Control implements AngularControl {
     constructor(public emitter, public key, public imageName, readonly = false) {
         super(key);
 
-        console.log('ImageControl key:' , key);
+        console.log('ImageControl key:', key);
         // console.log("Image control get data:", this.getData(key));
         console.log('ImageControl data:', this.data);
         

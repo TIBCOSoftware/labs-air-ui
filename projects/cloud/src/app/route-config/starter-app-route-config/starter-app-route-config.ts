@@ -37,7 +37,7 @@ export const STARTER_APP_ROUTES=
             {
                 path: 'device-details/:gatewayId',
                 component: CommonIotGatewayDetailsComponent,
-                data: { breadcrumb: ['Gateways','Devices', 'Devices']}
+                data: { breadcrumb: ['Gateways', 'Devices', 'Devices']}
             },
             {
                 path: 'pipeline/:gatewayId',

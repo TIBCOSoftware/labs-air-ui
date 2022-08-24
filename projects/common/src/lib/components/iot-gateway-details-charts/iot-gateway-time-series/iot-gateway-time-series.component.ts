@@ -9,10 +9,11 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { BaseChartDirective } from 'ng2-charts';
 
 import StreamingPlugin from 'chartjs-plugin-streaming';
-import { TSReading } from '@TIBCOSoftware/labs-air-graph-client';
+import { Reading } from '@TIBCOSoftware/labs-air-graph-client';
 
 // this import is actually needed for chart.js to render the time-series charts.
 import 'chartjs-adapter-luxon';
+import { ActivatedRoute } from '@angular/router';
 
 Chart.register(StreamingPlugin);
 
@@ -28,8 +29,8 @@ export class CommonIotGatewayTimeSeriesComponent implements OnInit, OnDestroy {
   instrument: Resource;
   subscriptions: Subscription[] = [];
   instrumentForm: UntypedFormGroup;
-  resourceReadings: TSReading[] = [];
-  resourceInferredReadings: TSReading[] = [];
+  resourceReadings: Reading[] = [];
+  resourceInferredReadings: Reading[] = [];
   numReadings = 300;
 
   timeSeriesData = [];
@@ -152,10 +153,12 @@ export class CommonIotGatewayTimeSeriesComponent implements OnInit, OnDestroy {
       },
     },
   };
+  gatewayId: string;
 
   constructor(
     private graphService: GraphService,
-    private formBuilder: UntypedFormBuilder
+    private formBuilder: UntypedFormBuilder,
+    private route: ActivatedRoute
   ) {
     this.instrumentForm = this.formBuilder.group({
       valueType: [""],
@@ -171,6 +174,9 @@ export class CommonIotGatewayTimeSeriesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    if (this.route.snapshot.paramMap.get('gatewayId')) {
+      this.gatewayId = this.route.snapshot.paramMap.get('gatewayId');
+    }
     let attrInterface = "";
     let attrPinNum = "";
     let attrType = "";
@@ -204,9 +210,9 @@ export class CommonIotGatewayTimeSeriesComponent implements OnInit, OnDestroy {
   getReadings() {
     this.subscriptions.push(
       this.graphService
-        .getReadings(this.device.name, this.instrument.name, 300)
+        .getReadings(this.gatewayId, this.device.name, this.instrument.name, 300)
         .subscribe((res) => {
-          this.resourceReadings = res as TSReading[];
+          this.resourceReadings = res as Reading[];
           this.getInferredReadings(
             this.device.name,
             this.instrument.name + "_Inferred",
@@ -226,9 +232,9 @@ export class CommonIotGatewayTimeSeriesComponent implements OnInit, OnDestroy {
   ) {
     this.subscriptions.push(
       this.graphService
-        .getReadings(deviceName, resourceName, numReadings)
+        .getReadings(this.gatewayId, deviceName, resourceName, numReadings)
         .subscribe((res) => {
-          this.resourceInferredReadings = res as TSReading[];
+          this.resourceInferredReadings = res as Reading[];
 
           // Set Data for chart dataset
           this.setChartInferredDataSet();
@@ -244,9 +250,9 @@ export class CommonIotGatewayTimeSeriesComponent implements OnInit, OnDestroy {
   ) {
     this.subscriptions.push(
       this.graphService
-        .getReadingsBetween(deviceName, resourceName, fromts, tots)
+        .getReadingsBetween(this.gatewayId, deviceName, resourceName, fromts, tots)
         .subscribe((res) => {
-          this.resourceReadings = res as TSReading[];
+          this.resourceReadings = res as Reading[];
           this.setChartDataSet();
         })
     );
@@ -297,7 +303,7 @@ export class CommonIotGatewayTimeSeriesComponent implements OnInit, OnDestroy {
         this.streamLastQuery
       )
       .subscribe((res) => {
-        this.resourceReadings = res as TSReading[];
+        this.resourceReadings = res as Reading[];
         console.log(
           "reading data in getStreamingData: ",
           this.resourceReadings

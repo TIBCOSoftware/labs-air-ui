@@ -119,7 +119,7 @@ export class FlogoDeployService {
       }
       const searchParamsString = searchParams.toString();
       if (searchParamsString){
-          url = url.concat('?',searchParamsString);
+          url = url.concat('?', searchParamsString);
       }
 
       return this.http.delete<string>(url, this.httpOptions)

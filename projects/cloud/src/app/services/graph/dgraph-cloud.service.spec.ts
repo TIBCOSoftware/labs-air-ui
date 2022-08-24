@@ -2,12 +2,12 @@ import { TestBed } from '@angular/core/testing';
 import {
     DataStoreService,
     GatewayService,
-    ModelService,
+    RestEndpointsService,
     NotificationService,
     PipelineService,
     ProtocolService,
     PythonResourceService,
-    ReadingService,
+    ReadingsService,
 } from '@TIBCOSoftware/labs-air-graph-client';
 import { DGraphCloudService } from './dgraph-cloud.service';
 import {
@@ -28,11 +28,11 @@ describe('DgraphService', () => {
     const appConfigService: Partial<AppConfigService> = jasmine.createSpyObj(['getFromConfigOrEnv']);
     const dataStoreService: Partial<DataStoreService> = jasmine.createSpyObj(['xxx']);
     const mockGatewayService: Partial<GatewayService> = jasmine.createSpyObj(['getGateways', 'getGatewayAndPipelines', 'getModels']);
-    const modelService: Partial<ModelService> = jasmine.createSpyObj(['xxx']);
+    const modelService: Partial<RestEndpointsService> = jasmine.createSpyObj(['xxx']);
     const notificationService: Partial<NotificationService> = jasmine.createSpyObj(['xxx']);
     const pipelineService: Partial<PipelineService> = jasmine.createSpyObj(['xxx']);
     const protocolService: Partial<ProtocolService> = jasmine.createSpyObj(['xxx']);
-    const readingService: Partial<ReadingService> = jasmine.createSpyObj(['xxx']);
+    const readingService: Partial<ReadingsService> = jasmine.createSpyObj(['xxx']);
     const pythonResourceService: Partial<PythonResourceService> = jasmine.createSpyObj(['xxx']);
 
     beforeEach(() => {
@@ -44,11 +44,11 @@ describe('DgraphService', () => {
                 { provide: AppConfigService, useValue: appConfigService },
                 { provide: DataStoreService, useValue: dataStoreService },
                 { provide: GatewayService, useValue: mockGatewayService },
-                { provide: ModelService, useValue: modelService },
+                { provide: RestEndpointsService, useValue: modelService },
                 { provide: NotificationService, useValue: notificationService },
                 { provide: PipelineService, useValue: pipelineService },
                 { provide: ProtocolService, useValue: protocolService },
-                { provide: ReadingService, useValue: readingService },
+                { provide: ReadingsService, useValue: readingService },
                 { provide: PythonResourceService, useValue: pythonResourceService },
                 { provide: HttpClient, useValue: httpClientSpy },
                 DGraphCloudService

@@ -35,7 +35,7 @@ import { RestServiceComponent } from '../rete/components/rest-service-component'
 import { NodePrimaryComponent } from '../rete/nodes/node-primary/node-primary.component';
 import { RestBroadcastComponent } from '../rete/components/rest-broadcast.component'
 import { MQTTRequestReplyComponent } from '../rete/components/mqtt-request-reply.component'
-import { Gateway, Model, Pipeline } from '@TIBCOSoftware/labs-air-graph-client';
+import { Gateway, RestEndpoint, Pipeline } from '@TIBCOSoftware/labs-air-graph-client';
 import { PythonComponent } from '../rete/components/python-component';
 import { PythonPipeComponent } from '../rete/components/python-pipe-component'
 import { Observable, Subject, Subscriber, Subscription } from 'rxjs';
@@ -155,8 +155,8 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
         return this.pipelineService.pipelineSelected;
     }
 
-    get models(): Model[] {
-        return this.pipelineService.models;
+    get restEndpoint(): RestEndpoint[] {
+        return this.pipelineService.restEndpoint;
     }
 
     get devices(): Device[] {
@@ -165,6 +165,10 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
 
     get filters(): Filter[] {
         return this.pipelineService.filters;
+    }
+
+    get selectableArtifacts(): any[] {
+        return this.pipelineService.selectableArtifacts;
     }
 
     async ngAfterViewInit() {
@@ -477,7 +481,9 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
             modified: ['', Validators.required],
             status: ['', Validators.required],
             flowConfiguration: ['', Validators.required],
-            logLevel: ['INFO', Validators.required]
+            logLevel: ['INFO', Validators.required],
+            requirement: [''],
+            configurationFile: ['']
         });
     }
 
@@ -533,7 +539,9 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
             deployerType: '',
             description: '',
             status: '',
-            logLevel: 'INFO'
+            logLevel: 'INFO',
+            requirement: '',
+            configurationFile: ''
         });
 
     }
@@ -577,7 +585,9 @@ export class CommonIotPipelineComponent implements OnInit, OnDestroy, AfterViewI
             description: pipeline.description,
             status: pipeline.status,
             flowConfiguration: pipeline.flowConfiguration,
-            logLevel: pipeline.logLevel
+            logLevel: pipeline.logLevel,
+            requirement: pipeline.requirement,
+            configurationFile: pipeline.configurationFile
         });
     }
 

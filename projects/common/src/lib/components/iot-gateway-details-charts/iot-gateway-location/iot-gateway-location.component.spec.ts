@@ -6,6 +6,7 @@ import { GraphService } from '@TIBCOSoftware/labs-air-graph-client';
 import { Device, Resource } from '../../../models/iot.model';
 
 import { CommonIotGatewayLocationComponent } from './iot-gateway-location.component';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('CommonIotGatewayLocationComponent', () => {
     let component: CommonIotGatewayLocationComponent;
@@ -16,7 +17,7 @@ describe('CommonIotGatewayLocationComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [CommonIotGatewayLocationComponent],
-            imports: [ReactiveFormsModule],
+            imports: [ReactiveFormsModule, RouterTestingModule],
             providers: [
                 { provide: GraphService, useValue: mockGraphService }
             ],
