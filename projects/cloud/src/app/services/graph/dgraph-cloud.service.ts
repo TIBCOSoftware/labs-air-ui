@@ -365,11 +365,6 @@ export class DGraphCloudService extends GraphService {
    * @param instrumentName
    * @param fromts
    */
-  // getReadingsStartingAt(deviceName: any, instrumentName: any, fromts: any): Observable<Reading[]> {
-  //   return this.readingService.getReadingsStartingAt(deviceName, instrumentName, fromts).pipe(
-  //     catchError(this.handleError<Reading[]>('getReadingsStartingAt', []))
-  //   );
-  // }
 
   /**
    *
