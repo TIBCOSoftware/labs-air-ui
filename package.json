@@ -44,7 +44,7 @@
     "chartjs-plugin-datalabels": "^2.0.0",
     "chartjs-plugin-streaming": "^2.0.0",
     "heatmap.js": "git+https://github.com/sanuradhag/heatmap.js.git",
-    "luxon": "^2.3.0",
+    "luxon": "^2.5.2",
     "ng2-charts": "^3.0.9",
     "ng2-google-charts": "~7.0.0",
     "ngx-heatmap": "^1.0.2",
